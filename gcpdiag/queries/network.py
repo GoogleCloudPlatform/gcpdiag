@@ -23,7 +23,6 @@ from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, iam
 
-#pylint: disable=invalid-name
 IPv4AddrOrIPv6Addr = Union[ipaddress.IPv4Address, ipaddress.IPv6Address]
 IPv4NetOrIPv6Net = Union[ipaddress.IPv4Network, ipaddress.IPv6Network]
 IPAddrOrNet = Union[IPv4AddrOrIPv6Addr, IPv4NetOrIPv6Net]
@@ -44,8 +43,7 @@ class Subnetwork(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -72,11 +70,11 @@ class Subnetwork(models.Resource):
   def region(self) -> str:
     # https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4
     m = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/([^/]+)/regions/([^/]+)',
-        self._resource_data['region'])
+      r'https://www.googleapis.com/compute/v1/projects/([^/]+)/regions/([^/]+)',
+      self._resource_data['region'],
+    )
     if not m:
-      raise RuntimeError(
-          f"can't parse region URL: {self._resource_data['region']}")
+      raise RuntimeError(f"can't parse region URL: {self._resource_data['region']}")
     return m.group(2)
 
   def is_private_ip_google_access(self) -> bool:
@@ -98,8 +96,7 @@ class Route(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -156,15 +153,15 @@ class Route(models.Resource):
 
   def get_next_hop(self) -> Union[Dict[str, Any], Optional[str]]:
     hop_types = {
-        'nextHopGateway': 'nextHopGateway',
-        'nextHopVpnTunnel': 'nextHopVpnTunnel',
-        'nextHopHub': 'nextHopHub',
-        'nextHopInstance': 'nextHopInstance',
-        'nextHopAddress': 'nextHopAddress',
-        'nextHopPeering': 'nextHopPeering',
-        'nextHopIlb': 'nextHopIlb',
-        'nextHopNetwork': 'nextHopNetwork',
-        'nextHopIp': 'nextHopIp'
+      'nextHopGateway': 'nextHopGateway',
+      'nextHopVpnTunnel': 'nextHopVpnTunnel',
+      'nextHopHub': 'nextHopHub',
+      'nextHopInstance': 'nextHopInstance',
+      'nextHopAddress': 'nextHopAddress',
+      'nextHopPeering': 'nextHopPeering',
+      'nextHopIlb': 'nextHopIlb',
+      'nextHopNetwork': 'nextHopNetwork',
+      'nextHopIp': 'nextHopIp',
     }
 
     for hop_type, value in hop_types.items():
@@ -185,6 +182,7 @@ class ManagedZone(models.Resource):
 
   https://cloud.google.com/dns/docs/reference/v1beta2/managedZones
   """
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -204,10 +202,9 @@ class ManagedZone(models.Resource):
     if 'privateVisibilityConfig' not in self._resource_data:
       self._resource_data['privateVisibilityConfig'] = {}
 
-    return (self._resource_data['privateVisibilityConfig'].get(
-        'networks', False) or
-            self._resource_data['privateVisibilityConfig'].get(
-                'gkeClusters', False))
+    return self._resource_data['privateVisibilityConfig'].get(
+      'networks', False
+    ) or self._resource_data['privateVisibilityConfig'].get('gkeClusters', False)
 
   @property
   def dnssec_config_state(self) -> bool:
@@ -222,8 +219,7 @@ class ManagedZone(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://dns.googleapis.com/dns/v1beta2/(.*)',
-                      self.self_link)
+    result = re.match(r'https://dns.googleapis.com/dns/v1beta2/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -251,8 +247,7 @@ class Router(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -301,9 +296,7 @@ class Router(models.Resource):
     for n in self._resource_data.get('nats', []):
       if n['sourceSubnetworkIpRangesToNat'] == 'LIST_OF_SUBNETWORKS':
         # Cloud NAT configure for specific subnets
-        if 'subnetworks' in n and subnetwork.self_link in [
-            s['name'] for s in n['subnetworks']
-        ]:
+        if 'subnetworks' in n and subnetwork.self_link in [s['name'] for s in n['subnetworks']]:
           return True
       else:
         # Cloud NAT configured for all subnets
@@ -322,8 +315,7 @@ class RouterStatus(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -354,8 +346,7 @@ class RouterStatus(models.Resource):
 
   @property
   def bgp_peer_status(self) -> str:
-    bgp_peer_status = self._resource_data.get('result',
-                                              {}).get('bgpPeerStatus', {})
+    bgp_peer_status = self._resource_data.get('result', {}).get('bgpPeerStatus', {})
     return bgp_peer_status
 
 
@@ -370,8 +361,7 @@ class RouterNatIpInfo(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -412,6 +402,7 @@ class Peering:
 
 class Network(models.Resource):
   """A VPC network."""
+
   _resource_data: dict
   _subnetworks: Optional[Dict[str, Subnetwork]]
   _context: models.Context
@@ -424,8 +415,7 @@ class Network(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -457,23 +447,29 @@ class Network(models.Resource):
   @property
   def subnetworks(self) -> Dict[str, Subnetwork]:
     return _batch_get_subnetworks(
-        self._project_id, frozenset(self._resource_data.get('subnetworks', [])),
-        self._context)
+      self._project_id, frozenset(self._resource_data.get('subnetworks', [])), self._context
+    )
 
   @property
   def peerings(self) -> List[Peering]:
     return [
-        Peering(peer['name'], peer['network'], peer['state'],
-                peer['exportCustomRoutes'], peer['importCustomRoutes'],
-                peer['autoCreateRoutes'])
-        for peer in self._resource_data.get('peerings', [])
+      Peering(
+        peer['name'],
+        peer['network'],
+        peer['state'],
+        peer['exportCustomRoutes'],
+        peer['importCustomRoutes'],
+        peer['autoCreateRoutes'],
+      )
+      for peer in self._resource_data.get('peerings', [])
     ]
 
 
 def _ip_match(  #
-    ip1: IPAddrOrNet,
-    ip2_list: List[Union[ipaddress.IPv4Network, ipaddress.IPv6Network]],
-    match_type: str = 'allow') -> bool:
+  ip1: IPAddrOrNet,
+  ip2_list: List[Union[ipaddress.IPv4Network, ipaddress.IPv6Network]],
+  match_type: str = 'allow',
+) -> bool:
   """Match IP address or network to a network list (i.e. verify that ip1 is
   included in any ip of ip2_list).
 
@@ -487,17 +483,14 @@ def _ip_match(  #
         return True
     else:
       # ip1: network, ip2: network
-      if isinstance(ip1, ipaddress.IPv4Network) and \
-          isinstance(ip2, ipaddress.IPv4Network):
+      if isinstance(ip1, ipaddress.IPv4Network) and isinstance(ip2, ipaddress.IPv4Network):
         if match_type == 'allow' and ip1.subnet_of(ip2):
           return True
         elif match_type == 'deny' and ip1.overlaps(ip2):
           return True
         else:
-          logging.debug('network no match %s of %s (%s matching)', ip1, ip2,
-                        match_type)
-      elif isinstance(ip1, ipaddress.IPv6Network) and \
-          isinstance(ip2, ipaddress.IPv6Network):
+          logging.debug('network no match %s of %s (%s matching)', ip1, ip2, match_type)
+      elif isinstance(ip1, ipaddress.IPv6Network) and isinstance(ip2, ipaddress.IPv6Network):
         if match_type == 'allow' and ip1.subnet_of(ip2):
           return True
         elif match_type == 'deny' and ip1.overlaps(ip2):
@@ -505,17 +498,16 @@ def _ip_match(  #
   return False
 
 
-def _l4_match(protocol: str, port: int, l4c_list: Iterable[Dict[str,
-                                                                Any]]) -> bool:
+def _l4_match(protocol: str, port: int, l4c_list: Iterable[Dict[str, Any]]) -> bool:
   """Match protocol and port to layer4Configs structure:
 
-         "layer4Configs": [
-            {
-              "ipProtocol": string,
-              "ports": [
-                string
-              ]
-            }
+  "layer4Configs": [
+     {
+       "ipProtocol": string,
+       "ports": [
+         string
+       ]
+     }
   """
   for l4c in l4c_list:
     if l4c['ipProtocol'] not in [protocol, 'all']:
@@ -532,35 +524,37 @@ def _port_in_port_range(port: int, port_range: str):
   try:
     parts = [int(p) for p in port_range.split('-', 1)]
   except (TypeError, ValueError) as e:
-    raise ValueError(
-        f'invalid port numbers in range syntax: {port_range}') from e
+    raise ValueError(f'invalid port numbers in range syntax: {port_range}') from e
   if len(parts) == 2:
     return parts[0] <= port <= parts[1]
   elif len(parts) == 1:
     return parts[0] == port
 
 
-def _vpc_allow_deny_match(protocol: str, port: Optional[int],
-                          allowed: Iterable[Dict[str, Any]],
-                          denied: Iterable[Dict[str, Any]]) -> Optional[str]:
+def _vpc_allow_deny_match(
+  protocol: str,
+  port: Optional[int],
+  allowed: Iterable[Dict[str, Any]],
+  denied: Iterable[Dict[str, Any]],
+) -> Optional[str]:
   """Match protocol and port to allowed denied structure (VPC firewalls):
 
-      "allowed": [
-        {
-          "IPProtocol": string,
-          "ports": [
-            string
-          ]
-        }
-      ],
-      "denied": [
-        {
-          "IPProtocol": string,
-          "ports": [
-            string
-          ]
-        }
-      ],
+  "allowed": [
+    {
+      "IPProtocol": string,
+      "ports": [
+        string
+      ]
+    }
+  ],
+  "denied": [
+    {
+      "IPProtocol": string,
+      "ports": [
+        string
+      ]
+    }
+  ],
   """
   for action, l4_rules in [('allow', allowed), ('deny', denied)]:
     for l4_rule in l4_rules:
@@ -648,35 +642,36 @@ class _FirewallPolicy:
   def __init__(self, resource_data):
     self._resource_data = resource_data
     self._rules = {
-        'INGRESS': [],
-        'EGRESS': [],
+      'INGRESS': [],
+      'EGRESS': [],
     }
     # sort by priority, and then by action (deny before allow)
     action_priority = {'deny': 1, 'allow': 2, 'goto_next': 3}
     for rule in sorted(
-        resource_data['rules'],
-        key=lambda r: (int(r.get('priority', 65535)),
-                       action_priority.get(r.get('action'), 99)),
+      resource_data['rules'],
+      key=lambda r: (int(r.get('priority', 65535)), action_priority.get(r.get('action'), 99)),
     ):
       rule_decoded = copy.deepcopy(rule)
       if 'match' in rule:
         # decode network ranges
         if 'srcIpRanges' in rule['match']:
-          rule_decoded['match']['srcIpRanges'] = \
-            [ipaddress.ip_network(net) for net in rule['match']['srcIpRanges']]
+          rule_decoded['match']['srcIpRanges'] = [
+            ipaddress.ip_network(net) for net in rule['match']['srcIpRanges']
+          ]
         if 'destIpRanges' in rule['match']:
-          rule_decoded['match']['destIpRanges'] = \
-            [ipaddress.ip_network(net) for net in rule['match']['destIpRanges']]
+          rule_decoded['match']['destIpRanges'] = [
+            ipaddress.ip_network(net) for net in rule['match']['destIpRanges']
+          ]
       self._rules[rule['direction']].append(rule_decoded)
 
   def check_connectivity_ingress(
-      self,  #
-      *,
-      src_ip: IPAddrOrNet,
-      ip_protocol: str,
-      port: Optional[int],
-      #target_network: Optional[Network] = None, # useless unless targetResources set by API.
-      target_service_account: Optional[str] = None
+    self,  #
+    *,
+    src_ip: IPAddrOrNet,
+    ip_protocol: str,
+    port: Optional[int],
+    # target_network: Optional[Network] = None, # useless unless targetResources set by API.
+    target_service_account: Optional[str] = None,
   ) -> FirewallCheckResult:
     for rule in self._rules['INGRESS']:
       if rule.get('disabled'):
@@ -689,8 +684,7 @@ class _FirewallPolicy:
       if not _ip_match(src_ip, rule['match']['srcIpRanges'], ip_match_type):
         continue
       # ip_protocol and port
-      if port is not None and not _l4_match(ip_protocol, port,
-                                            rule['match']['layer4Configs']):
+      if port is not None and not _l4_match(ip_protocol, port, rule['match']['layer4Configs']):
         continue
       # targetResources doesn't seem to get set. See also b/209450091.
       # please also check the check_connectivity_egress for similar issue.
@@ -704,30 +698,30 @@ class _FirewallPolicy:
       if 'targetServiceAccounts' in rule:
         if not target_service_account:
           continue
-        if not any(sa == target_service_account
-                   for sa in rule['targetServiceAccounts']):
+        if not any(sa == target_service_account for sa in rule['targetServiceAccounts']):
           continue
-      logging.debug('policy %s: %s -> %s/%s = %s', self.short_name, src_ip,
-                    port, ip_protocol, rule['action'])
+      logging.debug(
+        'policy %s: %s -> %s/%s = %s', self.short_name, src_ip, port, ip_protocol, rule['action']
+      )
       return FirewallCheckResult(
-          rule['action'],
-          firewall_policy_name=self.short_name,
-          firewall_policy_rule_description=rule['description'])
+        rule['action'],
+        firewall_policy_name=self.short_name,
+        firewall_policy_rule_description=rule['description'],
+      )
 
     # It should never happen that no rule match, because there should
     # be a low-priority 'goto_next' rule.
-    logging.warning('unexpected no-match in firewall policy %s',
-                    self.short_name)
+    logging.warning('unexpected no-match in firewall policy %s', self.short_name)
     return FirewallCheckResult('goto_next')
 
   def check_connectivity_egress(
-      self,  #
-      *,
-      src_ip: IPAddrOrNet,
-      ip_protocol: str,
-      port: Optional[int],
-      #target_network: Optional[Network] = None, # useless unless targetResources set by API.
-      target_service_account: Optional[str] = None
+    self,  #
+    *,
+    src_ip: IPAddrOrNet,
+    ip_protocol: str,
+    port: Optional[int],
+    # target_network: Optional[Network] = None, # useless unless targetResources set by API.
+    target_service_account: Optional[str] = None,
   ) -> FirewallCheckResult:
     for rule in self._rules['EGRESS']:
       # Do not evaluate disabled rules or automatically created rules
@@ -741,22 +735,22 @@ class _FirewallPolicy:
       if not _ip_match(src_ip, rule['match']['destIpRanges'], ip_match_type):
         continue
       # ip_protocol and port
-      if port is not None and not _l4_match(ip_protocol, port,
-                                            rule['match']['layer4Configs']):
+      if port is not None and not _l4_match(ip_protocol, port, rule['match']['layer4Configs']):
         continue
       # target_service_account
       if 'targetServiceAccounts' in rule:
         if not target_service_account:
           continue
-        if not any(sa == target_service_account
-                   for sa in rule['targetServiceAccounts']):
+        if not any(sa == target_service_account for sa in rule['targetServiceAccounts']):
           continue
-      logging.debug('policy %s: %s -> %s/%s = %s', self.short_name, src_ip,
-                    port, ip_protocol, rule['action'])
+      logging.debug(
+        'policy %s: %s -> %s/%s = %s', self.short_name, src_ip, port, ip_protocol, rule['action']
+      )
       return FirewallCheckResult(
-          rule['action'],
-          firewall_policy_name=self.short_name,
-          firewall_policy_rule_description=rule['description'])
+        rule['action'],
+        firewall_policy_name=self.short_name,
+        firewall_policy_rule_description=rule['description'],
+      )
 
     # It should never happen that no rule match, because there should
     # be a low-priority 'goto_next' rule.
@@ -766,25 +760,24 @@ class _FirewallPolicy:
 
 class _VpcFirewall:
   """VPC Firewall Rules (internal class)"""
+
   _rules: dict
 
   def __init__(self, rules_list):
     self._rules = {
-        'INGRESS': [],
-        'EGRESS': [],
+      'INGRESS': [],
+      'EGRESS': [],
     }
     # sort by primary key and then by deny action
-    for r in sorted(rules_list,
-                    key=lambda r: (int(r['priority']), 1
-                                   if r.get('denied') else 2)):
+    for r in sorted(rules_list, key=lambda r: (int(r['priority']), 1 if r.get('denied') else 2)):
       r_decoded = copy.deepcopy(r)
       # decode network ranges
       if 'sourceRanges' in r:
-        r_decoded['sourceRanges'] = \
-            [ipaddress.ip_network(net) for net in r['sourceRanges']]
+        r_decoded['sourceRanges'] = [ipaddress.ip_network(net) for net in r['sourceRanges']]
       if 'destinationRanges' in r:
-        r_decoded['destinationRanges'] = \
-            [ipaddress.ip_network(net) for net in r['destinationRanges']]
+        r_decoded['destinationRanges'] = [
+          ipaddress.ip_network(net) for net in r['destinationRanges']
+        ]
       # use sets for tags
       if 'sourceTags' in r:
         r_decoded['sourceTags'] = set(r['sourceTags'])
@@ -793,16 +786,16 @@ class _VpcFirewall:
       self._rules[r['direction']].append(r_decoded)
 
   def check_connectivity_ingress(
-      self,
-      *,
-      src_ip: IPAddrOrNet,
-      ip_protocol: str,
-      port: Optional[int],
-      # dest_ip: Optional[IPAddrOrNet] = None,
-      source_service_account: Optional[str] = None,
-      target_service_account: Optional[str] = None,
-      source_tags: Optional[List[str]] = None,
-      target_tags: Optional[List[str]] = None,
+    self,
+    *,
+    src_ip: IPAddrOrNet,
+    ip_protocol: str,
+    port: Optional[int],
+    # dest_ip: Optional[IPAddrOrNet] = None,
+    source_service_account: Optional[str] = None,
+    target_service_account: Optional[str] = None,
+    source_tags: Optional[List[str]] = None,
+    target_tags: Optional[List[str]] = None,
   ) -> FirewallCheckResult:
     if target_tags is not None and not isinstance(target_tags, list):
       raise ValueError('Internal error: target_tags must be a list')
@@ -810,7 +803,7 @@ class _VpcFirewall:
       raise ValueError('Internal error: source_tags must be a list')
 
     for rule in self._rules['INGRESS']:
-      #logging.debug('vpc firewall: %s -> %s/%s ? %s', src_ip, port, ip_protocol,
+      # logging.debug('vpc firewall: %s -> %s/%s ? %s', src_ip, port, ip_protocol,
       #              rule['name'])
 
       # disabled?
@@ -818,22 +811,20 @@ class _VpcFirewall:
         continue
 
       # ip_protocol and port
-      action = _vpc_allow_deny_match(ip_protocol,
-                                     port,
-                                     allowed=rule.get('allowed', []),
-                                     denied=rule.get('denied', []))
+      action = _vpc_allow_deny_match(
+        ip_protocol, port, allowed=rule.get('allowed', []), denied=rule.get('denied', [])
+      )
       if not action:
         continue
 
       # source
-      if 'sourceRanges' in rule and \
-          _ip_match(src_ip, rule['sourceRanges'], action):
+      if 'sourceRanges' in rule and _ip_match(src_ip, rule['sourceRanges'], action):
         pass
-      elif source_service_account and \
-          source_service_account in rule.get('sourceServiceAccounts', {}):
+      elif source_service_account and source_service_account in rule.get(
+        'sourceServiceAccounts', {}
+      ):
         pass
-      elif source_tags and \
-          set(source_tags) & rule.get('sourceTags', set()):
+      elif source_tags and set(source_tags) & rule.get('sourceTags', set()):
         pass
       else:
         continue
@@ -842,7 +833,7 @@ class _VpcFirewall:
       if 'targetServiceAccounts' in rule:
         if not target_service_account:
           continue
-        if not target_service_account in rule['targetServiceAccounts']:
+        if target_service_account not in rule['targetServiceAccounts']:
           continue
       if 'targetTags' in rule:
         if not target_tags:
@@ -850,27 +841,29 @@ class _VpcFirewall:
         if not set(target_tags) & rule['targetTags']:
           continue
 
-      logging.debug('vpc firewall: %s -> %s/%s = %s (%s)', src_ip, port,
-                    ip_protocol, action, rule['name'])
-      return FirewallCheckResult(action,
-                                 vpc_firewall_rule_id=rule['id'],
-                                 vpc_firewall_rule_name=rule['name'])
+      logging.debug(
+        'vpc firewall: %s -> %s/%s = %s (%s)', src_ip, port, ip_protocol, action, rule['name']
+      )
+      return FirewallCheckResult(
+        action, vpc_firewall_rule_id=rule['id'], vpc_firewall_rule_name=rule['name']
+      )
     # implied deny
-    logging.debug('vpc firewall: %s -> %s/%s = %s (implied rule)', src_ip, port,
-                  ip_protocol, 'deny')
+    logging.debug(
+      'vpc firewall: %s -> %s/%s = %s (implied rule)', src_ip, port, ip_protocol, 'deny'
+    )
     return FirewallCheckResult('deny')
 
   def check_connectivity_egress(
-      self,
-      *,
-      src_ip: IPAddrOrNet,
-      ip_protocol: str,
-      port: Optional[int],
-      # dest_ip: Optional[IPAddrOrNet] = None,
-      source_service_account: Optional[str] = None,
-      target_service_account: Optional[str] = None,
-      source_tags: Optional[List[str]] = None,
-      target_tags: Optional[List[str]] = None,
+    self,
+    *,
+    src_ip: IPAddrOrNet,
+    ip_protocol: str,
+    port: Optional[int],
+    # dest_ip: Optional[IPAddrOrNet] = None,
+    source_service_account: Optional[str] = None,
+    target_service_account: Optional[str] = None,
+    source_tags: Optional[List[str]] = None,
+    target_tags: Optional[List[str]] = None,
   ) -> FirewallCheckResult:
     if target_tags is not None and not isinstance(target_tags, list):
       raise ValueError('Internal error: target_tags must be a list')
@@ -883,22 +876,20 @@ class _VpcFirewall:
         continue
 
       # ip_protocol and port
-      action = _vpc_allow_deny_match(ip_protocol,
-                                     port,
-                                     allowed=rule.get('allowed', []),
-                                     denied=rule.get('denied', []))
+      action = _vpc_allow_deny_match(
+        ip_protocol, port, allowed=rule.get('allowed', []), denied=rule.get('denied', [])
+      )
       if not action:
         continue
 
       # source
-      if 'destinationRanges' in rule and \
-          _ip_match(src_ip, rule['destinationRanges'], action):
+      if 'destinationRanges' in rule and _ip_match(src_ip, rule['destinationRanges'], action):
         pass
-      elif source_service_account and \
-          source_service_account in rule.get('sourceServiceAccounts', {}):
+      elif source_service_account and source_service_account in rule.get(
+        'sourceServiceAccounts', {}
+      ):
         pass
-      elif source_tags and \
-          set(source_tags) & rule.get('sourceTags', set()):
+      elif source_tags and set(source_tags) & rule.get('sourceTags', set()):
         pass
       else:
         continue
@@ -907,7 +898,7 @@ class _VpcFirewall:
       if 'targetServiceAccounts' in rule:
         if not target_service_account:
           continue
-        if not target_service_account in rule['targetServiceAccounts']:
+        if target_service_account not in rule['targetServiceAccounts']:
           continue
       if 'targetTags' in rule:
         if not target_tags:
@@ -915,14 +906,16 @@ class _VpcFirewall:
         if not set(target_tags) & rule['targetTags']:
           continue
 
-      logging.debug('vpc firewall: %s -> %s/%s = %s (%s)', src_ip, port,
-                    ip_protocol, action, rule['name'])
-      return FirewallCheckResult(action,
-                                 vpc_firewall_rule_id=rule['id'],
-                                 vpc_firewall_rule_name=rule['name'])
+      logging.debug(
+        'vpc firewall: %s -> %s/%s = %s (%s)', src_ip, port, ip_protocol, action, rule['name']
+      )
+      return FirewallCheckResult(
+        action, vpc_firewall_rule_id=rule['id'], vpc_firewall_rule_name=rule['name']
+      )
     # implied allow egress
-    logging.debug('vpc firewall: %s -> %s/%s = %s (implied rule)', src_ip, port,
-                  ip_protocol, 'allow')
+    logging.debug(
+      'vpc firewall: %s -> %s/%s = %s (implied rule)', src_ip, port, ip_protocol, 'allow'
+    )
     return FirewallCheckResult('allow')
 
   def verify_ingress_rule_exists(self, name: str):
@@ -933,10 +926,12 @@ class _VpcFirewall:
     """See documentation for EffectiveFirewalls.verify_egress_rule_exists()."""
     return any(r['name'] == name for r in self._rules['EGRESS'])
 
-  def get_vpc_ingress_rules(self,
-                            name: Optional[str] = None,
-                            name_pattern: Optional[Optional[re.Pattern]] = None,
-                            target_tags: Optional[List[str]] = None):
+  def get_vpc_ingress_rules(
+    self,
+    name: Optional[str] = None,
+    name_pattern: Optional[Optional[re.Pattern]] = None,
+    target_tags: Optional[List[str]] = None,
+  ):
     """See documentation for EffectiveFirewalls.get_vpc_ingress_rules()."""
     if not (name or name_pattern):
       raise ValueError('Internal error: name or name_pattern must be provided')
@@ -954,7 +949,7 @@ class _VpcFirewall:
           continue
       # filter by target_tags if needed
       if target_tags:
-        if not 'targetTags' in rule:
+        if 'targetTags' not in rule:
           continue
         if not set(target_tags) & rule['targetTags']:
           continue
@@ -962,10 +957,12 @@ class _VpcFirewall:
 
     return rules
 
-  def get_vpc_egress_rules(self,
-                           name: Optional[str] = None,
-                           name_pattern: Optional[Optional[re.Pattern]] = None,
-                           target_tags: Optional[List[str]] = None):
+  def get_vpc_egress_rules(
+    self,
+    name: Optional[str] = None,
+    name_pattern: Optional[Optional[re.Pattern]] = None,
+    target_tags: Optional[List[str]] = None,
+  ):
     """See documentation for EffectiveFirewalls.get_vpc_egress_rules()."""
     if not (name or name_pattern):
       raise ValueError('Internal error: name or name_pattern must be provided')
@@ -983,7 +980,7 @@ class _VpcFirewall:
           continue
       # filter by target_tags if needed
       if target_tags:
-        if not 'targetTags' in rule:
+        if 'targetTags' not in rule:
           continue
         if not set(target_tags) & rule['targetTags']:
           continue
@@ -996,6 +993,7 @@ class EffectiveFirewalls:
   """Effective firewall rules for a VPC network or Instance.
 
   Includes org/folder firewall policies)."""
+
   _resource_data: dict
   _policies: List[_FirewallPolicy]
   _vpc_firewall: _VpcFirewall
@@ -1009,80 +1007,85 @@ class EffectiveFirewalls:
     self._vpc_firewall = _VpcFirewall(resource_data.get('firewalls', {}))
 
   def check_connectivity_ingress(
-      self,  #
-      *,
-      src_ip: IPAddrOrNet,
-      ip_protocol: str,
-      port: Optional[int] = None,
-      source_service_account: Optional[str] = None,
-      source_tags: Optional[List[str]] = None,
-      target_service_account: Optional[str] = None,
-      target_tags: Optional[List[str]] = None) -> FirewallCheckResult:
-
+    self,  #
+    *,
+    src_ip: IPAddrOrNet,
+    ip_protocol: str,
+    port: Optional[int] = None,
+    source_service_account: Optional[str] = None,
+    source_tags: Optional[List[str]] = None,
+    target_service_account: Optional[str] = None,
+    target_tags: Optional[List[str]] = None,
+  ) -> FirewallCheckResult:
     if ip_protocol != 'ICMP' and port is None:
       raise ValueError('TCP and UDP must have port numbers')
 
     # Firewall policies (organization, folders)
     for p in self._policies:
       result = p.check_connectivity_ingress(
-          src_ip=src_ip,
-          ip_protocol=ip_protocol,
-          port=port,
-          #target_network=self._network,
-          target_service_account=target_service_account)
+        src_ip=src_ip,
+        ip_protocol=ip_protocol,
+        port=port,
+        # target_network=self._network,
+        target_service_account=target_service_account,
+      )
       if result.action != 'goto_next':
         return result
 
     # VPC firewall rules
     return self._vpc_firewall.check_connectivity_ingress(
-        src_ip=src_ip,
-        ip_protocol=ip_protocol,
-        port=port,
-        source_service_account=source_service_account,
-        source_tags=source_tags,
-        target_service_account=target_service_account,
-        target_tags=target_tags)
+      src_ip=src_ip,
+      ip_protocol=ip_protocol,
+      port=port,
+      source_service_account=source_service_account,
+      source_tags=source_tags,
+      target_service_account=target_service_account,
+      target_tags=target_tags,
+    )
 
   def check_connectivity_egress(
-      self,  #
-      *,
-      src_ip: IPAddrOrNet,
-      ip_protocol: str,
-      port: Optional[int] = None,
-      source_service_account: Optional[str] = None,
-      source_tags: Optional[List[str]] = None,
-      target_service_account: Optional[str] = None,
-      target_tags: Optional[List[str]] = None) -> FirewallCheckResult:
-
+    self,  #
+    *,
+    src_ip: IPAddrOrNet,
+    ip_protocol: str,
+    port: Optional[int] = None,
+    source_service_account: Optional[str] = None,
+    source_tags: Optional[List[str]] = None,
+    target_service_account: Optional[str] = None,
+    target_tags: Optional[List[str]] = None,
+  ) -> FirewallCheckResult:
     if ip_protocol != 'ICMP' and port is None:
       raise ValueError('TCP and UDP must have port numbers')
 
     # Firewall policies (organization, folders)
     for p in self._policies:
       result = p.check_connectivity_egress(
-          src_ip=src_ip,
-          ip_protocol=ip_protocol,
-          port=port,
-          #target_network=self._network,
-          target_service_account=target_service_account)
+        src_ip=src_ip,
+        ip_protocol=ip_protocol,
+        port=port,
+        # target_network=self._network,
+        target_service_account=target_service_account,
+      )
       if result.action != 'goto_next':
         return result
 
     # VPC firewall rules
     return self._vpc_firewall.check_connectivity_egress(
-        src_ip=src_ip,
-        ip_protocol=ip_protocol,
-        port=port,
-        source_service_account=source_service_account,
-        source_tags=source_tags,
-        target_service_account=target_service_account,
-        target_tags=target_tags)
+      src_ip=src_ip,
+      ip_protocol=ip_protocol,
+      port=port,
+      source_service_account=source_service_account,
+      source_tags=source_tags,
+      target_service_account=target_service_account,
+      target_tags=target_tags,
+    )
 
   def get_vpc_ingress_rules(
-      self,
-      name: Optional[str] = None,
-      name_pattern: Optional[re.Pattern] = None,
-      target_tags: Optional[List[str]] = None) -> List[VpcFirewallRule]:
+    self,
+    name: Optional[str] = None,
+    name_pattern: Optional[re.Pattern] = None,
+    target_tags: Optional[List[str]] = None,
+  ) -> List[VpcFirewallRule]:
     """Retrieve the list of ingress firewall rules matching name or name pattern and target tags.
 
     Args:
@@ -1094,15 +1097,15 @@ class EffectiveFirewalls:
     Returns:
         List[VpcFirewallRule]: List of ingress firewall rules
     """
-    rules = self._vpc_firewall.get_vpc_ingress_rules(name, name_pattern,
-                                                     target_tags)
+    rules = self._vpc_firewall.get_vpc_ingress_rules(name, name_pattern, target_tags)
     return rules
 
   def get_vpc_egress_rules(
-      self,
-      name: Optional[str] = None,
-      name_pattern: Optional[re.Pattern] = None,
-      target_tags: Optional[List[str]] = None) -> List[VpcFirewallRule]:
+    self,
+    name: Optional[str] = None,
+    name_pattern: Optional[re.Pattern] = None,
+    target_tags: Optional[List[str]] = None,
+  ) -> List[VpcFirewallRule]:
     """Retrieve the list of egress firewall rules matching name or name pattern and target tags.
 
     Args:
@@ -1114,8 +1117,7 @@ class EffectiveFirewalls:
     Returns:
         List[VpcFirewallRule]: List of egress firewall rules
     """
-    rules = self._vpc_firewall.get_vpc_egress_rules(name, name_pattern,
-                                                    target_tags)
+    rules = self._vpc_firewall.get_vpc_egress_rules(name, name_pattern, target_tags)
     return rules
 
   def verify_ingress_rule_exists(self, name: str):
@@ -1136,6 +1138,7 @@ class VPCEffectiveFirewalls(EffectiveFirewalls):
 
   Includes org/folder firewall policies).
   """
+
   _network: Network
 
   def __init__(self, network, resource_data):
@@ -1146,15 +1149,15 @@ class VPCEffectiveFirewalls(EffectiveFirewalls):
 @caching.cached_api_call()
 def _get_effective_firewalls(network: Network):
   compute = apis.get_api('compute', 'v1', network.project_id)
-  request = compute.networks().getEffectiveFirewalls(project=network.project_id,
-                                                     network=network.name)
+  request = compute.networks().getEffectiveFirewalls(
+    project=network.project_id, network=network.name
+  )
   response = request.execute(num_retries=config.API_RETRIES)
   return VPCEffectiveFirewalls(network, response)
 
 
 @caching.cached_api_call(in_memory=True)
-def get_network(project_id: str, network_name: str,
-                context: models.Context) -> Network:
+def get_network(project_id: str, network_name: str, context: models.Context) -> Network:
   logging.debug('fetching network: %s/%s', project_id, network_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.networks().get(project=project_id, network=network_name)
@@ -1164,8 +1167,13 @@ def get_network(project_id: str, network_name: str,
 
 def get_subnetwork_from_url(url: str) -> Subnetwork:
   """Returns Subnetwork object given subnetwork url"""
-  m = re.match((r'https://www.googleapis.com/compute/v1/projects/'
-                r'([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$'), url)
+  m = re.match(
+    (
+      r'https://www.googleapis.com/compute/v1/projects/'
+      r'([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$'
+    ),
+    url,
+  )
   if not m:
     raise ValueError(f"can't parse network url: {url}")
   (project_id, region, subnetwork_name) = (m.group(1), m.group(2), m.group(3))
@@ -1174,13 +1182,12 @@ def get_subnetwork_from_url(url: str) -> Subnetwork:
 
 def get_network_from_url(url: str) -> Network:
   m = re.match(
-      r'https://www.googleapis.com/compute/v1/projects/([^/]+)/global/networks/([^/]+)',
-      url)
+    r'https://www.googleapis.com/compute/v1/projects/([^/]+)/global/networks/([^/]+)', url
+  )
   if not m:
     raise ValueError(f"can't parse network url: {url}")
   (project_id, network_name) = (m.group(1), m.group(2))
-  return get_network(project_id, network_name,
-                     models.Context(project_id=project_id))
+  return get_network(project_id, network_name, models.Context(project_id=project_id))
 
 
 @caching.cached_api_call(in_memory=True)
@@ -1189,58 +1196,53 @@ def get_networks(context: models.Context) -> List[Network]:
   compute = apis.get_api('compute', 'v1', context.project_id)
   request = compute.networks().list(project=context.project_id)
   response = request.execute(num_retries=config.API_RETRIES)
-  return [
-      Network(context.project_id, item, context)
-      for item in response.get('items', [])
-  ]
+  return [Network(context.project_id, item, context) for item in response.get('items', [])]
 
 
 @caching.cached_api_call(in_memory=True)
-def get_subnetwork(project_id: str, region: str,
-                   subnetwork_name: str) -> Subnetwork:
+def get_subnetwork(project_id: str, region: str, subnetwork_name: str) -> Subnetwork:
   logging.debug('fetching network: %s/%s', project_id, subnetwork_name)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.subnetworks().get(project=project_id,
-                                      region=region,
-                                      subnetwork=subnetwork_name)
+  request = compute.subnetworks().get(project=project_id, region=region, subnetwork=subnetwork_name)
   response = request.execute(num_retries=config.API_RETRIES)
   if response is None:
-    raise RuntimeError(
-        f'failed to fetch subnetwork: {project_id}/{region}/{subnetwork_name}')
-  return Subnetwork(project_id,
-                    response,
-                    context=models.Context(project_id=project_id))
+    raise RuntimeError(f'failed to fetch subnetwork: {project_id}/{region}/{subnetwork_name}')
+  return Subnetwork(project_id, response, context=models.Context(project_id=project_id))
 
 
 @caching.cached_api_call(in_memory=True)
-def _batch_get_subnetworks(project_id, subnetworks_urls: FrozenSet[str],
-                           context: models.Context) -> Dict[str, Subnetwork]:
+def _batch_get_subnetworks(
+  project_id, subnetworks_urls: FrozenSet[str], context: models.Context
+) -> Dict[str, Subnetwork]:
   compute = apis.get_api('compute', 'v1', project_id)
   requests = []
   for subnet_url in subnetworks_urls:
-    m = re.match((r'https://www.googleapis.com/compute/v1/projects/'
-                  r'([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$'), subnet_url)
+    m = re.match(
+      (
+        r'https://www.googleapis.com/compute/v1/projects/'
+        r'([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$'
+      ),
+      subnet_url,
+    )
     if not m:
       logging.warning("can't parse subnet URL: %s", subnet_url)
       continue
     requests.append(  #
-        compute.subnetworks().get(project=m.group(1),
-                                  region=m.group(2),
-                                  subnetwork=m.group(3)))
+      compute.subnetworks().get(project=m.group(1), region=m.group(2), subnetwork=m.group(3))
+    )
   subnets = {}
   if not requests:
     return {}
-  for (_, resp, exception) in apis_utils.execute_concurrently(api=compute,
-                                                              requests=requests,
-                                                              context=context):
+  for _, resp, exception in apis_utils.execute_concurrently(
+    api=compute, requests=requests, context=context
+  ):
     if exception:
       logging.warning(exception)
       continue
     if resp and isinstance(resp, dict) and 'selfLink' in resp:
       subnets[resp['selfLink']] = Subnetwork(project_id, resp, context)
     else:
-      logging.warning('Invalid response item in _batch_get_subnetworks: %s',
-                      resp)
+      logging.warning('Invalid response item in _batch_get_subnetworks: %s', resp)
   return subnets
 
 
@@ -1261,8 +1263,7 @@ def get_zones(project_id: str) -> List[ManagedZone]:
   response = request.execute(num_retries=config.API_RETRIES)
   zones = []
   for zone in response.get('managedZones', []):
-    request2 = dns.managedZones().get(project=project_id,
-                                      managedZone=zone['name'])
+    request2 = dns.managedZones().get(project=project_id, managedZone=zone['name'])
     response2 = request2.execute(num_retries=config.API_RETRIES)
     zones.append(ManagedZone(project_id, response2))
   return zones
@@ -1272,9 +1273,9 @@ def get_zones(project_id: str) -> List[ManagedZone]:
 def get_routers(project_id: str, region: str, network) -> List[Router]:
   logging.debug('fetching routers: %s/%s', project_id, region)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.routers().list(project=project_id,
-                                   region=region,
-                                   filter=f'network="{network.self_link}"')
+  request = compute.routers().list(
+    project=project_id, region=region, filter=f'network="{network.self_link}"'
+  )
   response = request.execute(num_retries=config.API_RETRIES)
   return [Router(project_id, item) for item in response.get('items', [])]
 
@@ -1283,87 +1284,79 @@ def get_routers(project_id: str, region: str, network) -> List[Router]:
 def get_router(project_id: str, region: str, network) -> Router:
   logging.debug('fetching routers: %s/%s', project_id, region)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.routers().list(project=project_id,
-                                   region=region,
-                                   filter=f'network="{network.self_link}"')
+  request = compute.routers().list(
+    project=project_id, region=region, filter=f'network="{network.self_link}"'
+  )
   response = request.execute(num_retries=config.API_RETRIES)
   return Router(project_id, next(iter(response.get('items', [{}]))))
 
 
 @caching.cached_api_call(in_memory=True)
-def get_router_by_name(project_id: str, region: str,
-                       router_name: str) -> Router:
-  logging.debug('fetching router list: %s/%s in region %s', project_id,
-                router_name, region)
+def get_router_by_name(project_id: str, region: str, router_name: str) -> Router:
+  logging.debug('fetching router list: %s/%s in region %s', project_id, router_name, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().list(project=project_id, region=region)
   response = request.execute(num_retries=config.API_RETRIES)
   return next(
-      Router(project_id, item)
-      for item in response.get('items', [])
-      if item['name'] == router_name)
+    Router(project_id, item) for item in response.get('items', []) if item['name'] == router_name
+  )
 
 
 @caching.cached_api_call(in_memory=True)
-def nat_router_status(project_id: str, router_name: str,
-                      region: str) -> RouterStatus:
-  logging.debug('fetching router status: %s/%s in region %s', project_id,
-                router_name, region)
+def nat_router_status(project_id: str, router_name: str, region: str) -> RouterStatus:
+  logging.debug('fetching router status: %s/%s in region %s', project_id, router_name, region)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.routers().getRouterStatus(project=project_id,
-                                              router=router_name,
-                                              region=region)
+  request = compute.routers().getRouterStatus(project=project_id, router=router_name, region=region)
   response = request.execute(num_retries=config.API_RETRIES)
   if 'result' in str(response):
     return RouterStatus(project_id, response)
   else:
-    logging.debug('unable to fetch router status: %s/%s in region %s',
-                  project_id, router_name, region)
+    logging.debug(
+      'unable to fetch router status: %s/%s in region %s', project_id, router_name, region
+    )
     return RouterStatus(project_id, {})
 
 
 @caching.cached_api_call(in_memory=True)
-def get_nat_ip_info(project_id: str, router_name: str,
-                    region: str) -> RouterNatIpInfo:
-  logging.debug('fetching NAT IP info for router: %s/%s in region %s',
-                project_id, router_name, region)
+def get_nat_ip_info(project_id: str, router_name: str, region: str) -> RouterNatIpInfo:
+  logging.debug(
+    'fetching NAT IP info for router: %s/%s in region %s', project_id, router_name, region
+  )
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.routers().getNatIpInfo(project=project_id,
-                                           router=router_name,
-                                           region=region)
+  request = compute.routers().getNatIpInfo(project=project_id, router=router_name, region=region)
   response = request.execute(num_retries=config.API_RETRIES)
   if 'result' in str(response):
     return RouterNatIpInfo(project_id, response)
   else:
-    logging.debug('unable to fetch Nat IP Info for router: %s/%s in region %s',
-                  project_id, router_name, region)
+    logging.debug(
+      'unable to fetch Nat IP Info for router: %s/%s in region %s', project_id, router_name, region
+    )
     return RouterNatIpInfo(project_id, {})
 
 
 class VPCSubnetworkIAMPolicy(iam.BaseIAMPolicy):
-
   def _is_resource_permission(self, permission):
     return True
 
 
 @caching.cached_api_call(in_memory=True)
-def get_subnetwork_iam_policy(context: models.Context, region: str,
-                              subnetwork_name: str) -> VPCSubnetworkIAMPolicy:
+def get_subnetwork_iam_policy(
+  context: models.Context, region: str, subnetwork_name: str
+) -> VPCSubnetworkIAMPolicy:
   project_id = context.project_id
-  resource_name = (f'projects/{project_id}/regions/{region}/'
-                   f'subnetworks/{subnetwork_name}')
+  resource_name = f'projects/{project_id}/regions/{region}/subnetworks/{subnetwork_name}'
 
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.subnetworks().getIamPolicy(project=project_id,
-                                               region=region,
-                                               resource=subnetwork_name)
+  request = compute.subnetworks().getIamPolicy(
+    project=project_id, region=region, resource=subnetwork_name
+  )
 
-  return iam.fetch_iam_policy(request, VPCSubnetworkIAMPolicy, project_id,
-                              resource_name, context)
+  return iam.fetch_iam_policy(request, VPCSubnetworkIAMPolicy, project_id, resource_name, context)
 
 
 class Address(models.Resource):
   """IP Addresses."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -1372,8 +1365,7 @@ class Address(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -1412,6 +1404,5 @@ def get_addresses(project_id: str) -> List[Address]:
   for _, data_ in addresses_by_regions.items():
     if 'addresses' not in data_:
       continue
-    addresses.extend(
-        [Address(project_id, address) for address in data_['addresses']])
+    addresses.extend([Address(project_id, address) for address in data_['addresses']])
   return addresses

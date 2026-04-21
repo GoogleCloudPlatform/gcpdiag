@@ -17,6 +17,7 @@ Airflow database performance issues can lead to overall DAG execution issues.
 If the database CPU usage exceeds 80% for more than a few percent of the total
 time, the database is overloaded and requires scaling.
 """
+
 from typing import Dict
 
 from boltons.iterutils import get_path
@@ -35,15 +36,15 @@ def prefetch_rule(context: models.Context):
   if not envs_by_project[context.project_id]:
     return
 
-  _query_results_per_project_id[context.project_id] = \
-    monitoring.query(
-      context.project_id,
-      f"""
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id,
+    f"""
       fetch cloud_composer_environment
        | metric 'composer.googleapis.com/environment/database/cpu/utilization'
        | within 1h
        | filter val() >= {CPU_USAGE_THRESHOLD}
-      """)
+      """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -69,8 +70,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for env in envs:
     if env.name in overloaded_envs:
-      report.add_failed(
-          env,
-          f'database CPU usage exceeded 80% ({overloaded_envs[env.name]:.2f})')
+      report.add_failed(env, f'database CPU usage exceeded 80% ({overloaded_envs[env.name]:.2f})')
     else:
       report.add_ok(env)

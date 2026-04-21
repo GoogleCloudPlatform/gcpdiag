@@ -27,12 +27,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   """Check if the BigQuery subscription has dead-letter topic ."""
   subscriptions = pubsub.get_subscriptions(context)
   if not subscriptions:
-    report.add_skipped(None, "no subscriptions found")
+    report.add_skipped(None, 'no subscriptions found')
   for _, subscription in sorted(subscriptions.items()):
     if subscription.is_big_query_subscription():
       if subscription.has_dead_letter_topic():
         report.add_ok(subscription)
       else:
-        report.add_failed(subscription, "has no dead-letter topic attached")
+        report.add_failed(subscription, 'has no dead-letter topic attached')
     else:
-      report.add_skipped(subscription, "is not a BigQuery Subscription")
+      report.add_skipped(subscription, 'is not a BigQuery Subscription')

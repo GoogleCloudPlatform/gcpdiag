@@ -49,32 +49,34 @@ class VmHasAnActiveServiceAccount(runbook.Step):
 
     if sa and project_id:
       sa_resource = next(
-          filter(lambda r: r.email == sa,
-                 iam.get_service_account_list(project_id)), None)
+        filter(lambda r: r.email == sa, iam.get_service_account_list(project_id)), None
+      )
       # Verify service account exists
       if not iam.is_service_account_existing(sa, context):
-        op.add_failed(sa_resource,
-                      reason=op.prep_msg(op.FAILURE_REASON,
-                                         sa=sa_resource.full_path),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+        op.add_failed(
+          sa_resource,
+          reason=op.prep_msg(op.FAILURE_REASON, sa=sa_resource.full_path),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+        )
       # Verify service account exists
       elif not iam.is_service_account_enabled(sa, context):
-        op.add_failed(resource=sa_resource,
-                      reason=op.prep_msg(op.FAILURE_REASON),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1,
-                                              sa=sa_resource.full_path))
-      elif (iam.is_service_account_existing(sa, context) and
-            iam.is_service_account_enabled(sa, context)):
-        op.add_ok(sa_resource,
-                  op.prep_msg(op.SUCCESS_REASON, sa=sa_resource.full_path))
+        op.add_failed(
+          resource=sa_resource,
+          reason=op.prep_msg(op.FAILURE_REASON),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1, sa=sa_resource.full_path),
+        )
+      elif iam.is_service_account_existing(sa, context) and iam.is_service_account_enabled(
+        sa, context
+      ):
+        op.add_ok(sa_resource, op.prep_msg(op.SUCCESS_REASON, sa=sa_resource.full_path))
       else:
-        op.add_uncertain(None,
-                         reason=op.UNCERTAIN_REASON,
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+        op.add_uncertain(
+          None, reason=op.UNCERTAIN_REASON, remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION)
+        )
     else:
-      op.add_uncertain(None,
-                       reason=op.UNCERTAIN_REASON,
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(
+        None, reason=op.UNCERTAIN_REASON, remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION)
+      )
 
 
 class IamPolicyCheck(runbook.Step):
@@ -94,6 +96,7 @@ class IamPolicyCheck(runbook.Step):
                         present.
     template (str): The template used for generating reports for the step.
   """
+
   template = 'permissions::default'
 
   principal: str = ''
@@ -128,24 +131,29 @@ class IamPolicyCheck(runbook.Step):
     permissions_or_roles = 'permissions' if self.permissions else 'roles'
 
     if outcome:
-      op.add_ok(resource=iam_policy,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   principal=principal,
-                                   permissions_or_roles=permissions_or_roles,
-                                   present_permissions_or_roles=', '.join(
-                                       sorted(present_permissions_or_roles))))
+      op.add_ok(
+        resource=iam_policy,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON,
+          principal=principal,
+          permissions_or_roles=permissions_or_roles,
+          present_permissions_or_roles=', '.join(sorted(present_permissions_or_roles)),
+        ),
+      )
     else:
       op.add_failed(
-          resource=iam_policy,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             principal=principal,
-                             permissions_or_roles=permissions_or_roles,
-                             missing_permissions_or_roles=', '.join(
-                                 sorted(missing_permissions_or_roles))),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                  principal=principal,
-                                  permissions_or_roles=permissions_or_roles,
-                                  present_permissions_or_roles=', '.join(
-                                      sorted(present_permissions_or_roles)),
-                                  missing_permissions_or_roles=', '.join(
-                                      sorted(missing_permissions_or_roles))))
+        resource=iam_policy,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          principal=principal,
+          permissions_or_roles=permissions_or_roles,
+          missing_permissions_or_roles=', '.join(sorted(missing_permissions_or_roles)),
+        ),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION,
+          principal=principal,
+          permissions_or_roles=permissions_or_roles,
+          present_permissions_or_roles=', '.join(sorted(present_permissions_or_roles)),
+          missing_permissions_or_roles=', '.join(sorted(missing_permissions_or_roles)),
+        ),
+      )

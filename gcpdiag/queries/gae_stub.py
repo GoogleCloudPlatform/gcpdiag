@@ -20,9 +20,6 @@ Instead of doing real API calls, we return test JSON data.
 
 from gcpdiag.queries import apis_stub
 
-#pylint: disable=unused-argument
-#pylint: disable=invalid-name
-
 
 class AppEngineApiStub(apis_stub.ApiStub):
   """Mock object to simulate App Engine api calls."""

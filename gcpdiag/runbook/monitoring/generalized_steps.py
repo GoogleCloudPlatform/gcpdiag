@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Contains generalized steps for Cloud monitoring"""
+
 from gcpdiag import runbook
 from gcpdiag.models import Resource
 from gcpdiag.queries import monitoring
@@ -26,6 +27,7 @@ class TimeSeriesCheck(runbook.Step):
   - Currently checks if metrics exists indicating a problem
   - Improve to be more flexible.
   """
+
   template = 'metrics::default'
   query: str
   query_kwargs: dict
@@ -34,12 +36,13 @@ class TimeSeriesCheck(runbook.Step):
   def execute(self):
     """Verify if expected metrics value is present or not"""
     metrics = None
-    metrics = monitoring.query(op.get(flags.PROJECT_ID),
-                               self.query.format(self.query_kwargs))
+    metrics = monitoring.query(op.get(flags.PROJECT_ID), self.query.format(self.query_kwargs))
 
     if metrics:
-      op.add_failed(self.resource,
-                    reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        self.resource,
+        reason=op.prep_msg(op.FAILURE_REASON),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
       op.add_ok(self.resource, reason=op.prep_msg(op.SUCCESS_REASON))

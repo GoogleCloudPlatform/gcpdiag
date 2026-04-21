@@ -35,20 +35,19 @@ def prefetch_rule(context: models.Context):
   if not envs_by_project[context.project_id]:
     return
 
-  within_str = 'within %dd, d\'%s\'' % (config.get('within_days'),
-                                        monitoring.period_aligned_now(60))
-  _query_results_per_project_id[context.project_id] = \
-    monitoring.query(
-      context.project_id,
-      # maximum total DAG parse time during config.get('within_days')
-      f"""
+  within_str = "within %dd, d'%s'" % (config.get('within_days'), monitoring.period_aligned_now(60))
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id,
+    # maximum total DAG parse time during config.get('within_days')
+    f"""
       fetch cloud_composer_environment
       | metric 'composer.googleapis.com/environment/dag_processing/total_parse_time'
       | {within_str}
       | every 1m
       | group_by {config.get('within_days')}d,
                 [value_total_parse_time_max: max(value.total_parse_time)]
-      """)
+      """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -63,20 +62,18 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   metric_values = {}
-  for query_result in \
-  _query_results_per_project_id[context.project_id].values():
+  for query_result in _query_results_per_project_id[context.project_id].values():
     try:
-      metric_values[query_result['labels']['resource.environment_name']] = \
-      query_result['values'][0][0]
+      metric_values[query_result['labels']['resource.environment_name']] = query_result['values'][
+        0
+      ][0]
     except KeyError:
       continue
 
   for env in envs:
     try:
       if metric_values[env.name] >= TOTAL_DAG_PARSE_SECONDS:
-        report.add_failed(
-            env,
-            f'max total DAG parse time: {metric_values[env.name]:.2f} seconds')
+        report.add_failed(env, f'max total DAG parse time: {metric_values[env.name]:.2f} seconds')
       else:
         report.add_ok(env)
     except KeyError:

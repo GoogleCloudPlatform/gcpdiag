@@ -18,6 +18,7 @@
 The OS Config service account (@gcp-sa-osconfig.iam.gserviceaccount.com) must
 have the osconfig.serviceAgent role.
 """
+
 import operator
 
 from gcpdiag import lint, models
@@ -26,7 +27,7 @@ from gcpdiag.queries import crm, gce, iam
 ROLE = 'roles/osconfig.serviceAgent'
 
 
-#check metadata on project first if not per instance and skip get_metadata
+# check metadata on project first if not per instance and skip get_metadata
 def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
   project_ids = {i.project_id for i in gce.get_instances(context).values()}
@@ -37,26 +38,21 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context)
   instances_count = 0
-  for i in sorted(instances.values(),
-                  key=operator.attrgetter('project_id', 'name')):
+  for i in sorted(instances.values(), key=operator.attrgetter('project_id', 'name')):
     # GKE nodes never have OS Config enabled
     if i.is_gke_node():
       continue
     if i.get_metadata('enable-osconfig'):
       osconfig_service_account = 'service-{}@gcp-sa-osconfig.iam.gserviceaccount.com'.format(
-          crm.get_project(i.project_id).number)
+        crm.get_project(i.project_id).number
+      )
       instances_count += 1
-      iam_policy = iam.get_project_policy(
-          context.copy_with(project_id=i.project_id))
+      iam_policy = iam.get_project_policy(context.copy_with(project_id=i.project_id))
       sa = i.service_account
       if not sa:
         # if an SA is not attached to the vm check if the service agent has the correct role
-        if not iam_policy.has_role_permissions(
-            f'serviceAccount:{osconfig_service_account}', ROLE):
-          report.add_failed(
-              i,
-              f'service account: {osconfig_service_account}\nmissing role: {ROLE}'
-          )
+        if not iam_policy.has_role_permissions(f'serviceAccount:{osconfig_service_account}', ROLE):
+          report.add_failed(i, f'service account: {osconfig_service_account}\nmissing role: {ROLE}')
         else:
           report.add_ok(i)
       else:

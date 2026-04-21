@@ -13,7 +13,6 @@
 # limitations under the License.
 """Common parameter flags applicable to any gcp runbook"""
 
-# pylint:disable=wildcard-import,unused-wildcard-import
 from gcpdiag.runbook.flags import *
 
 PROJECT_ID = 'project_id'

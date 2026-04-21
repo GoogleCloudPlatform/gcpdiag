@@ -23,11 +23,11 @@ from gcpdiag import lint, models
 from gcpdiag.queries import gke
 
 required_storage_scope = [
-    'https://www.googleapis.com/auth/devstorage.read_only',
-    'https://www.googleapis.com/auth/devstorage.read_write',
-    'https://www.googleapis.com/auth/devstorage.full_control',
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/cloud-platform.read-only'
+  'https://www.googleapis.com/auth/devstorage.read_only',
+  'https://www.googleapis.com/auth/devstorage.read_write',
+  'https://www.googleapis.com/auth/devstorage.full_control',
+  'https://www.googleapis.com/auth/cloud-platform',
+  'https://www.googleapis.com/auth/cloud-platform.read-only',
 ]
 
 
@@ -39,7 +39,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for cluster in sorted(clusters.values()):
     for nodepool in cluster.nodepools:
-
       if not cluster.nodepools:
         report.add_skipped(None, 'no nodepools found')
 

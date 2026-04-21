@@ -26,8 +26,7 @@ all_project_billing_info = []
 
 
 def prepare_rule(context: models.Context):
-  all_project_billing_info.extend(
-      crm.get_all_projects_in_parent(context.project_id))
+  all_project_billing_info.extend(crm.get_all_projects_in_parent(context.project_id))
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

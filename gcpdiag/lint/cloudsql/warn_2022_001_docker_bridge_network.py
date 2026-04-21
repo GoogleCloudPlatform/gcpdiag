@@ -42,8 +42,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for instance in instances:
     if any(_is_docker_bridge_ip(ip) for ip in instance.ip_addresses):
-      report.add_failed(instance,
-                        f'{instance.name} is inside of Docker bridge network')
+      report.add_failed(instance, f'{instance.name} is inside of Docker bridge network')
     else:
       report.add_ok(instance)
 

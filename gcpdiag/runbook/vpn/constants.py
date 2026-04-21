@@ -13,7 +13,5 @@
 # limitations under the License.
 """Constants for VPN Tunnel Check runbook."""
 
-# pylint: disable=unused-wildcard-import, wildcard-import
-
 # https://docs.cloud.google.com/network-connectivity/docs/vpn/quotas#limits
 PACKET_PER_SECOND_LIMIT = 250000

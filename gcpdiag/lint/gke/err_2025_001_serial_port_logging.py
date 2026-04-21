@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-""" GKE cluster complies with the serial port logging organization policy.
+"""GKE cluster complies with the serial port logging organization policy.
 
 When the constraints/compute.disableSerialPortLogging policy is enabled,
 GKE clusters must be created with logging disabled (serial-port-logging-enable: 'false'),
@@ -28,29 +28,28 @@ from gcpdiag.queries import gke, orgpolicy
 
 def get_non_compliant_pools(cluster: gke.Cluster) -> List[str]:
   """
-        Checks if org serial port logging policy is enforced and if cluster complies with it.
+  Checks if org serial port logging policy is enforced and if cluster complies with it.
 
-        Args:
-            cluster: The GKE cluster to check.
+  Args:
+      cluster: The GKE cluster to check.
 
-        Returns:
-            List[str]: List of non-compliant nodepool names
-        """
+  Returns:
+      List[str]: List of non-compliant nodepool names
+  """
   # Get the policy constraint status
   constraint = orgpolicy.get_effective_org_policy(
-      cluster.project_id, 'constraints/compute.disableSerialPortLogging')
+    cluster.project_id, 'constraints/compute.disableSerialPortLogging'
+  )
 
   # If policy is not enforced, return None (no compliance check needed) and empty list
-  if not isinstance(
-      constraint,
-      orgpolicy.BooleanPolicyConstraint) or not constraint.is_enforced():
+  if not isinstance(constraint, orgpolicy.BooleanPolicyConstraint) or not constraint.is_enforced():
     return []
 
   # Get cluster node pools
   return [
-      nodepool.name
-      for nodepool in cluster.nodepools
-      if nodepool.config.has_serial_port_logging_enabled
+    nodepool.name
+    for nodepool in cluster.nodepools
+    if nodepool.config.has_serial_port_logging_enabled
   ]
 
 
@@ -64,8 +63,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     # Skip Autopilot clusters as they are managed by Google
     if cluster.is_autopilot:
       report.add_skipped(
-          cluster,
-          'Skipping Autopilot cluster - serial port logging managed by Google')
+        cluster, 'Skipping Autopilot cluster - serial port logging managed by Google'
+      )
       continue
 
     # find list of non compliant node pools.
@@ -74,7 +73,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_ok(cluster)
     else:
       report.add_failed(
-          cluster,
-          'The following nodepools do not comply with the serial port logging org policy:\n. '
-          + '\n. '.join(non_compliant_pools),
+        cluster,
+        'The following nodepools do not comply with the serial port logging org policy:\n. '
+        + '\n. '.join(non_compliant_pools),
       )

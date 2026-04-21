@@ -26,19 +26,23 @@ from gcpdiag.runbook.gce import flags, vm_creation
 
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   """Snapshot tests for VM creation runbook."""
+
   rule_pkg = gce
   runbook_name = 'gce/vm-creation'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-gce6-aaaa',
       'instance_name': 'existing-instance',
-      'zone': 'us-central1-c'
-  }, {
+      'zone': 'us-central1-c',
+    },
+    {
       'project_id': 'gcpdiag-gce6-aaaa',
       'instance_name': 'non-existing-gpu-instance',
-      'zone': 'us-central1-c'
-  }]
+      'zone': 'us-central1-c',
+    },
+  ]
 
 
 class VmCreationUnitTests(unittest.TestCase):
@@ -46,48 +50,39 @@ class VmCreationUnitTests(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(interface=self.mock_interface)
     self.operator.run_id = 'test-run'
     self.params = {
-        flags.PROJECT_ID: 'gcpdiag-gce6-aaaa',
-        flags.ZONE: 'us-central1-a',
-        flags.INSTANCE_NAME: 'test-instance',
-        flags.END_TIME: datetime.datetime(2025, 1, 1),
-        'start_time': datetime.datetime(2025, 1, 1),
+      flags.PROJECT_ID: 'gcpdiag-gce6-aaaa',
+      flags.ZONE: 'us-central1-a',
+      flags.INSTANCE_NAME: 'test-instance',
+      flags.END_TIME: datetime.datetime(2025, 1, 1),
+      'start_time': datetime.datetime(2025, 1, 1),
     }
     self.operator.parameters = self.params
     self.operator.messages = models.Messages()
-    self.operator.messages.update({
+    self.operator.messages.update(
+      {
         'FAILURE_REASON': 'Reason {error_message}',
         'FAILURE_REMEDIATION': 'Remedy',
         'FAILURE_REASON_ALT1': 'Quota Reason {error_message}',
         'FAILURE_REMEDIATION_ALT1': 'Quota Remedy',
         'FAILURE_REASON_ALT2': 'Forbidden Reason {error_message}',
         'FAILURE_REMEDIATION_ALT2': 'Forbidden Remedy',
-    })
+      }
+    )
     self.op_context = self.enterContext(op.operator_context(self.operator))
 
   def _get_base_entry(self):
     """Returns a baseline log entry structure to satisfy initial get_path calls."""
     return {
-        'protoPayload': {
-            'status': {
-                'message': ''
-            },
-            'response': {
-                'error': {
-                    'errors': [{
-                        'message': '',
-                        'reason': ''
-                    }]
-                }
-            }
-        }
+      'protoPayload': {
+        'status': {'message': ''},
+        'response': {'error': {'errors': [{'message': '', 'reason': ''}]}},
+      }
     }
 
   def test_build_tree_logic_zone_separation_true(self):
@@ -108,14 +103,8 @@ class VmCreationUnitTests(unittest.TestCase):
   def test_execute_quota_exceeded(self, mock_query):
     entry = self._get_base_entry()
     entry['protoPayload']['status'] = {
-        'message': 'QUOTA_EXCEEDED',
-        'details': {
-            'quotaExceeded': {
-                'metricName': 'CPUS',
-                'limit': 10,
-                'limitName': 'CPUS-limit'
-            }
-        }
+      'message': 'QUOTA_EXCEEDED',
+      'details': {'quotaExceeded': {'metricName': 'CPUS', 'limit': 10, 'limitName': 'CPUS-limit'}},
     }
     mock_query.return_value = [entry]
     step = vm_creation.InvestigateVmCreationLogFailure()
@@ -127,8 +116,8 @@ class VmCreationUnitTests(unittest.TestCase):
   def test_execute_already_exists(self, mock_query):
     entry = self._get_base_entry()
     entry['protoPayload']['response']['error']['errors'][0] = {
-        'reason': 'alreadyExists',
-        'message': 'Instance exists'
+      'reason': 'alreadyExists',
+      'message': 'Instance exists',
     }
     mock_query.return_value = [entry]
     step = vm_creation.InvestigateVmCreationLogFailure()
@@ -140,8 +129,8 @@ class VmCreationUnitTests(unittest.TestCase):
   def test_execute_forbidden(self, mock_query):
     entry = self._get_base_entry()
     entry['protoPayload']['response']['error']['errors'][0] = {
-        'reason': 'forbidden',
-        'message': 'Permission denied'
+      'reason': 'forbidden',
+      'message': 'Permission denied',
     }
     mock_query.return_value = [entry]
     step = vm_creation.InvestigateVmCreationLogFailure()

@@ -29,7 +29,6 @@ TEST_TIME = datetime(2026, 1, 8, 12, 0, 0, tzinfo=timezone.utc)
 
 
 class MockDatetime(datetime):
-
   @classmethod
   def now(cls, tz=None):
     if tz:
@@ -42,12 +41,14 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'gke/node-bootstrapping'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-gke1-aaaa',
       'nodepool': 'gke-gke1-default-pool-671518f6',
       'location': 'europe-west4-a',
       'gke_cluster_name': 'gke-cluster-name',
-  }]
+    }
+  ]
 
 
 class TestNodeBootstrappingCoverage(unittest.TestCase):
@@ -58,42 +59,35 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    patcher = patch('gcpdiag.runbook.gke.node_bootstrapping.datetime',
-                    MockDatetime)
+    patcher = patch('gcpdiag.runbook.gke.node_bootstrapping.datetime', MockDatetime)
     patcher.start()
     self.addCleanup(patcher.stop)
     self.op_add_ok = patch('gcpdiag.runbook.op.add_ok').start()
     self.op_add_failed = patch('gcpdiag.runbook.op.add_failed').start()
     self.op_add_skipped = patch('gcpdiag.runbook.op.add_skipped').start()
-    self.mock_gke = patch('gcpdiag.runbook.gke.node_bootstrapping.gke',
-                          gke_stub).start()
-    self.mock_gce = patch('gcpdiag.runbook.gke.node_bootstrapping.gce',
-                          gce_stub).start()
-    self.mock_crm = patch('gcpdiag.runbook.gke.node_bootstrapping.crm',
-                          crm_stub).start()
-    self.mock_iam = patch('gcpdiag.runbook.gke.node_bootstrapping.iam',
-                          iam_stub).start()
-    self.mock_logs_module = patch('gcpdiag.runbook.gke.node_bootstrapping.logs',
-                                  logs_stub).start()
-    self.mock_realtime_query = patch('gcpdiag.queries.logs_stub.realtime_query',
-                                     create=True).start()
-    self.mock_get_clusters = patch('gcpdiag.queries.gke_stub.get_clusters',
-                                   create=True).start()
-    self.mock_get_instance = patch('gcpdiag.queries.gce_stub.get_instance',
-                                   create=True).start()
-    self.mock_get_project = patch('gcpdiag.queries.crm_stub.get_project',
-                                  create=True).start()
+    self.mock_gke = patch('gcpdiag.runbook.gke.node_bootstrapping.gke', gke_stub).start()
+    self.mock_gce = patch('gcpdiag.runbook.gke.node_bootstrapping.gce', gce_stub).start()
+    self.mock_crm = patch('gcpdiag.runbook.gke.node_bootstrapping.crm', crm_stub).start()
+    self.mock_iam = patch('gcpdiag.runbook.gke.node_bootstrapping.iam', iam_stub).start()
+    self.mock_logs_module = patch('gcpdiag.runbook.gke.node_bootstrapping.logs', logs_stub).start()
+    self.mock_realtime_query = patch(
+      'gcpdiag.queries.logs_stub.realtime_query', create=True
+    ).start()
+    self.mock_get_clusters = patch('gcpdiag.queries.gke_stub.get_clusters', create=True).start()
+    self.mock_get_instance = patch('gcpdiag.queries.gce_stub.get_instance', create=True).start()
+    self.mock_get_project = patch('gcpdiag.queries.crm_stub.get_project', create=True).start()
     self.mock_get_project_policy = patch(
-        'gcpdiag.queries.iam_stub.get_project_policy', create=True).start()
+      'gcpdiag.queries.iam_stub.get_project_policy', create=True
+    ).start()
 
     self.params = {
-        flags.PROJECT_ID: 'test-project',
-        flags.LOCATION: 'us-central1-a',
-        flags.NODE: 'test-node',
-        flags.GKE_CLUSTER_NAME: 'test-cluster',
-        flags.START_TIME: TEST_TIME - timedelta(hours=1),
-        flags.END_TIME: TEST_TIME,
-        flags.NODEPOOL: 'test-pool',
+      flags.PROJECT_ID: 'test-project',
+      flags.LOCATION: 'us-central1-a',
+      flags.NODE: 'test-node',
+      flags.GKE_CLUSTER_NAME: 'test-cluster',
+      flags.START_TIME: TEST_TIME - timedelta(hours=1),
+      flags.END_TIME: TEST_TIME,
+      flags.NODEPOOL: 'test-pool',
     }
     self.mock_op_parent = MagicMock()
     self.mock_op_parent.parameters = self.params
@@ -117,7 +111,8 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     with op.operator_context(self.mock_op_parent):
       step.execute()
     self.op_add_skipped.assert_called_with(
-        ANY, reason='No test-cluster GKE cluster found in project test-project')
+      ANY, reason='No test-cluster GKE cluster found in project test-project'
+    )
 
   def test_start_no_clusters_at_all(self):
     """No clusters in project."""
@@ -127,7 +122,8 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     with op.operator_context(self.mock_op_parent):
       step.execute()
     self.op_add_skipped.assert_called_with(
-        ANY, reason='No GKE clusters found in project test-project')
+      ANY, reason='No GKE clusters found in project test-project'
+    )
 
   def test_start_non_gke_node(self):
     """Node is not a GKE node."""
@@ -136,20 +132,15 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     with op.operator_context(self.mock_op_parent):
       step.execute()
     self.op_add_skipped.assert_called_with(
-        ANY,
-        reason=
-        'Instance test-node in location us-central1-a does not appear to be a GKE node'
+      ANY, reason='Instance test-node in location us-central1-a does not appear to be a GKE node'
     )
 
   def test_insert_check_failed(self):
     """instances.insert error found."""
     self.params[flags.NODE] = None  # Ensure it checks pool insert
-    self.mock_realtime_query.return_value = [{
-        'severity': 'ERROR',
-        'protoPayload': {
-            'resourceName': 'pool'
-        }
-    }]
+    self.mock_realtime_query.return_value = [
+      {'severity': 'ERROR', 'protoPayload': {'resourceName': 'pool'}}
+    ]
     step = node_bootstrapping.NodeInsertCheck()
     with op.operator_context(self.mock_op_parent):
       step.execute()
@@ -182,27 +173,15 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     vm = self.create_mock_vm()
     self.mock_get_instance.return_value = vm
     self.mock_realtime_query.side_effect = [
-        [],  # for log_entries_success
-        [],  # for log_entries_completed by id
-        [{
-            'textPayload': 'Completed running Node Registration Checker'
-        }],
-        [
-            {
-                'textPayload': 'other log'
-            },
-            {
-                'textPayload':
-                    '** Here is a summary of the checks performed: **'
-            },
-            {
-                'textPayload': 'check 1'
-            },
-            {
-                'textPayload':
-                    ('** Completed running Node Registration Checker **')
-            },
-        ],
+      [],  # for log_entries_success
+      [],  # for log_entries_completed by id
+      [{'textPayload': 'Completed running Node Registration Checker'}],
+      [
+        {'textPayload': 'other log'},
+        {'textPayload': '** Here is a summary of the checks performed: **'},
+        {'textPayload': 'check 1'},
+        {'textPayload': ('** Completed running Node Registration Checker **')},
+      ],
     ]
     step = node_bootstrapping.NodeRegistrationSuccess()
     with op.operator_context(self.mock_op_parent):
@@ -212,9 +191,7 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
   def test_registration_deleted_node_past_success(self):
     """Node deleted but registered in past."""
     self.mock_get_instance.return_value = None
-    self.mock_realtime_query.return_value = [{
-        'textPayload': 'Node ready and registered.'
-    }]
+    self.mock_realtime_query.return_value = [{'textPayload': 'Node ready and registered.'}]
     step = node_bootstrapping.NodeRegistrationSuccess()
     with op.operator_context(self.mock_op_parent):
       step.execute()
@@ -223,18 +200,10 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
   def test_get_nrc_summary_logic(self):
     """Directly tests the helper logic of get_nrc_summary."""
     self.mock_realtime_query.return_value = [
-        {
-            'textPayload': 'other log'
-        },
-        {
-            'textPayload': '** Here is a summary of the checks performed: **'
-        },
-        {
-            'textPayload': 'check 1'
-        },
-        {
-            'textPayload': '** Completed running Node Registration Checker **'
-        },
+      {'textPayload': 'other log'},
+      {'textPayload': '** Here is a summary of the checks performed: **'},
+      {'textPayload': 'check 1'},
+      {'textPayload': '** Completed running Node Registration Checker **'},
     ]
     with op.operator_context(self.mock_op_parent):
       summary = node_bootstrapping.get_nrc_summary('node', 'zone')
@@ -255,13 +224,7 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     vm = self.create_mock_vm()
     vm.creation_timestamp = datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
     self.mock_get_instance.return_value = vm
-    self.params[flags.START_TIME] = datetime(2024,
-                                             1,
-                                             2,
-                                             0,
-                                             0,
-                                             0,
-                                             tzinfo=timezone.utc)
+    self.params[flags.START_TIME] = datetime(2024, 1, 2, 0, 0, 0, tzinfo=timezone.utc)
     mock_policy = MagicMock()
     mock_policy.has_role_permissions.return_value = True
     self.mock_get_project_policy.return_value = mock_policy
@@ -274,9 +237,7 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     """Running node registered successfully."""
     vm = self.create_mock_vm()
     self.mock_get_instance.return_value = vm
-    self.mock_realtime_query.return_value = [{
-        'textPayload': 'Node ready and registered.'
-    }]
+    self.mock_realtime_query.return_value = [{'textPayload': 'Node ready and registered.'}]
     mock_policy = MagicMock()
     mock_policy.has_role_permissions.return_value = True
     self.mock_get_project_policy.return_value = mock_policy
@@ -293,21 +254,13 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     mock_policy.has_role_permissions.return_value = True
     self.mock_get_project_policy.return_value = mock_policy
     self.mock_realtime_query.side_effect = [
-        [],  # for log_entries_success
-        [{
-            'textPayload': 'Completed...'
-        }],  # for log_entries_completed
-        [  # for log_entries_all for summary extraction
-            {
-                'textPayload': 'Completed running Node Registration Checker'
-            },
-            {
-                'textPayload': 'Error details'
-            },
-            {
-                'textPayload': node_bootstrapping.TOKEN_NRC_START
-            },
-        ]
+      [],  # for log_entries_success
+      [{'textPayload': 'Completed...'}],  # for log_entries_completed
+      [  # for log_entries_all for summary extraction
+        {'textPayload': 'Completed running Node Registration Checker'},
+        {'textPayload': 'Error details'},
+        {'textPayload': node_bootstrapping.TOKEN_NRC_START},
+      ],
     ]
 
     step = node_bootstrapping.NodeRegistrationSuccess()
@@ -319,22 +272,13 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     """Node not running, checker failed in past."""
     self.mock_get_instance.return_value = None
     self.mock_realtime_query.side_effect = [
-        [],  # log_entries_success
-        [{
-            'textPayload': 'Completed...'
-        }],  # log_entries_completed by name
-        [  # logs for get_nrc_summary
-            {
-                'textPayload': node_bootstrapping.TOKEN_NRC_START
-            },
-            {
-                'textPayload': 'error'
-            },
-            {
-                'textPayload':
-                    '** Completed running Node Registration Checker **'
-            },
-        ]
+      [],  # log_entries_success
+      [{'textPayload': 'Completed...'}],  # log_entries_completed by name
+      [  # logs for get_nrc_summary
+        {'textPayload': node_bootstrapping.TOKEN_NRC_START},
+        {'textPayload': 'error'},
+        {'textPayload': '** Completed running Node Registration Checker **'},
+      ],
     ]
     step = node_bootstrapping.NodeRegistrationSuccess()
     with op.operator_context(self.mock_op_parent):
@@ -359,16 +303,14 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
 
   def test_get_instance_http_error(self):
     """gce.get_instance raises HttpError."""
-    self.mock_get_instance.side_effect = HttpError(MagicMock(status=404),
-                                                   b'not found')
+    self.mock_get_instance.side_effect = HttpError(MagicMock(status=404), b'not found')
     self.mock_realtime_query.return_value = []
     step = node_bootstrapping.NodeBootstrappingStart()
     with op.operator_context(self.mock_op_parent):
       step.execute()
     self.op_add_skipped.assert_called_once()
     _, kwargs = self.op_add_skipped.call_args
-    self.assertIn('There are no log entries for the provided node test-node',
-                  kwargs['reason'])
+    self.assertIn('There are no log entries for the provided node test-node', kwargs['reason'])
 
   def test_start_no_logs_for_node(self):
     """No audit logs found for the node."""
@@ -379,8 +321,7 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
       step.execute()
     self.op_add_skipped.assert_called_once()
     _, kwargs = self.op_add_skipped.call_args
-    self.assertIn('There are no log entries for the provided node test-node',
-                  kwargs['reason'])
+    self.assertIn('There are no log entries for the provided node test-node', kwargs['reason'])
 
   def test_registration_uncertain_no_nrc_complete(self):
     """NRC completion log not found for running node."""
@@ -390,9 +331,9 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     mock_policy.has_role_permissions.return_value = True
     self.mock_get_project_policy.return_value = mock_policy
     self.mock_realtime_query.side_effect = [
-        [],  # log_entries_success
-        [],  # log_entries_completed by id
-        []  # log_entries_completed by name
+      [],  # log_entries_success
+      [],  # log_entries_completed by id
+      [],  # log_entries_completed by name
     ]
     step = node_bootstrapping.NodeRegistrationSuccess()
     with op.operator_context(self.mock_op_parent):
@@ -403,8 +344,8 @@ class TestNodeBootstrappingCoverage(unittest.TestCase):
     """Node not running, NRC never completed in past."""
     self.mock_get_instance.return_value = None
     self.mock_realtime_query.side_effect = [
-        [],  # log_entries_success
-        []  # log_entries_completed by name
+      [],  # log_entries_success
+      [],  # log_entries_completed by name
     ]
     step = node_bootstrapping.NodeRegistrationSuccess()
     with op.operator_context(self.mock_op_parent):

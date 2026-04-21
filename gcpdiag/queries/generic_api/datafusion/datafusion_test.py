@@ -1,6 +1,6 @@
 """
-  Tests for datafusion API
-  python -m unittest gcpdiag.queries.generic_api.datafusion.datafusion_test
+Tests for datafusion API
+python -m unittest gcpdiag.queries.generic_api.datafusion.datafusion_test
 """
 
 import unittest
@@ -24,16 +24,18 @@ class FakeCreds:
 
 
 class TestDatafusion(unittest.TestCase):
-  """ Tests for API call """
+  """Tests for API call"""
 
   def setUp(self):
     self._token = 'fake token'
     self._base_url = 'https://datafusion.googleusercontent.com'
     self._api = datafusion.Datafusion(
-        self._base_url,
-        creds=FakeCreds(self._token),
-        retry_strategy=constant_time_retry_strategy.
-        ConstantTimeoutRetryStrategy(timeout=42, retries=3))
+      self._base_url,
+      creds=FakeCreds(self._token),
+      retry_strategy=constant_time_retry_strategy.ConstantTimeoutRetryStrategy(
+        timeout=42, retries=3
+      ),
+    )
 
   @patch('requests.request')
   def test_get_system_profiles_success(self, mock_request):
@@ -46,10 +48,11 @@ class TestDatafusion(unittest.TestCase):
     self.assertEqual(response, {'profile': {}})
 
     mock_request.assert_called_once_with(
-        'GET',
-        f'{self._base_url}/v3/profiles',
-        headers={'test_auth': f'test_auth {self._token}'},
-        params=None)
+      'GET',
+      f'{self._base_url}/v3/profiles',
+      headers={'test_auth': f'test_auth {self._token}'},
+      params=None,
+    )
     mock_response.json.assert_called_once()
 
   @patch('requests.request')
@@ -63,10 +66,11 @@ class TestDatafusion(unittest.TestCase):
     self.assertEqual(response, {'namespaces': []})
 
     mock_request.assert_called_once_with(
-        'GET',
-        f'{self._base_url}/v3/namespaces',
-        headers={'test_auth': f'test_auth {self._token}'},
-        params=None)
+      'GET',
+      f'{self._base_url}/v3/namespaces',
+      headers={'test_auth': f'test_auth {self._token}'},
+      params=None,
+    )
     mock_response.json.assert_called_once()
 
   @patch('requests.request')
@@ -80,25 +84,26 @@ class TestDatafusion(unittest.TestCase):
     self.assertEqual(response, {'userProfiles': []})
 
     mock_request.assert_called_once_with(
-        'GET',
-        f'{self._base_url}/v3/namespaces/test-namespace/profiles',
-        headers={'test_auth': f'test_auth {self._token}'},
-        params=None)
+      'GET',
+      f'{self._base_url}/v3/namespaces/test-namespace/profiles',
+      headers={'test_auth': f'test_auth {self._token}'},
+      params=None,
+    )
     mock_response.json.assert_called_once()
 
   @patch('requests.request')
   def test_get_system_profiles_failure(self, mock_request):
-    mock_request.side_effect = requests.exceptions.RequestException(
-        'Network error')
+    mock_request.side_effect = requests.exceptions.RequestException('Network error')
 
-    with patch.object(constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
-                      'get_sleep_intervals',
-                      return_value=[0.1, 0.2, 0.3]):
+    with patch.object(
+      constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
+      'get_sleep_intervals',
+      return_value=[0.1, 0.2, 0.3],
+    ):
       with self.assertRaises(RuntimeError) as context:
         self._api.get('test_endpoint')
 
-    self.assertIn('Failed to get an API response after maximum retries',
-                  str(context.exception))
+    self.assertIn('Failed to get an API response after maximum retries', str(context.exception))
     self.assertEqual(mock_request.call_count, 3)
 
   @patch('requests.request')
@@ -111,12 +116,12 @@ class TestDatafusion(unittest.TestCase):
     sucessful_response.status_code = 200
     sucessful_response.json.return_value = {'userProfiles': []}
 
-    mock_request.side_effect = [
-        temporary_failure, temporary_failure, sucessful_response
-    ]
-    with patch.object(constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
-                      'get_sleep_intervals',
-                      return_value=[0.1, 0.2, 0.3]):
+    mock_request.side_effect = [temporary_failure, temporary_failure, sucessful_response]
+    with patch.object(
+      constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
+      'get_sleep_intervals',
+      return_value=[0.1, 0.2, 0.3],
+    ):
       response = self._api.get_user_profiles(namespace='test-namespace')
 
     self.assertEqual(response, {'userProfiles': []})
@@ -127,33 +132,35 @@ class TestDatafusion(unittest.TestCase):
     mock_response = Mock()
     mock_response.status_code = 500
     mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
-        'Internal Server Error')
+      'Internal Server Error'
+    )
     mock_request.return_value = mock_response
 
-    with patch.object(constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
-                      'get_sleep_intervals',
-                      return_value=[0.1, 0.2, 0.3]):
+    with patch.object(
+      constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
+      'get_sleep_intervals',
+      return_value=[0.1, 0.2, 0.3],
+    ):
       with self.assertRaises(RuntimeError) as context:
         self._api.get_all_namespaces()
 
-    self.assertIn('Failed to get an API response after maximum retries',
-                  str(context.exception))
+    self.assertIn('Failed to get an API response after maximum retries', str(context.exception))
     self.assertEqual(mock_request.call_count, 3)
 
   @patch('requests.request')
   def test_get_user_profiles_failure(self, mock_request):
     mock_response = Mock()
     mock_response.status_code = 404
-    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
-        'Not Found')
+    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError('Not Found')
     mock_request.return_value = mock_response
 
     with self.assertRaises(RuntimeError) as context:
       self._api.get_user_profiles(namespace='test-namespace')
 
     self.assertIn(
-        'http status 404 calling GET https://datafusion.googleusercontent.com/v3/namespaces/test-namespace/profiles',  # pylint: disable=line-too-long
-        str(context.exception))
+      'http status 404 calling GET https://datafusion.googleusercontent.com/v3/namespaces/test-namespace/profiles',
+      str(context.exception),
+    )
     self.assertEqual(mock_request.call_count, 1)
 
   @patch('requests.request')
@@ -173,24 +180,26 @@ class TestDatafusion(unittest.TestCase):
     mock_response.json.return_value = {'preferences': {}}
     mock_request.return_value = mock_response
     response = self._api.get_application_preferences(
-        namespace='test-namespace', application_name='test-application')
+      namespace='test-namespace', application_name='test-application'
+    )
     self.assertEqual(response, {'preferences': {}})
 
   @patch('requests.request')
   def test_get_application_preferences_failure(self, mock_request):
     mock_response = Mock()
     mock_response.status_code = 404
-    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
-        'Not Found')
+    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError('Not Found')
     mock_request.return_value = mock_response
 
     with self.assertRaises(RuntimeError) as context:
-      self._api.get_application_preferences(namespace='test-namespace',
-                                            application_name='test-application')
+      self._api.get_application_preferences(
+        namespace='test-namespace', application_name='test-application'
+      )
 
     self.assertIn(
-        'http status 404 calling GET https://datafusion.googleusercontent.com/v3/namespaces/test-namespace/apps/test-application/preferences',  # pylint: disable=line-too-long
-        str(context.exception))
+      'http status 404 calling GET https://datafusion.googleusercontent.com/v3/namespaces/test-namespace/apps/test-application/preferences',
+      str(context.exception),
+    )
     self.assertEqual(mock_request.call_count, 1)
 
   @patch('requests.request')

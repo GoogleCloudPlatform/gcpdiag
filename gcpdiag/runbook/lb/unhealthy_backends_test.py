@@ -22,11 +22,14 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'lb/unhealthy-backends'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-lb2-aaaa',
       'backend_service_name': 'web-backend-service',
-  }, {
+    },
+    {
       'project_id': 'gcpdiag-lb2-aaaa',
       'backend_service_name': 'backend-service-2',
       'region': 'europe-west4',
-  }]
+    },
+  ]

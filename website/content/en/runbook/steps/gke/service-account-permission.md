@@ -13,9 +13,9 @@ description: >
 ### Description
 
 Attributes:
-      required_roles (list): list of IAM roles to check on each node-pool service account.
-      template (str): the runbook template path for this check.
-      service_name (str) the service for which service account permissions need to be check.
+    required_roles (list): list of IAM roles to check on each node-pool service account.
+    template (str): the runbook template path for this check.
+    service_name (str) the service for which service account permissions need to be check.
 
 
 

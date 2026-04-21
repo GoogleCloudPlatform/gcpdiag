@@ -36,10 +36,10 @@ DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.c
 DUMMY_CLUSTER3_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/gke3'
 DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
 DUMMY_CLUSTER6_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke6'
-DUMMY_AUTOPILOT_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/autopilot-gke1'  # pylint: disable=C0301
+DUMMY_AUTOPILOT_CLUSTER1_NAME = (
+  f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/autopilot-gke1'
+)
 DUMMY_DEFAULT_NAME = 'default'
-
-# pylint: disable=consider-iterating-dictionary
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -48,15 +48,13 @@ class TestCluster(unittest.TestCase):
 
   def test_get_clusters_by_label(self):
     """get_clusters returns the right cluster matched by label."""
-    context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=DUMMY_CLUSTER1_LABELS)
+    context = models.Context(project_id=DUMMY_PROJECT_NAME, labels=DUMMY_CLUSTER1_LABELS)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 1
 
   def test_get_clusters_by_region(self):
     """get_clusters returns the right cluster matched by region."""
-    context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             locations=['europe-west4'])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME, locations=['europe-west4'])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 7
 
@@ -115,7 +113,7 @@ class TestCluster(unittest.TestCase):
     assert c.has_monitoring_enabled()
 
   def test_has_authenticator_group_enabled(self):
-    """""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
+    """ ""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
     enabled."""
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
@@ -164,12 +162,10 @@ class TestCluster(unittest.TestCase):
     clusters = gke.get_clusters(context)
     # cluster 1
     c = clusters[DUMMY_CLUSTER1_NAME]
-    assert c.pod_ipv4_cidr.compare_networks(
-        ipaddress.ip_network('192.168.1.0/24')) == 0
+    assert c.pod_ipv4_cidr.compare_networks(ipaddress.ip_network('192.168.1.0/24')) == 0
     # cluster 2
     c = clusters[DUMMY_CLUSTER2_NAME]
-    assert c.pod_ipv4_cidr.compare_networks(
-        ipaddress.ip_network('10.4.0.0/14')) == 0
+    assert c.pod_ipv4_cidr.compare_networks(ipaddress.ip_network('10.4.0.0/14')) == 0
 
   def test_current_node_count(self):
     """returns correct number of nodes running"""
@@ -195,10 +191,12 @@ class TestCluster(unittest.TestCase):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
 
-    #cluster 1 is vpc-native and has a value set for the nodepool cidr block
+    # cluster 1 is vpc-native and has a value set for the nodepool cidr block
     c = clusters[DUMMY_CLUSTER1_NAME]
-    assert c.nodepools[0].pod_ipv4_cidr_block.compare_networks(
-        ipaddress.ip_network('192.168.1.0/24')) == 0
+    assert (
+      c.nodepools[0].pod_ipv4_cidr_block.compare_networks(ipaddress.ip_network('192.168.1.0/24'))
+      == 0
+    )
 
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.nodepools[0].pod_ipv4_cidr_block is None
@@ -343,8 +341,7 @@ class TestCluster(unittest.TestCase):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER4_NAME]
-    assert c.network.firewall.verify_ingress_rule_exists(
-        f'gke-gke4-{c.cluster_hash}-master')
+    assert c.network.firewall.verify_ingress_rule_exists(f'gke-gke4-{c.cluster_hash}-master')
     assert not c.network.firewall.verify_ingress_rule_exists('foobar')
 
   def test_cluster_network_subnetwork(self):
@@ -403,7 +400,7 @@ class TestCluster(unittest.TestCase):
 
 
 class TestVersion:
-  """ Test GKE Version class """
+  """Test GKE Version class"""
 
   def test_init(self):
     Version('1.19.13-gke.701')
@@ -426,8 +423,7 @@ class TestVersion:
     assert Version('1.19.13-gke.701') != '1.19.13-gke.702'
 
   def test_add_str(self):
-    assert 'the version is: ' + Version('1.19.13-gke.701') == \
-      'the version is: 1.19.13-gke.701'
+    assert 'the version is: ' + Version('1.19.13-gke.701') == 'the version is: 1.19.13-gke.701'
     assert Version('1.19.13-gke.701') + '!' == '1.19.13-gke.701!'
     with pytest.raises(TypeError):
       assert Version('1.19.13-gke.701') + 42

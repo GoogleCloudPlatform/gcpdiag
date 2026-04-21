@@ -37,10 +37,11 @@ def prepare_rule(context: models.Context):
   for project_id in {c.project_id for c in clusters.values()}:
     # k8s_cluster, api server logs
     gke_logs_by_project[project_id] = logs.query(
-        project_id=project_id,
-        resource_type='k8s_cluster',
-        log_name='log_id("cloudaudit.googleapis.com/activity")',
-        filter_str=f'protoPayload.response.message:"{_MATCH_STR_1}"')
+      project_id=project_id,
+      resource_type='k8s_cluster',
+      log_name='log_id("cloudaudit.googleapis.com/activity")',
+      filter_str=f'protoPayload.response.message:"{_MATCH_STR_1}"',
+    )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -63,13 +64,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   def filter_f(log_entry):
     try:
       if _MATCH_STR_1 in log_entry['protoPayload']['response']['message']:
-        return bool(
-            _MATCH_STR_2 in log_entry['protoPayload']['response']['message'])
+        return bool(_MATCH_STR_2 in log_entry['protoPayload']['response']['message'])
     except KeyError:
       return False
 
   bad_clusters = util.gke_logs_find_bad_clusters(
-      context=context, logs_by_project=gke_logs_by_project, filter_f=filter_f)
+    context=context, logs_by_project=gke_logs_by_project, filter_f=filter_f
+  )
 
   # Create the report.
   for _, c in sorted(clusters.items()):

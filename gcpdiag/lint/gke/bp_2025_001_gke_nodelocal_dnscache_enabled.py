@@ -28,29 +28,27 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   clusters = gke_queries.get_clusters(context)
   if not clusters:
-    report.add_skipped(None, "no clusters found")
+    report.add_skipped(None, 'no clusters found')
     return
 
   for _, cluster in sorted(clusters.items()):
-
-    if cluster.status != "RUNNING":
-      report.add_skipped(
-          cluster, f"Cluster is not in RUNNING state (state: {cluster.status})")
+    if cluster.status != 'RUNNING':
+      report.add_skipped(cluster, f'Cluster is not in RUNNING state (state: {cluster.status})')
       continue
 
     if cluster.is_autopilot:
-      report.add_skipped(cluster, "NodeLocal DNSCache is default in Autopilot")
+      report.add_skipped(cluster, 'NodeLocal DNSCache is default in Autopilot')
       continue
 
     if cluster.is_nodelocal_dnscache_enabled:
       report.add_ok(cluster)
     else:
       reason = (
-          "NodeLocal DNSCache is not enabled.\n"
-          "Enable it to improve DNS performance and reliability.\n"
-          "You can enable it with the command:\n"
-          f"  gcloud container clusters update {cluster.name} --location={cluster.location}"
-          " --update-addons=NodeLocalDNS=ENABLED\n"
-          "See also: https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache"
+        'NodeLocal DNSCache is not enabled.\n'
+        'Enable it to improve DNS performance and reliability.\n'
+        'You can enable it with the command:\n'
+        f'  gcloud container clusters update {cluster.name} --location={cluster.location}'
+        ' --update-addons=NodeLocalDNS=ENABLED\n'
+        'See also: https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache'
       )
       report.add_failed(cluster, reason=reason)

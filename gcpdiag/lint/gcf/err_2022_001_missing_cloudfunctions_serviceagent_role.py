@@ -37,7 +37,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   sa_email = f'service-{project.number}@gcf-admin-robot.iam.gserviceaccount.com'
   iam_policy = iam.get_project_policy(context)
   if not iam_policy.has_role_permissions(f'serviceAccount:{sa_email}', ROLE):
-    report.add_failed(project,
-                      f'service account: {sa_email}\nmissing role: {ROLE}')
+    report.add_failed(project, f'service account: {sa_email}\nmissing role: {ROLE}')
   else:
     report.add_ok(project)

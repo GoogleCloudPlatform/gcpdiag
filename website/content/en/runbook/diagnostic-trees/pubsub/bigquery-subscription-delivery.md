@@ -13,7 +13,7 @@ description: >
 ### Description
 
 A diagnostic guide to help you resolve common issues
-causing message delivery failures from Pub/Sub to BigQuery.
+  causing message delivery failures from Pub/Sub to BigQuery.
 
 ### Executing this runbook
 

@@ -37,8 +37,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     valid_node_versions = gke.get_valid_node_versions(c.project_id, c.location)
     for np in c.nodepools:
       if np.version not in valid_node_versions:
-        report.add_failed(np,
-                          'valid versions: ' + ', '.join(valid_node_versions),
-                          np.version)
+        report.add_failed(np, 'valid versions: ' + ', '.join(valid_node_versions), np.version)
       else:
         report.add_ok(np, np.version)

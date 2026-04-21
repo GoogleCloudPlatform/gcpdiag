@@ -41,10 +41,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   service_account = SA.format(project_number=project.number)
 
   project_policy = policy_by_project[context.project_id]
-  if not project_policy.has_role_permissions(
-      f'serviceAccount:{service_account}', ROLE):
-    report.add_failed(project, (f'service account: {service_account}\n'
-                                f'missing role: {ROLE}'))
+  if not project_policy.has_role_permissions(f'serviceAccount:{service_account}', ROLE):
+    report.add_failed(project, (f'service account: {service_account}\nmissing role: {ROLE}'))
     return
 
   report.add_ok(project)

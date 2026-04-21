@@ -19,9 +19,11 @@ import googleapiclient.errors
 from boltons.iterutils import get_path
 
 from gcpdiag import runbook
+
 # Interact with GCP APIs using gcpdiag queries
 from gcpdiag.queries import crm, gce, iam, logs, monitoring
 from gcpdiag.runbook import op
+
 # Reuse generalized steps from other products within this runbook
 from gcpdiag.runbook.crm import generalized_steps as crm_gs
 from gcpdiag.runbook.gce import constants, flags
@@ -54,55 +56,42 @@ class OpsAgent(runbook.DiagnosticTree):
   4. Scope of Investigation:
     - Note that this runbook does not include internal VM checks, such as guest OS investigations.
   """
+
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID containing the VM',
-          'required': True
-      },
-      flags.INSTANCE_NAME: {
-          'type': str,
-          'help': 'Name of the GCE instance running the Ops Agent',
-          'required': True
-      },
-      flags.INSTANCE_ID: {
-          'type': str,
-          'help': 'ID of the GCE instance running the Ops Agent',
-      },
-      flags.ZONE: {
-          'type': str,
-          'help': 'Zone of the GCE instance running the Ops Agent',
-          'required': True
-      },
-      flags.START_TIME: {
-          'type': datetime,
-          'help': 'Start time of the issue',
-      },
-      flags.END_TIME: {
-          'type': datetime,
-          'help': 'End time of the issue',
-      },
-      GAC_SERVICE_ACCOUNT: {
-          'type':
-              str,
-          'help':
-              'GOOGLE_APPLICATION_CREDENTIALS used by ops agent, if applicable'
-      },
-      CHECK_LOGGING: {
-          'type': bool,
-          'help': 'Investigate logging issues',
-          'default': True
-      },
-      CHECK_MONITORING: {
-          'type': bool,
-          'help': 'Investigate monitoring issues',
-          'default': True
-      },
-      CHECK_SERIAL_PORT_LOGGING: {
-          'type': bool,
-          'help': 'Check if VM Serial logging is enabled',
-          'default': True
-      }
+    flags.PROJECT_ID: {'type': str, 'help': 'The Project ID containing the VM', 'required': True},
+    flags.INSTANCE_NAME: {
+      'type': str,
+      'help': 'Name of the GCE instance running the Ops Agent',
+      'required': True,
+    },
+    flags.INSTANCE_ID: {
+      'type': str,
+      'help': 'ID of the GCE instance running the Ops Agent',
+    },
+    flags.ZONE: {
+      'type': str,
+      'help': 'Zone of the GCE instance running the Ops Agent',
+      'required': True,
+    },
+    flags.START_TIME: {
+      'type': datetime,
+      'help': 'Start time of the issue',
+    },
+    flags.END_TIME: {
+      'type': datetime,
+      'help': 'End time of the issue',
+    },
+    GAC_SERVICE_ACCOUNT: {
+      'type': str,
+      'help': 'GOOGLE_APPLICATION_CREDENTIALS used by ops agent, if applicable',
+    },
+    CHECK_LOGGING: {'type': bool, 'help': 'Investigate logging issues', 'default': True},
+    CHECK_MONITORING: {'type': bool, 'help': 'Investigate monitoring issues', 'default': True},
+    CHECK_SERIAL_PORT_LOGGING: {
+      'type': bool,
+      'help': 'Check if VM Serial logging is enabled',
+      'default': True,
+    },
   }
 
   def build_tree(self):
@@ -130,15 +119,18 @@ class OpsAgentStart(runbook.StartStep):
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     try:
-      instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                                  zone=op.get(flags.ZONE),
-                                  instance_name=op.get(flags.INSTANCE_NAME))
+      instance = gce.get_instance(
+        project_id=op.get(flags.PROJECT_ID),
+        zone=op.get(flags.ZONE),
+        instance_name=op.get(flags.INSTANCE_NAME),
+      )
     except googleapiclient.errors.HttpError:
       op.add_skipped(
-          project,
-          reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
-              op.get(flags.PROJECT_ID)))
+        project,
+        reason=('Instance {} does not exist in zone {} or project {}').format(
+          op.get(flags.INSTANCE_NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)
+        ),
+      )
     else:
       # Prepare extra parameters.
       if instance and op.get(flags.INSTANCE_NAME):
@@ -156,44 +148,52 @@ class VmHasAServiceAccount(runbook.Step):
   GOOGLE_APPLICATION_CREDENTIALS. User will have to know and specify that if
   They are using the application
   """
+
   template = 'vm_attributes::service_account_exists'
 
   def execute(self):
     """Verify Ops Agent has a service account."""
-    instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                                zone=op.get(flags.ZONE),
-                                instance_name=op.get(flags.INSTANCE_NAME))
+    instance = gce.get_instance(
+      project_id=op.get(flags.PROJECT_ID),
+      zone=op.get(flags.ZONE),
+      instance_name=op.get(flags.INSTANCE_NAME),
+    )
 
     if not op.get(GAC_SERVICE_ACCOUNT):
       if instance.service_account:
         op.put(flags.SERVICE_ACCOUNT, instance.service_account)
-        op.add_ok(instance,
-                  reason=op.prep_msg(op.SUCCESS_REASON,
-                                     full_resource_path=instance.full_path,
-                                     sa=instance.service_account))
+        op.add_ok(
+          instance,
+          reason=op.prep_msg(
+            op.SUCCESS_REASON, full_resource_path=instance.full_path, sa=instance.service_account
+          ),
+        )
       else:
-        op.add_failed(instance,
-                      reason=op.prep_msg(op.FAILURE_REASON,
-                                         full_resource_path=instance.full_path),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+        op.add_failed(
+          instance,
+          reason=op.prep_msg(op.FAILURE_REASON, full_resource_path=instance.full_path),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+        )
       return
 
     if op.get(GAC_SERVICE_ACCOUNT):
       sa_list = iam.get_service_account_list(op.get(flags.PROJECT_ID))
       for sa in sa_list:
-
         if sa.email == op.get(GAC_SERVICE_ACCOUNT):
           op.put(flags.SERVICE_ACCOUNT, sa.email)
-          op.add_ok(instance,
-                    reason=op.prep_msg(op.SUCCESS_REASON,
-                                       full_resource_path=instance.full_path,
-                                       sa=sa.email))
+          op.add_ok(
+            instance,
+            reason=op.prep_msg(
+              op.SUCCESS_REASON, full_resource_path=instance.full_path, sa=sa.email
+            ),
+          )
           break
     elif not op.get(GAC_SERVICE_ACCOUNT) and not instance.service_account:
-      op.add_failed(instance,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       full_resource_path=instance.full_path),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        instance,
+        reason=op.prep_msg(op.FAILURE_REASON, full_resource_path=instance.full_path),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
 
 class InvestigateLoggingMonitoring(runbook.Gateway):
@@ -215,13 +215,12 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
 
       log_permission_check = iam_gs.IamPolicyCheck()
       log_permission_check.project = op.get(flags.PROJECT_ID)
-      log_permission_check.principal = (
-          f'serviceAccount:{op.get(flags.SERVICE_ACCOUNT)}')
+      log_permission_check.principal = f'serviceAccount:{op.get(flags.SERVICE_ACCOUNT)}'
       log_permission_check.roles = [
-          'roles/owner',
-          'roles/editor',
-          'roles/logging.logWriter',
-          'roles/logging.admin',
+        'roles/owner',
+        'roles/editor',
+        'roles/logging.logWriter',
+        'roles/logging.admin',
       ]
       logging_api.add_child(log_permission_check)
       logging_access_scope = gce_gs.VmScope()
@@ -229,9 +228,9 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       logging_access_scope.zone = op.get(flags.ZONE)
       logging_access_scope.instance_name = op.get(flags.INSTANCE_NAME)
       logging_access_scope.access_scopes = {
-          'https://www.googleapis.com/auth/logging.write',
-          'https://www.googleapis.com/auth/cloud-platform',
-          'https://www.googleapis.com/auth/logging.admin',
+        'https://www.googleapis.com/auth/logging.write',
+        'https://www.googleapis.com/auth/cloud-platform',
+        'https://www.googleapis.com/auth/logging.admin',
       }
       logging_api.add_child(logging_access_scope)
 
@@ -260,8 +259,11 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       monitoring_permission_check.project = op.get(flags.PROJECT_ID)
       monitoring_permission_check.principal = f'serviceAccount:{op.get(flags.SERVICE_ACCOUNT)}'
       monitoring_permission_check.roles = [
-          'roles/monitoring.metricWriter', 'roles/monitoring.admin',
-          'roles/monitoring.editor', 'roles/owner', 'roles/editor'
+        'roles/monitoring.metricWriter',
+        'roles/monitoring.admin',
+        'roles/monitoring.editor',
+        'roles/owner',
+        'roles/editor',
       ]
       monitoring_api.add_child(child=monitoring_permission_check)
       monitoring_access_scope = gce_gs.VmScope()
@@ -269,9 +271,9 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       monitoring_access_scope.zone = op.get(flags.ZONE)
       monitoring_access_scope.instance_name = op.get(flags.INSTANCE_NAME)
       monitoring_access_scope.access_scopes = {
-          'https://www.googleapis.com/auth/monitoring.write',
-          'https://www.googleapis.com/auth/cloud-platform',
-          'https://www.googleapis.com/auth/monitoring'
+        'https://www.googleapis.com/auth/monitoring.write',
+        'https://www.googleapis.com/auth/cloud-platform',
+        'https://www.googleapis.com/auth/monitoring',
       }
       monitoring_api.add_child(monitoring_access_scope)
       # Check if ops agent metric subagent is installed.
@@ -328,22 +330,24 @@ class OpsAgentEnd(runbook.EndStep):
     has_opsagent = False
     if op.get(CHECK_SERIAL_PORT_LOGGING):
       serial_log_entries = logs.realtime_query(
-          project_id=op.get(flags.PROJECT_ID),
-          filter_str='''resource.type="gce_instance"
+        project_id=op.get(flags.PROJECT_ID),
+        filter_str='''resource.type="gce_instance"
                         log_name="projects/{}/logs/ops-agent-health"
                         resource.labels.instance_id="{}" AND
-                        "LogPingOpsAgent"'''.format(op.get(flags.PROJECT_ID),
-                                                    op.get(flags.INSTANCE_ID)),
-          start_time=op.get(flags.END_TIME),
-          end_time=datetime.now())
+                        "LogPingOpsAgent"'''.format(
+          op.get(flags.PROJECT_ID), op.get(flags.INSTANCE_ID)
+        ),
+        start_time=op.get(flags.END_TIME),
+        end_time=datetime.now(),
+      )
       if serial_log_entries:
         has_expected_opsagent_logs = True
-        op.info(
-            'There are new logs indicating ops agent is exporting serial logs')
+        op.info('There are new logs indicating ops agent is exporting serial logs')
 
     if op.get(CHECK_MONITORING):
       ops_agent_uptime = monitoring.query(
-          op.get(flags.PROJECT_ID), """
+        op.get(flags.PROJECT_ID),
+        """
                 fetch gce_instance
                 | metric 'agent.googleapis.com/agent/uptime'
                 | filter (resource.instance_id == '{}')
@@ -351,21 +355,19 @@ class OpsAgentEnd(runbook.EndStep):
                 | every 1m
                 | group_by [resource.instance_id, metric.version],
                     [value_uptime_aggregate: aggregate(value.uptime)]
-              """.format(op.get(flags.INSTANCE_ID)))
+              """.format(op.get(flags.INSTANCE_ID)),
+      )
 
       for entry in ops_agent_uptime.values():
         version = get_path(entry, ('labels', 'metric.version'), '')
         if 'google-cloud-ops-agent-metrics' in version:
           has_opsagent = True
-          op.info(
-              'There is metrics data indicating ops agent is exporting metrics correctly!'
-          )
+          op.info('There is metrics data indicating ops agent is exporting metrics correctly!')
 
       if not has_expected_opsagent_logs and not has_opsagent:
         response = op.prompt(
-            kind=op.CONFIRMATION,
-            message=
-            f'Is your ops agent issues resolved for "{op.get(flags.INSTANCE_NAME)}?"'
+          kind=op.CONFIRMATION,
+          message=f'Is your ops agent issues resolved for "{op.get(flags.INSTANCE_NAME)}?"',
         )
         if response == op.NO:
           op.info(message=op.END_MESSAGE)

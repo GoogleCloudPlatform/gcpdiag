@@ -31,8 +31,7 @@ cost_insights = {}
 def prepare_rule(context: models.Context):
   billing_account = billing.get_billing_account(context.project_id)
   if billing_account:
-    cost_insights['insights'] = billing.get_cost_insights_for_a_project(
-        context.project_id)
+    cost_insights['insights'] = billing.get_cost_insights_for_a_project(context.project_id)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -41,16 +40,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     billing.get_billing_info(context.project_id)
     return
   if not cost_insights:
-    report.add_skipped(
-        None, 'Billing Account Permission Denied or Project Billing Disabled')
+    report.add_skipped(None, 'Billing Account Permission Denied or Project Billing Disabled')
     return
   project = crm.get_project(context.project_id)
   cost_insight = cost_insights['insights']
   anomaly_found = False
   for cost_insight in cost_insights['insights']:
     if cost_insight.is_anomaly():
-      report.add_failed(project, 'Cost Anomaly Found',
-                        cost_insight.build_anomaly_description())
+      report.add_failed(project, 'Cost Anomaly Found', cost_insight.build_anomaly_description())
       anomaly_found = True
   if not anomaly_found:
     # no cost anomalies found

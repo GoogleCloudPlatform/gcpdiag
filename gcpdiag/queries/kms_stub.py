@@ -18,9 +18,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 import pathlib
 
 from gcpdiag import utils

@@ -26,9 +26,9 @@ from gcpdiag.queries import apis, crm, logs
 
 MATCH_STR = 'tabledata.list bytes per second per project'
 LOG_FILTER = [
-    'severity>=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity>=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 
 project_logs = {}
@@ -36,10 +36,10 @@ project_logs = {}
 
 def prepare_rule(context: models.Context):
   project_logs[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(LOG_FILTER),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(LOG_FILTER),
   )
 
 
@@ -53,32 +53,31 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'BigQuery api is disabled')
     return
-  if (project_logs.get(context.project_id) and
-      project_logs[context.project_id].entries):
-
+  if project_logs.get(context.project_id) and project_logs[context.project_id].entries:
     for log_entry in project_logs[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), default=''):
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         continue
 
       job_id = get_path(
-          log_entry,
-          (
-              'protoPayload',
-              'serviceData',
-              'jobGetQueryResultsResponse',
-              'job',
-              'jobName',
-              'jobId',
-          ),
+        log_entry,
+        (
+          'protoPayload',
+          'serviceData',
+          'jobGetQueryResultsResponse',
+          'job',
+          'jobName',
+          'jobId',
+        ),
       )
 
       report.add_failed(
-          project,
-          'Exceeded maximum tabledata.list bytes per second per project'
-          ' limit. Try spacing out requests over a longer period with'
-          ' delays. Please check failed job ' + job_id + ' for more details.',
+        project,
+        'Exceeded maximum tabledata.list bytes per second per project'
+        ' limit. Try spacing out requests over a longer period with'
+        ' delays. Please check failed job ' + job_id + ' for more details.',
       )
       return
     report.add_ok(project)

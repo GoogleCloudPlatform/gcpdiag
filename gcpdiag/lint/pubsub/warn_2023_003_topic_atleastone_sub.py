@@ -31,8 +31,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   subscriptions = pubsub.get_subscriptions(context)
 
   for _, subscription in subscriptions.items():
-    if (subscription.topic != "_deleted_topic_" and
-        subscription.topic.full_path in topics):
+    if subscription.topic != '_deleted_topic_' and subscription.topic.full_path in topics:
       del topics[subscription.topic.full_path]
 
   if topics:
@@ -40,6 +39,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_failed(topic)
   else:
     report.add_ok(
-        crm.get_project(context.project_id),
-        "All active topics have subscriptions",
+      crm.get_project(context.project_id),
+      'All active topics have subscriptions',
     )

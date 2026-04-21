@@ -14,18 +14,18 @@
 
 # Lint as: python3
 """
-  Allocates memory to bytearray based on payload specified in HTTP Request.
-  Args:
-      request (flask.Request): HTTP request object.
-  Returns:
-      sum_dict: Python Dictionary containing payload:bytearray memory size
-      (key/value format)
+Allocates memory to bytearray based on payload specified in HTTP Request.
+Args:
+    request (flask.Request): HTTP request object.
+Returns:
+    sum_dict: Python Dictionary containing payload:bytearray memory size
+    (key/value format)
 """
+
 import sys
 
 
 def gcf_mem_alloc(request):
-
   request_json = request.get_json()
   if request.args and 'payload' in request.args:
     return request.args.get('payload')

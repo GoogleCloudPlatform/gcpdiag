@@ -25,19 +25,15 @@ class TestCredential:
   """Test apis set_credentials."""
 
   def test_set_credential_null(self):
-    # pylint:disable=protected-access
     apis._credentials = 'something to clear'
     apis.set_credentials(None)
     assert apis._credentials is None
-    # pylint:enable=protected-access
 
   @mock.patch('google.oauth2.credentials.Credentials.from_authorized_user_info')
   def test_set_credential(self, mock_cred):
     mock_cred.return_value = 'credential_data'
     apis.set_credentials('"some json data"')
-    # pylint:disable=protected-access
     assert apis._credentials == 'credential_data'
-    # pylint:enable=protected-access
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -49,11 +45,9 @@ class Test:
     assert not apis.is_enabled(DUMMY_PROJECT_NAME, 'containerxyz')
 
   def test_is_all_enabled(self):
-    for value in apis.is_all_enabled(DUMMY_PROJECT_NAME,
-                                     ['container', 'compute']).values():
+    for value in apis.is_all_enabled(DUMMY_PROJECT_NAME, ['container', 'compute']).values():
       assert value == 'ENABLED'
-    for val in apis.is_all_enabled(DUMMY_PROJECT_NAME,
-                                   ['containerxyz', 'computelol']).values():
+    for val in apis.is_all_enabled(DUMMY_PROJECT_NAME, ['containerxyz', 'computelol']).values():
       assert val == 'DISABLED'
 
 

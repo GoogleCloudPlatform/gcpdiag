@@ -27,7 +27,7 @@ DUMMY_DISABLED_CRYPTO_KEY_NAME = BASE_KEY_NAME + 'kms-key-disabled'
 DUMMY_ENABLED_CRYPTO_KEY_NAME = BASE_KEY_NAME + 'kms-key-enabled'
 
 DUMMY_IAM_POLICY_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
-DUMMY_IAM_POLICY_CRYPTO_KEY_NAME = f'projects/{DUMMY_IAM_POLICY_PROJECT_NAME}/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key'  # pylint: disable=C0301
+DUMMY_IAM_POLICY_CRYPTO_KEY_NAME = f'projects/{DUMMY_IAM_POLICY_PROJECT_NAME}/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key'
 DUMMY_IAM_POLICY_MEMBER = 'serviceAccount:service-12340005@gcp-sa-apigee.iam.gserviceaccount.com'
 DUMMY_IAM_POLICY_ROLE = 'roles/cloudkms.cryptoKeyEncrypterDecrypter'
 
@@ -55,7 +55,5 @@ class TestCryptoKey:
 
   def test_get_crypto_key_iam_policy(self):
     context = models.Context(project_id=DUMMY_IAM_POLICY_PROJECT_NAME)
-    policy = kms.get_crypto_key_iam_policy(context,
-                                           DUMMY_IAM_POLICY_CRYPTO_KEY_NAME)
-    assert policy.has_role_permissions(DUMMY_IAM_POLICY_MEMBER,
-                                       DUMMY_IAM_POLICY_ROLE)
+    policy = kms.get_crypto_key_iam_policy(context, DUMMY_IAM_POLICY_CRYPTO_KEY_NAME)
+    assert policy.has_role_permissions(DUMMY_IAM_POLICY_MEMBER, DUMMY_IAM_POLICY_ROLE)

@@ -48,10 +48,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for project_id in sorted({c.project_id for c in clusters.values()}):
     project = crm.get_project(project_id)
     sa_email = f'{project.number}@cloudservices.gserviceaccount.com'
-    iam_policy = iam.get_project_policy(
-        context.copy_with(project_id=project_id))
+    iam_policy = iam.get_project_policy(context.copy_with(project_id=project_id))
     if not iam_policy.has_role_permissions(f'serviceAccount:{sa_email}', ROLE):
-      report.add_failed(project,
-                        f'service account: {sa_email}\nmissing role: {ROLE}')
+      report.add_failed(project, f'service account: {sa_email}\nmissing role: {ROLE}')
     else:
       report.add_ok(project)

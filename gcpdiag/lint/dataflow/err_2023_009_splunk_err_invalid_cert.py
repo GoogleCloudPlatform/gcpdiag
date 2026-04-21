@@ -18,7 +18,6 @@ correct one or if the endpoint is not signed by a valid issuer.
 Check that the issuer for the certificate is
 valid and the correct certificate is provided.
 """
-# pylint: enable=line-too-long
 
 from itertools import islice
 
@@ -28,12 +27,12 @@ from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
 MATCH_STRINGS = [
-    'Error writing to Splunk',
-    'unable to find valid certification path to requested target',
+  'Error writing to Splunk',
+  'unable to find valid certification path to requested target',
 ]
 LOG_FILTER = [
-    'severity=ERROR',
-    'jsonPayload.message: ("{}")'.format('" AND "'.join(MATCH_STRINGS)),
+  'severity=ERROR',
+  'jsonPayload.message: ("{}")'.format('" AND "'.join(MATCH_STRINGS)),
 ]
 
 project_logs = {}
@@ -45,10 +44,11 @@ def prepare_rule(context: models.Context):
   log_name = 'log_id("dataflow.googleapis.com/worker")'
   # f'projects/{project_id}/logs/dataflow.googleapis.com%2Fworker'
   project_logs[project_id] = logs.query(
-      project_id=project_id,
-      resource_type='dataflow_step',
-      log_name=log_name,
-      filter_str=' AND '.join(LOG_FILTER))  # "returns LogsQuery object"
+    project_id=project_id,
+    resource_type='dataflow_step',
+    log_name=log_name,
+    filter_str=' AND '.join(LOG_FILTER),
+  )  # "returns LogsQuery object"
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -65,27 +65,28 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'dataflow api is disabled')
     return
 
-  if (context.project_id in project_logs and
-      project_logs[context.project_id].entries):
+  if context.project_id in project_logs and project_logs[context.project_id].entries:
     failed_jobs = set()
     for log_entry in project_logs[context.project_id].entries:
       current_entry = get_path(log_entry, ('jsonPayload', 'message'), '')
 
-      if log_entry['severity'] != 'ERROR' or all(
-          m not in current_entry for m in MATCH_STRINGS):
+      if log_entry['severity'] != 'ERROR' or all(m not in current_entry for m in MATCH_STRINGS):
         continue
 
       job_id = get_path(log_entry, ('resource', 'labels', 'job_id'))
       failed_jobs.add(job_id)
 
     if failed_jobs:
-      extra_jobs = (f', and {len(failed_jobs) - MAX_JOBS_TO_DISPLAY} more jobs'
-                    if len(failed_jobs) > MAX_JOBS_TO_DISPLAY else '')
+      extra_jobs = (
+        f', and {len(failed_jobs) - MAX_JOBS_TO_DISPLAY} more jobs'
+        if len(failed_jobs) > MAX_JOBS_TO_DISPLAY
+        else ''
+      )
 
       report.add_failed(
-          project,
-          f'{len(failed_jobs)} job(s) contain invalid certification path'
-          f" errors: {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
+        project,
+        f'{len(failed_jobs)} job(s) contain invalid certification path'
+        f' errors: {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
       )
     else:
       # only irrelevant logs were fetched

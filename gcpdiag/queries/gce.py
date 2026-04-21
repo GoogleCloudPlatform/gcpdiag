@@ -51,8 +51,7 @@ class InstanceTemplate(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -85,12 +84,12 @@ class InstanceTemplate(models.Resource):
   @property
   def network(self) -> network_q.Network:
     return network_q.get_network_from_url(
-        self._resource_data['properties']['networkInterfaces'][0]['network'])
+      self._resource_data['properties']['networkInterfaces'][0]['network']
+    )
 
   @property
   def subnetwork(self) -> network_q.Subnetwork:
-    subnet_url = self._resource_data['properties']['networkInterfaces'][0][
-        'subnetwork']
+    subnet_url = self._resource_data['properties']['networkInterfaces'][0]['subnetwork']
     return self.network.subnetworks[subnet_url]
 
   def get_metadata(self, key: str) -> str:
@@ -112,8 +111,8 @@ class InstanceGroup(models.Resource):
   @property
   def full_path(self) -> str:
     result = re.match(
-        r'https://www.googleapis.com/compute/v1/(.*)',
-        self._resource_data['selfLink'],
+      r'https://www.googleapis.com/compute/v1/(.*)',
+      self._resource_data['selfLink'],
     )
     if result:
       return result.group(1)
@@ -159,8 +158,8 @@ class ManagedInstanceGroup(models.Resource):
   @property
   def full_path(self) -> str:
     result = re.match(
-        r'https://www.googleapis.com/compute/v1/(.*)',
-        self._resource_data['selfLink'],
+      r'https://www.googleapis.com/compute/v1/(.*)',
+      self._resource_data['selfLink'],
     )
     if result:
       return result.group(1)
@@ -199,20 +198,22 @@ class ManagedInstanceGroup(models.Resource):
       if 'region' in self._resource_data:
         m = re.search(r'/regions/([^/]+)$', self._resource_data['region'])
         if not m:
-          raise RuntimeError("can't determine region of mig %s (%s)" %
-                             (self.name, self._resource_data['region']))
+          raise RuntimeError(
+            "can't determine region of mig {} ({})".format(self.name, self._resource_data['region'])
+          )
         self._region = m.group(1)
       elif 'zone' in self._resource_data:
         m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
         if not m:
-          raise RuntimeError("can't determine region of mig %s (%s)" %
-                             (self.name, self._resource_data['region']))
+          raise RuntimeError(
+            "can't determine region of mig {} ({})".format(self.name, self._resource_data['region'])
+          )
         zone = m.group(1)
         self._region = utils.zone_region(zone)
       else:
         raise RuntimeError(
-            f"can't determine region of mig {self.name}, both region and zone"
-            " aren't set!")
+          f"can't determine region of mig {self.name}, both region and zone aren't set!"
+        )
     return self._region
 
   @property
@@ -220,8 +221,9 @@ class ManagedInstanceGroup(models.Resource):
     if 'zone' in self._resource_data:
       m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
       if not m:
-        raise RuntimeError("can't determine zone of mig %s (%s)" %
-                           (self.name, self._resource_data['zone']))
+        raise RuntimeError(
+          "can't determine zone of mig {} ({})".format(self.name, self._resource_data['zone'])
+        )
       return m.group(1)
     return None
 
@@ -229,11 +231,13 @@ class ManagedInstanceGroup(models.Resource):
     """number of instances in the mig that are running and have no scheduled actions."""
     return self._resource_data['currentActions']['none']
 
-  def is_instance_member(self, project_id: str, region: str,
-                         instance_name: str):
+  def is_instance_member(self, project_id: str, region: str, instance_name: str):
     """Given the project_id, region and instance name, is it a member of this MIG?"""
-    return (self.project_id == project_id and self.region == region and
-            instance_name.startswith(self._resource_data['baseInstanceName']))
+    return (
+      self.project_id == project_id
+      and self.region == region
+      and instance_name.startswith(self._resource_data['baseInstanceName'])
+    )
 
   @property
   def template(self) -> InstanceTemplate:
@@ -241,31 +245,27 @@ class ManagedInstanceGroup(models.Resource):
       raise RuntimeError('instanceTemplate not set for MIG {self.name}')
 
     m = re.match(
-        r'https://www.googleapis.com/compute/v1/(.*)',
-        self._resource_data['instanceTemplate'],
+      r'https://www.googleapis.com/compute/v1/(.*)',
+      self._resource_data['instanceTemplate'],
     )
 
     if not m:
-      raise RuntimeError("can't parse instanceTemplate: %s" %
-                         self._resource_data['instanceTemplate'])
+      raise RuntimeError(
+        "can't parse instanceTemplate: %s" % self._resource_data['instanceTemplate']
+      )
     template_self_link = m.group(1)
     templates = get_instance_templates(self.project_id)
     if template_self_link not in templates:
-      raise RuntimeError(
-          f'instanceTemplate {template_self_link} for MIG {self.name} not found'
-      )
+      raise RuntimeError(f'instanceTemplate {template_self_link} for MIG {self.name} not found')
     return templates[template_self_link]
 
   @property
   def version_target_reached(self) -> bool:
-    return get_path(self._resource_data,
-                    ('status', 'versionTarget', 'isReached'))
+    return get_path(self._resource_data, ('status', 'versionTarget', 'isReached'))
 
   def get(self, path: str, default: Any = None) -> Any:
     """Gets a value from resource_data using a dot-separated path."""
-    return get_path(self._resource_data,
-                    tuple(path.split('.')),
-                    default=default)
+    return get_path(self._resource_data, tuple(path.split('.')), default=default)
 
 
 class Autoscaler(models.Resource):
@@ -283,8 +283,7 @@ class Autoscaler(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -296,9 +295,7 @@ class Autoscaler(models.Resource):
 
   def get(self, path: str, default: Any = None) -> Any:
     """Gets a value from resource_data using a dot-separated path."""
-    return get_path(self._resource_data,
-                    tuple(path.split('.')),
-                    default=default)
+    return get_path(self._resource_data, tuple(path.split('.')), default=default)
 
 
 class SerialPortOutput:
@@ -348,8 +345,8 @@ class Instance(models.Resource):
   @property
   def full_path(self) -> str:
     result = re.match(
-        r'https://www.googleapis.com/compute/v1/(.*)',
-        self._resource_data['selfLink'],
+      r'https://www.googleapis.com/compute/v1/(.*)',
+      self._resource_data['selfLink'],
     )
     if result:
       return result.group(1)
@@ -366,9 +363,11 @@ class Instance(models.Resource):
   @property
   def creation_timestamp(self) -> datetime:
     """VM creation time, as a *naive* `datetime` object."""
-    return (datetime.fromisoformat(
-        self._resource_data['creationTimestamp']).astimezone(
-            timezone.utc).replace(tzinfo=None))
+    return (
+      datetime.fromisoformat(self._resource_data['creationTimestamp'])
+      .astimezone(timezone.utc)
+      .replace(tzinfo=None)
+    )
 
   @property
   def region(self) -> str:
@@ -376,13 +375,14 @@ class Instance(models.Resource):
       if 'zone' in self._resource_data:
         m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
         if not m:
-          raise RuntimeError("can't determine region of instance %s (%s)" %
-                             (self.name, self._resource_data['region']))
+          raise RuntimeError(
+            "can't determine region of instance %s (%s)"
+            % (self.name, self._resource_data['region'])
+          )
         zone = m.group(1)
         self._region = utils.zone_region(zone)
       else:
-        raise RuntimeError(
-            f"can't determine region of instance {self.name}, zone isn't set!")
+        raise RuntimeError(f"can't determine region of instance {self.name}, zone isn't set!")
     return self._region
 
   @property
@@ -406,8 +406,7 @@ class Instance(models.Resource):
     for disk in self.disks:
       if disk.get('boot'):
         return [
-            l.partition('/global/licenses/')[2]
-            for l in disk.get('licenses', [])
+          license_str.partition('/global/licenses/')[2] for license_str in disk.get('licenses', [])
         ]
     return []
 
@@ -455,9 +454,11 @@ class Instance(models.Resource):
 
   @property
   def is_preemptible_vm(self) -> bool:
-    return ('scheduling' in self._resource_data and
-            'preemptible' in self._resource_data['scheduling'] and
-            self._resource_data['scheduling']['preemptible'])
+    return (
+      'scheduling' in self._resource_data
+      and 'preemptible' in self._resource_data['scheduling']
+      and self._resource_data['scheduling']['preemptible']
+    )
 
   def min_cpu_platform(self) -> str:
     if 'minCpuPlatform' in self._resource_data:
@@ -476,8 +477,8 @@ class Instance(models.Resource):
       return False
 
     created_by_match = re.match(
-        r'projects/([^/]+)/((?:regions|zones)/[^/]+/instanceGroupManagers/[^/]+)$',
-        created_by,
+      r'projects/([^/]+)/((?:regions|zones)/[^/]+/instanceGroupManagers/[^/]+)$',
+      created_by,
     )
     if not created_by_match:
       return False
@@ -504,8 +505,7 @@ class Instance(models.Resource):
       if mt:
         return mt.group(1)
       else:
-        raise RuntimeError(
-            f"can't determine machineType of instance {self.name}")
+        raise RuntimeError(f"can't determine machineType of instance {self.name}")
     return None
 
   def check_license(self, licenses: List[str]) -> bool:
@@ -529,9 +529,7 @@ class Instance(models.Resource):
         if not m:
           raise RuntimeError(f"can't determine name of boot disk {disk_source}")
         disk_name = m.group(1)
-        gce_disk: Disk = get_disk(self.project_id,
-                                  zone=self.zone,
-                                  disk_name=disk_name)
+        gce_disk: Disk = get_disk(self.project_id, zone=self.zone, disk_name=disk_name)
         return gce_disk.source_image
     return boot_disk_image
 
@@ -543,19 +541,17 @@ class Instance(models.Resource):
   def network(self) -> network_q.Network:
     # 'https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default'
     network_string = self._resource_data['networkInterfaces'][0]['network']
-    m = re.match(r'^.+/projects/([^/]+)/global/networks/([^/]+)$',
-                 network_string)
+    m = re.match(r'^.+/projects/([^/]+)/global/networks/([^/]+)$', network_string)
     if not m:
       raise RuntimeError("can't parse network string: %s" % network_string)
-    return network_q.get_network(m.group(1),
-                                 m.group(2),
-                                 context=models.Context(project_id=m.group(1)))
+    return network_q.get_network(
+      m.group(1), m.group(2), context=models.Context(project_id=m.group(1))
+    )
 
   @property
   def network_ips(self) -> List[network_q.IPv4AddrOrIPv6Addr]:
     return [
-        ipaddress.ip_address(nic['networkIP'])
-        for nic in self._resource_data['networkInterfaces']
+      ipaddress.ip_address(nic['networkIP']) for nic in self._resource_data['networkInterfaces']
     ]
 
   @property
@@ -585,7 +581,8 @@ class Instance(models.Resource):
     return routes
 
   def get_network_ip_for_instance_interface(
-      self, network: str) -> Optional[network_q.IPv4NetOrIPv6Net]:
+    self, network: str
+  ) -> Optional[network_q.IPv4NetOrIPv6Net]:
     """Get the network ip for a nic given a network name."""
     for nic in self._resource_data['networkInterfaces']:
       if nic.get('network') == network:
@@ -623,8 +620,7 @@ class Instance(models.Resource):
   def get_metadata(self, key: str) -> str:
     if not self._metadata_dict:
       self._metadata_dict = {}
-      if ('metadata' in self._resource_data and
-          'items' in self._resource_data['metadata']):
+      if 'metadata' in self._resource_data and 'items' in self._resource_data['metadata']:
         for item in self._resource_data['metadata']['items']:
           if 'key' in item and 'value' in item:
             self._metadata_dict[item['key']] = item['value']
@@ -659,32 +655,31 @@ class Instance(models.Resource):
       raise AttributeError(f'instance {self.id} is not managed by a mig')
 
     # Example created-by:
-    # pylint: disable=line-too-long
     # "projects/12340002/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp"
     # (note how it uses a project number and not a project id...)
     created_by_match = re.match(
-        r'projects/([^/]+)/((?:regions|zones)/[^/]+/instanceGroupManagers/[^/]+)$',
-        created_by,
+      r'projects/([^/]+)/((?:regions|zones)/[^/]+/instanceGroupManagers/[^/]+)$',
+      created_by,
     )
     if not created_by_match:
-      raise AttributeError(f'instance {self.id} is not managed by a mig'
-                           f' (created-by={created_by})')
+      raise AttributeError(f'instance {self.id} is not managed by a mig (created-by={created_by})')
     project = crm.get_project(created_by_match.group(1))
 
-    mig_self_link = ('https://www.googleapis.com/compute/v1/'
-                     f'projects/{project.id}/{created_by_match.group(2)}')
+    mig_self_link = (
+      f'https://www.googleapis.com/compute/v1/projects/{project.id}/{created_by_match.group(2)}'
+    )
 
     # Try to find a matching mig.
     context = models.Context(project_id=self.project_id)
     all_migs = list(get_managed_instance_groups(context).values()) + list(
-        get_region_managed_instance_groups(context).values())
+      get_region_managed_instance_groups(context).values()
+    )
 
     for mig in all_migs:
       if mig.self_link == mig_self_link:
         return mig
 
-    raise AttributeError(f'MIG not found for instance {self.id}. '
-                         f'Created by: {created_by}')
+    raise AttributeError(f'MIG not found for instance {self.id}. Created by: {created_by}')
 
   @property
   def labels(self) -> dict:
@@ -712,8 +707,9 @@ class Disk(models.Resource):
   def type(self) -> str:
     disk_type = re.search(r'/diskTypes/([^/]+)$', self._resource_data['type'])
     if not disk_type:
-      raise RuntimeError("can't determine type of the disk %s (%s)" %
-                         (self.name, self._resource_data['type']))
+      raise RuntimeError(
+        "can't determine type of the disk {} ({})".format(self.name, self._resource_data['type'])
+      )
     return disk_type.group(1)
 
   @property
@@ -731,8 +727,9 @@ class Disk(models.Resource):
   def zone(self) -> str:
     m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
     if not m:
-      raise RuntimeError("can't determine zone of disk %s (%s)" %
-                         (self.name, self._resource_data['zone']))
+      raise RuntimeError(
+        "can't determine zone of disk {} ({})".format(self.name, self._resource_data['zone'])
+      )
     return m.group(1)
 
   @property
@@ -742,8 +739,8 @@ class Disk(models.Resource):
   @property
   def full_path(self) -> str:
     result = re.match(
-        r'https://www.googleapis.com/compute/v1/(.*)',
-        self._resource_data['selfLink'],
+      r'https://www.googleapis.com/compute/v1/(.*)',
+      self._resource_data['selfLink'],
     )
     if result:
       return result.group(1)
@@ -800,17 +797,14 @@ def get_gce_public_licences(project_id: str) -> List[str]:
     for license_ in response['items']:
       formatted_license = license_['selfLink'].partition('/global/licenses/')[2]
       licenses.append(formatted_license)
-    request = gce_api.licenses().list_next(previous_request=request,
-                                           previous_response=response)
+    request = gce_api.licenses().list_next(previous_request=request, previous_response=response)
   return licenses
 
 
 def get_instance(project_id: str, zone: str, instance_name: str) -> Instance:
   """Returns instance object matching instance name and zone"""
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.instances().get(project=project_id,
-                                    zone=zone,
-                                    instance=instance_name)
+  request = compute.instances().get(project=project_id, zone=zone, instance=instance_name)
 
   response = request.execute(num_retries=config.API_RETRIES)
   return Instance(project_id, resource_data=response)
@@ -830,9 +824,9 @@ def get_instance_by_id(project_id: str, instance_id: str) -> Optional[Instance]:
     return None
   gce_api = apis.get_api('compute', 'v1', project_id)
   # Use aggregatedList with filter to efficiently find the instance by ID.
-  request = gce_api.instances().aggregatedList(project=project_id,
-                                               filter=f'id eq {instance_id}',
-                                               returnPartialSuccess=True)
+  request = gce_api.instances().aggregatedList(
+    project=project_id, filter=f'id eq {instance_id}', returnPartialSuccess=True
+  )
 
   while request:
     response = request.execute(num_retries=config.API_RETRIES)
@@ -844,31 +838,33 @@ def get_instance_by_id(project_id: str, instance_id: str) -> Optional[Instance]:
             return Instance(project_id, instance_data)
 
     request = gce_api.instances().aggregatedList_next(
-        previous_request=request, previous_response=response)
+      previous_request=request, previous_response=response
+    )
 
   return None
 
 
 @caching.cached_api_call(in_memory=True)
 def get_global_operations(
-    project: str,
-    filter_str: Optional[str] = None,
-    order_by: Optional[str] = None,
-    max_results: Optional[int] = None,
-    service_project_number: Optional[int] = None,
+  project: str,
+  filter_str: Optional[str] = None,
+  order_by: Optional[str] = None,
+  max_results: Optional[int] = None,
+  service_project_number: Optional[int] = None,
 ) -> List[Dict[str, Any]]:
   """Returns global operations object matching project id."""
   compute = apis.get_api('compute', 'v1', project)
-  logging.debug(('searching compute global operations'
-                 'logs in project %s with filter %s'), project, filter_str)
+  logging.debug(
+    ('searching compute global operationslogs in project %s with filter %s'), project, filter_str
+  )
   operations: List[Dict[str, Any]] = []
   request = compute.globalOperations().aggregatedList(
-      project=project,
-      filter=filter_str,
-      orderBy=order_by,
-      maxResults=max_results,
-      serviceProjectNumber=service_project_number,
-      returnPartialSuccess=True,
+    project=project,
+    filter=filter_str,
+    orderBy=order_by,
+    maxResults=max_results,
+    serviceProjectNumber=service_project_number,
+    returnPartialSuccess=True,
   )
   while request:
     response = request.execute(num_retries=config.API_RETRIES)
@@ -878,7 +874,8 @@ def get_global_operations(
         continue
       operations.extend(data['operations'])
     request = compute.globalOperations().aggregatedList_next(
-        previous_request=request, previous_response=response)
+      previous_request=request, previous_response=response
+    )
   return operations
 
 
@@ -892,8 +889,8 @@ def get_disk(project_id: str, zone: str, disk_name: str) -> Disk:
 
 
 def get_instance_group_manager(
-    project_id: str, zone: str,
-    instance_group_manager_name: str) -> ManagedInstanceGroup:
+  project_id: str, zone: str, instance_group_manager_name: str
+) -> ManagedInstanceGroup:
   """Get a zonal ManagedInstanceGroup object by name and zone.
 
   Args:
@@ -909,9 +906,8 @@ def get_instance_group_manager(
   """
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.instanceGroupManagers().get(
-      project=project_id,
-      zone=zone,
-      instanceGroupManager=instance_group_manager_name)
+    project=project_id, zone=zone, instanceGroupManager=instance_group_manager_name
+  )
   try:
     response = request.execute(num_retries=config.API_RETRIES)
     return ManagedInstanceGroup(project_id, resource_data=response)
@@ -920,8 +916,8 @@ def get_instance_group_manager(
 
 
 def get_region_instance_group_manager(
-    project_id: str, region: str,
-    instance_group_manager_name: str) -> ManagedInstanceGroup:
+  project_id: str, region: str, instance_group_manager_name: str
+) -> ManagedInstanceGroup:
   """Get a regional ManagedInstanceGroup object by name and region.
 
   Args:
@@ -937,9 +933,9 @@ def get_region_instance_group_manager(
   """
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.regionInstanceGroupManagers().get(
-      project=project_id,
-      region=region,
-      instanceGroupManager=instance_group_manager_name,
+    project=project_id,
+    region=region,
+    instanceGroupManager=instance_group_manager_name,
   )
   try:
     response = request.execute(num_retries=config.API_RETRIES)
@@ -948,13 +944,10 @@ def get_region_instance_group_manager(
     raise utils.GcpApiError(err) from err
 
 
-def get_autoscaler(project_id: str, zone: str,
-                   autoscaler_name: str) -> Autoscaler:
+def get_autoscaler(project_id: str, zone: str, autoscaler_name: str) -> Autoscaler:
   """Get a zonal Autoscaler object by name and zone."""
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.autoscalers().get(project=project_id,
-                                      zone=zone,
-                                      autoscaler=autoscaler_name)
+  request = compute.autoscalers().get(project=project_id, zone=zone, autoscaler=autoscaler_name)
   try:
     response = request.execute(num_retries=config.API_RETRIES)
     return Autoscaler(project_id, resource_data=response)
@@ -962,13 +955,12 @@ def get_autoscaler(project_id: str, zone: str,
     raise utils.GcpApiError(err) from err
 
 
-def get_region_autoscaler(project_id: str, region: str,
-                          autoscaler_name: str) -> Autoscaler:
+def get_region_autoscaler(project_id: str, region: str, autoscaler_name: str) -> Autoscaler:
   """Get a regional Autoscaler object by name and region."""
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.regionAutoscalers().get(project=project_id,
-                                            region=region,
-                                            autoscaler=autoscaler_name)
+  request = compute.regionAutoscalers().get(
+    project=project_id, region=region, autoscaler=autoscaler_name
+  )
   try:
     response = request.execute(num_retries=config.API_RETRIES)
     return Autoscaler(project_id, resource_data=response)
@@ -984,8 +976,9 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   if not apis.is_enabled(context.project_id, 'compute'):
     return instances
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  request = gce_api.instances().aggregatedList(project=context.project_id,
-                                               returnPartialSuccess=True)
+  request = gce_api.instances().aggregatedList(
+    project=context.project_id, returnPartialSuccess=True
+  )
   logging.debug('listing gce instances of project %s', context.project_id)
   while request:  # Continue as long as there are pages
     response = request.execute(num_retries=config.API_RETRIES)
@@ -995,29 +988,30 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
         continue
       for instance in data_['instances']:
         result = re.match(
-            r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)/',
-            instance['selfLink'],
+          r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)/',
+          instance['selfLink'],
         )
         if not result:
           logging.error(
-              "instance %s selfLink didn't match regexp: %s",
-              instance['id'],
-              instance['selfLink'],
+            "instance %s selfLink didn't match regexp: %s",
+            instance['id'],
+            instance['selfLink'],
           )
           continue
         zone = result.group(1)
         labels = instance.get('labels', {})
         if not context.match_project_resource(
-            resource=instance.get('name'), location=zone,
-            labels=labels) and not context.match_project_resource(
-                resource=instance.get('id'), location=zone, labels=labels):
+          resource=instance.get('name'), location=zone, labels=labels
+        ) and not context.match_project_resource(
+          resource=instance.get('id'), location=zone, labels=labels
+        ):
           continue
-        instances.update({
-            instance['id']:
-                Instance(project_id=context.project_id, resource_data=instance)
-        })
+        instances.update(
+          {instance['id']: Instance(project_id=context.project_id, resource_data=instance)}
+        )
     request = gce_api.instances().aggregatedList_next(
-        previous_request=request, previous_response=response)
+      previous_request=request, previous_response=response
+    )
   return instances
 
 
@@ -1028,8 +1022,9 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
   if not apis.is_enabled(context.project_id, 'compute'):
     return groups
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  request = gce_api.instanceGroups().aggregatedList(project=context.project_id,
-                                                    returnPartialSuccess=True)
+  request = gce_api.instanceGroups().aggregatedList(
+    project=context.project_id, returnPartialSuccess=True
+  )
   logging.debug('listing gce instance groups of project %s', context.project_id)
   while request:  # Continue as long as there are pages
     response = request.execute(num_retries=config.API_RETRIES)
@@ -1039,32 +1034,33 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
         continue
       for group in data_['instanceGroups']:
         result = re.match(
-            r'https://www.googleapis.com/compute/v1/projects/[^/]+/(zones|regions)/([^/]+)',
-            group['selfLink'],
+          r'https://www.googleapis.com/compute/v1/projects/[^/]+/(zones|regions)/([^/]+)',
+          group['selfLink'],
         )
         if not result:
           logging.error(
-              "instance %s selfLink didn't match regexp: %s",
-              group['id'],
-              group['selfLink'],
+            "instance %s selfLink didn't match regexp: %s",
+            group['id'],
+            group['selfLink'],
           )
           continue
         location = result.group(2)
         labels = group.get('labels', {})
         resource = group.get('name', '')
-        if not context.match_project_resource(
-            location=location, labels=labels, resource=resource):
+        if not context.match_project_resource(location=location, labels=labels, resource=resource):
           continue
         instance_group = InstanceGroup(context.project_id, resource_data=group)
         groups[instance_group.full_path] = instance_group
     request = gce_api.instanceGroups().aggregatedList_next(
-        previous_request=request, previous_response=response)
+      previous_request=request, previous_response=response
+    )
   return groups
 
 
 @caching.cached_api_call(in_memory=True)
 def get_managed_instance_groups(
-    context: models.Context,) -> Mapping[int, ManagedInstanceGroup]:
+  context: models.Context,
+) -> Mapping[int, ManagedInstanceGroup]:
   """Get a list of zonal ManagedInstanceGroups matching the given context, indexed by mig id."""
 
   migs: Dict[int, ManagedInstanceGroup] = {}
@@ -1072,9 +1068,9 @@ def get_managed_instance_groups(
     return migs
   gce_api = apis.get_api('compute', 'v1', context.project_id)
   request = gce_api.instanceGroupManagers().aggregatedList(
-      project=context.project_id, returnPartialSuccess=True)
-  logging.debug('listing zonal managed instance groups of project %s',
-                context.project_id)
+    project=context.project_id, returnPartialSuccess=True
+  )
+  logging.debug('listing zonal managed instance groups of project %s', context.project_id)
   while request:  # Continue as long as there are pages
     response = request.execute(num_retries=config.API_RETRIES)
     migs_by_zones = response.get('items', {})
@@ -1083,32 +1079,32 @@ def get_managed_instance_groups(
         continue
       for mig in data_['instanceGroupManagers']:
         result = re.match(
-            r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions|zones)/([^/]+)/',
-            mig['selfLink'],
+          r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions|zones)/([^/]+)/',
+          mig['selfLink'],
         )
         if not result:
           logging.error(
-              "mig %s selfLink didn't match regexp: %s",
-              mig['name'],
-              mig['selfLink'],
+            "mig %s selfLink didn't match regexp: %s",
+            mig['name'],
+            mig['selfLink'],
           )
           continue
         location = result.group(1)
         labels = mig.get('labels', {})
         resource = mig.get('name', '')
-        if not context.match_project_resource(
-            location=location, labels=labels, resource=resource):
+        if not context.match_project_resource(location=location, labels=labels, resource=resource):
           continue
-        migs[mig['id']] = ManagedInstanceGroup(project_id=context.project_id,
-                                               resource_data=mig)
+        migs[mig['id']] = ManagedInstanceGroup(project_id=context.project_id, resource_data=mig)
     request = gce_api.instanceGroupManagers().aggregatedList_next(
-        previous_request=request, previous_response=response)
+      previous_request=request, previous_response=response
+    )
   return migs
 
 
 @caching.cached_api_call(in_memory=True)
 def get_region_managed_instance_groups(
-    context: models.Context,) -> Mapping[int, ManagedInstanceGroup]:
+  context: models.Context,
+) -> Mapping[int, ManagedInstanceGroup]:
   """Get a list of regional ManagedInstanceGroups matching the given context, indexed by mig id."""
 
   migs: Dict[int, ManagedInstanceGroup] = {}
@@ -1116,39 +1112,34 @@ def get_region_managed_instance_groups(
     return migs
   gce_api = apis.get_api('compute', 'v1', context.project_id)
   requests = [
-      gce_api.regionInstanceGroupManagers().list(project=context.project_id,
-                                                 region=r.name)
-      for r in get_all_regions(context.project_id)
+    gce_api.regionInstanceGroupManagers().list(project=context.project_id, region=r.name)
+    for r in get_all_regions(context.project_id)
   ]
   logging.debug(
-      'listing regional managed instance groups of project %s',
-      context.project_id,
+    'listing regional managed instance groups of project %s',
+    context.project_id,
   )
   items = apis_utils.execute_concurrently_with_pagination(
-      api=gce_api,
-      requests=requests,
-      next_function=gce_api.regionInstanceGroupManagers().list_next,
-      context=context,
-      log_text=
-      f'listing regional managed instance groups of project {context.project_id}'
+    api=gce_api,
+    requests=requests,
+    next_function=gce_api.regionInstanceGroupManagers().list_next,
+    context=context,
+    log_text=f'listing regional managed instance groups of project {context.project_id}',
   )
   for i in items:
     result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions)/([^/]+)/',
-        i['selfLink'],
+      r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions)/([^/]+)/',
+      i['selfLink'],
     )
     if not result:
-      logging.error("mig %s selfLink didn't match regexp: %s", i['name'],
-                    i['selfLink'])
+      logging.error("mig %s selfLink didn't match regexp: %s", i['name'], i['selfLink'])
       continue
     location = result.group(1)
     labels = i.get('labels', {})
     name = i.get('name', '')
-    if not context.match_project_resource(
-        location=location, labels=labels, resource=name):
+    if not context.match_project_resource(location=location, labels=labels, resource=name):
       continue
-    migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id,
-                                         resource_data=i)
+    migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id, resource_data=i)
   return migs
 
 
@@ -1158,15 +1149,16 @@ def get_instance_templates(project_id: str) -> Mapping[str, InstanceTemplate]:
   templates = {}
   gce_api = apis.get_api('compute', 'v1', project_id)
   request = gce_api.instanceTemplates().list(
-      project=project_id,
-      returnPartialSuccess=True,
-      # Fetch only a subset of the fields to improve performance.
-      fields=('items/name, items/properties/tags,'
-              ' items/properties/networkInterfaces,'
-              ' items/properties/serviceAccounts, items/properties/metadata'),
+    project=project_id,
+    returnPartialSuccess=True,
+    # Fetch only a subset of the fields to improve performance.
+    fields=(
+      'items/name, items/properties/tags,'
+      ' items/properties/networkInterfaces,'
+      ' items/properties/serviceAccounts, items/properties/metadata'
+    ),
   )
-  for t in apis_utils.list_all(
-      request, next_function=gce_api.instanceTemplates().list_next):
+  for t in apis_utils.list_all(request, next_function=gce_api.instanceTemplates().list_next):
     instance_template = InstanceTemplate(project_id, t)
     templates[instance_template.full_path] = instance_template
   return templates
@@ -1208,16 +1200,16 @@ def get_instances_serial_port_output(context: models.Context):
   # Only relevant instances as storage size can grow drastically for
   # massive projects. Think 1MB * N where N is some large number.
   requests = [
-      gce_api.instances().getSerialPortOutput(
-          project=i.project_id,
-          zone=i.zone,
-          instance=i.id,
-          # To get all 1mb output
-          start=-1000000,
-      )
-      for i in get_instances(context).values()
-      # fetch running instances that do not export to cloud logging
-      if not i.is_serial_port_logging_enabled() and i.is_running
+    gce_api.instances().getSerialPortOutput(
+      project=i.project_id,
+      zone=i.zone,
+      instance=i.id,
+      # To get all 1mb output
+      start=-1000000,
+    )
+    for i in get_instances(context).values()
+    # fetch running instances that do not export to cloud logging
+    if not i.is_serial_port_logging_enabled() and i.is_running
   ]
   requests_start_time = datetime.now()
   # Note: We are limited to 1000 calls in a single batch request.
@@ -1225,9 +1217,10 @@ def get_instances_serial_port_output(context: models.Context):
   # https://github.com/googleapis/google-api-python-client/blob/main/docs/batch.md
   batch_size = 1000
   for i in range(0, len(requests), batch_size):
-    batch_requests = requests[i:i + batch_size]
+    batch_requests = requests[i : i + batch_size]
     for _, response, exception in apis_utils.execute_concurrently(
-        api=gce_api, requests=batch_requests, context=context):
+      api=gce_api, requests=batch_requests, context=context
+    ):
       if exception:
         if isinstance(exception, googleapiclient.errors.HttpError):
           raise utils.GcpApiError(exception) from exception
@@ -1236,34 +1229,33 @@ def get_instances_serial_port_output(context: models.Context):
 
       if response:
         result = re.match(
-            r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/[^/]+/instances/([^/]+)',
-            response['selfLink'],
+          r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/[^/]+/instances/([^/]+)',
+          response['selfLink'],
         )
         if not result:
-          logging.error("instance selfLink didn't match regexp: %s",
-                        response['selfLink'])
+          logging.error("instance selfLink didn't match regexp: %s", response['selfLink'])
           return
 
         project_id = result.group(1)
         instance_id = result.group(2)
         deque.appendleft(
-            SerialPortOutput(
-                project_id=project_id,
-                instance_id=instance_id,
-                contents=response['contents'].splitlines(),
-            ))
+          SerialPortOutput(
+            project_id=project_id,
+            instance_id=instance_id,
+            contents=response['contents'].splitlines(),
+          )
+        )
   requests_end_time = datetime.now()
   logging.debug(
-      'total serial logs processing time: %s, number of instances: %s',
-      requests_end_time - requests_start_time,
-      len(requests),
+    'total serial logs processing time: %s, number of instances: %s',
+    requests_end_time - requests_start_time,
+    len(requests),
   )
   return deque
 
 
 @caching.cached_api_call
-def get_instance_serial_port_output(
-    project_id, zone, instance_name) -> Optional[SerialPortOutput]:
+def get_instance_serial_port_output(project_id, zone, instance_name) -> Optional[SerialPortOutput]:
   """Get a list of serial port output for instances
 
   which matches the given context, running and is not
@@ -1275,11 +1267,11 @@ def get_instance_serial_port_output(
   gce_api = apis.get_api('compute', 'v1', project_id)
 
   request = gce_api.instances().getSerialPortOutput(
-      project=project_id,
-      zone=zone,
-      instance=instance_name,
-      # To get all 1mb output
-      start=-1000000,
+    project=project_id,
+    zone=zone,
+    instance=instance_name,
+    # To get all 1mb output
+    start=-1000000,
   )
   try:
     response = request.execute(num_retries=config.API_RETRIES)
@@ -1288,20 +1280,19 @@ def get_instance_serial_port_output(
 
   if response:
     result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/[^/]+/instances/([^/]+)',
-        response['selfLink'],
+      r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/[^/]+/instances/([^/]+)',
+      response['selfLink'],
     )
     if not result:
-      logging.error("instance selfLink didn't match regexp: %s",
-                    response['selfLink'])
+      logging.error("instance selfLink didn't match regexp: %s", response['selfLink'])
       return None
 
     project_id = result.group(1)
     instance_id = result.group(2)
     return SerialPortOutput(
-        project_id,
-        instance_id=instance_id,
-        contents=response['contents'].splitlines(),
+      project_id,
+      instance_id=instance_id,
+      contents=response['contents'].splitlines(),
     )
   return None
 
@@ -1321,8 +1312,7 @@ class Region(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -1353,9 +1343,7 @@ def get_all_regions(project_id: str) -> Iterable[Region]:
     if not response or 'items' not in response:
       return set()
 
-    return {
-        Region(project_id, item) for item in response['items'] if 'name' in item
-    }
+    return {Region(project_id, item) for item in response['items'] if 'name' in item}
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
 
@@ -1394,18 +1382,18 @@ def get_all_disks(context: models.Context) -> Iterable[Disk]:
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [
-        gce_api.disks().list(project=project_id, zone=zone)
-        for zone in get_gce_zones(project_id)
+      gce_api.disks().list(project=project_id, zone=zone) for zone in get_gce_zones(project_id)
     ]
 
     logging.debug('listing gce disks of project %s', project_id)
 
     items = apis_utils.execute_concurrently_with_pagination(
-        api=gce_api,
-        requests=requests,
-        next_function=gce_api.disks().list_next,
-        context=context,
-        log_text=f'listing GCE disks of project {project_id}')
+      api=gce_api,
+      requests=requests,
+      next_function=gce_api.disks().list_next,
+      context=context,
+      log_text=f'listing GCE disks of project {project_id}',
+    )
 
     return {Disk(project_id, item) for item in items}
 
@@ -1414,8 +1402,7 @@ def get_all_disks(context: models.Context) -> Iterable[Disk]:
 
 
 @caching.cached_api_call
-def get_all_disks_of_instance(context: models.Context, zone: str,
-                              instance_name: str) -> dict:
+def get_all_disks_of_instance(context: models.Context, zone: str, instance_name: str) -> dict:
   """Get all disks of a given instance.
 
   Args:
@@ -1432,18 +1419,17 @@ def get_all_disks_of_instance(context: models.Context, zone: str,
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [gce_api.disks().list(project=project_id, zone=zone)]
     logging.debug(
-        'listing gce disks attached to instance %s in project %s',
-        instance_name,
-        project_id,
+      'listing gce disks attached to instance %s in project %s',
+      instance_name,
+      project_id,
     )
 
     items = apis_utils.execute_concurrently_with_pagination(
-        api=gce_api,
-        requests=requests,
-        next_function=gce_api.disks().list_next,
-        context=context,
-        log_text=
-        f'listing gce disks attached to instance {instance_name} in project {project_id}'
+      api=gce_api,
+      requests=requests,
+      next_function=gce_api.disks().list_next,
+      context=context,
+      log_text=f'listing gce disks attached to instance {instance_name} in project {project_id}',
     )
     all_disk_list = {Disk(project_id, item) for item in items}
     disk_list = {}
@@ -1473,14 +1459,15 @@ class InstanceEffectiveFirewalls(network_q.EffectiveFirewalls):
 
 @caching.cached_api_call(in_memory=True)
 def get_instance_interface_effective_firewalls(
-    instance: Instance, nic: str) -> InstanceEffectiveFirewalls:
+  instance: Instance, nic: str
+) -> InstanceEffectiveFirewalls:
   """Return effective firewalls for a network interface on the instance."""
   compute = apis.get_api('compute', 'v1', instance.project_id)
   request = compute.instances().getEffectiveFirewalls(
-      project=instance.project_id,
-      zone=instance.zone,
-      instance=instance.name,
-      networkInterface=nic,
+    project=instance.project_id,
+    zone=instance.zone,
+    instance=instance.name,
+    networkInterface=nic,
   )
   response = request.execute(num_retries=config.API_RETRIES)
   return InstanceEffectiveFirewalls(Instance, nic, response)
@@ -1490,8 +1477,7 @@ def is_project_serial_port_logging_enabled(project_id: str) -> bool:
   if not apis.is_enabled(project_id, 'compute'):
     return False
 
-  value = get_project_metadata(
-      project_id=project_id).get('serial-port-logging-enable')
+  value = get_project_metadata(project_id=project_id).get('serial-port-logging-enable')
   return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 
 
@@ -1506,9 +1492,7 @@ class _SerialOutputJob:
   context: models.Context
   future: Optional[concurrent.futures.Future] = None
 
-  def __init__(self,
-               context,
-               future: Optional[concurrent.futures.Future] = None):
+  def __init__(self, context, future: Optional[concurrent.futures.Future] = None):
     self.context = context
     self.future = future
 
@@ -1524,12 +1508,13 @@ class SerialOutputQuery:
   @property
   def entries(self) -> Sequence:
     if not self.job.future:
-      raise RuntimeError("Fetching serial logs wasn't executed. did you call"
-                         ' execute_get_serial_port_output()?')
+      raise RuntimeError(
+        "Fetching serial logs wasn't executed. did you call execute_get_serial_port_output()?"
+      )
     elif self.job.future.running():
       logging.debug(
-          'waiting for serial output results for project: %s',
-          self.job.context.project_id,
+        'waiting for serial output results for project: %s',
+        self.job.context.project_id,
       )
     return self.job.future.result()
 
@@ -1537,8 +1522,7 @@ class SerialOutputQuery:
 jobs_todo: Dict[models.Context, _SerialOutputJob] = {}
 
 
-def execute_fetch_serial_port_outputs(
-    query_executor: executor.ContextAwareExecutor):
+def execute_fetch_serial_port_outputs(query_executor: executor.ContextAwareExecutor):
   # start a thread to fetch serial log; processing logs can be large
   # depending on he number of instances in the project which aren't
   # logging to cloud logging. currently expects only one job but
@@ -1548,8 +1532,7 @@ def execute_fetch_serial_port_outputs(
   jobs_todo = {}
   # query_executor = get_executor(context)
   for job in jobs_executing.values():
-    job.future = query_executor.submit(get_instances_serial_port_output,
-                                       job.context)
+    job.future = query_executor.submit(get_instances_serial_port_output, job.context)
 
 
 def fetch_serial_port_outputs(context: models.Context) -> SerialOutputQuery:
@@ -1575,8 +1558,7 @@ class HealthCheck(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -1652,12 +1634,12 @@ class HealthCheck(models.Resource):
 
   def get_health_check_property(self, property_name: str, default_value=None):
     health_check_types = {
-        'HTTP': 'httpHealthCheck',
-        'HTTPS': 'httpsHealthCheck',
-        'HTTP2': 'http2HealthCheck',
-        'TCP': 'tcpHealthCheck',
-        'SSL': 'sslHealthCheck',
-        'GRPC': 'grpcHealthCheck',
+      'HTTP': 'httpHealthCheck',
+      'HTTPS': 'httpsHealthCheck',
+      'HTTP2': 'http2HealthCheck',
+      'TCP': 'tcpHealthCheck',
+      'SSL': 'sslHealthCheck',
+      'GRPC': 'grpcHealthCheck',
     }
     if self.type in health_check_types:
       health_check_data = self._resource_data.get(health_check_types[self.type])
@@ -1667,17 +1649,14 @@ class HealthCheck(models.Resource):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_health_check(project_id: str,
-                     health_check: str,
-                     region: str = None) -> object:
+def get_health_check(project_id: str, health_check: str, region: str = None) -> object:
   compute = apis.get_api('compute', 'v1', project_id)
   if not region or region == 'global':
-    request = compute.healthChecks().get(project=project_id,
-                                         healthCheck=health_check)
+    request = compute.healthChecks().get(project=project_id, healthCheck=health_check)
   else:
-    request = compute.regionHealthChecks().get(project=project_id,
-                                               healthCheck=health_check,
-                                               region=region)
+    request = compute.regionHealthChecks().get(
+      project=project_id, healthCheck=health_check, region=region
+    )
   response = request.execute(num_retries=config.API_RETRIES)
   return HealthCheck(project_id, response)
 
@@ -1702,8 +1681,7 @@ class NetworkEndpointGroup(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -1721,42 +1699,38 @@ class NetworkEndpointGroup(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_zonal_network_endpoint_groups(
-    context: models.Context,) -> Mapping[str, NetworkEndpointGroup]:
+  context: models.Context,
+) -> Mapping[str, NetworkEndpointGroup]:
   """Returns a list of Network Endpoint Groups in the project."""
   groups: Dict[str, NetworkEndpointGroup] = {}
   if not apis.is_enabled(context.project_id, 'compute'):
     return groups
   gce_api = apis.get_api('compute', 'v1', context.project_id)
   requests = [
-      gce_api.networkEndpointGroups().list(project=context.project_id,
-                                           zone=zone)
-      for zone in get_gce_zones(context.project_id)
+    gce_api.networkEndpointGroups().list(project=context.project_id, zone=zone)
+    for zone in get_gce_zones(context.project_id)
   ]
-  logging.debug('listing gce networkEndpointGroups of project %s',
-                context.project_id)
+  logging.debug('listing gce networkEndpointGroups of project %s', context.project_id)
   items = apis_utils.execute_concurrently_with_pagination(
-      api=gce_api,
-      requests=requests,
-      next_function=gce_api.networkEndpointGroups().list_next,
-      context=context,
-      log_text=(
-          f'listing gce networkEndpointGroups of project {context.project_id}'),
+    api=gce_api,
+    requests=requests,
+    next_function=gce_api.networkEndpointGroups().list_next,
+    context=context,
+    log_text=(f'listing gce networkEndpointGroups of project {context.project_id}'),
   )
 
   for i in items:
     result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
-        i['selfLink'],
+      r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
+      i['selfLink'],
     )
     if not result:
-      logging.error("instance %s selfLink didn't match regexp: %s", i['id'],
-                    i['selfLink'])
+      logging.error("instance %s selfLink didn't match regexp: %s", i['id'], i['selfLink'])
       continue
     zone = result.group(1)
     labels = i.get('labels', {})
     resource = i.get('name', '')
-    if not context.match_project_resource(
-        location=zone, labels=labels, resource=resource):
+    if not context.match_project_resource(location=zone, labels=labels, resource=resource):
       continue
     data = NetworkEndpointGroup(context.project_id, i)
     groups[data.full_path] = data

@@ -1,26 +1,29 @@
-""" Base class for different output implementations """
+"""Base class for different output implementations"""
+
 import logging
 import sys
 import threading
 from typing import TextIO
 
-# pylint: disable=unused-import (lint is used in type annotations)
 from gcpdiag import config, lint, models
 
 
 class BaseOutput:
-  """ Base class for different output implementations """
+  """Base class for different output implementations"""
+
   file: TextIO
   show_ok: bool
   show_skipped: bool
   log_info_for_progress_only: bool
   lock: threading.Lock
 
-  def __init__(self,
-               file: TextIO = sys.stdout,
-               log_info_for_progress_only: bool = True,
-               show_ok: bool = True,
-               show_skipped: bool = False) -> None:
+  def __init__(
+    self,
+    file: TextIO = sys.stdout,
+    log_info_for_progress_only: bool = True,
+    show_ok: bool = True,
+    show_skipped: bool = False,
+  ) -> None:
     self.file = file
     self.show_ok = show_ok
     self.show_skipped = show_skipped
@@ -35,11 +38,8 @@ class BaseOutput:
 
   def display_footer(self, result: 'lint.LintResults') -> None:
     totals = result.get_totals_by_status()
-    state_strs = [
-        f'{totals.get(state, 0)} {state}'
-        for state in ['skipped', 'ok', 'failed']
-    ]
-    print(f"Rules summary: {', '.join(state_strs)}", file=sys.stderr)
+    state_strs = [f'{totals.get(state, 0)} {state}' for state in ['skipped', 'ok', 'failed']]
+    print(f'Rules summary: {", ".join(state_strs)}', file=sys.stderr)
 
   def get_logging_handler(self) -> logging.Handler:
     return _LoggingHandler(self)
@@ -53,8 +53,7 @@ class BaseOutput:
     ok = result.status == 'ok' and not self.show_ok
     return skipped or ok
 
-  def _should_rule_be_skipped(
-      self, rule_report: 'lint.LintReportRuleInterface') -> bool:
+  def _should_rule_be_skipped(self, rule_report: 'lint.LintReportRuleInterface') -> bool:
     skipped = rule_report.overall_status == 'skipped' and not self.show_skipped
     ok = rule_report.overall_status == 'ok' and not self.show_ok
     return skipped or ok
@@ -62,6 +61,7 @@ class BaseOutput:
 
 class _LoggingHandler(logging.Handler):
   """logging.Handler implementation used when producing a lint report."""
+
   output: BaseOutput
 
   def __init__(self, output: BaseOutput):

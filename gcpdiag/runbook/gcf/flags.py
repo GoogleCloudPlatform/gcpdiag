@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Flags for gcf"""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.iam.flags import *
 
 GAC_SERVICE_ACCOUNT = 'gac_service_account'

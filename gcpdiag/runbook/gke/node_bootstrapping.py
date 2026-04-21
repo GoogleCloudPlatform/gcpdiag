@@ -65,19 +65,22 @@ def get_node_instance(project, location, node):
 
 
 def local_realtime_query(filter_str):
-  result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time=op.get(flags.START_TIME),
-                               end_time=op.get(flags.END_TIME),
-                               filter_str=filter_str)
+  result = logs.realtime_query(
+    project_id=op.get(flags.PROJECT_ID),
+    start_time=op.get(flags.START_TIME),
+    end_time=op.get(flags.END_TIME),
+    filter_str=filter_str,
+  )
   return result
 
 
 def get_nrc_summary(node, location):
   filter_str = [
-      f'labels."compute.googleapis.com/resource_name"="{node}"',
-      'resource.type="gce_instance"', f'resource.labels.zone="{location}"',
-      'log_id("serialconsole.googleapis.com/serial_port_1_output")',
-      'textPayload:"node-registration-checker.sh"'
+    f'labels."compute.googleapis.com/resource_name"="{node}"',
+    'resource.type="gce_instance"',
+    f'resource.labels.zone="{location}"',
+    'log_id("serialconsole.googleapis.com/serial_port_1_output")',
+    'textPayload:"node-registration-checker.sh"',
   ]
   filter_str = '\n'.join(filter_str)
   log_entries_all = local_realtime_query(filter_str)
@@ -91,8 +94,7 @@ def get_nrc_summary(node, location):
       found = True
     if found:
       nrc_summary.append(log_entry['textPayload'])
-    if '** Completed running Node Registration Checker **' in log_entry[
-        'textPayload']:
+    if '** Completed running Node Registration Checker **' in log_entry['textPayload']:
       break
 
   return nrc_summary
@@ -124,64 +126,62 @@ class NodeBootstrapping(runbook.DiagnosticTree):
 
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The ID of the project hosting the GKE Cluster',
-          'required': True,
-      },
-      flags.LOCATION: {
-          'type': str,
-          'help': (
-              'The location where the node or nodepool is. For a node, location'
-              ' will be the zone where the node is running (i.e.'
-              ' us-central1-c). For a nodepool, this can be the zone or the'
-              ' region (i.e. us-central1) where the nodepool is configured'),
-          'required': True,
-      },
-      flags.NODE: {
-          'type': str,
-          'help':
-              ('The node name that is failing to register (if available). If'
-               ' node name is not available, please provide the nodepool name'
-               " where nodes aren't registering"),
-          'required': False,
-      },
-      flags.NODEPOOL: {
-          'type': str,
-          'help': (
-              "The nodepool name where nodes aren't registering, if a node name"
-              ' is not available'),
-          'required': False,
-      },
-      flags.NAME: {
-          'type': str,
-          'help':
-              ('The GKE cluster name. When providing nodepool name, please'
-               ' provide the GKE cluster name as well to be able to properly'
-               ' filter events in the logging query.'),
-          'deprecated': True,
-          'new_parameter': 'gke_cluster_name',
-      },
-      flags.GKE_CLUSTER_NAME: {
-          'type': str,
-          'help':
-              ('The GKE cluster name. When providing nodepool name, please'
-               ' provide the GKE cluster name as well to be able to properly'
-               ' filter events in the logging query.'),
-          'required': False,
-      },
-      flags.START_TIME: {
-          'type':
-              datetime,
-          'help': ('The start window to investigate vm termination. Format:'
-                   ' YYYY-MM-DDTHH:MM:SSZ'),
-      },
-      flags.END_TIME: {
-          'type':
-              datetime,
-          'help': ('The end window for the investigation. Format:'
-                   ' YYYY-MM-DDTHH:MM:SSZ'),
-      },
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The ID of the project hosting the GKE Cluster',
+      'required': True,
+    },
+    flags.LOCATION: {
+      'type': str,
+      'help': (
+        'The location where the node or nodepool is. For a node, location'
+        ' will be the zone where the node is running (i.e.'
+        ' us-central1-c). For a nodepool, this can be the zone or the'
+        ' region (i.e. us-central1) where the nodepool is configured'
+      ),
+      'required': True,
+    },
+    flags.NODE: {
+      'type': str,
+      'help': (
+        'The node name that is failing to register (if available). If'
+        ' node name is not available, please provide the nodepool name'
+        " where nodes aren't registering"
+      ),
+      'required': False,
+    },
+    flags.NODEPOOL: {
+      'type': str,
+      'help': ("The nodepool name where nodes aren't registering, if a node name is not available"),
+      'required': False,
+    },
+    flags.NAME: {
+      'type': str,
+      'help': (
+        'The GKE cluster name. When providing nodepool name, please'
+        ' provide the GKE cluster name as well to be able to properly'
+        ' filter events in the logging query.'
+      ),
+      'deprecated': True,
+      'new_parameter': 'gke_cluster_name',
+    },
+    flags.GKE_CLUSTER_NAME: {
+      'type': str,
+      'help': (
+        'The GKE cluster name. When providing nodepool name, please'
+        ' provide the GKE cluster name as well to be able to properly'
+        ' filter events in the logging query.'
+      ),
+      'required': False,
+    },
+    flags.START_TIME: {
+      'type': datetime,
+      'help': ('The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ'),
+    },
+    flags.END_TIME: {
+      'type': datetime,
+      'help': ('The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ'),
+    },
   }
 
   def legacy_parameter_handler(self, parameters):
@@ -224,20 +224,14 @@ class NodeBootstrappingStart(runbook.StartStep):
 
     # check if there are clusters in the project
     if name:
-      clusters = gke.get_clusters(
-          op.get_context(project_id=project, resources=[name]))
+      clusters = gke.get_clusters(op.get_context(project_id=project, resources=[name]))
       if not clusters:
-        op.add_skipped(
-            project_path,
-            reason=f'No {name} GKE cluster found in project {project}')
+        op.add_skipped(project_path, reason=f'No {name} GKE cluster found in project {project}')
         return
     else:
-      clusters = gke.get_clusters(
-          op.get_context(project_id=op.get(flags.PROJECT_ID)))
+      clusters = gke.get_clusters(op.get_context(project_id=op.get(flags.PROJECT_ID)))
       if not clusters:
-        op.add_skipped(
-            project_path,
-            reason=('No GKE clusters found in project {}').format(project))
+        op.add_skipped(project_path, reason=('No GKE clusters found in project {}').format(project))
         return
 
     # check if node exists
@@ -247,25 +241,26 @@ class NodeBootstrappingStart(runbook.StartStep):
       if node_vm:
         if not node_vm.is_gke_node():
           op.add_skipped(
-              project_path,
-              reason=
-              (f'Instance {node} in location {location} does not appear to be a GKE node'
-              ))
+            project_path,
+            reason=(f'Instance {node} in location {location} does not appear to be a GKE node'),
+          )
           return
         elif not node_vm.is_serial_port_logging_enabled():
           op.add_skipped(
-              project_path,
-              reason=
-              (f'Instance {node} in location {location} does not have Serial Logs enabled, please '
-               'enable serial logs for easier troubleshooting.'))
+            project_path,
+            reason=(
+              f'Instance {node} in location {location} does not have Serial Logs enabled, please '
+              'enable serial logs for easier troubleshooting.'
+            ),
+          )
           return
 
       # fail if Audit Log does not have any log entries for the input provided, meaning there could
       # have been an input error
       filter_str = [
-          'log_id("cloudaudit.googleapis.com/activity")',
-          f'resource.labels.zone="{location}"',
-          f'protoPayload.resourceName:"{node}"'
+        'log_id("cloudaudit.googleapis.com/activity")',
+        f'resource.labels.zone="{location}"',
+        f'protoPayload.resourceName:"{node}"',
       ]
       filter_str = '\n'.join(filter_str)
 
@@ -273,13 +268,15 @@ class NodeBootstrappingStart(runbook.StartStep):
 
       if not log_entries:
         op.add_skipped(
-            project_path,
-            reason=
-            (f'There are no log entries for the provided node {node} and location '
-             f'{location} in the provided time range '
-             f'{start_time} - {end_time}.\n'
-             'Please make sure the node/location pair is correct and it was booted '
-             'in the time range provided, then try again this runbook.'))
+          project_path,
+          reason=(
+            f'There are no log entries for the provided node {node} and location '
+            f'{location} in the provided time range '
+            f'{start_time} - {end_time}.\n'
+            'Please make sure the node/location pair is correct and it was booted '
+            'in the time range provided, then try again this runbook.'
+          ),
+        )
         return
 
 
@@ -308,12 +305,13 @@ class NodeInsertCheck(runbook.Step):
         # the gke instance name will have a max of 16 characters from the nodepool name
         # and max 16 characters from the GKE cluster name
         filter_str = [
-            'log_id("cloudaudit.googleapis.com/activity")',
-            'protoPayload.methodName="v1.compute.instances.insert"',
-            'resource.type="gce_instance"', 'severity=ERROR',
-            f'protoPayload.resourceName:"{location}"',
-            f'protoPayload.resourceName:"{name[:self.MAX_GKE_NAME_LENGTH]}"',
-            f'protoPayload.resourceName:"{nodepool[:self.MAX_GKE_NAME_LENGTH]}"'
+          'log_id("cloudaudit.googleapis.com/activity")',
+          'protoPayload.methodName="v1.compute.instances.insert"',
+          'resource.type="gce_instance"',
+          'severity=ERROR',
+          f'protoPayload.resourceName:"{location}"',
+          f'protoPayload.resourceName:"{name[: self.MAX_GKE_NAME_LENGTH]}"',
+          f'protoPayload.resourceName:"{nodepool[: self.MAX_GKE_NAME_LENGTH]}"',
         ]
         filter_str = '\n'.join(filter_str)
 
@@ -325,45 +323,58 @@ class NodeInsertCheck(runbook.Step):
             sample_log = log_entry
             sample_log = str(sample_log).replace(', ', '\n')
             break
-          op.add_failed(project_path,
-                        reason=op.prep_msg(op.FAILURE_REASON,
-                                           log_entry=sample_log,
-                                           NODEPOOL=nodepool,
-                                           NAME=name,
-                                           location=location,
-                                           NR_ERRORS=nr_errors,
-                                           start_time=start_time,
-                                           end_time=end_time),
-                        remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+          op.add_failed(
+            project_path,
+            reason=op.prep_msg(
+              op.FAILURE_REASON,
+              log_entry=sample_log,
+              NODEPOOL=nodepool,
+              NAME=name,
+              location=location,
+              NR_ERRORS=nr_errors,
+              start_time=start_time,
+              end_time=end_time,
+            ),
+            remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+          )
           return
         else:
-          op.add_ok(project_path,
-                    reason=op.prep_msg(op.SUCCESS_REASON,
-                                       start_time=start_time,
-                                       end_time=end_time,
-                                       NODEPOOL=nodepool,
-                                       NAME=name,
-                                       location=location))
+          op.add_ok(
+            project_path,
+            reason=op.prep_msg(
+              op.SUCCESS_REASON,
+              start_time=start_time,
+              end_time=end_time,
+              NODEPOOL=nodepool,
+              NAME=name,
+              location=location,
+            ),
+          )
           return
       else:
         op.add_skipped(
-            project_path,
-            reason=
-            ('Node parameter provided together with nodepool parameter, proceeding with Node '
-             'Registration Checkout output verification .'))
+          project_path,
+          reason=(
+            'Node parameter provided together with nodepool parameter, proceeding with Node '
+            'Registration Checkout output verification .'
+          ),
+        )
     else:
       op.add_skipped(
-          project_path,
-          reason=
-          ('No nodepool or GKE cluster name provided, skipping this step . \n'
-           'Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name '
-           '(-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the '
-           'nodepool.'))
+        project_path,
+        reason=(
+          'No nodepool or GKE cluster name provided, skipping this step . \n'
+          'Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name '
+          '(-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the '
+          'nodepool.'
+        ),
+      )
       return
 
 
 class NodeRegistrationSuccess(runbook.Step):
   """Verify Node Registration Checker output"""
+
   template = 'nodebootstrapping::node_registration_checker'
   NODE_BOOT_NCR_READY_MIN_TIME = 7
 
@@ -381,12 +392,12 @@ class NodeRegistrationSuccess(runbook.Step):
     node = op.get(flags.NODE)
 
     if node:
-
       # default filter that is used in all log searches
       default_filter = [
-          'resource.type="gce_instance"', f'resource.labels.zone="{location}"',
-          'log_id("serialconsole.googleapis.com/serial_port_1_output")',
-          'textPayload:"node-registration-checker.sh"'
+        'resource.type="gce_instance"',
+        f'resource.labels.zone="{location}"',
+        'log_id("serialconsole.googleapis.com/serial_port_1_output")',
+        'textPayload:"node-registration-checker.sh"',
       ]
       default_filter = '\n'.join(default_filter)
       # get node instance
@@ -396,69 +407,77 @@ class NodeRegistrationSuccess(runbook.Step):
         # Check if NODE_BOOT_NCR_READY_MIN_TIME minutes (should be at least 7 minutes) passed since
         # the instance was booted, to make sure there was enough time for Node Registration Checker
         # to finish running
-        time_since_creation = datetime.now(
-        ) - node_vm.creation_timestamp >= timedelta(
-            minutes=self.NODE_BOOT_NCR_READY_MIN_TIME)
+        time_since_creation = datetime.now() - node_vm.creation_timestamp >= timedelta(
+          minutes=self.NODE_BOOT_NCR_READY_MIN_TIME
+        )
 
         if not time_since_creation:
           op.add_failed(
-              project_path,
-              reason=
-              (f'Instance {node} with instance-id {node_vm.id} in location {location} just booted '
-               f'at {node_vm.creation_timestamp}.'),
-              remediation=
-              (f'Please allow for at least {self.NODE_BOOT_NCR_READY_MIN_TIME} minutes since '
-               'starting the instance to allow for Node Registration Checker to finish running.'
-              ))
+            project_path,
+            reason=(
+              f'Instance {node} with instance-id {node_vm.id} in location {location} just booted '
+              f'at {node_vm.creation_timestamp}.'
+            ),
+            remediation=(
+              f'Please allow for at least {self.NODE_BOOT_NCR_READY_MIN_TIME} minutes since '
+              'starting the instance to allow for Node Registration Checker to finish running.'
+            ),
+          )
           return
 
       if node_vm:
         # check node service account has logging write permissions
         iam_policy = iam.get_project_policy(op.get_context())
         if not iam_policy.has_role_permissions(
-            f'serviceAccount:{node_vm.service_account}',
-            'roles/logging.logWriter'):
+          f'serviceAccount:{node_vm.service_account}', 'roles/logging.logWriter'
+        ):
           op.add_failed(
-              project_path,
-              reason=
-              (f'The service account {node_vm.service_account} for node {node} in location '
-               f'{location} does not have "Logs Writer (roles/logging.logWriter)" role '
-               'permissions. "Logs Writer" permissions are needed for the Node Registration '
-               'Checker\'s output to be written in Cloud Logging, where we can analyse it.'
-              ),
-              remediation=
-              ('Add the minimum permissions required to operate GKE to the Node\'s Service '
-               f'Account {node_vm.service_account} following the documentation: '
-               'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster'
-               '#permissions'))
+            project_path,
+            reason=(
+              f'The service account {node_vm.service_account} for node {node} in location '
+              f'{location} does not have "Logs Writer (roles/logging.logWriter)" role '
+              'permissions. "Logs Writer" permissions are needed for the Node Registration '
+              "Checker's output to be written in Cloud Logging, where we can analyse it."
+            ),
+            remediation=(
+              "Add the minimum permissions required to operate GKE to the Node's Service "
+              f'Account {node_vm.service_account} following the documentation: '
+              'https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster'
+              '#permissions'
+            ),
+          )
           return
 
       # if serial log is enabled, we can check Cloud Logging for node-registration-checker.sh
       # output:
-      if node_vm and node_vm.is_running and node_vm.is_serial_port_logging_enabled(
-      ):
+      if node_vm and node_vm.is_running and node_vm.is_serial_port_logging_enabled():
         # check if START_TIME is after node's boot time if yes we might not find Node
         # Registration Checker logs, so the user needs to set earlier START_TIME
 
         # get the offset-aware datetime instead of offset-naive
-        node_start_time = datetime.fromisoformat(str(
-            node_vm.creation_timestamp)).replace(tzinfo=timezone.utc)
+        node_start_time = datetime.fromisoformat(str(node_vm.creation_timestamp)).replace(
+          tzinfo=timezone.utc
+        )
         if node_start_time < op.get(flags.START_TIME):
           op.add_failed(
-              project_path,
-              reason=
-              (f'The node {node} in the location {location} booted at {node_start_time} before '
-               f'the provided START_TIME {op.get(flags.START_TIME)} '
-               '(default is 8 hours from now)'),
-              remediation=
-              ('Please provide the START_TIME parameter (-p start_time) with a date '
-               f'before {node_start_time}, so that the runbook can find the Node Registration '
-               'Checker logs for the node'))
+            project_path,
+            reason=(
+              f'The node {node} in the location {location} booted at {node_start_time} before '
+              f'the provided START_TIME {op.get(flags.START_TIME)} '
+              '(default is 8 hours from now)'
+            ),
+            remediation=(
+              'Please provide the START_TIME parameter (-p start_time) with a date '
+              f'before {node_start_time}, so that the runbook can find the Node Registration '
+              'Checker logs for the node'
+            ),
+          )
           return
 
         filter_str = [
-            f'resource.labels.instance_id="{node_vm.id}"', default_filter,
-            'textPayload:"Node ready and registered."'
+          f'resource.labels.instance_id="{node_vm.id}"',
+          default_filter,
+          'textPayload:"Node ready and registered."',
         ]
         filter_str = '\n'.join(filter_str)
 
@@ -468,17 +487,17 @@ class NodeRegistrationSuccess(runbook.Step):
           # node registered successfully, we're all good
           sample_log = log_entries_success.pop()
           sample_log = str(sample_log).replace(', ', '\n')
-          op.add_ok(project_path,
-                    reason=op.prep_msg(op.SUCCESS_REASON,
-                                       log_entry=sample_log,
-                                       node=node))
+          op.add_ok(
+            project_path, reason=op.prep_msg(op.SUCCESS_REASON, log_entry=sample_log, node=node)
+          )
 
         else:
           # node failed to register, need to find Node Registration Checker summary verify if
           # node-registration-checker.sh finished running
           filter_str = [
-              f'resource.labels.instance_id="{node_vm.id}"', default_filter,
-              'textPayload:"Completed running Node Registration Checker"'
+            f'resource.labels.instance_id="{node_vm.id}"',
+            default_filter,
+            'textPayload:"Completed running Node Registration Checker"',
           ]
           filter_str = '\n'.join(filter_str)
 
@@ -486,9 +505,7 @@ class NodeRegistrationSuccess(runbook.Step):
 
           if log_entries_completed:
             # node registration finished running but node didn't register. Get all logs for info
-            filter_str = [
-                f'resource.labels.instance_id="{node_vm.id}"', default_filter
-            ]
+            filter_str = [f'resource.labels.instance_id="{node_vm.id}"', default_filter]
             filter_str = '\n'.join(filter_str)
             log_entries_all = local_realtime_query(filter_str)
 
@@ -502,21 +519,22 @@ class NodeRegistrationSuccess(runbook.Step):
               if TOKEN_NRC_START in nrc_summary[0]:
                 found = True
 
-            op.add_failed(project_path,
-                          reason=op.prep_msg(op.FAILURE_REASON,
-                                             log_entries=nrc_summary,
-                                             node=node,
-                                             location=location),
-                          remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+            op.add_failed(
+              project_path,
+              reason=op.prep_msg(
+                op.FAILURE_REASON, log_entries=nrc_summary, node=node, location=location
+              ),
+              remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+            )
             return
 
           else:
             # Could not find message that Node Registration Checker finished running for instance
             # id, checking by node name and look for potential repair loop
             filter_str = [
-                f'labels."compute.googleapis.com/resource_name"="{node}"',
-                default_filter,
-                'textPayload:"Completed running Node Registration Checker"'
+              f'labels."compute.googleapis.com/resource_name"="{node}"',
+              default_filter,
+              'textPayload:"Completed running Node Registration Checker"',
             ]
             filter_str = '\n'.join(filter_str)
 
@@ -528,33 +546,37 @@ class NodeRegistrationSuccess(runbook.Step):
               # the summary taking into account that there could be multiple summaries
               nrc_summary = get_nrc_summary(node, op.get(flags.LOCATION))
 
-              op.add_failed(project_path,
-                            reason=op.prep_msg(op.FAILURE_REASON_ALT1,
-                                               log_entries=nrc_summary,
-                                               node=node,
-                                               location=location),
-                            remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+              op.add_failed(
+                project_path,
+                reason=op.prep_msg(
+                  op.FAILURE_REASON_ALT1, log_entries=nrc_summary, node=node, location=location
+                ),
+                remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+              )
               return
             else:
               # node is running, but there's no "Completed running Node Registration Checker" log
               # entry in the provided time range
-              op.add_failed(project_path,
-                            reason=op.prep_msg(op.UNCERTAIN_REASON,
-                                               node=node,
-                                               location=location,
-                                               start_time=op.get(
-                                                   flags.START_TIME),
-                                               end_time=op.get(flags.END_TIME)),
-                            remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                                    node=node))
+              op.add_failed(
+                project_path,
+                reason=op.prep_msg(
+                  op.UNCERTAIN_REASON,
+                  node=node,
+                  location=location,
+                  start_time=op.get(flags.START_TIME),
+                  end_time=op.get(flags.END_TIME),
+                ),
+                remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION, node=node),
+              )
               return
 
       else:
         # node doesn't exist, checking older logs by node name and trying to find if Node
         # Registration Checker completed running at least once
         filter_str = [
-            f'labels."compute.googleapis.com/resource_name"="{node}"',
-            default_filter, 'textPayload:"Node ready and registered."'
+          f'labels."compute.googleapis.com/resource_name"="{node}"',
+          default_filter,
+          'textPayload:"Node ready and registered."',
         ]
         filter_str = '\n'.join(filter_str)
 
@@ -564,15 +586,15 @@ class NodeRegistrationSuccess(runbook.Step):
           # node isn't running now, but it registered successfully in the past
           sample_log = log_entries_success.pop()
           sample_log = str(sample_log).replace(', ', '\n')
-          op.add_ok(project_path,
-                    reason=op.prep_msg(op.SUCCESS_REASON_ALT1,
-                                       log_entry=sample_log,
-                                       node=node))
+          op.add_ok(
+            project_path,
+            reason=op.prep_msg(op.SUCCESS_REASON_ALT1, log_entry=sample_log, node=node),
+          )
         else:
           filter_str = [
-              f'labels."compute.googleapis.com/resource_name"="{node}"',
-              default_filter,
-              'textPayload:"Completed running Node Registration Checker"'
+            f'labels."compute.googleapis.com/resource_name"="{node}"',
+            default_filter,
+            'textPayload:"Completed running Node Registration Checker"',
           ]
           filter_str = '\n'.join(filter_str)
 
@@ -583,30 +605,33 @@ class NodeRegistrationSuccess(runbook.Step):
             # into account that there could be multiple summaries
             nrc_summary = get_nrc_summary(node, op.get(flags.LOCATION))
 
-            op.add_failed(project_path,
-                          reason=op.prep_msg(op.FAILURE_REASON_ALT2,
-                                             log_entries=nrc_summary,
-                                             node=node,
-                                             location=location),
-                          remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+            op.add_failed(
+              project_path,
+              reason=op.prep_msg(
+                op.FAILURE_REASON_ALT2, log_entries=nrc_summary, node=node, location=location
+              ),
+              remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+            )
             return
 
           else:
             # node is not running and Node Registration Checker did not complete running. Most
             # probably the node was deleted before Node Registration Checker could finish running.
-            op.add_failed(project_path,
-                          reason=op.prep_msg(op.FAILURE_REASON_ALT3,
-                                             node=node,
-                                             location=location),
-                          remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT3))
+            op.add_failed(
+              project_path,
+              reason=op.prep_msg(op.FAILURE_REASON_ALT3, node=node, location=location),
+              remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT3),
+            )
             return
     else:
       op.add_skipped(
-          project_path,
-          reason=
-          ('No node name provided, skipping this step .\n'
-           'Please provide node name (-p node=<nodename>) if the node appears in the nodepool, '
-           'but fails registration.\n'))
+        project_path,
+        reason=(
+          'No node name provided, skipping this step .\n'
+          'Please provide node name (-p node=<nodename>) if the node appears in the nodepool, '
+          'but fails registration.\n'
+        ),
+      )
 
 
 class NodeBootstrappingEnd(runbook.EndStep):
@@ -622,7 +647,7 @@ class NodeBootstrappingEnd(runbook.EndStep):
   def execute(self):
     """Finalize `GKE Node Bootstrapping` diagnostics."""
     response = op.prompt(
-        kind=op.CONFIRMATION,
-        message='Are you satisfied with the `GKE Node Bootstrapping` analysis?')
+      kind=op.CONFIRMATION, message='Are you satisfied with the `GKE Node Bootstrapping` analysis?'
+    )
     if response == op.NO:
       op.info(message=op.END_MESSAGE)

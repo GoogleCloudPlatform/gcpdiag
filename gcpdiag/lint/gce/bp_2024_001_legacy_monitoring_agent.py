@@ -36,16 +36,17 @@ LEGACY_MONITORING_AGENT_METRICS_LABEL = 'stackdriver_agent'
 LEGACY_AGENT_NOT_DETECTED = 'Legacy monitoring agent not installed on the VM'
 UNABLE_TO_DETECT = 'Unable to confirm legacy monitoring agent installation'
 UNABLE_TO_DETECT_EXPLANATION = (
-    'VM Manager is needed for the legacy agent detection. Please enable it at:'
-    ' https://cloud.google.com/compute/docs/manage-os#automatic and run this'
-    ' check again.')
+  'VM Manager is needed for the legacy agent detection. Please enable it at:'
+  ' https://cloud.google.com/compute/docs/manage-os#automatic and run this'
+  ' check again.'
+)
 LEGACY_AGENT_DETECTED = 'Legacy monitoring agent installed on the VM'
 
 
 def prefetch_rule(context: models.Context):
   _query_results_project_id[context.project_id] = monitoring.query(
-      context.project_id,
-      """
+    context.project_id,
+    """
 fetch gce_instance
 | metric 'agent.googleapis.com/agent/uptime'
 | align rate(4m)
@@ -60,8 +61,7 @@ fetch gce_instance
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = list(gce.get_instances(context).values())
   if not instances:
-    report.add_skipped(
-        None, f'No VM instances found in project: {context.project_id}.')
+    report.add_skipped(None, f'No VM instances found in project: {context.project_id}.')
     return
 
   instances_without_osinventory = []
@@ -76,9 +76,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for pkg_name in inventory.installed_packages:
       if LEGACY_MONITORING_AGENT_PACKAGE_NAME in pkg_name:
         report.add_failed(
-            i,
-            '',
-            LEGACY_AGENT_DETECTED,
+          i,
+          '',
+          LEGACY_AGENT_DETECTED,
         )
         legacy_agent_found = True
         break
@@ -88,36 +88,35 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   query = _query_results_project_id[context.project_id]
   try:
     vms_agents = {
-        e['labels']['resource.instance_id']: e['labels']['metric.version']
-        for e in query.values()
+      e['labels']['resource.instance_id']: e['labels']['metric.version'] for e in query.values()
     }
   except KeyError:
     for i in instances_without_osinventory:
       report.add_skipped(
-          i,
-          UNABLE_TO_DETECT_EXPLANATION,
-          UNABLE_TO_DETECT,
+        i,
+        UNABLE_TO_DETECT_EXPLANATION,
+        UNABLE_TO_DETECT,
       )
     return
 
   for i in sorted(
-      instances_without_osinventory,
-      key=op.attrgetter('project_id', 'name'),
+    instances_without_osinventory,
+    key=op.attrgetter('project_id', 'name'),
   ):
     if i.is_gke_node():
       continue
     if i.id in vms_agents:
       if LEGACY_MONITORING_AGENT_METRICS_LABEL in vms_agents[i.id]:
         report.add_failed(
-            i,
-            '',
-            LEGACY_AGENT_DETECTED,
+          i,
+          '',
+          LEGACY_AGENT_DETECTED,
         )
       else:
         report.add_ok(i, LEGACY_AGENT_NOT_DETECTED)
     else:
       report.add_skipped(
-          i,
-          UNABLE_TO_DETECT_EXPLANATION,
-          UNABLE_TO_DETECT,
+        i,
+        UNABLE_TO_DETECT_EXPLANATION,
+        UNABLE_TO_DETECT,
       )

@@ -16,6 +16,7 @@
 Verify that the Google Kubernetes Engine service account exists and has
 the Kubernetes Engine Service Agent role on the project.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import crm, gke, iam
 
@@ -31,11 +32,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   project = crm.get_project(context.project_id)
-  sa = 'service-{}@container-engine-robot.iam.gserviceaccount.com'.format(
-      project.number)
+  sa = f'service-{project.number}@container-engine-robot.iam.gserviceaccount.com'
   iam_policy = iam.get_project_policy(context)
   if iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
     report.add_ok(project)
   else:
-    report.add_failed(project,
-                      reason=f'service account: {sa}\nmissing role: {ROLE}')
+    report.add_failed(project, reason=f'service account: {sa}\nmissing role: {ROLE}')

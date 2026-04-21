@@ -26,25 +26,27 @@ LEGACY_SKEW = 2
 CURRENT_SKEW = 3
 
 fail_reason_template = (
-    "Difference between versions of the node pool ({np_ver}) and cluster ({c_ver}) is"
-    " more than {skew} minor versions")
+  'Difference between versions of the node pool ({np_ver}) and cluster ({c_ver}) is'
+  ' more than {skew} minor versions'
+)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context).values()
 
   if not clusters:
-    report.add_skipped(None, "No GKE clusters found")
+    report.add_skipped(None, 'No GKE clusters found')
 
   for cluster in clusters:
     for nodepool in cluster.nodepools:
-
       c_ver = cluster.master_version
       np_ver = nodepool.version
 
       skew = LEGACY_SKEW
-      if c_ver.minor >= K8S_MINOR_WITH_3_VERSIONS_SKEW or \
-          c_ver.major > K8S_MAJOR_WITH_3_VERSIONS_SKEW:
+      if (
+        c_ver.minor >= K8S_MINOR_WITH_3_VERSIONS_SKEW
+        or c_ver.major > K8S_MAJOR_WITH_3_VERSIONS_SKEW
+      ):
         skew = CURRENT_SKEW
       major_ok = c_ver.same_major(np_ver)
       minor_ok = c_ver.diff_minor(np_ver) <= skew
@@ -52,7 +54,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       if major_ok and minor_ok:
         report.add_ok(nodepool)
       else:
-        report.add_failed(nodepool,
-                          reason=fail_reason_template.format(c_ver=c_ver,
-                                                             np_ver=np_ver,
-                                                             skew=skew))
+        report.add_failed(
+          nodepool, reason=fail_reason_template.format(c_ver=c_ver, np_ver=np_ver, skew=skew)
+        )

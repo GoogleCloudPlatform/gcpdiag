@@ -30,11 +30,10 @@ def _mapping_str(mapping: Mapping[str, str]) -> str:
 
 
 class Messages(dict):
-
   def get_msg(self, template: str, **kwargs):
-    return self.get(
-        template,
-        'NOTICE: No message available to parse for this step').format(**kwargs)
+    return self.get(template, 'NOTICE: No message available to parse for this step').format(
+      **kwargs
+    )
 
 
 T = TypeVar('T')
@@ -67,8 +66,7 @@ class Parameter(dict[T, V], Generic[T, V]):
 
   def setdefault(self, key: T, default: V = None) -> V:
     if key not in self:
-      converted_default = self._parse_value(default) if isinstance(
-          default, str) else default
+      converted_default = self._parse_value(default) if isinstance(default, str) else default
       self[key] = converted_default
     return super().setdefault(key, self[key])
 
@@ -79,6 +77,7 @@ class Parameter(dict[T, V], Generic[T, V]):
 @dataclasses.dataclass
 class Context:
   """List of resource groups / scopes that should be analyzed."""
+
   # project_id of project that is being analyzed, mandatory
   project_id: str
   # a pattern of sub project resources that match
@@ -107,14 +106,14 @@ class Context:
   # ({label1=value1,label2=value2} OR {label3=value3})
 
   def __init__(
-      self,
-      project_id: str,
-      locations: Optional[Iterable[str]] = None,
-      labels: Optional[Mapping[str, str]] = None,
-      parameters: Optional[Parameter[str, str]] = None,
-      resources: Optional[Iterable[str]] = None,
-      context_provider: Optional[gcpdiag_context.ContextProvider] = None,
-      **kwargs,
+    self,
+    project_id: str,
+    locations: Optional[Iterable[str]] = None,
+    labels: Optional[Mapping[str, str]] = None,
+    parameters: Optional[Parameter[str, str]] = None,
+    resources: Optional[Iterable[str]] = None,
+    context_provider: Optional[gcpdiag_context.ContextProvider] = None,
+    **kwargs,
   ):
     """Args:
 
@@ -136,8 +135,7 @@ class Context:
       self.locations_pattern = kwargs['locations_pattern']
     elif locations:
       if not isinstance(locations, List):
-        raise ValueError(
-            str(locations) + ' did not supply full list of locations')
+        raise ValueError(str(locations) + ' did not supply full list of locations')
       for location in locations:
         if not (utils.is_region(location) or utils.is_zone(location)):
           raise ValueError(location + ' does not look like a valid region/zone')
@@ -158,8 +156,7 @@ class Context:
       self.resources_pattern = kwargs['resources_pattern']
     elif resources:
       if not isinstance(resources, List):
-        raise ValueError(
-            str(resources) + ' did not supply full list of resources')
+        raise ValueError(str(resources) + ' did not supply full list of resources')
 
       self.resources_pattern = re.compile('|'.join(resources), re.IGNORECASE)
 
@@ -194,10 +191,10 @@ class Context:
   IGNORELABEL = MappingProxyType({'IGNORELABEL': 'IGNORELABEL'})
 
   def match_project_resource(
-      self,
-      resource: Optional[str],
-      location: Optional[str] = IGNORELOCATION,
-      labels: Optional[Mapping[str, str]] = IGNORELABEL,
+    self,
+    resource: Optional[str],
+    location: Optional[str] = IGNORELOCATION,
+    labels: Optional[Mapping[str, str]] = IGNORELABEL,
   ) -> bool:
     """Compare resource fields to the name and/or location and/or labels supplied
     by the user and return a boolean outcome depending on the context.
@@ -242,6 +239,7 @@ class Context:
 
 class Resource(abc.ABC):
   """Represents a single resource in GCP."""
+
   _project_id: str
 
   def __init__(self, project_id):

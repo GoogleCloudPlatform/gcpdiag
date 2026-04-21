@@ -34,21 +34,20 @@ def prepare_rule(context: models.Context):
   clusters = gke.get_clusters(context)
   for project_id in {c.project_id for c in clusters.values()}:
     ca_logs_by_project[project_id] = logs.query(
-        project_id=project_id,
-        resource_type='k8s_cluster',
-        log_name=
-        'log_id("container.googleapis.com/cluster-autoscaler-visibility")',
-        filter_str=
-        'jsonPayload.resultInfo.results.errorMsg.messageId:"scale.up.error"')
+      project_id=project_id,
+      resource_type='k8s_cluster',
+      log_name='log_id("container.googleapis.com/cluster-autoscaler-visibility")',
+      filter_str='jsonPayload.resultInfo.results.errorMsg.messageId:"scale.up.error"',
+    )
     gce_logs_by_project[project_id] = logs.query(
-        project_id=project_id,
-        resource_type='gce_instance',
-        log_name='log_id("cloudaudit.googleapis.com/activity")',
-        filter_str='severity=ERROR AND '
-        'protoPayload.methodName="v1.compute.instances.insert"')
+      project_id=project_id,
+      resource_type='gce_instance',
+      log_name='log_id("cloudaudit.googleapis.com/activity")',
+      filter_str='severity=ERROR AND protoPayload.methodName="v1.compute.instances.insert"',
+    )
     # Note: we don't filter by callerSuppliedUserAgent because this will be
     # removed anyway because of search job aggregation.
-    #AND '
+    # AND '
     #'protoPayload.requestMetadata.callerSuppliedUserAgent="GCE Managed Instance Group for GKE"'
 
 
@@ -92,21 +91,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for log_entry in query.entries:
       try:
         # Filter out non-relevant log entries.
-        if log_entry['severity']!='ERROR' or \
-          log_entry['protoPayload']['methodName']!='v1.compute.instances.insert' or \
-          log_entry['protoPayload']['requestMetadata']['callerSuppliedUserAgent']!= \
-          'GCE Managed Instance Group for GKE':
+        if (
+          log_entry['severity'] != 'ERROR'
+          or log_entry['protoPayload']['methodName'] != 'v1.compute.instances.insert'
+          or log_entry['protoPayload']['requestMetadata']['callerSuppliedUserAgent']
+          != 'GCE Managed Instance Group for GKE'
+        ):
           continue
         # Determine mig name.
-        m = re.search(r'/instances/([^/]+)$',
-                      log_entry['protoPayload']['resourceName'])
+        m = re.search(r'/instances/([^/]+)$', log_entry['protoPayload']['resourceName'])
         if not m:
           continue
         instance_name = m.group(1)
-        # pylint: disable=cell-var-from-loop
-        mig = list(
-            filter(lambda x: is_mig_instance(x, instance_name),
-                   cluster_by_mig.keys()))
+        mig = list(filter(lambda x: is_mig_instance(x, instance_name), cluster_by_mig.keys()))
         if not mig:
           continue
         if log_entry['protoPayload']['status']['message'] == 'LIMIT_EXCEEDED':
@@ -131,11 +128,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Create the report.
   for _, c in sorted(clusters.items()):
-    cluster_mig_errors = cluster_migs.get(c,
-                                          set()).intersection(mig_errors.keys())
+    cluster_mig_errors = cluster_migs.get(c, set()).intersection(mig_errors.keys())
     if cluster_mig_errors:
       report.add_failed(
-          c, 'Scale up failures detected on managed instance groups:\n. '+\
-              '\n. '.join(f'{mig} ({mig_errors[mig]})' for mig in cluster_mig_errors))
+        c,
+        'Scale up failures detected on managed instance groups:\n. '
+        + '\n. '.join(f'{mig} ({mig_errors[mig]})' for mig in cluster_mig_errors),
+      )
     else:
       report.add_ok(c)

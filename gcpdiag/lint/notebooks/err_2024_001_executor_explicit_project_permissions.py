@@ -27,25 +27,26 @@ ERROR_CODE = '40'
 ERROR_MESSAGE = 'permission'
 
 ERROR_MESSAGE_MATCH_STRING_1 = (
-    f'{ERROR_CODE}[4,3] (GET|POST) '
-    r'https:\/\/bigquery.googleapis.com\/bigquery\/[a-z0-9.]*\/projects\/[a-z0-9]{1,20}-tp'
+  f'{ERROR_CODE}[4,3] (GET|POST) '
+  r'https:\/\/bigquery.googleapis.com\/bigquery\/[a-z0-9.]*\/projects\/[a-z0-9]{1,20}-tp'
 )
 
 ERROR_MESSAGE_MATCH_STRING_2 = (
-    'does not have '
-    f'[a-z.]* {ERROR_MESSAGE} in project [a-z0-9]{1,20}-tp')
+  f'does not have [a-z.]* {ERROR_MESSAGE} in project [a-z0-9]{1, 20}-tp'
+)
 
-ERROR_MESSAGE_MATCH_STRING_3 = fr'{ERROR_CODE}[3,4] gs:\/\/[a-z0-9]{1,20}-tp'
+ERROR_MESSAGE_MATCH_STRING_3 = rf'{ERROR_CODE}[3,4] gs:\/\/[a-z0-9]{1, 20}-tp'
 
 ERROR_MESSAGES = (
-    f'(jsonPayload.message =~ "{ERROR_MESSAGE_MATCH_STRING_1}" OR '
-    f'jsonPayload.message =~ "{ERROR_MESSAGE_MATCH_STRING_2}" OR '
-    f'jsonPayload.message =~ "{ERROR_MESSAGE_MATCH_STRING_3}")')
+  f'(jsonPayload.message =~ "{ERROR_MESSAGE_MATCH_STRING_1}" OR '
+  f'jsonPayload.message =~ "{ERROR_MESSAGE_MATCH_STRING_2}" OR '
+  f'jsonPayload.message =~ "{ERROR_MESSAGE_MATCH_STRING_3}")'
+)
 
 NOTEBOOKS_EXECUTOR_PERMISSIONS_ERRORS_FILTER = [
-    'severity=ERROR',
-    'labels."compute.googleapis.com/resource_name" =~ "training"',
-    ERROR_MESSAGES
+  'severity=ERROR',
+  'labels."compute.googleapis.com/resource_name" =~ "training"',
+  ERROR_MESSAGES,
 ]
 
 logs_by_project = {}
@@ -57,21 +58,21 @@ def prepare_rule(context: models.Context):
   log_name = 'log_id("workerpool0-0")'
 
   logs_by_project[context.project_id] = logs.query(
-      project_id=project_id,
-      log_name=log_name,
-      resource_type='ml_job',
-      filter_str=' AND '.join(NOTEBOOKS_EXECUTOR_PERMISSIONS_ERRORS_FILTER),
+    project_id=project_id,
+    log_name=log_name,
+    resource_type='ml_job',
+    filter_str=' AND '.join(NOTEBOOKS_EXECUTOR_PERMISSIONS_ERRORS_FILTER),
   )
 
 
 def find_logs_with_permission_errors(context: models.Context):
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant and repeated log entries.
       path_message = get_path(log_entry, ('jsonPayload', 'message'), default='')
-      if log_entry['severity'] == 'ERROR' and (ERROR_CODE in path_message or
-                                               ERROR_MESSAGE in path_message):
+      if log_entry['severity'] == 'ERROR' and (
+        ERROR_CODE in path_message or ERROR_MESSAGE in path_message
+      ):
         return True
   return False
 
@@ -96,9 +97,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Logs-based rule as error only occurs at runtime and depends on user code
   if find_logs_with_permission_errors(context):
     report.add_failed(
-        project,
-        ('Missing permissions in executor project: You did not specify your'
-         'own project id explicitly in your notebook code'),
+      project,
+      (
+        'Missing permissions in executor project: You did not specify your'
+        'own project id explicitly in your notebook code'
+      ),
     )
   else:
     report.add_ok(project)

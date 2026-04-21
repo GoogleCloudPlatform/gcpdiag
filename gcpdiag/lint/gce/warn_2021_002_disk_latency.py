@@ -42,11 +42,10 @@ def prefetch_rule(context: models.Context):
   if not instances:
     return
 
-  within_str = 'within %dd, d\'%s\'' % (config.get('within_days'),
-                                        monitoring.period_aligned_now(60))
-  _query_results_per_project_id[context.project_id] = \
-      monitoring.query(
-          context.project_id, f"""
+  within_str = "within %dd, d'%s'" % (config.get('within_days'), monitoring.period_aligned_now(60))
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id,
+    f"""
 fetch gce_instance
 | {{ metric 'agent.googleapis.com/disk/operation_time'
      | align rate(1m) ;
@@ -61,7 +60,8 @@ fetch gce_instance
 | every 1m
 | value(val() > cast_units({SLO_LATENCY_MS}, "ms/s"))
 | group_by 1d, [ .count_true, .count ]
-  """)
+  """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -70,8 +70,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
     return
 
-  for i in sorted(instances.values(),
-                  key=op.attrgetter('project_id', 'full_path')):
+  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'full_path')):
     ts_key = frozenset({f'resource.instance_id:{i.id}'})
     try:
       ts = _query_results_per_project_id[context.project_id][ts_key]
@@ -96,8 +95,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           slo_missed = 1
     if slo_missed:
       report.add_failed(
-          i, f'disk latency >{SLO_LATENCY_MS}ms during {total_minutes_bad} ' +
-          f'out of {total_minutes} minutes')
+        i,
+        f'disk latency >{SLO_LATENCY_MS}ms during {total_minutes_bad} '
+        + f'out of {total_minutes} minutes',
+      )
     elif not slo_valid:
       report.add_skipped(i, 'not enough data')
     else:

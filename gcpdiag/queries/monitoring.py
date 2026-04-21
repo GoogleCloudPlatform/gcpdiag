@@ -28,8 +28,7 @@ from gcpdiag.queries import apis
 
 
 # see: https://cloud.google.com/monitoring/api/ref_v3/rest/v3/TypedValue
-def _gcp_typed_values_to_python_list(
-    typed_values: List[Mapping[str, Any]]) -> List[Any]:
+def _gcp_typed_values_to_python_list(typed_values: List[Mapping[str, Any]]) -> List[Any]:
   out_list: List[Any] = []
   for val in typed_values:
     if 'boolValue' in val:
@@ -103,16 +102,18 @@ class TimeSeriesCollection(collections.abc.Mapping):
 
     for ts in resource_data['timeSeriesData']:
       # No data?
-      if not ts['pointData'] or not 'values' in ts['pointData'][0] or not ts[
-          'pointData'][0]['values']:
+      if (
+        not ts['pointData']
+        or 'values' not in ts['pointData'][0]
+        or not ts['pointData'][0]['values']
+      ):
         continue
 
       # Use frozenset of label:value pairs as key to store the data
       labels_dict = {}
       if 'labelValues' in ts:
         for i, value in enumerate(ts['labelValues']):
-          label_name = resource_data['timeSeriesDescriptor'][
-              'labelDescriptors'][i]['key']
+          label_name = resource_data['timeSeriesDescriptor']['labelDescriptors'][i]['key']
           if 'stringValue' in value:
             labels_dict[label_name] = value['stringValue']
         labels_frozenset = frozenset(f'{k}:{v}' for k, v in labels_dict.items())
@@ -121,16 +122,13 @@ class TimeSeriesCollection(collections.abc.Mapping):
 
       ts_point_data = ts['pointData']
       self._data[labels_frozenset] = {
-          'labels':
-              labels_dict,
-          'start_time':
-              ts_point_data[-1]['timeInterval']['startTime'],
-          'end_time':
-              ts_point_data[0]['timeInterval']['endTime'],
-          'values': [
-              _gcp_typed_values_to_python_list(ts_point_data[i]['values'])
-              for i in reversed(range(len(ts_point_data)))
-          ]
+        'labels': labels_dict,
+        'start_time': ts_point_data[-1]['timeInterval']['startTime'],
+        'end_time': ts_point_data[0]['timeInterval']['endTime'],
+        'values': [
+          _gcp_typed_values_to_python_list(ts_point_data[i]['values'])
+          for i in reversed(range(len(ts_point_data)))
+        ],
       }
 
   def __getitem__(self, labels):
@@ -165,9 +163,11 @@ def query(project_id: str, query_str: str) -> TimeSeriesCollection:
 
   mon_api = apis.get_api('monitoring', 'v3', project_id)
   try:
-    request = mon_api.projects().timeSeries().query(name='projects/' +
-                                                    project_id,
-                                                    body={'query': query_str})
+    request = (
+      mon_api.projects()
+      .timeSeries()
+      .query(name='projects/' + project_id, body={'query': query_str})
+    )
 
     logging.debug('executing monitoring query (project: %s)', project_id)
     logging.debug('query: %s', query_str)
@@ -177,26 +177,28 @@ def query(project_id: str, query_str: str) -> TimeSeriesCollection:
       pages += 1
       response = request.execute(num_retries=config.API_RETRIES)
       time_series.add_api_response(response)
-      request = mon_api.projects().timeSeries().query_next(
-          previous_request=request, previous_response=response)
+      request = (
+        mon_api.projects()
+        .timeSeries()
+        .query_next(previous_request=request, previous_response=response)
+      )
       if request:
-        logging.debug('still executing monitoring query (project: %s)',
-                      project_id)
+        logging.debug('still executing monitoring query (project: %s)', project_id)
     end_time = datetime.datetime.now()
     logging.debug('query run time: %s, pages: %d', end_time - start_time, pages)
   except googleapiclient.errors.HttpError as err:
     gcp_err = utils.GcpApiError(err)
     # Ignore 502 because we get that when the monitoring query times out.
     if gcp_err.status in [502]:
-      logging.warning('error executing monitoring query: %s',
-                      str(gcp_err.message))
+      logging.warning('error executing monitoring query: %s', str(gcp_err.message))
     else:
       raise utils.GcpApiError(err) from err
   return time_series
 
 
-def queryrange(project_id: str, query_str: str, start_time: datetime.datetime,
-               end_time: datetime.datetime):
+def queryrange(
+  project_id: str, query_str: str, start_time: datetime.datetime, end_time: datetime.datetime
+):
   """
   Do a monitoring query during specific timeframe in the specified project.
 
@@ -210,25 +212,26 @@ def queryrange(project_id: str, query_str: str, start_time: datetime.datetime,
 
   try:
     step = '1m'
-    start_time_str = start_time.isoformat(timespec='seconds').replace(
-        '+00:00', 'Z')
+    start_time_str = start_time.isoformat(timespec='seconds').replace('+00:00', 'Z')
     end_time_str = end_time.isoformat(timespec='seconds').replace('+00:00', 'Z')
-    request = mon_api.projects().location().prometheus().api().v1().query_range(
+    request = (
+      mon_api.projects()
+      .location()
+      .prometheus()
+      .api()
+      .v1()
+      .query_range(
         name=f'projects/{project_id}',
         location='global',
-        body={
-            'query': query_str,
-            'start': start_time_str,
-            'end': end_time_str,
-            'step': step
-        })
+        body={'query': query_str, 'start': start_time_str, 'end': end_time_str, 'step': step},
+      )
+    )
     response = request.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
     gcp_err = utils.GcpApiError(err)
     # Ignore 502 because we get that when the monitoring query times out.
     if gcp_err.status in [502]:
-      logging.warning('error executing monitoring query: %s',
-                      str(gcp_err.message))
+      logging.warning('error executing monitoring query: %s', str(gcp_err.message))
     else:
       raise utils.GcpApiError(err) from err
   return response

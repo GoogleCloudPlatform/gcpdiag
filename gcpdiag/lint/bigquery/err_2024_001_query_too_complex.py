@@ -21,29 +21,28 @@ exponential growth in complexity,Sometimes customers use WITH clause as
 substitution for temp tables. It is not a good practice and they could use
 scripts and temp tables instead.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = (
-    'Not enough resources for query planning - too many subqueries or query is'
-    ' too complex')
+MATCH_STR = 'Not enough resources for query planning - too many subqueries or query is too complex'
 
 QUERY_COMPLEX = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(QUERY_COMPLEX),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(QUERY_COMPLEX),
   )
 
 
@@ -56,19 +55,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'BigQuery api is disabled')
     return
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       project_ok_flag = True
-      if MATCH_STR not in get_path(log_entry,
-                                   ('protoPayload', 'status', 'message'),
-                                   default=''):
+      if MATCH_STR not in get_path(log_entry, ('protoPayload', 'status', 'message'), default=''):
         continue
       else:
         report.add_failed(
-            project,
-            'has BigQuery jobs failing due to high complexity. Please optimize'
-            ' the query',
+          project,
+          'has BigQuery jobs failing due to high complexity. Please optimize the query',
         )
         project_ok_flag = False
         break

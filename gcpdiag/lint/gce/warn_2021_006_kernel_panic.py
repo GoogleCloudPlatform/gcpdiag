@@ -18,6 +18,7 @@
 The "Kernel panic" messages in serial output usually indicate that some
 fatal error occurred on a Linux instance.
 """
+
 from typing import Optional
 
 from gcpdiag import lint, models
@@ -26,7 +27,7 @@ from gcpdiag.queries import gce
 from gcpdiag.queries.logs import LogEntryShort
 
 PANIC_MESSAGES = [
-    'Kernel panic',  #
+  'Kernel panic',  #
 ]
 
 logs_by_project = {}
@@ -34,7 +35,8 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = utils.SerialOutputSearch(
-      context, search_strings=PANIC_MESSAGES)
+    context, search_strings=PANIC_MESSAGES
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -50,12 +52,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'No instances found')
   else:
     for instance in sorted(instances, key=lambda i: i.name):
-      match: Optional[LogEntryShort] = search.get_last_match(
-          instance_id=instance.id)
+      match: Optional[LogEntryShort] = search.get_last_match(instance_id=instance.id)
       if match:
         report.add_failed(
-            instance, ('There are messages indicating that '
-                       '"Kernel panic" event occurred for {}\n{}: "{}"').format(
-                           instance.name, match.timestamp_iso, match.text))
+          instance,
+          (
+            'There are messages indicating that "Kernel panic" event occurred for {}\n{}: "{}"'
+          ).format(instance.name, match.timestamp_iso, match.text),
+        )
       else:
         report.add_ok(instance)

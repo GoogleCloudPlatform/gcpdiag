@@ -39,11 +39,9 @@ class GeneralizedStepsTestBase(unittest.TestCase):
   def setUp(self):
     super().setUp()
     # 1. Patch get_api with the stub.
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
     # 2. Create a mock interface to capture outputs
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     # 3. Instantiate a real Operator
     self.operator = op.Operator(self.mock_interface)
@@ -51,12 +49,9 @@ class GeneralizedStepsTestBase(unittest.TestCase):
     self.operator.messages = MockMessage()
     # 4. Define standard parameters.
     self.params = {
-        flags.PROJECT_ID:
-            DUMMY_PROJECT_ID,
-        'start_time':
-            datetime.datetime(2025, 1, 1, tzinfo=datetime.timezone.utc),
-        'end_time':
-            datetime.datetime(2025, 1, 2, tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: DUMMY_PROJECT_ID,
+      'start_time': datetime.datetime(2025, 1, 1, tzinfo=datetime.timezone.utc),
+      'end_time': datetime.datetime(2025, 1, 2, tzinfo=datetime.timezone.utc),
     }
     self.operator.parameters = self.params
 
@@ -66,8 +61,8 @@ class OrgPolicyCheckTest(GeneralizedStepsTestBase):
 
   def test_org_policy_enforced_and_expected_enforced(self):
     step = generalized_steps.OrgPolicyCheck(
-        constraint='constraints/compute.disableSerialPortAccess',
-        is_enforced=True,
+      constraint='constraints/compute.disableSerialPortAccess',
+      is_enforced=True,
     )
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -77,8 +72,8 @@ class OrgPolicyCheckTest(GeneralizedStepsTestBase):
 
   def test_org_policy_not_enforced_and_expected_enforced(self):
     step = generalized_steps.OrgPolicyCheck(
-        constraint='constraints/iam.disableCrossProjectServiceAccountUsage',
-        is_enforced=True,
+      constraint='constraints/iam.disableCrossProjectServiceAccountUsage',
+      is_enforced=True,
     )
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -88,8 +83,8 @@ class OrgPolicyCheckTest(GeneralizedStepsTestBase):
 
   def test_org_policy_not_enforced_and_expected_not_enforced(self):
     step = generalized_steps.OrgPolicyCheck(
-        constraint='constraints/iam.disableCrossProjectServiceAccountUsage',
-        is_enforced=False,
+      constraint='constraints/iam.disableCrossProjectServiceAccountUsage',
+      is_enforced=False,
     )
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -99,8 +94,8 @@ class OrgPolicyCheckTest(GeneralizedStepsTestBase):
 
   def test_org_policy_enforced_and_expected_not_enforced(self):
     step = generalized_steps.OrgPolicyCheck(
-        constraint='constraints/compute.disableSerialPortAccess',
-        is_enforced=False,
+      constraint='constraints/compute.disableSerialPortAccess',
+      is_enforced=False,
     )
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -110,9 +105,9 @@ class OrgPolicyCheckTest(GeneralizedStepsTestBase):
 
   def test_org_policy_enforced_with_project_parameter(self):
     step = generalized_steps.OrgPolicyCheck(
-        constraint='constraints/compute.disableSerialPortAccess',
-        is_enforced=True,
-        project=DUMMY_PROJECT_ID,
+      constraint='constraints/compute.disableSerialPortAccess',
+      is_enforced=True,
+      project=DUMMY_PROJECT_ID,
     )
     with op.operator_context(self.operator):
       self.operator.set_step(step)

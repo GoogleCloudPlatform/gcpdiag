@@ -31,7 +31,8 @@ def prefetch_rule(context: models.Context):
 
   # Fetch the metrics for all clusters.
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id, """
+    context.project_id,
+    """
 fetch prometheus_target
 | metric 'prometheus.googleapis.com/apiserver_storage_objects/gauge'
 | filter (metric.resource == 'serviceaccounts')
@@ -42,7 +43,8 @@ fetch prometheus_target
 | group_by [resource.cluster],
     [value_apiserver_storage_objects_mean_aggregate:
        aggregate(value_apiserver_storage_objects_mean)]
-  """)
+  """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -64,16 +66,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       pass
 
   for _, c in sorted(clusters.items()):
-    if c.is_autopilot or c.has_workload_identity_enabled(
-    ) and c.has_monitoring_enabled:
+    if c.is_autopilot or c.has_workload_identity_enabled() and c.has_monitoring_enabled:
       if 'APISERVER' not in c.enabled_monitoring_components():
         report.add_skipped(c, 'API Server metrics are disabled')
         continue
       if c.name not in per_cluster_results:
-        report.add_skipped(
-            c, 'Unable to find serviceaccount count from APISERVER metrics')
+        report.add_skipped(c, 'Unable to find serviceaccount count from APISERVER metrics')
       elif per_cluster_results[c.name] < 3000:
         report.add_ok(c)
       else:
-        report.add_failed(
-            c, 'Cluster has more than 3,000 Kubernetes service accounts.')
+        report.add_failed(c, 'Cluster has more than 3,000 Kubernetes service accounts.')

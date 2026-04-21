@@ -32,11 +32,10 @@ from gcpdiag.lint.gke import util
 from gcpdiag.queries import apis, gke, logs
 
 _LOG_RESOURCE_TYPE = 'k8s_cluster'
-_LOG_NAME = (
-    'log_id("container.googleapis.com%2Fcluster-autoscaler-visibility")')
+_LOG_NAME = 'log_id("container.googleapis.com%2Fcluster-autoscaler-visibility")'
 _LOG_FILTER_STR = (
-    'jsonPayload.noDecisionStatus.noScaleUp.unhandledPodGroups.'
-    'napFailureReasons.messageId="no.scale.up.nap.pod.zonal.resources.exceeded"'
+  'jsonPayload.noDecisionStatus.noScaleUp.unhandledPodGroups.'
+  'napFailureReasons.messageId="no.scale.up.nap.pod.zonal.resources.exceeded"'
 )
 
 MATCH_STR_1 = 'no.scale.up.nap.pod.zonal.resources.exceeded'
@@ -47,46 +46,47 @@ def prepare_rule(context: models.Context):
   clusters = gke.get_clusters(context)
   for project_id in {c.project_id for c in clusters.values()}:
     logs_by_project[project_id] = logs.query(
-        project_id=project_id,
-        resource_type=_LOG_RESOURCE_TYPE,
-        log_name=_LOG_NAME,
-        filter_str=_LOG_FILTER_STR,
+      project_id=project_id,
+      resource_type=_LOG_RESOURCE_TYPE,
+      log_name=_LOG_NAME,
+      filter_str=_LOG_FILTER_STR,
     )
 
 
 def _filter_f(log_entry: logs.LogEntryShort) -> bool:
   try:
     return MATCH_STR_1 in get_path(
-        log_entry,
-        (
-            'jsonPayload',
-            'noDecisionStatus',
-            'noScaleUp',
-            'unhandledPodGroups',
-            0,
-            'napFailureReasons',
-            0,
-            'messageId',
-        ),
+      log_entry,
+      (
+        'jsonPayload',
+        'noDecisionStatus',
+        'noScaleUp',
+        'unhandledPodGroups',
+        0,
+        'napFailureReasons',
+        0,
+        'messageId',
+      ),
     )
   except KeyError:
     return False
 
 
 def _extract_sample_affected_pod(
-    log_entry: logs.LogEntryShort,) -> Tuple[Optional[str], Optional[str]]:
+  log_entry: logs.LogEntryShort,
+) -> Tuple[Optional[str], Optional[str]]:
   try:
     pod_group = get_path(
-        log_entry,
-        (
-            'jsonPayload',
-            'noDecisionStatus',
-            'noScaleUp',
-            'unhandledPodGroups',
-            0,
-            'podGroup',
-            'samplePod',
-        ),
+      log_entry,
+      (
+        'jsonPayload',
+        'noDecisionStatus',
+        'noScaleUp',
+        'unhandledPodGroups',
+        0,
+        'podGroup',
+        'samplePod',
+      ),
     )
     return (pod_group['namespace'], pod_group['name'])
   except KeyError:
@@ -106,15 +106,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Search the logs.
   bad_clusters = util.gke_logs_find_bad_clusters(
-      context=context, logs_by_project=logs_by_project, filter_f=_filter_f)
+    context=context, logs_by_project=logs_by_project, filter_f=_filter_f
+  )
 
   # Create the report.
   for _, c in sorted(clusters.items()):
     if c in bad_clusters:
       namespace, name = _extract_sample_affected_pod(bad_clusters[c])
-      message = (
-          'NAP cannot scale-up since cluster-wide cpu and/or memory limits'
-          ' would be exceeded.')
+      message = 'NAP cannot scale-up since cluster-wide cpu and/or memory limits would be exceeded.'
       if namespace and name:
         message += f' Sample affected pod: {namespace}/{name}.'
       report.add_failed(c, message)

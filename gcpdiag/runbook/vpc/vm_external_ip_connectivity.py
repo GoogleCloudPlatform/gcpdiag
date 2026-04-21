@@ -22,9 +22,8 @@ from gcpdiag.queries import crm, gce
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gcp import generalized_steps as gcp_gs
 from gcpdiag.runbook.nat import generalized_steps as nat_gs
-from gcpdiag.runbook.vpc import flags
+from gcpdiag.runbook.vpc import flags, util
 from gcpdiag.runbook.vpc import generalized_steps as vpc_gs
-from gcpdiag.runbook.vpc import util
 
 SCOPE_TO_SINGLE_VM = 'vm_exists'
 
@@ -56,52 +55,40 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
   - NATGW Checks:
       - For source nics without an External IP address, verify the VM is served
         by a Public NAT Gateway and check there are no issues on the NATGW.
-    """
+  """
 
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True
-      },
-      flags.NAME: {
-          'type': str,
-          'help': 'The name of the GCE Instance',
-          'group': 'instance',
-          'deprecated': True,
-          'new_parameter': 'instance_name'
-      },
-      flags.INSTANCE_NAME: {
-          'type': str,
-          'help': 'The name of the GCE Instance',
-          'group': 'instance',
-          'required': True
-      },
-      flags.DEST_IP: {
-          'type': ipaddress.IPv4Address,
-          'help': 'External IP the VM is connecting to',
-          'required': True
-      },
-      flags.DEST_PORT: {
-          'type': int,
-          'help': 'External IP the VM is connecting to',
-          'default': 443
-      },
-      flags.PROTOCOL_TYPE: {
-          'type': str,
-          'help': 'Protocol used to connect to SSH',
-          'default': 'tcp',
-      },
-      flags.SRC_NIC: {
-          'type': str,
-          'help': 'VM source NIC',
-          'required': True
-      },
-      flags.ZONE: {
-          'type': str,
-          'help': 'The zone of the target GCE Instance',
-          'required': True
-      }
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.NAME: {
+      'type': str,
+      'help': 'The name of the GCE Instance',
+      'group': 'instance',
+      'deprecated': True,
+      'new_parameter': 'instance_name',
+    },
+    flags.INSTANCE_NAME: {
+      'type': str,
+      'help': 'The name of the GCE Instance',
+      'group': 'instance',
+      'required': True,
+    },
+    flags.DEST_IP: {
+      'type': ipaddress.IPv4Address,
+      'help': 'External IP the VM is connecting to',
+      'required': True,
+    },
+    flags.DEST_PORT: {'type': int, 'help': 'External IP the VM is connecting to', 'default': 443},
+    flags.PROTOCOL_TYPE: {
+      'type': str,
+      'help': 'Protocol used to connect to SSH',
+      'default': 'tcp',
+    },
+    flags.SRC_NIC: {'type': str, 'help': 'VM source NIC', 'required': True},
+    flags.ZONE: {'type': str, 'help': 'The zone of the target GCE Instance', 'required': True},
   }
 
   def legacy_parameter_handler(self, parameters):
@@ -135,15 +122,18 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
     """Starting VM external connectivity diagnostics"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
-      vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                            zone=op.get(flags.ZONE),
-                            instance_name=op.get(flags.INSTANCE_NAME))
+      vm = gce.get_instance(
+        project_id=op.get(flags.PROJECT_ID),
+        zone=op.get(flags.ZONE),
+        instance_name=op.get(flags.INSTANCE_NAME),
+      )
     except googleapiclient.errors.HttpError:
       op.add_skipped(
-          project,
-          reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
-              op.get(flags.PROJECT_ID)))
+        project,
+        reason=('Instance {} does not exist in zone {} or project {}').format(
+          op.get(flags.INSTANCE_NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)
+        ),
+      )
     else:
       if vm:
         # Check for instance id and instance name
@@ -153,11 +143,10 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
     # Check that the user passed in a valid source NIC on the VM
     if not util.is_valid_nic(op.get(flags.SRC_NIC)):
       op.add_failed(
-          vm,
-          reason=
-          (f'{op.get(flags.SRC_NIC)} is not a valid nic on the the VM {vm.name}.'
-          ),
-          remediation='Run using a valid nic.')
+        vm,
+        reason=(f'{op.get(flags.SRC_NIC)} is not a valid nic on the the VM {vm.name}.'),
+        remediation='Run using a valid nic.',
+      )
     else:
       # get the networkIP of the NIC
       for interface in vm.get_network_interfaces:
@@ -169,17 +158,18 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
     if op.get(flags.DEST_IP):
       if ipaddress.IPv4Address(op.get(flags.DEST_IP)).is_private:
         op.add_failed(
-            op.get(flags.DEST_IP),
-            reason=
-            f'{op.get(flags.DEST_IP)} is not a public/external ip address.',
-            remediation='Run using a valid public/external ip address.')
+          op.get(flags.DEST_IP),
+          reason=f'{op.get(flags.DEST_IP)} is not a public/external ip address.',
+          remediation='Run using a valid public/external ip address.',
+        )
 
     # Check that the user has provided a port number
     if not op.get(flags.DEST_PORT):
       op.add_failed(
-          op.get(flags.DEST_PORT),
-          reason=f'{op.get(flags.DEST_PORT)} is not a valid port address.',
-          remediation='Run using a valid destination port.')
+        op.get(flags.DEST_PORT),
+        reason=f'{op.get(flags.DEST_PORT)} is not a valid port address.',
+        remediation='Run using a valid destination port.',
+      )
 
 
 class VmHasExternalIp(runbook.Gateway):
@@ -192,22 +182,23 @@ class VmHasExternalIp(runbook.Gateway):
   def execute(self):
     """Checking if the source NIC has an associated external IP address."""
 
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.INSTANCE_NAME))
+    vm = gce.get_instance(
+      project_id=op.get(flags.PROJECT_ID),
+      zone=op.get(flags.ZONE),
+      instance_name=op.get(flags.INSTANCE_NAME),
+    )
 
     # If this an interface without an external IP address run checks for external interface
-    if util.is_external_ip_on_nic(vm.get_network_interfaces,
-                                  op.get(flags.SRC_NIC)):
+    if util.is_external_ip_on_nic(vm.get_network_interfaces, op.get(flags.SRC_NIC)):
       op.info(
-          f'The source NIC {op.get(flags.SRC_NIC)} on the VM has an External IP address,'
-          f'checking direct connectivity to external IP {op.get(flags.DEST_IP)}'
+        f'The source NIC {op.get(flags.SRC_NIC)} on the VM has an External IP address,'
+        f'checking direct connectivity to external IP {op.get(flags.DEST_IP)}'
       )
       self.add_child(ExternalInterfaceCheck())
     else:
       op.info(
-          f'The source NIC {op.get(flags.SRC_NIC)} on the VM does not have an External IP address,'
-          f'checking connectivity to external IP {op.get(flags.DEST_IP)} via a NATGW'
+        f'The source NIC {op.get(flags.SRC_NIC)} on the VM does not have an External IP address,'
+        f'checking connectivity to external IP {op.get(flags.DEST_IP)} via a NATGW'
       )
       self.add_child(InternalInterfaceCheck())
 
@@ -222,12 +213,14 @@ class VmExternalIpConnectivityEnd(runbook.EndStep):
   def execute(self):
     """Finalize VM external connectivity diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
-      response = op.prompt(kind=op.CONFIRMATION,
-                           message="""
+      response = op.prompt(
+        kind=op.CONFIRMATION,
+        message="""
           Are you able to connect to external IP from the VM {}:
           after taking the remediation steps outlined.
           """.format(op.get(flags.INSTANCE_NAME)),
-                           choice_msg='Enter an option: ')
+        choice_msg='Enter an option: ',
+      )
       if response == op.NO:
         op.info(message=op.END_MESSAGE)
 
@@ -271,7 +264,6 @@ class InternalInterfaceCheck(runbook.CompositeStep):
 
     # Check there is egress rule permitting egress traffic to the destination/remote IP.
     if op.get(flags.DEST_IP):
-
       # check the VPC Firewall rules.
       dest_ip_egress_firewall_check = vpc_gs.VpcFirewallCheck()
       dest_ip_egress_firewall_check.traffic = 'egress'

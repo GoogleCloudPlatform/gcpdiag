@@ -15,8 +15,6 @@
 # limitations under the License.
 """gcpdiag main script."""
 
-# pylint: disable=invalid-name
-
 import sys
 
 from gcpdiag import config
@@ -45,8 +43,8 @@ def main(argv):
       lint_command.run(argv)
     except KeyboardInterrupt:
       print(
-          '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)',
-          file=sys.stderr)
+        '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)', file=sys.stderr
+      )
       sys.exit(1)
   elif argv[1] == 'runbook':
     # Replace argv[0:1] with only argv[0] so that argparse works correctly.
@@ -56,8 +54,8 @@ def main(argv):
       runbook_command.run(argv)
     except KeyboardInterrupt:
       print(
-          '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)',
-          file=sys.stderr)
+        '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)', file=sys.stderr
+      )
       sys.exit(1)
   elif argv[1] == 'search':
     # Replace argv[0:1] with only argv[0] so that argparse works correctly.
@@ -67,12 +65,11 @@ def main(argv):
       search_command.run(argv)
     except KeyboardInterrupt:
       print(
-          '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)',
-          file=sys.stderr)
+        '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)', file=sys.stderr
+      )
       sys.exit(1)
   else:
-    print(f'ERROR: unknown command {argv[1]}. Use --help for help.',
-          file=sys.stderr)
+    print(f'ERROR: unknown command {argv[1]}. Use --help for help.', file=sys.stderr)
     sys.exit(1)
 
 

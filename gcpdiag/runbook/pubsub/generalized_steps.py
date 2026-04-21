@@ -35,22 +35,21 @@ class PubsubQuotas(runbook.Step):
     """Checks if any Pub/Sub quotas are being exceeded."""
     if self.quota_exceeded_found is True:
       op.add_failed(
-          resource=crm.get_project(op.get(flags.PROJECT_ID)),
-          reason=op.prep_msg(op.FAILURE_REASON),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+        resource=crm.get_project(op.get(flags.PROJECT_ID)),
+        reason=op.prep_msg(op.FAILURE_REASON),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
     else:
       op.add_ok(
-          resource=crm.get_project(op.get(flags.PROJECT_ID)),
-          reason='Quota usage is within project limits.',
+        resource=crm.get_project(op.get(flags.PROJECT_ID)),
+        reason='Quota usage is within project limits.',
       )
 
   def quota_exceeded_found(self) -> bool:
-    quota_exceeded_query = (
-        quotas.QUOTA_EXCEEDED_HOURLY_PER_SERVICE_QUERY_TEMPLATE.format(
-            service_name='pubsub', within_days=1))
-    time_series = monitoring.query(op.get(flags.PROJECT_ID),
-                                   quota_exceeded_query)
+    quota_exceeded_query = quotas.QUOTA_EXCEEDED_HOURLY_PER_SERVICE_QUERY_TEMPLATE.format(
+      service_name='pubsub', within_days=1
+    )
+    time_series = monitoring.query(op.get(flags.PROJECT_ID), quota_exceeded_query)
     if time_series:
       return True
     return False
@@ -67,32 +66,30 @@ class ThroughputQualification(runbook.Step):
   def execute(self):
     """Checks if subscription has good health (high qualification)."""
 
-    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
-                                           subscription_name=op.get(
-                                               flags.SUBSCRIPTION_NAME))
+    subscription = pubsub.get_subscription(
+      project_id=op.get(flags.PROJECT_ID), subscription_name=op.get(flags.SUBSCRIPTION_NAME)
+    )
 
     qualification_query = (
-        'fetch pubsub_subscription | metric'
-        ' "pubsub.googleapis.com/subscription/delivery_latency_health_score" |'
-        ' filter (resource.subscription_id =="{}") | group_by 1m,'
-        ' [value_delivery_latency_health_score_sum:sum(if(value.delivery_latency_health_score,'
-        ' 1, 0))] | every 1m | within 10m').format(subscription.name)
+      'fetch pubsub_subscription | metric'
+      ' "pubsub.googleapis.com/subscription/delivery_latency_health_score" |'
+      ' filter (resource.subscription_id =="{}") | group_by 1m,'
+      ' [value_delivery_latency_health_score_sum:sum(if(value.delivery_latency_health_score,'
+      ' 1, 0))] | every 1m | within 10m'
+    ).format(subscription.name)
 
     low_health_metrics = []
-    time_series = monitoring.query(op.get(flags.PROJECT_ID),
-                                   qualification_query)
+    time_series = monitoring.query(op.get(flags.PROJECT_ID), qualification_query)
     for metric in list(time_series.values()):
       # metric_dict[get_path(metric, ('labels','metric.criteria'))] = metric['values']
       if metric['values'][0][-1] == 0:
-        low_health_metrics.append(
-            get_path(metric, ('labels', 'metric.criteria')))
+        low_health_metrics.append(get_path(metric, ('labels', 'metric.criteria')))
 
     if low_health_metrics:
       op.add_failed(
-          resource=subscription,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             low_health_metrics=low_health_metrics),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+        resource=subscription,
+        reason=op.prep_msg(op.FAILURE_REASON, low_health_metrics=low_health_metrics),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
     else:
       op.add_ok(resource=subscription, reason='Subcription has good health')
@@ -108,15 +105,17 @@ class ActiveSubscription(runbook.Step):
 
   def execute(self):
     """Checks subscription activity status."""
-    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
-                                           subscription_name=op.get(
-                                               flags.SUBSCRIPTION_NAME))
+    subscription = pubsub.get_subscription(
+      project_id=op.get(flags.PROJECT_ID), subscription_name=op.get(flags.SUBSCRIPTION_NAME)
+    )
     if subscription.is_active():
       op.add_ok(resource=subscription, reason='Subscription is active')
     else:
-      op.add_failed(resource=subscription,
-                    reason='Inactive subscription. ',
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        resource=subscription,
+        reason='Inactive subscription. ',
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
 
 class DeadLetterTopic(runbook.Step):
@@ -131,16 +130,17 @@ class DeadLetterTopic(runbook.Step):
 
   def execute(self):
     """Checks for dead letter topic presence."""
-    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
-                                           subscription_name=op.get(
-                                               flags.SUBSCRIPTION_NAME))
+    subscription = pubsub.get_subscription(
+      project_id=op.get(flags.PROJECT_ID), subscription_name=op.get(flags.SUBSCRIPTION_NAME)
+    )
     if subscription.has_dead_letter_topic():
-      op.add_ok(resource=subscription,
-                reason='Dead letter topic already attached')
+      op.add_ok(resource=subscription, reason='Dead letter topic already attached')
     else:
-      op.add_failed(resource=subscription,
-                    reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        resource=subscription,
+        reason=op.prep_msg(op.FAILURE_REASON),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
 
 class DeadLetterTopicPermissions(runbook.Step):
@@ -158,43 +158,42 @@ class DeadLetterTopicPermissions(runbook.Step):
     project_id = op.get(flags.PROJECT_ID)
     project = crm.get_project(project_id=project_id)
     subscription = pubsub.get_subscription(
-        project_id=project_id,
-        subscription_name=op.get(flags.SUBSCRIPTION_NAME),
+      project_id=project_id,
+      subscription_name=op.get(flags.SUBSCRIPTION_NAME),
     )
 
     if not subscription.has_dead_letter_topic():
-      op.add_skipped(
-          subscription,
-          'Subscription does not have a dead letter topic configured.')
+      op.add_skipped(subscription, 'Subscription does not have a dead letter topic configured.')
       return
     # dead letter topic is in another project that the user may not be allowed
-    if subscription.has_dead_letter_topic() and subscription.dead_letter_topic(
-    ).split('/')[1] != project_id:
+    if (
+      subscription.has_dead_letter_topic()
+      and subscription.dead_letter_topic().split('/')[1] != project_id
+    ):
       op.info(
-          'Dead Letter topic permissions could not be verified. ' \
-          'Please ensure both the publisher role to the dead letter topic/project ' \
-          'level and the subscriber role at the subscription/project level to the ' \
-          'pubsub agent ' \
-          'serviceAccount:service-<project-number>@gcp-sa-pubsub.iam.gserviceaccount.com ' \
-          'are assigned'
+        'Dead Letter topic permissions could not be verified. '
+        'Please ensure both the publisher role to the dead letter topic/project '
+        'level and the subscriber role at the subscription/project level to the '
+        'pubsub agent '
+        'serviceAccount:service-<project-number>@gcp-sa-pubsub.iam.gserviceaccount.com '
+        'are assigned'
       )
-      op.add_skipped(resource=project,
-                     reason='Dead Letter topic is in another project.')
+      op.add_skipped(resource=project, reason='Dead Letter topic is in another project.')
       return
 
     role_publisher = 'roles/pubsub.publisher'
     role_subscriber = 'roles/pubsub.subscriber'
     policy = iam.get_project_policy(op.get_context())
-    service_account_re = re.compile('serviceAccount:service-' +
-                                    str(project.number) +
-                                    '@gcp-sa-pubsub.iam.gserviceaccount.com')
+    service_account_re = re.compile(
+      'serviceAccount:service-' + str(project.number) + '@gcp-sa-pubsub.iam.gserviceaccount.com'
+    )
 
     service_account = next(
-        filter(
-            service_account_re.match,
-            policy.get_members(),
-        ),
-        None,
+      filter(
+        service_account_re.match,
+        policy.get_members(),
+      ),
+      None,
     )
 
     if not service_account:
@@ -203,32 +202,27 @@ class DeadLetterTopicPermissions(runbook.Step):
 
     # check at the project level
     if policy.has_role_permissions(
-        member=service_account,
-        role=role_subscriber) and policy.has_role_permissions(
-            member=service_account, role=role_publisher):
-      op.add_ok(resource=project,
-                reason='Dead Letter permissions assigned at the project level')
+      member=service_account, role=role_subscriber
+    ) and policy.has_role_permissions(member=service_account, role=role_publisher):
+      op.add_ok(resource=project, reason='Dead Letter permissions assigned at the project level')
       return
 
     # check at the resource level
     subscription_policy = pubsub.get_subscription_iam_policy(
-        op.get_context(), subscription.full_path)
-    topic_policy = pubsub.get_topic_iam_policy(op.get_context(),
-                                               subscription.dead_letter_topic())
+      op.get_context(), subscription.full_path
+    )
+    topic_policy = pubsub.get_topic_iam_policy(op.get_context(), subscription.dead_letter_topic())
 
     # log uncertain in case of fine grained access restrictions
     if not subscription_policy.has_role_permissions(
-        service_account,
-        role_subscriber) or not topic_policy.has_role_permissions(
-            service_account, role_publisher):
+      service_account, role_subscriber
+    ) or not topic_policy.has_role_permissions(service_account, role_publisher):
       op.add_uncertain(
-          resource=project,
-          reason='Missing dead letter topic permissions',
-          remediation=
-          'Please ensure both the publisher role to the dead letter topic/project ' \
-          'level and the subscriber role at the subscription/project level to the ' \
-          'pubsub agent {} are assigned'
-          .format(service_account))
+        resource=project,
+        reason='Missing dead letter topic permissions',
+        remediation='Please ensure both the publisher role to the dead letter topic/project '
+        'level and the subscriber role at the subscription/project level to the '
+        'pubsub agent {} are assigned'.format(service_account),
+      )
     else:
-      op.add_ok(resource=subscription,
-                reason='Dead letter topic permissions assigned')
+      op.add_ok(resource=subscription, reason='Dead letter topic permissions assigned')

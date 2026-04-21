@@ -30,24 +30,24 @@ GCE_SERVICE_ACCOUNT = '12340010-compute@developer.gserviceaccount.com'
 ENV_SERVICE_ACCOUNT = f'env2sa@{DUMMY_PROJECT_NAME}.iam.gserviceaccount.com'
 NUMBER_OF_INSTANCES_IN_DATAFUSION_JSON_DUMP_FILE = 1
 SUPPORTED_VERSIONS_DICT = {
-    '6.9': '2025-03-31',
-    '6.8': '2024-08-31',
-    '6.7': '2023-02-28',
-    '6.6': '2023-10-31',
-    '6.5': '2023-05-31',
-    '6.4': '2022-11-30',
-    '6.3': '2022-07-31',
-    '6.2': '2022-03-31',
-    '6.1': '2021-06-30',
+  '6.9': '2025-03-31',
+  '6.8': '2024-08-31',
+  '6.7': '2023-02-28',
+  '6.6': '2023-10-31',
+  '6.5': '2023-05-31',
+  '6.4': '2022-11-30',
+  '6.3': '2022-07-31',
+  '6.2': '2022-03-31',
+  '6.1': '2021-06-30',
 }
 DATAFUSION_DATAPROC_VERSIONS_DICT = {
-    '6.7': ['1.3'],
-    '6.6': ['2.0', '1.3'],
-    '6.5': ['2.0', '1.3'],
-    '6.4': ['2.0', '1.3'],
-    '6.3': ['1.3'],
-    '6.2': ['1.3'],
-    '6.1': ['1.3'],
+  '6.7': ['1.3'],
+  '6.6': ['2.0', '1.3'],
+  '6.5': ['2.0', '1.3'],
+  '6.4': ['2.0', '1.3'],
+  '6.3': ['1.3'],
+  '6.2': ['1.3'],
+  '6.1': ['1.3'],
 }
 
 
@@ -63,14 +63,12 @@ class TestDataFusion:
   def test_running(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = datafusion.get_instances(context)
-    assert (DUMMY_INSTANCE1_NAME,
-            True) in [(i.name, i.is_running) for k, i in instances.items()]
+    assert (DUMMY_INSTANCE1_NAME, True) in [(i.name, i.is_running) for k, i in instances.items()]
 
   def test_is_private_ip(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = datafusion.get_instances(context)
-    assert (DUMMY_INSTANCE1_NAME,
-            True) in [(i.name, i.is_private) for k, i in instances.items()]
+    assert (DUMMY_INSTANCE1_NAME, True) in [(i.name, i.is_private) for k, i in instances.items()]
 
 
 @mock.patch('gcpdiag.queries.web.get', new=web_stub.get)
@@ -87,8 +85,10 @@ class TestExtractVersionPolicyDict:
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-@mock.patch('gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
-            new=generic_api_stub.get_generic_api_stub)
+@mock.patch(
+  'gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
+  new=generic_api_stub.get_generic_api_stub,
+)
 class TestComputeProfile:
   """Test Compute Profile"""
 
@@ -108,8 +108,10 @@ class TestComputeProfile:
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-@mock.patch('gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
-            new=generic_api_stub.get_generic_api_stub)
+@mock.patch(
+  'gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
+  new=generic_api_stub.get_generic_api_stub,
+)
 class TestPreferences:
   """Test datafusion cdap preferences"""
 

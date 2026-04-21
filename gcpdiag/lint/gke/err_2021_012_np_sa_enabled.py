@@ -36,10 +36,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       if np.has_default_service_account():
         default_prefix = 'default '
       if not iam.is_service_account_existing(sa, context):
-        report.add_failed(np,
-                          f'{default_prefix}service account is deleted: {sa}')
+        report.add_failed(np, f'{default_prefix}service account is deleted: {sa}')
       elif not iam.is_service_account_enabled(sa, context):
-        report.add_failed(np,
-                          f'{default_prefix}service account is disabled: {sa}')
+        report.add_failed(np, f'{default_prefix}service account is disabled: {sa}')
       else:
         report.add_ok(np)

@@ -40,11 +40,9 @@ class GeneralizedStepsTestBase(unittest.TestCase):
   def setUp(self):
     super().setUp()
     # 1. Patch get_api with the stub.
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
     # 2. Create a mock interface to capture outputs
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     # 3. Instantiate a real Operator
     self.operator = op.Operator(self.mock_interface)
@@ -52,16 +50,11 @@ class GeneralizedStepsTestBase(unittest.TestCase):
     self.operator.messages = MockMessage()
     # 4. Define standard parameters.
     self.params = {
-        flags.PROJECT_ID:
-            DUMMY_PROJECT_ID,
-        flags.DATAFLOW_JOB_ID:
-            DUMMY_JOB_ID,
-        flags.JOB_REGION:
-            DUMMY_REGION,
-        'start_time':
-            datetime.datetime(2025, 1, 1, tzinfo=datetime.timezone.utc),
-        'end_time':
-            datetime.datetime(2025, 1, 2, tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: DUMMY_PROJECT_ID,
+      flags.DATAFLOW_JOB_ID: DUMMY_JOB_ID,
+      flags.JOB_REGION: DUMMY_REGION,
+      'start_time': datetime.datetime(2025, 1, 1, tzinfo=datetime.timezone.utc),
+      'end_time': datetime.datetime(2025, 1, 2, tzinfo=datetime.timezone.utc),
     }
     self.operator.parameters = self.params
 

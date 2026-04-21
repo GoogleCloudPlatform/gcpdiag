@@ -27,14 +27,9 @@ DUMMY_ZONE = 'europe-west4-a'
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 class Test:
-
   def test_timeserie(self):
-    ts_col = monitoring.query(DUMMY_PROJECT_NAME,
-                              'mocked query (this is ignored)')
-    fs = frozenset({
-        f'resource.zone:{DUMMY_ZONE}',
-        f'metric.instance_name:{DUMMY_INSTANCE_NAME}'
-    })
+    ts_col = monitoring.query(DUMMY_PROJECT_NAME, 'mocked query (this is ignored)')
+    fs = frozenset({f'resource.zone:{DUMMY_ZONE}', f'metric.instance_name:{DUMMY_INSTANCE_NAME}'})
     assert fs in ts_col.keys()
     value = ts_col[fs]
 
@@ -60,10 +55,9 @@ class Test:
     end_time = datetime.now()
     start_time = end_time - timedelta(minutes=30)
     vpn_query = 'cloud_monitoring_vpn_gateway_network_googleapis_com_vpn_gateway_tunnel_is_up'
-    response = monitoring.queryrange(project_id=DUMMY_PROJECT_NAME,
-                                     query_str=vpn_query,
-                                     start_time=start_time,
-                                     end_time=end_time)
+    response = monitoring.queryrange(
+      project_id=DUMMY_PROJECT_NAME, query_str=vpn_query, start_time=start_time, end_time=end_time
+    )
     assert response['status'] == 'success'
     results = response['data']['result']
     if len(results) > 0:

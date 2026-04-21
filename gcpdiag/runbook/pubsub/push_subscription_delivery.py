@@ -22,15 +22,16 @@ from gcpdiag.runbook.pubsub import flags
 from gcpdiag.runbook.pubsub import generalized_steps as pubsub_gs
 
 RESPONSE_CODES = (
-    'fetch pubsub_subscription '
-    '| metric "pubsub.googleapis.com/subscription/push_request_count"'
-    '| filter resource.project_id == "{project_id}"'
-    ' && (resource.subscription_id == "{subscription_name}") '
-    '| align rate(1m) '
-    '| every 1m '
-    '| group_by [metric.response_class], '
-    ' [value_push_request_count_aggregate: aggregate(value.push_request_count)]'
-    '| within 10m ')
+  'fetch pubsub_subscription '
+  '| metric "pubsub.googleapis.com/subscription/push_request_count"'
+  '| filter resource.project_id == "{project_id}"'
+  ' && (resource.subscription_id == "{subscription_name}") '
+  '| align rate(1m) '
+  '| every 1m '
+  '| group_by [metric.response_class], '
+  ' [value_push_request_count_aggregate: aggregate(value.push_request_count)]'
+  '| within 10m '
+)
 
 
 class PushSubscriptionDelivery(runbook.DiagnosticTree):
@@ -49,17 +50,18 @@ class PushSubscriptionDelivery(runbook.DiagnosticTree):
     - vpcsc enablement
 
   """
+
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True,
-      },
-      flags.SUBSCRIPTION_NAME: {
-          'type': str,
-          'help': ('The name of subscription to evaluate in the runbook'),
-          'required': True,
-      },
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.SUBSCRIPTION_NAME: {
+      'type': str,
+      'help': ('The name of subscription to evaluate in the runbook'),
+      'required': True,
+    },
   }
 
   def build_tree(self):
@@ -104,32 +106,34 @@ class PushSubscriptionDeliveryStart(runbook.StartStep):
       op.info(f'name: {project.name}, id: {project.id}')
 
     if not apis.is_enabled(op.get(flags.PROJECT_ID), 'pubsub'):
-      op.add_skipped(
-          project,
-          reason='Pub/Sub API is not enabled, please enable to proceed.')
+      op.add_skipped(project, reason='Pub/Sub API is not enabled, please enable to proceed.')
       return
 
     subscription_name = op.get(flags.SUBSCRIPTION_NAME)
     # check subscription exists and is pull
     try:
       subscription = pubsub.get_subscription(
-          project_id=op.get(flags.PROJECT_ID),
-          subscription_name=subscription_name)
+        project_id=op.get(flags.PROJECT_ID), subscription_name=subscription_name
+      )
     except utils.GcpApiError:
       op.add_skipped(
-          resource=project,
-          reason=
-          ('Could not find subscription {subscription_name}, please confirm it exists or '
-           'if recreated please wait a few minutes before querying the runbook'.
-           format(subscription_name=subscription_name)),
+        resource=project,
+        reason=(
+          'Could not find subscription {subscription_name}, please confirm it exists or '
+          'if recreated please wait a few minutes before querying the runbook'.format(
+            subscription_name=subscription_name
+          )
+        ),
       )
     else:
       if not subscription.is_push_subscription():
         op.add_skipped(
-            resource=project,
-            reason=
-            ('Skipping execution because provided {subscription_name} is not a push subscription. '
-             .format(subscription_name=subscription_name)),
+          resource=project,
+          reason=(
+            'Skipping execution because provided {subscription_name} is not a push subscription. '.format(
+              subscription_name=subscription_name
+            )
+          ),
         )
 
 
@@ -147,33 +151,32 @@ class ResponseCodeStep(runbook.Step):
     project_id = op.get(flags.PROJECT_ID)
 
     push_metric = monitoring.query(
-        project_id,
-        RESPONSE_CODES.format(project_id=project_id,
-                              subscription_name=op.get(
-                                  flags.SUBSCRIPTION_NAME)),
+      project_id,
+      RESPONSE_CODES.format(
+        project_id=project_id, subscription_name=op.get(flags.SUBSCRIPTION_NAME)
+      ),
     )
     if not push_metric:
       op.add_skipped(
-          resource=crm.get_project(project_id),
-          reason=(
-              'Skipping as no traffic delivery to the endpoint has been detected'
-          ))
+        resource=crm.get_project(project_id),
+        reason=('Skipping as no traffic delivery to the endpoint has been detected'),
+      )
     else:
-      subscription = pubsub.get_subscription(project_id=project_id,
-                                             subscription_name=op.get(
-                                                 flags.SUBSCRIPTION_NAME))
+      subscription = pubsub.get_subscription(
+        project_id=project_id, subscription_name=op.get(flags.SUBSCRIPTION_NAME)
+      )
       found_error_response: bool = False
       for metric_values in push_metric.values():
-        response_class = get_path(metric_values,
-                                  ('labels', 'metric.response_class'))
+        response_class = get_path(metric_values, ('labels', 'metric.response_class'))
         if response_class != 'ack':
           found_error_response = True
-          op.add_failed(resource=subscription,
-                        reason=op.prep_msg(op.FAILURE_REASON),
-                        remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+          op.add_failed(
+            resource=subscription,
+            reason=op.prep_msg(op.FAILURE_REASON),
+            remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+          )
       if not found_error_response:
-        op.add_ok(resource=subscription,
-                  reason='No error responses from the endpoint detected')
+        op.add_ok(resource=subscription, reason='No error responses from the endpoint detected')
 
 
 class VpcScStep(runbook.Step):
@@ -185,7 +188,7 @@ class VpcScStep(runbook.Step):
   template = 'generics::vpcsc_api'
 
   def execute(self):
-    """Check if push subscription project has a VPCSC perimeter """
+    """Check if push subscription project has a VPCSC perimeter"""
 
     if apis.is_enabled(op.get(flags.PROJECT_ID), 'accesscontextmanager'):
       op.info(op.prep_msg(op.FAILURE_REMEDIATION), step_type='INFO')
@@ -194,8 +197,8 @@ class VpcScStep(runbook.Step):
 class PushSubscriptionDeliveryEnd(runbook.EndStep):
   """End Step
 
-    No more checks.
-    """
+  No more checks.
+  """
 
   def execute(self):
     """End Step for push subscription"""

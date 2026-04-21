@@ -17,6 +17,7 @@
 
 Instead of doing real API calls, we return test JSON data.
 """
+
 import json
 import re
 
@@ -24,8 +25,6 @@ import googleapiclient.errors
 import httplib2
 
 from gcpdiag.queries import apis_stub
-
-#pylint: disable=unused-argument
 
 
 class CloudRunApiStub:
@@ -63,12 +62,10 @@ class GetServiceRequest:
     m = re.match(r'projects/([^/]+)/locations/[^/]+/services/[^/]+', self.name)
     project_id = m.group(1)
     json_dir = apis_stub.get_json_dir(project_id)
-    with open(json_dir / 'cloudrun_services.json',
-              encoding='utf-8') as json_file:
+    with open(json_dir / 'cloudrun_services.json', encoding='utf-8') as json_file:
       response = json.load(json_file)
       services = response['services']
     for service in services:
       if service['name'] == self.name:
         return service
-    raise googleapiclient.errors.HttpError(httplib2.Response({'status': 404}),
-                                           b'Not found')
+    raise googleapiclient.errors.HttpError(httplib2.Response({'status': 404}), b'Not found')

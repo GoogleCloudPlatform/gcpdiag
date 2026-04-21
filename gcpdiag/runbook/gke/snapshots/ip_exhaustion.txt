@@ -10,7 +10,7 @@ gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
   - GKE cluster type.
   - GKE cluster and nodepool configuration
   - Stackdriver logs
-    
+  
 [START]: Starting the IP Exhaustion diagnostics
 
    - gcpdiag-gke3-gggg                                                    [OK]

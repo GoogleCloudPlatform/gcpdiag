@@ -29,24 +29,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for vlan in attachments:
-    vlan_router = network.get_router_by_name(project_id=context.project_id,
-                                             region=vlan.region,
-                                             router_name=vlan.router)
+    vlan_router = network.get_router_by_name(
+      project_id=context.project_id, region=vlan.region, router_name=vlan.router
+    )
 
     if not vlan_router:
       report.add_skipped(vlan, 'no vlan router found')
       continue
 
     vlan_network_name = vlan_router.get_network_name()
-    vlan_network = network.get_network(project_id=context.project_id,
-                                       network_name=vlan_network_name,
-                                       context=context)
+    vlan_network = network.get_network(
+      project_id=context.project_id, network_name=vlan_network_name, context=context
+    )
     if not vlan_network:
       report.add_skipped(vlan, 'no vlan network found')
 
     if vlan.mtu != vlan_network.mtu:
-      report.add_failed(
-          vlan, None,
-          f' MTU mismatch: {vlan.mtu} vs VPC MTU {vlan_network.mtu}')
+      report.add_failed(vlan, None, f' MTU mismatch: {vlan.mtu} vs VPC MTU {vlan_network.mtu}')
     else:
       report.add_ok(vlan)

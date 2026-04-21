@@ -28,8 +28,8 @@ from gcpdiag.queries import apis, gce, iam, network
 
 ROLE = 'roles/cloudsql.client'
 CLOUDSQL_ADMIN_SCOPES = [
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/sqlservice.admin'
+  'https://www.googleapis.com/auth/cloud-platform',
+  'https://www.googleapis.com/auth/sqlservice.admin',
 ]
 
 
@@ -54,8 +54,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no Cloud SQL peered vpc found')
     return
 
-  for instance in sorted(instances.values(),
-                         key=op.attrgetter('project_id', 'name')):
+  for instance in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
     if instance.network.self_link not in cloudsql_peered_networks:
       continue
 
@@ -70,10 +69,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     if not service_account:
       message.append('no service account')
-    elif not iam_policy.has_role_permissions(
-        f'serviceAccount:{service_account}', ROLE):
-      message.append(
-          f'service_account: {service_account}\nmissing role: {ROLE}')
+    elif not iam_policy.has_role_permissions(f'serviceAccount:{service_account}', ROLE):
+      message.append(f'service_account: {service_account}\nmissing role: {ROLE}')
 
     if message:
       report.add_failed(instance, '\n'.join(message))

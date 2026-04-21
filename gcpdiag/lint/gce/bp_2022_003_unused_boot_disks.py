@@ -31,8 +31,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   all_ok = True
   for d in sorted(disks, key=lambda d: d.name):
     if d.bootable and not d.in_use:
-      report.add_failed(
-          d, f'Unattached bootable disk: {d.name} in zone: {d.zone}')
+      report.add_failed(d, f'Unattached bootable disk: {d.name} in zone: {d.zone}')
       all_ok = False
   if all_ok:
     project = crm.get_project(context.project_id)

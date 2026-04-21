@@ -34,36 +34,28 @@ class GkeStepTestBase(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_get_user_email = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_user_email'))
-    self.mock_is_enabled = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.is_enabled'))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_get_user_email = self.enterContext(mock.patch('gcpdiag.queries.apis.get_user_email'))
+    self.mock_is_enabled = self.enterContext(mock.patch('gcpdiag.queries.apis.is_enabled'))
     self.mock_is_enabled.return_value = True
     self.mock_get_user_email.return_value = 'test@example.com'
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
     self.mock_op_get = self.enterContext(mock.patch('gcpdiag.runbook.op.get'))
-    self.mock_op_add_ok = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_ok'))
-    self.mock_op_add_failed = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_failed'))
-    self.mock_op_get_context = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.get_context'))
+    self.mock_op_add_ok = self.enterContext(mock.patch('gcpdiag.runbook.op.add_ok'))
+    self.mock_op_add_failed = self.enterContext(mock.patch('gcpdiag.runbook.op.add_failed'))
+    self.mock_op_get_context = self.enterContext(mock.patch('gcpdiag.runbook.op.get_context'))
 
     self.params = {
-        flags.PROJECT_ID: 'test-project',
-        flags.LOCATION: 'us-central1',
-        flags.GKE_CLUSTER_NAME: 'test-cluster',
+      flags.PROJECT_ID: 'test-project',
+      flags.LOCATION: 'us-central1',
+      flags.GKE_CLUSTER_NAME: 'test-cluster',
     }
-    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(
-        key, default)
+    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(key, default)
 
 
 class ApiEnabledTest(GkeStepTestBase):
@@ -93,12 +85,9 @@ class NodePoolScopeTest(GkeStepTestBase):
 
   @mock.patch('gcpdiag.queries.gke.get_clusters')
   @mock.patch('gcpdiag.lint.gke.util.get_cluster_object')
-  def test_nodepool_scope_ok(self, mock_get_cluster_obj,
-                             unused_mock_get_clusters):
+  def test_nodepool_scope_ok(self, mock_get_cluster_obj, unused_mock_get_clusters):
     mock_nodepool = mock.Mock()
-    mock_nodepool.config.oauth_scopes = [
-        'https://www.googleapis.com/auth/cloud-platform'
-    ]
+    mock_nodepool.config.oauth_scopes = ['https://www.googleapis.com/auth/cloud-platform']
     mock_cluster = mock.Mock()
     mock_cluster.nodepools = [mock_nodepool]
     mock_get_cluster_obj.return_value = mock_cluster
@@ -111,8 +100,7 @@ class NodePoolScopeTest(GkeStepTestBase):
 
   @mock.patch('gcpdiag.queries.gke.get_clusters')
   @mock.patch('gcpdiag.lint.gke.util.get_cluster_object')
-  def test_nodepool_scope_failed(self, mock_get_cluster_obj,
-                                 unused_mock_get_clusters):
+  def test_nodepool_scope_failed(self, mock_get_cluster_obj, unused_mock_get_clusters):
     mock_nodepool = mock.Mock()
     mock_nodepool.config.oauth_scopes = ['wrong-scope']
     mock_cluster = mock.Mock()
@@ -133,8 +121,9 @@ class ServiceAccountPermissionTest(GkeStepTestBase):
   @mock.patch('gcpdiag.lint.gke.util.get_cluster_object')
   @mock.patch('gcpdiag.queries.iam.get_project_policy')
   @mock.patch('gcpdiag.queries.iam.is_service_account_enabled')
-  def test_sa_permission_ok(self, mock_sa_enabled, mock_get_policy,
-                            mock_get_cluster_obj, unused_mock_get_clusters):
+  def test_sa_permission_ok(
+    self, mock_sa_enabled, mock_get_policy, mock_get_cluster_obj, unused_mock_get_clusters
+  ):
     mock_sa_enabled.return_value = True
     mock_policy = mock.Mock()
     mock_policy.has_role_permissions.return_value = True
@@ -156,8 +145,9 @@ class ServiceAccountPermissionTest(GkeStepTestBase):
   @mock.patch('gcpdiag.lint.gke.util.get_cluster_object')
   @mock.patch('gcpdiag.queries.iam.get_project_policy')
   @mock.patch('gcpdiag.queries.iam.is_service_account_enabled')
-  def test_sa_disabled(self, mock_sa_enabled, unused_mock_get_policy,
-                       mock_get_cluster_obj, unused_mock_get_clusters):
+  def test_sa_disabled(
+    self, mock_sa_enabled, unused_mock_get_policy, mock_get_cluster_obj, unused_mock_get_clusters
+  ):
     mock_sa_enabled.return_value = False
     mock_nodepool = mock.Mock()
     mock_cluster = mock.Mock()

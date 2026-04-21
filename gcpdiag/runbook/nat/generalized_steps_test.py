@@ -35,7 +35,6 @@ class MockMessage:
 
 
 class MockMonitoringResult:
-
   def __init__(self, data):
     self._data = data
 
@@ -55,12 +54,7 @@ def make_ip_exhaustion_result(is_failed):
 def make_resource_exhaustion_result(value, reason='OUT_OF_RESOURCES'):
   if value is None:
     return None
-  return MockMonitoringResult([{
-      'values': [[value]],
-      'labels': {
-          'metric.reason': reason
-      }
-  }])
+  return MockMonitoringResult([{'values': [[value]], 'labels': {'metric.reason': reason}}])
 
 
 def make_dropped_received_packet_result(value):
@@ -73,53 +67,35 @@ def make_vm_dropped_received_packet_result(vm_drops):
   # vm_drops is a list of tuples: (instance_id, drop_count)
   data = []
   for instance_id, drop_count in vm_drops:
-    data.append({
-        'values': [[drop_count]],
-        'labels': {
-            'resource.instance_id': instance_id
-        }
-    })
+    data.append({'values': [[drop_count]], 'labels': {'resource.instance_id': instance_id}})
   return MockMonitoringResult(data)
 
 
 class NatStepsTest(unittest.TestCase):
-
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_monitoring_query = self.enterContext(
-        mock.patch('gcpdiag.queries.monitoring.query'))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_monitoring_query = self.enterContext(mock.patch('gcpdiag.queries.monitoring.query'))
     self.mock_region_from_zone = self.enterContext(
-        mock.patch('gcpdiag.runbook.nat.utils.region_from_zone',
-                   return_value='us-central1'))
+      mock.patch('gcpdiag.runbook.nat.utils.region_from_zone', return_value='us-central1')
+    )
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
     self.params = {
-        flags.PROJECT_ID:
-            'gcpdiag-nat1-aaaa',
-        flags.ZONE:
-            'us-central1-a',
-        flags.INSTANCE_NAME:
-            'instance-1',
-        'nat_gateway_name':
-            'nat-gw-1',
-        'start_time':
-            datetime.datetime(2025, 1, 1, 0, 0, 0,
-                              tzinfo=datetime.timezone.utc),
-        'end_time':
-            datetime.datetime(2025, 1, 1, 1, 0, 0,
-                              tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: 'gcpdiag-nat1-aaaa',
+      flags.ZONE: 'us-central1-a',
+      flags.INSTANCE_NAME: 'instance-1',
+      'nat_gateway_name': 'nat-gw-1',
+      'start_time': datetime.datetime(2025, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
+      'end_time': datetime.datetime(2025, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
     }
 
   def test_nat_ip_exhaustion_check_failed(self):
-    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(
-        is_failed=True)
+    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(is_failed=True)
     step = generalized_steps.NatIpExhaustionCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -130,8 +106,7 @@ class NatStepsTest(unittest.TestCase):
     self.mock_interface.add_uncertain.assert_not_called()
 
   def test_nat_ip_exhaustion_check_ok(self):
-    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(
-        is_failed=False)
+    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(is_failed=False)
     step = generalized_steps.NatIpExhaustionCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -153,8 +128,7 @@ class NatStepsTest(unittest.TestCase):
     self.mock_interface.add_uncertain.assert_called_once()
 
   def test_nat_ip_exhaustion_check_no_monitoring_data(self):
-    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(
-        is_failed=None)
+    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(is_failed=None)
     step = generalized_steps.NatIpExhaustionCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -166,10 +140,8 @@ class NatStepsTest(unittest.TestCase):
 
 
 class NatResourceExhaustionCheckTest(NatStepsTest):
-
   def test_nat_resource_exhaustion_check_failed(self):
-    self.mock_monitoring_query.return_value = make_resource_exhaustion_result(
-        value=1)
+    self.mock_monitoring_query.return_value = make_resource_exhaustion_result(value=1)
     step = generalized_steps.NatResourceExhaustionCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -180,8 +152,7 @@ class NatResourceExhaustionCheckTest(NatStepsTest):
     self.mock_interface.add_uncertain.assert_not_called()
 
   def test_nat_resource_exhaustion_check_ok(self):
-    self.mock_monitoring_query.return_value = make_resource_exhaustion_result(
-        value=0)
+    self.mock_monitoring_query.return_value = make_resource_exhaustion_result(value=0)
     step = generalized_steps.NatResourceExhaustionCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -203,8 +174,7 @@ class NatResourceExhaustionCheckTest(NatStepsTest):
     self.mock_interface.add_uncertain.assert_called_once()
 
   def test_nat_resource_exhaustion_check_no_monitoring_data(self):
-    self.mock_monitoring_query.return_value = make_resource_exhaustion_result(
-        None)
+    self.mock_monitoring_query.return_value = make_resource_exhaustion_result(None)
     step = generalized_steps.NatResourceExhaustionCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -216,10 +186,8 @@ class NatResourceExhaustionCheckTest(NatStepsTest):
 
 
 class NatDroppedReceivedPacketCheckTest(NatStepsTest):
-
   def test_nat_dropped_received_packet_check_ok(self):
-    self.mock_monitoring_query.return_value = make_dropped_received_packet_result(
-        0)
+    self.mock_monitoring_query.return_value = make_dropped_received_packet_result(0)
     step = generalized_steps.NatDroppedReceivedPacketCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -243,8 +211,7 @@ class NatDroppedReceivedPacketCheckTest(NatStepsTest):
     self.mock_interface.add_uncertain.assert_called_once()
 
   def test_nat_dropped_received_packet_check_no_monitoring_data(self):
-    self.mock_monitoring_query.return_value = make_dropped_received_packet_result(
-        None)
+    self.mock_monitoring_query.return_value = make_dropped_received_packet_result(None)
     step = generalized_steps.NatDroppedReceivedPacketCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -256,9 +223,7 @@ class NatDroppedReceivedPacketCheckTest(NatStepsTest):
     self.mock_interface.add_uncertain.assert_not_called()
 
   def test_nat_dropped_received_packet_check_gw_drops_no_vm_drops_data(self):
-    self.mock_monitoring_query.side_effect = [
-        make_dropped_received_packet_result(1), None
-    ]
+    self.mock_monitoring_query.side_effect = [make_dropped_received_packet_result(1), None]
     step = generalized_steps.NatDroppedReceivedPacketCheck()
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -269,11 +234,10 @@ class NatDroppedReceivedPacketCheckTest(NatStepsTest):
     self.mock_interface.add_ok.assert_not_called()
     self.mock_interface.add_uncertain.assert_called_once()
 
-  def test_nat_dropped_received_packet_check_gw_drops_vm_drops_below_threshold(
-      self):
+  def test_nat_dropped_received_packet_check_gw_drops_vm_drops_below_threshold(self):
     self.mock_monitoring_query.side_effect = [
-        make_dropped_received_packet_result(1),
-        make_vm_dropped_received_packet_result([('vm1', 0.5), ('vm2', 0)])
+      make_dropped_received_packet_result(1),
+      make_vm_dropped_received_packet_result([('vm1', 0.5), ('vm2', 0)]),
     ]
     step = generalized_steps.NatDroppedReceivedPacketCheck()
     with op.operator_context(self.operator):
@@ -287,8 +251,8 @@ class NatDroppedReceivedPacketCheckTest(NatStepsTest):
 
   def test_nat_dropped_received_packet_check_gw_drops_with_vm_drops(self):
     self.mock_monitoring_query.side_effect = [
-        make_dropped_received_packet_result(1),
-        make_vm_dropped_received_packet_result([('vm1', 2), ('vm2', 0)])
+      make_dropped_received_packet_result(1),
+      make_vm_dropped_received_packet_result([('vm1', 2), ('vm2', 0)]),
     ]
     step = generalized_steps.NatDroppedReceivedPacketCheck()
     with op.operator_context(self.operator):

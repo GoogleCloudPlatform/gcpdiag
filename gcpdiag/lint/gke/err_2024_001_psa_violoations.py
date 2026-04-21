@@ -26,8 +26,7 @@ from gcpdiag.queries import apis, gke, logs
 _MATCH_STR = 'Forbidden'
 _LOG_RESOURCE_TYPE = 'k8s_cluster'
 _LOG_NAME = 'log_id("cloudaudit.googleapis.com/activity")'
-_LOG_FILTER_STR = ('severity=DEFAULT AND ' +
-                   'protoPayload.response.message:"violates PodSecurity"')
+_LOG_FILTER_STR = 'severity=DEFAULT AND ' + 'protoPayload.response.message:"violates PodSecurity"'
 
 logs_by_project = {}
 
@@ -36,10 +35,10 @@ def prepare_rule(context: models.Context):
   clusters = gke.get_clusters(context)
   for project_id in {c.project_id for c in clusters.values()}:
     logs_by_project[project_id] = logs.query(
-        project_id=project_id,
-        resource_type=_LOG_RESOURCE_TYPE,
-        log_name=_LOG_NAME,
-        filter_str=_LOG_FILTER_STR,
+      project_id=project_id,
+      resource_type=_LOG_RESOURCE_TYPE,
+      log_name=_LOG_NAME,
+      filter_str=_LOG_FILTER_STR,
     )
 
 
@@ -65,15 +64,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Check for Forbidden logs
   bad_pods_by_cluster = util.gke_logs_find_bad_pods(
-      context=context, logs_by_project=logs_by_project, filter_f=_filter_f)
+    context=context, logs_by_project=logs_by_project, filter_f=_filter_f
+  )
 
   # Create the report.
   for _, c in sorted(clusters.items()):
     if c in bad_pods_by_cluster:
       report.add_failed(
-          c,
-          'PodSecurity Admission policy violation identified for pods:\n. ' +
-          '\n. '.join(bad_pods_by_cluster[c]),
+        c,
+        'PodSecurity Admission policy violation identified for pods:\n. '
+        + '\n. '.join(bad_pods_by_cluster[c]),
       )
     else:
       report.add_ok(c)

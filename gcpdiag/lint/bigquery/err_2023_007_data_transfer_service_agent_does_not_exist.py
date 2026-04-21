@@ -23,8 +23,7 @@ from gcpdiag.queries import apis, crm, iam
 ROLE = 'roles/bigquerydatatransfer.serviceAgent'
 
 
-def run_rule(context: models.Context,
-             report: lint.LintReportRuleInterface) -> None:
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   project = crm.get_project(context.project_id)
 
   if not apis.is_enabled(context.project_id, 'bigquery'):
@@ -42,7 +41,6 @@ def run_rule(context: models.Context,
     if policy.has_role_permissions(f'serviceAccount:{dts_sa}', ROLE):
       report.add_ok(project)
     else:
-      report.add_failed(project, (f'service account: {dts_sa}\n'
-                                  f'missing role: {ROLE}'))
+      report.add_failed(project, (f'service account: {dts_sa}\nmissing role: {ROLE}'))
   else:
     report.add_failed(project, (f'service account: {dts_sa} is missing'))

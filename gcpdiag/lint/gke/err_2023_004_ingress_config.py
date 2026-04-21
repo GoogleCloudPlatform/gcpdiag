@@ -47,14 +47,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     try:
       stdout, stderr = kubectl.check_gke_ingress(executor_dict[c])
     except FileNotFoundError as err:
-      logging.warning('Can not inspect Kubernetes resources: %s: %s',
-                      type(err).__name__, err)
+      logging.warning('Can not inspect Kubernetes resources: %s: %s', type(err).__name__, err)
       report.add_skipped(c, 'failed to access k8s cluster')
       continue
 
     if stderr:
-      report.add_skipped(c,
-                         'failed to run kubectl check-gke-ingress: ' + stderr)
+      report.add_skipped(c, 'failed to run kubectl check-gke-ingress: ' + stderr)
       continue
     result = json.loads(stdout)
 
@@ -64,9 +62,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       for check in resource['checks']:
         if check['result'] == 'FAILED':
           failed = True
-          message += kubectl.error_message(check['name'], resource['kind'],
-                                           resource['namespace'],
-                                           resource['name'], check['message'])
+          message += kubectl.error_message(
+            check['name'],
+            resource['kind'],
+            resource['namespace'],
+            resource['name'],
+            check['message'],
+          )
     if not failed:
       report.add_ok(c)
     else:

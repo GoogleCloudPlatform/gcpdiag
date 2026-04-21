@@ -55,7 +55,7 @@ def _get_bypass_cache():
 
 
 def configure_global_cache(enabled: bool):
-  """ Used to enable or disable the use of caching in the application."""
+  """Used to enable or disable the use of caching in the application."""
   global _use_cache
   _use_cache = enabled
 
@@ -191,15 +191,13 @@ def cached_api_call(expire=None, in_memory=False):
         with _acquire_timeout(lock, config.CACHE_LOCK_TIMEOUT, func.__name__):
           if in_memory:
             if _get_bypass_cache():
-              logging.debug('bypassing cache for %s, fetching fresh data.',
-                            func.__name__)
+              logging.debug('bypassing cache for %s, fetching fresh data.', func.__name__)
               lru_cached_func.cache_clear()
             return lru_cached_func(*args, **kwargs)
           else:
             api_cache = get_disk_cache()
             if _get_bypass_cache():
-              logging.debug('bypassing cache for %s, fetching fresh data.',
-                            func.__name__)
+              logging.debug('bypassing cache for %s, fetching fresh data.', func.__name__)
             else:
               # We use 'no data' to be able to cache calls that returned None.
               cached_result = api_cache.get(key, default='no data')
@@ -211,13 +209,13 @@ def cached_api_call(expire=None, in_memory=False):
       else:
         logging.debug('caching is disabled for %s', func.__name__)
       # Call the function
-      logging.debug('calling function %s (expire=%s, key=%s)', func.__name__,
-                    str(expire), str(key))
+      logging.debug('calling function %s (expire=%s, key=%s)', func.__name__, str(expire), str(key))
       result = None
       try:
         result = func(*args, **kwargs)
-        logging.debug('DONE calling function %s (expire=%s, key=%s)',
-                      func.__name__, str(expire), str(key))
+        logging.debug(
+          'DONE calling function %s (expire=%s, key=%s)', func.__name__, str(expire), str(key)
+        )
       except googleapiclient.errors.HttpError as err:
         # cache API errors as well
         result = err

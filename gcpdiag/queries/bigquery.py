@@ -13,48 +13,48 @@ from gcpdiag.queries import apis, crm, iam
 from gcpdiag.runbook import op
 
 BIGQUERY_REGIONS = [
-    'me-central1',
-    'me-central2',
-    'me-west1',
-    'africa-south1',
-    'us',
-    'eu',
-    'us-east1',
-    'us-east4',
-    'us-east5',
-    'us-west1',
-    'us-west2',
-    'us-west3',
-    'us-west4',
-    'us-central1',
-    'us-south1',
-    'northamerica-northeast1',
-    'northamerica-northeast2',
-    'southamerica-east1',
-    'southamerica-west1',
-    'asia-east1',
-    'asia-east2',
-    'asia-south1',
-    'asia-south2',
-    'asia-northeast1',
-    'asia-northeast2',
-    'asia-northeast3',
-    'asia-southeast1',
-    'asia-southeast2',
-    'australia-southeast1',
-    'australia-southeast2',
-    'europe-north1',
-    'europe-southwest1',
-    'europe-central2',
-    'europe-west1',
-    'europe-west10',
-    'europe-west2',
-    'europe-west3',
-    'europe-west4',
-    'europe-west6',
-    'europe-west8',
-    'europe-west9',
-    'europe-west12',
+  'me-central1',
+  'me-central2',
+  'me-west1',
+  'africa-south1',
+  'us',
+  'eu',
+  'us-east1',
+  'us-east4',
+  'us-east5',
+  'us-west1',
+  'us-west2',
+  'us-west3',
+  'us-west4',
+  'us-central1',
+  'us-south1',
+  'northamerica-northeast1',
+  'northamerica-northeast2',
+  'southamerica-east1',
+  'southamerica-west1',
+  'asia-east1',
+  'asia-east2',
+  'asia-south1',
+  'asia-south2',
+  'asia-northeast1',
+  'asia-northeast2',
+  'asia-northeast3',
+  'asia-southeast1',
+  'asia-southeast2',
+  'australia-southeast1',
+  'australia-southeast2',
+  'europe-north1',
+  'europe-southwest1',
+  'europe-central2',
+  'europe-west1',
+  'europe-west10',
+  'europe-west2',
+  'europe-west3',
+  'europe-west4',
+  'europe-west6',
+  'europe-west8',
+  'europe-west9',
+  'europe-west12',
 ]
 # STRING CONSTANTS
 C_NOT_AVAILABLE = 'N/A'
@@ -84,45 +84,43 @@ def get_organization_policy(context: models.Context, organization_id: str):
 
   try:
     root_logger.setLevel(logging.ERROR)
-    policy = iam.get_organization_policy(context,
-                                         organization_id,
-                                         raise_error_if_fails=False)
+    policy = iam.get_organization_policy(context, organization_id, raise_error_if_fails=False)
     return policy
   except utils.GcpApiError as err:
-    if 'doesn\'t have access to' in err.message.lower(
-    ) or 'denied on resource' in err.message.lower():
+    if (
+      "doesn't have access to" in err.message.lower() or 'denied on resource' in err.message.lower()
+    ):
       op.info(
-          'User does not have access to the organization policy. Investigation'
-          ' completeness and accuracy might depend on the presence of'
-          ' organization level permissions.')
+        'User does not have access to the organization policy. Investigation'
+        ' completeness and accuracy might depend on the presence of'
+        ' organization level permissions.'
+      )
     return None
   finally:
     root_logger.setLevel(original_level)
 
 
 def check_permissions_for_principal(
-    policy: PolicyObject, principal: str,
-    permissions_to_check: Set[str]) -> Dict[str, bool]:
+  policy: PolicyObject, principal: str, permissions_to_check: Set[str]
+) -> Dict[str, bool]:
   """Uses a policy object to check a set of permissions for a principal.
 
   Returns a dictionary mapping each permission to a boolean indicating its
   presence.
   """
   return {
-      permission: policy.has_permission(principal, permission)
-      for permission in permissions_to_check
+    permission: policy.has_permission(principal, permission) for permission in permissions_to_check
   }
 
 
-def get_missing_permissions(required_permissions: Set[str],
-                            actual_permissions: Dict[str, bool]) -> Set[str]:
+def get_missing_permissions(
+  required_permissions: Set[str], actual_permissions: Dict[str, bool]
+) -> Set[str]:
   """Compares a set of required permissions against a dictionary of actual
 
   permissions and returns the set of missing ones.
   """
-  return {
-      perm for perm in required_permissions if not actual_permissions.get(perm)
-  }
+  return {perm for perm in required_permissions if not actual_permissions.get(perm)}
 
 
 class BigQueryTable:
@@ -167,15 +165,14 @@ class BigQueryJob(models.Resource):
   project_id: str
 
   def __init__(
-      self,
-      project_id: str,
-      job_api_resource_data: dict[str, Any],
-      information_schema_job_metadata: dict[str, str],
+    self,
+    project_id: str,
+    job_api_resource_data: dict[str, Any],
+    information_schema_job_metadata: dict[str, str],
   ):
     super().__init__(project_id)
     self._job_api_resource_data = job_api_resource_data
-    self._information_schema_job_metadata = (information_schema_job_metadata or
-                                             {})
+    self._information_schema_job_metadata = information_schema_job_metadata or {}
 
   @property
   def full_path(self) -> str:
@@ -247,32 +244,27 @@ class BigQueryJob(models.Resource):
   @property
   def creation_time(self) -> Optional[int]:
     time_str = self._stats.get('creationTime')
-    return (int(time_str)
-            if isinstance(time_str, str) and time_str.isdigit() else None)
+    return int(time_str) if isinstance(time_str, str) and time_str.isdigit() else None
 
   @property
   def start_time(self) -> Optional[int]:
     time_str = self._stats.get('startTime')
-    return (int(time_str)
-            if isinstance(time_str, str) and time_str.isdigit() else None)
+    return int(time_str) if isinstance(time_str, str) and time_str.isdigit() else None
 
   @property
   def end_time(self) -> Optional[int]:
     time_str = self._stats.get('endTime')
-    return (int(time_str)
-            if isinstance(time_str, str) and time_str.isdigit() else None)
+    return int(time_str) if isinstance(time_str, str) and time_str.isdigit() else None
 
   @property
   def total_bytes_processed(self) -> int:
     bytes_str = self._stats.get('totalBytesProcessed', '0')
-    return (int(bytes_str)
-            if isinstance(bytes_str, str) and bytes_str.isdigit() else 0)
+    return int(bytes_str) if isinstance(bytes_str, str) and bytes_str.isdigit() else 0
 
   @property
   def total_bytes_billed(self) -> int:
     bytes_str = self._query_stats.get('totalBytesBilled', '0')
-    return (int(bytes_str)
-            if isinstance(bytes_str, str) and bytes_str.isdigit() else 0)
+    return int(bytes_str) if isinstance(bytes_str, str) and bytes_str.isdigit() else 0
 
   @property
   def total_slot_ms(self) -> int:
@@ -288,8 +280,7 @@ class BigQueryJob(models.Resource):
     deferments_dict = self._stats.get('quotaDeferments', {})
     if isinstance(deferments_dict, dict):
       deferment_list = deferments_dict.get('', [])
-      if isinstance(deferment_list, list) and all(
-          isinstance(s, str) for s in deferment_list):
+      if isinstance(deferment_list, list) and all(isinstance(s, str) for s in deferment_list):
         return deferment_list
     return []
 
@@ -301,8 +292,9 @@ class BigQueryJob(models.Resource):
   @property
   def total_partitions_processed(self) -> int:
     partitions_str = self._query_stats.get('totalPartitionsProcessed', '0')
-    return (int(partitions_str) if isinstance(partitions_str, str) and
-            partitions_str.isdigit() else 0)
+    return (
+      int(partitions_str) if isinstance(partitions_str, str) and partitions_str.isdigit() else 0
+    )
 
   @property
   def referenced_tables(self) -> list[BigQueryTable]:
@@ -314,11 +306,15 @@ class BigQueryJob(models.Resource):
           project_id = item.get('projectId')
           dataset_id = item.get('datasetId')
           table_id = item.get('tableId')
-          if (isinstance(project_id, str) and project_id and
-              isinstance(dataset_id, str) and dataset_id and
-              isinstance(table_id, str) and table_id):
-            referenced_tables.append(
-                BigQueryTable(project_id, dataset_id, table_id))
+          if (
+            isinstance(project_id, str)
+            and project_id
+            and isinstance(dataset_id, str)
+            and dataset_id
+            and isinstance(table_id, str)
+            and table_id
+          ):
+            referenced_tables.append(BigQueryTable(project_id, dataset_id, table_id))
     return referenced_tables
 
   @property
@@ -331,18 +327,21 @@ class BigQueryJob(models.Resource):
           project_id = item.get('projectId')
           dataset_id = item.get('datasetId')
           routine_id = item.get('routineId')
-          if (isinstance(project_id, str) and project_id and
-              isinstance(dataset_id, str) and dataset_id and
-              isinstance(routine_id, str) and routine_id):
-            referenced_routines.append(
-                BigQueryRoutine(project_id, dataset_id, routine_id))
+          if (
+            isinstance(project_id, str)
+            and project_id
+            and isinstance(dataset_id, str)
+            and dataset_id
+            and isinstance(routine_id, str)
+            and routine_id
+          ):
+            referenced_routines.append(BigQueryRoutine(project_id, dataset_id, routine_id))
     return referenced_routines
 
   @property
   def num_affected_dml_rows(self) -> int:
     rows_str = self._query_stats.get('numDmlAffectedRows', '0')
-    return (int(rows_str)
-            if isinstance(rows_str, str) and rows_str.isdigit() else 0)
+    return int(rows_str) if isinstance(rows_str, str) and rows_str.isdigit() else 0
 
   @property
   def dml_stats(self) -> dict[str, int]:
@@ -353,13 +352,15 @@ class BigQueryJob(models.Resource):
     deleted_str = stats.get('deletedRowCount', '0')
     updated_str = stats.get('updatedRowCount', '0')
     return {
-        'insertedRowCount':
-            (int(inserted_str) if isinstance(inserted_str, str) and
-             inserted_str.isdigit() else 0),
-        'deletedRowCount': (int(deleted_str) if isinstance(deleted_str, str) and
-                            deleted_str.isdigit() else 0),
-        'updatedRowCount': (int(updated_str) if isinstance(updated_str, str) and
-                            updated_str.isdigit() else 0),
+      'insertedRowCount': (
+        int(inserted_str) if isinstance(inserted_str, str) and inserted_str.isdigit() else 0
+      ),
+      'deletedRowCount': (
+        int(deleted_str) if isinstance(deleted_str, str) and deleted_str.isdigit() else 0
+      ),
+      'updatedRowCount': (
+        int(updated_str) if isinstance(updated_str, str) and updated_str.isdigit() else 0
+      ),
     }
 
   @property
@@ -377,14 +378,16 @@ class BigQueryJob(models.Resource):
     if isinstance(reasons_list, list):
       for item in reasons_list:
         if isinstance(item, dict):
-          bi_engine_reasons.append({
+          bi_engine_reasons.append(
+            {
               'code': str(item.get('code', '')),
               'message': item.get('message', ''),
-          })
+            }
+          )
     return {
-        'biEngineMode': str(stats.get('biEngineMode', '')),
-        'accelerationMode': str(stats.get('accelerationMode', '')),
-        'biEngineReasons': bi_engine_reasons,
+      'biEngineMode': str(stats.get('biEngineMode', '')),
+      'accelerationMode': str(stats.get('accelerationMode', '')),
+      'biEngineReasons': bi_engine_reasons,
     }
 
   @property
@@ -403,19 +406,26 @@ class BigQueryJob(models.Resource):
             project_id = base_table_data.get('projectId')
             dataset_id = base_table_data.get('datasetId')
             table_id = base_table_data.get('tableId')
-            if (isinstance(project_id, str) and project_id and
-                isinstance(dataset_id, str) and dataset_id and
-                isinstance(table_id, str) and table_id):
+            if (
+              isinstance(project_id, str)
+              and project_id
+              and isinstance(dataset_id, str)
+              and dataset_id
+              and isinstance(table_id, str)
+              and table_id
+            ):
               base_table_obj = BigQueryTable(project_id, dataset_id, table_id)
-          index_unused_reasons.append({
+          index_unused_reasons.append(
+            {
               'code': str(item.get('code', '')),
               'message': item.get('message', ''),
               'indexName': item.get('indexName', ''),
               'baseTable': base_table_obj,
-          })
+            }
+          )
     return {
-        'indexUsageMode': str(stats.get('indexUsageMode', '')),
-        'indexUnusedReasons': index_unused_reasons,
+      'indexUsageMode': str(stats.get('indexUsageMode', '')),
+      'indexUnusedReasons': index_unused_reasons,
     }
 
   @property
@@ -428,25 +438,28 @@ class BigQueryJob(models.Resource):
     if isinstance(standalone_list, list):
       for item in standalone_list:
         if isinstance(item, dict):
-          stage_performance_standalone_insights.append({
+          stage_performance_standalone_insights.append(
+            {
               'stageId': item.get('stageId', ''),
-          })
+            }
+          )
     change_list = insights.get('stagePerformanceChangeInsights', [])
     stage_performance_change_insights = []
     if isinstance(change_list, list):
       for item in change_list:
         if isinstance(item, dict):
-          stage_performance_change_insights.append({
+          stage_performance_change_insights.append(
+            {
               'stageId': item.get('stageId', ''),
-          })
+            }
+          )
     avg_ms_str = insights.get('avgPreviousExecutionMs', '0')
     return {
-        'avgPreviousExecutionMs':
-            (int(avg_ms_str)
-             if isinstance(avg_ms_str, str) and avg_ms_str.isdigit() else 0),
-        'stagePerformanceStandaloneInsights':
-            (stage_performance_standalone_insights),
-        'stagePerformanceChangeInsights': stage_performance_change_insights,
+      'avgPreviousExecutionMs': (
+        int(avg_ms_str) if isinstance(avg_ms_str, str) and avg_ms_str.isdigit() else 0
+      ),
+      'stagePerformanceStandaloneInsights': (stage_performance_standalone_insights),
+      'stagePerformanceChangeInsights': stage_performance_change_insights,
     }
 
   @property
@@ -461,10 +474,12 @@ class BigQueryJob(models.Resource):
     file_count_str = stats.get('fileCount', '0')
     row_count_str = stats.get('rowCount', '0')
     return {
-        'fileCount': (int(file_count_str) if isinstance(file_count_str, str) and
-                      file_count_str.isdigit() else 0),
-        'rowCount': (int(row_count_str) if isinstance(row_count_str, str) and
-                     row_count_str.isdigit() else 0),
+      'fileCount': (
+        int(file_count_str) if isinstance(file_count_str, str) and file_count_str.isdigit() else 0
+      ),
+      'rowCount': (
+        int(row_count_str) if isinstance(row_count_str, str) and row_count_str.isdigit() else 0
+      ),
     }
 
   @property
@@ -478,21 +493,31 @@ class BigQueryJob(models.Resource):
     output_bytes_str = stats.get('outputBytes', '0')
     bad_records_str = stats.get('badRecords', '0')
     return {
-        'inputFiles':
-            (int(input_files_str) if isinstance(input_files_str, str) and
-             input_files_str.isdigit() else 0),
-        'inputFileBytes':
-            (int(input_bytes_str) if isinstance(input_bytes_str, str) and
-             input_bytes_str.isdigit() else 0),
-        'outputRows':
-            (int(output_rows_str) if isinstance(output_rows_str, str) and
-             output_rows_str.isdigit() else 0),
-        'outputBytes':
-            (int(output_bytes_str) if isinstance(output_bytes_str, str) and
-             output_bytes_str.isdigit() else 0),
-        'badRecords':
-            (int(bad_records_str) if isinstance(bad_records_str, str) and
-             bad_records_str.isdigit() else 0),
+      'inputFiles': (
+        int(input_files_str)
+        if isinstance(input_files_str, str) and input_files_str.isdigit()
+        else 0
+      ),
+      'inputFileBytes': (
+        int(input_bytes_str)
+        if isinstance(input_bytes_str, str) and input_bytes_str.isdigit()
+        else 0
+      ),
+      'outputRows': (
+        int(output_rows_str)
+        if isinstance(output_rows_str, str) and output_rows_str.isdigit()
+        else 0
+      ),
+      'outputBytes': (
+        int(output_bytes_str)
+        if isinstance(output_bytes_str, str) and output_bytes_str.isdigit()
+        else 0
+      ),
+      'badRecords': (
+        int(bad_records_str)
+        if isinstance(bad_records_str, str) and bad_records_str.isdigit()
+        else 0
+      ),
     }
 
   @property
@@ -501,24 +526,27 @@ class BigQueryJob(models.Resource):
     if not isinstance(stats, dict):
       return {}
     logging_info_dict = stats.get('loggingInfo', {})
-    logging_info = ({
+    logging_info = (
+      {
         'resourceType': logging_info_dict.get('resourceType', ''),
         'projectId': logging_info_dict.get('projectId', ''),
-    } if isinstance(logging_info_dict, dict) else {})
+      }
+      if isinstance(logging_info_dict, dict)
+      else {}
+    )
     return {
-        'endpoints': stats.get('endpoints', {}),
-        'sparkJobId': stats.get('sparkJobId', ''),
-        'sparkJobLocation': stats.get('sparkJobLocation', ''),
-        'kmsKeyName': stats.get('kmsKeyName', ''),
-        'gcsStagingBucket': stats.get('gcsStagingBucket', ''),
-        'loggingInfo': logging_info,
+      'endpoints': stats.get('endpoints', {}),
+      'sparkJobId': stats.get('sparkJobId', ''),
+      'sparkJobLocation': stats.get('sparkJobLocation', ''),
+      'kmsKeyName': stats.get('kmsKeyName', ''),
+      'gcsStagingBucket': stats.get('gcsStagingBucket', ''),
+      'loggingInfo': logging_info,
     }
 
   @property
   def transferred_bytes(self) -> int:
     bytes_str = self._query_stats.get('transferredBytes', '0')
-    return (int(bytes_str)
-            if isinstance(bytes_str, str) and bytes_str.isdigit() else 0)
+    return int(bytes_str) if isinstance(bytes_str, str) and bytes_str.isdigit() else 0
 
   @property
   def reservation_id(self) -> str:
@@ -535,14 +563,14 @@ class BigQueryJob(models.Resource):
         return parts[1]
       else:
         logging.warning(
-            'Could not parse project ID from reservation_id: %s',
-            self.reservation_id,
+          'Could not parse project ID from reservation_id: %s',
+          self.reservation_id,
         )
         return None
     except (IndexError, AttributeError):
       logging.warning(
-          'Could not parse project ID from reservation_id: %s',
-          self.reservation_id,
+        'Could not parse project ID from reservation_id: %s',
+        self.reservation_id,
       )
       return None
 
@@ -559,27 +587,27 @@ class BigQueryJob(models.Resource):
   @property
   def row_level_security_applied(self) -> bool:
     rls_stats = self._stats.get('RowLevelSecurityStatistics', {})
-    return (rls_stats.get('rowLevelSecurityApplied') is True if isinstance(
-        rls_stats, dict) else False)
+    return (
+      rls_stats.get('rowLevelSecurityApplied') is True if isinstance(rls_stats, dict) else False
+    )
 
   @property
   def data_masking_applied(self) -> bool:
     masking_stats = self._stats.get('dataMaskingStatistics', {})
-    return (masking_stats.get('dataMaskingApplied') is True if isinstance(
-        masking_stats, dict) else False)
+    return (
+      masking_stats.get('dataMaskingApplied') is True if isinstance(masking_stats, dict) else False
+    )
 
   @property
   def session_id(self) -> str:
     session_info = self._stats.get('sessionInfo', {})
-    session_id_val = (session_info.get('sessionId', '') if isinstance(
-        session_info, dict) else '')
+    session_id_val = session_info.get('sessionId', '') if isinstance(session_info, dict) else ''
     return session_id_val if isinstance(session_id_val, str) else ''
 
   @property
   def final_execution_duration_ms(self) -> int:
     duration_str = self._stats.get('finalExecutionDurationMs', '0')
-    return (int(duration_str)
-            if isinstance(duration_str, str) and duration_str.isdigit() else 0)
+    return int(duration_str) if isinstance(duration_str, str) and duration_str.isdigit() else 0
 
   @property
   def job_state(self) -> str:
@@ -592,10 +620,10 @@ class BigQueryJob(models.Resource):
     if not isinstance(error_result, dict):
       return {}
     return {
-        'reason': error_result.get('reason'),
-        'location': error_result.get('location'),
-        'debugInfo': error_result.get('debugInfo'),
-        'message': error_result.get('message'),
+      'reason': error_result.get('reason'),
+      'location': error_result.get('location'),
+      'debugInfo': error_result.get('debugInfo'),
+      'message': error_result.get('message'),
     }
 
   @property
@@ -605,12 +633,14 @@ class BigQueryJob(models.Resource):
     if isinstance(errors_list, list):
       for item in errors_list:
         if isinstance(item, dict):
-          errors_iterable.append({
+          errors_iterable.append(
+            {
               'reason': item.get('reason'),
               'location': item.get('location'),
               'debugInfo': item.get('debugInfo'),
               'message': item.get('message'),
-          })
+            }
+          )
     return errors_iterable
 
   @property
@@ -626,22 +656,29 @@ class BigQueryJob(models.Resource):
             project_id = table_ref_data.get('projectId')
             dataset_id = table_ref_data.get('datasetId')
             table_id = table_ref_data.get('tableId')
-            if (isinstance(project_id, str) and project_id and
-                isinstance(dataset_id, str) and dataset_id and
-                isinstance(table_id, str) and table_id):
+            if (
+              isinstance(project_id, str)
+              and project_id
+              and isinstance(dataset_id, str)
+              and dataset_id
+              and isinstance(table_id, str)
+              and table_id
+            ):
               table_ref_obj = BigQueryTable(project_id, dataset_id, table_id)
           chosen = item.get('chosen') is True
           saved_str = item.get('estimatedBytesSaved', '0')
-          estimated_bytes_saved = (int(saved_str)
-                                   if isinstance(saved_str, str) and
-                                   saved_str.isdigit() else 0)
+          estimated_bytes_saved = (
+            int(saved_str) if isinstance(saved_str, str) and saved_str.isdigit() else 0
+          )
           rejected_reason = str(item.get('rejectedReason', ''))
-          materialized_view.append({
+          materialized_view.append(
+            {
               'chosen': chosen,
               'estimatedBytesSaved': estimated_bytes_saved,
               'rejectedReason': rejected_reason,
               'tableReference': table_ref_obj,
-          })
+            }
+          )
     return {'materialView': materialized_view}
 
   @property
@@ -657,15 +694,22 @@ class BigQueryJob(models.Resource):
             project_id = table_ref_data.get('projectId')
             dataset_id = table_ref_data.get('datasetId')
             table_id = table_ref_data.get('tableId')
-            if (isinstance(project_id, str) and project_id and
-                isinstance(dataset_id, str) and dataset_id and
-                isinstance(table_id, str) and table_id):
+            if (
+              isinstance(project_id, str)
+              and project_id
+              and isinstance(dataset_id, str)
+              and dataset_id
+              and isinstance(table_id, str)
+              and table_id
+            ):
               table_ref_obj = BigQueryTable(project_id, dataset_id, table_id)
-          metadata_cache.append({
+          metadata_cache.append(
+            {
               'explanation': item.get('explanation', ''),
               'unusedReason': str(item.get('unusedReason', '')),
               'tableReference': table_ref_obj,
-          })
+            }
+          )
     return {'tableMetadataCacheUsage': metadata_cache}
 
   # Properties derived from _information_schema_job_metadata
@@ -702,8 +746,7 @@ class BigQueryJob(models.Resource):
     if not self._information_schema_job_metadata:
       return C_NOT_AVAILABLE
     try:
-      total_modified_partitions = self._information_schema_job_metadata[
-          'total_modified_partitions']
+      total_modified_partitions = self._information_schema_job_metadata['total_modified_partitions']
       return total_modified_partitions
     except KeyError:
       return C_NOT_AVAILABLE
@@ -717,8 +760,7 @@ class BigQueryJob(models.Resource):
     if not self._information_schema_job_metadata:
       return C_NOT_AVAILABLE
     try:
-      resource_warning = self._information_schema_job_metadata['query_info'][
-          'resource_warning']
+      resource_warning = self._information_schema_job_metadata['query_info']['resource_warning']
       return resource_warning
     except KeyError:
       return C_NOT_AVAILABLE
@@ -727,8 +769,9 @@ class BigQueryJob(models.Resource):
   def information_schema_normalized_literals(self) -> str:
     """Contains the hashes of the query."""
     try:
-      query_hashes = self._information_schema_job_metadata['query_info'][
-          'query_hashes']['normalized_literals']
+      query_hashes = self._information_schema_job_metadata['query_info']['query_hashes'][
+        'normalized_literals'
+      ]
       return query_hashes
     except KeyError:
       return C_NOT_AVAILABLE
@@ -736,15 +779,13 @@ class BigQueryJob(models.Resource):
 
 @caching.cached_api_call
 def get_bigquery_job_api_resource_data(
-    project_id: str,
-    region: str,
-    job_id: str,
+  project_id: str,
+  region: str,
+  job_id: str,
 ) -> Union[dict[str, Any], None]:
   """Fetch a specific BigQuery job's raw API resource data."""
   api = apis.get_api('bigquery', 'v2', project_id)
-  query_job = api.jobs().get(projectId=project_id,
-                             location=region,
-                             jobId=job_id)
+  query_job = api.jobs().get(projectId=project_id, location=region, jobId=job_id)
 
   try:
     resp = query_job.execute(num_retries=config.API_RETRIES)
@@ -755,12 +796,12 @@ def get_bigquery_job_api_resource_data(
 
 @caching.cached_api_call
 def get_information_schema_job_metadata(
-    context: models.Context,
-    project_id: str,
-    region: str,
-    job_id: str,
-    creation_time_milis: Optional[int] = None,
-    skip_permission_check: bool = False,
+  context: models.Context,
+  project_id: str,
+  region: str,
+  job_id: str,
+  creation_time_milis: Optional[int] = None,
+  skip_permission_check: bool = False,
 ) -> Optional[dict[str, Any]]:
   """Fetch metadata about a BigQuery job from the INFORMATION_SCHEMA."""
   if not apis.is_enabled(project_id, 'bigquery'):
@@ -771,35 +812,33 @@ def get_information_schema_job_metadata(
   except (RuntimeError, exceptions.DefaultCredentialsError):
     pass
   except AttributeError as err:
-    if (('has no attribute' in str(err)) and
-        ('with_quota_project' in str(err))):
+    if ('has no attribute' in str(err)) and ('with_quota_project' in str(err)):
       op.info('Running the investigation within the GCA context.')
   user = 'user:' + user_email
   if not skip_permission_check:
     try:
       policy = iam.get_project_policy(context)
       if (not policy.has_permission(user, 'bigquery.jobs.create')) or (
-          not policy.has_permission(user, 'bigquery.jobs.listAll')):
+        not policy.has_permission(user, 'bigquery.jobs.listAll')
+      ):
         op.info(
-            f'WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.\
+          f'WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.\
             \nMake sure to grant {user_email} "bigquery.jobs.create" and "bigquery.jobs.listAll".\
             \nContinuing the investigation with the BigQuery job metadata obtained from the API.'
         )
         return None
     except utils.GcpApiError:
       op.info(
-          'Attempting to query INFORMATION_SCHEMA with no knowledge of project'
-          ' level permissions        \n(due to missing'
-          ' resourcemanager.projects.get permission).')
+        'Attempting to query INFORMATION_SCHEMA with no knowledge of project'
+        ' level permissions        \n(due to missing'
+        ' resourcemanager.projects.get permission).'
+      )
   else:
-    op.info(
-        'Attempting to query INFORMATION_SCHEMA without checking project level permissions.'
-    )
+    op.info('Attempting to query INFORMATION_SCHEMA without checking project level permissions.')
   try:
     creation_time_milis_filter = ' '
     if creation_time_milis:
-      creation_time_milis_filter = (
-          f'AND creation_time = TIMESTAMP_MILLIS({creation_time_milis})')
+      creation_time_milis_filter = f'AND creation_time = TIMESTAMP_MILLIS({creation_time_milis})'
     query = f"""
     SELECT
         user_email, start_time, end_time, query
@@ -811,11 +850,11 @@ def get_information_schema_job_metadata(
       LIMIT 1
     """
     results = get_query_results(
-        project_id=project_id,
-        query=query,
-        location=region,
-        timeout_sec=30,
-        poll_interval_sec=2,  # Short poll interval
+      project_id=project_id,
+      query=query,
+      location=region,
+      timeout_sec=30,
+      poll_interval_sec=2,  # Short poll interval
     )
     if not results or len(results) != 1:
       # We cannot raise an exception otherwise tests that use get_bigquery_job would fail
@@ -824,21 +863,20 @@ def get_information_schema_job_metadata(
     return results[0]
   except errors.HttpError as err:
     logging.warning(
-        'Failed to retrieve INFORMATION_SCHEMA job metadata for job %s: %s',
-        job_id,
-        err,
+      'Failed to retrieve INFORMATION_SCHEMA job metadata for job %s: %s',
+      job_id,
+      err,
     )
     return None
   except KeyError as err:
     logging.warning(
-        'Failed to parse INFORMATION_SCHEMA response for job %s: %s',
-        job_id,
-        err,
+      'Failed to parse INFORMATION_SCHEMA response for job %s: %s',
+      job_id,
+      err,
     )
     return None
   except utils.GcpApiError as err:
-    logging.error('GcpApiError during BigQuery query execution for job %s: %s',
-                  job_id, err)
+    logging.error('GcpApiError during BigQuery query execution for job %s: %s', job_id, err)
     # Raise specific GcpApiError if needed for upstream handling
     if 'permission' in err.message.lower():
       logging.debug('permissions issue FOUND HERE : %s', err.message.lower())
@@ -848,17 +886,14 @@ def get_information_schema_job_metadata(
 
 
 def get_bigquery_job(
-    context: models.Context,
-    region: str,
-    job_id: str,
-    skip_permission_check: bool = False) -> Union[BigQueryJob, None]:
+  context: models.Context, region: str, job_id: str, skip_permission_check: bool = False
+) -> Union[BigQueryJob, None]:
   """Fetch a BigQuery job, combining API and INFORMATION_SCHEMA data."""
   project_id = context.project_id
   if not project_id:
     return None
   try:
-    job_api_resource_data = get_bigquery_job_api_resource_data(
-        project_id, region, job_id)
+    job_api_resource_data = get_bigquery_job_api_resource_data(project_id, region, job_id)
     if not job_api_resource_data:
       return None
   except utils.GcpApiError as err:
@@ -867,14 +902,17 @@ def get_bigquery_job(
       user_email = ''
       try:
         user_email = apis.get_user_email()
-      except (RuntimeError, AttributeError,
-              exceptions.DefaultCredentialsError) as error:
-        if (('has no attribute' in str(error)) and
-            ('with_quota_project' in str(error))):
+      except (RuntimeError, AttributeError, exceptions.DefaultCredentialsError) as error:
+        if ('has no attribute' in str(error)) and ('with_quota_project' in str(error)):
           op.info('Running the investigation within the GCA context.')
-      logging.debug(('Could not retrieve BigQuery job %s.\
+      logging.debug(
+        (
+          'Could not retrieve BigQuery job %s.\
           \n make sure to give the bigquery.jobs.get and bigquery.jobs.create permissions to %s',
-                     (project_id + ':' + region + '.' + job_id), user_email))
+          (project_id + ':' + region + '.' + job_id),
+          user_email,
+        )
+      )
       raise utils.GcpApiError(err)
     # This will be returned when a job is not found.
     elif 'not found' in err.message.lower():
@@ -882,27 +920,30 @@ def get_bigquery_job(
       logging.debug('Could not find BigQuery job %s', job_id_string)
       return None
     else:
-      logging.debug((
+      logging.debug(
+        (
           'Could not retrieve BigQuery job %s due to an issue calling the API. \
             Please restart the investigation.',
-          (project_id + ':' + region + '.' + job_id)))
+          (project_id + ':' + region + '.' + job_id),
+        )
+      )
       return None
   information_schema_job_metadata = {}
   job_creation_millis = None
-  creation_time_str = job_api_resource_data.get('statistics',
-                                                {}).get('creationTime')
+  creation_time_str = job_api_resource_data.get('statistics', {}).get('creationTime')
   if creation_time_str:
     try:
       job_creation_millis = int(creation_time_str)
     except (ValueError, TypeError):
       pass
   information_schema_job_metadata = get_information_schema_job_metadata(
-      context, project_id, region, job_id, job_creation_millis,
-      skip_permission_check)
+    context, project_id, region, job_id, job_creation_millis, skip_permission_check
+  )
   return BigQueryJob(
-      project_id=project_id,
-      job_api_resource_data=job_api_resource_data,
-      information_schema_job_metadata=information_schema_job_metadata)
+    project_id=project_id,
+    job_api_resource_data=job_api_resource_data,
+    information_schema_job_metadata=information_schema_job_metadata,
+  )
 
 
 def _parse_value(field_schema: dict, value_data: Any) -> Any:
@@ -930,8 +971,7 @@ def _parse_value(field_schema: dict, value_data: Any) -> Any:
   return value_data
 
 
-def _parse_row(schema_fields: List[dict],
-               row_cells: List[dict]) -> dict[str, Any]:
+def _parse_row(schema_fields: List[dict], row_cells: List[dict]) -> dict[str, Any]:
   """Parses a BigQuery TableRow into a dictionary."""
   row_dict = {}
   for i, field_schema in enumerate(schema_fields):
@@ -943,11 +983,11 @@ def _parse_row(schema_fields: List[dict],
 
 
 def get_query_results(
-    project_id: str,
-    query: str,
-    location: Optional[str] = None,
-    timeout_sec: int = 30,
-    poll_interval_sec: int = 2,
+  project_id: str,
+  query: str,
+  location: Optional[str] = None,
+  timeout_sec: int = 30,
+  poll_interval_sec: int = 2,
 ) -> Optional[List[dict[str, Any]]]:
   """Executes a BigQuery query, waits for completion, and returns the results.
 
@@ -974,25 +1014,25 @@ def get_query_results(
   api = apis.get_api('bigquery', 'v2', project_id)
   job_id = f'gcpdiag_query_{uuid.uuid4()}'
   job_body = {
-      'jobReference': {
-          'projectId': project_id,
-          'jobId': job_id,
-          'location': location,  # Location can be None
-      },
-      'configuration': {
-          'query': {
-              'query': query,
-              'useLegacySql': False,
-              # Consider adding priority, destinationTable, etc. if needed
-          }
-      },
+    'jobReference': {
+      'projectId': project_id,
+      'jobId': job_id,
+      'location': location,  # Location can be None
+    },
+    'configuration': {
+      'query': {
+        'query': query,
+        'useLegacySql': False,
+        # Consider adding priority, destinationTable, etc. if needed
+      }
+    },
   }
   try:
     logging.debug(
-        'Starting BigQuery job %s in project %s, location %s',
-        job_id,
-        project_id,
-        location or 'default',
+      'Starting BigQuery job %s in project %s, location %s',
+      job_id,
+      project_id,
+      location or 'default',
     )
     insert_request = api.jobs().insert(projectId=project_id, body=job_body)
     insert_response = insert_request.execute(num_retries=config.API_RETRIES)
@@ -1005,17 +1045,17 @@ def get_query_results(
       # Check for timeout
       if time.time() - start_time > timeout_sec:
         logging.error(
-            'BigQuery job %s timed out after %d seconds.',
-            actual_job_id,
-            timeout_sec,
+          'BigQuery job %s timed out after %d seconds.',
+          actual_job_id,
+          timeout_sec,
         )
         return None
       # Get job status
       logging.debug('>>> Getting job status for %s', actual_job_id)
       get_request = api.jobs().get(
-          projectId=job_ref['projectId'],
-          jobId=actual_job_id,
-          location=actual_location,
+        projectId=job_ref['projectId'],
+        jobId=actual_job_id,
+        location=actual_location,
       )
       job_status_response = get_request.execute(num_retries=config.API_RETRIES)
       status = job_status_response.get('status', {})
@@ -1023,31 +1063,29 @@ def get_query_results(
       if status.get('state') == 'DONE':
         if status.get('errorResult'):
           error_info = status['errorResult']
-          if 'User does not have permission to query table' in error_info.get(
-              'message'):
+          if 'User does not have permission to query table' in error_info.get('message'):
             op.info(
-                error_info.get('message')[15:] +
-                '\nContinuing the investigation with the job metadata obtained from the API.'
+              error_info.get('message')[15:]
+              + '\nContinuing the investigation with the job metadata obtained from the API.'
             )
           else:
             error_info = status['errorResult']
             logging.error(
-                'BigQuery job %s failed. Reason: %s, Message: %s',
-                actual_job_id,
-                error_info.get('reason'),
-                error_info.get('message'),
+              'BigQuery job %s failed. Reason: %s, Message: %s',
+              actual_job_id,
+              error_info.get('reason'),
+              error_info.get('message'),
             )
             # Log detailed errors if available
             for error in status.get('errors', []):
               logging.error(
-                  '  - Detail: %s (Location: %s)',
-                  error.get('message'),
-                  error.get('location'),
+                '  - Detail: %s (Location: %s)',
+                error.get('message'),
+                error.get('location'),
               )
           return None
         else:
-          logging.debug('BigQuery job %s completed successfully.',
-                        actual_job_id)
+          logging.debug('BigQuery job %s completed successfully.', actual_job_id)
           break  # Job finished successfully
       elif status.get('state') in ['PENDING', 'RUNNING']:
         logging.debug('>>> Job running, sleeping...')
@@ -1056,27 +1094,25 @@ def get_query_results(
       else:
         # Unexpected state
         logging.error(
-            'BigQuery job %s entered unexpected state: %s',
-            actual_job_id,
-            status.get('state', 'UNKNOWN'),
+          'BigQuery job %s entered unexpected state: %s',
+          actual_job_id,
+          status.get('state', 'UNKNOWN'),
         )
         return None
     # Fetch results
-    logging.debug('>>> Fetching results for job %s...',
-                  actual_job_id)  # <-- ADD
+    logging.debug('>>> Fetching results for job %s...', actual_job_id)  # <-- ADD
     results_request = api.jobs().getQueryResults(
-        projectId=job_ref['projectId'],
-        jobId=actual_job_id,
-        location=actual_location,
-        # Add startIndex, maxResults for pagination if needed
+      projectId=job_ref['projectId'],
+      jobId=actual_job_id,
+      location=actual_location,
+      # Add startIndex, maxResults for pagination if needed
     )
     results_response = results_request.execute(num_retries=config.API_RETRIES)
     # Check if job actually completed (getQueryResults might return before DONE sometimes)
     if not results_response.get('jobComplete', False):
       logging.warning(
-          'getQueryResults returned jobComplete=False for job %s, results might'
-          ' be incomplete.',
-          actual_job_id,
+        'getQueryResults returned jobComplete=False for job %s, results might be incomplete.',
+        actual_job_id,
       )
       # Decide if you want to wait longer or return potentially partial results
     rows = []
@@ -1089,21 +1125,19 @@ def get_query_results(
           rows.append(_parse_row(schema_fields, row_data['f']))
     if results_response.get('pageToken'):
       logging.warning(
-          'Query results for job %s are paginated, but pagination '
-          'is not yet implemented.',
-          actual_job_id,
+        'Query results for job %s are paginated, but pagination is not yet implemented.',
+        actual_job_id,
       )
     return rows
   except errors.HttpError as err:
-    logging.error('API error during BigQuery query execution for job %s: %s',
-                  job_id, err)
+    logging.error('API error during BigQuery query execution for job %s: %s', job_id, err)
     # Raise specific GcpApiError if needed for upstream handling
     raise utils.GcpApiError(err) from err
   except Exception as e:
     logging.exception(
-        'Unexpected error during BigQuery query execution for job %s: %s',
-        job_id,
-        e,
+      'Unexpected error during BigQuery query execution for job %s: %s',
+      job_id,
+      e,
     )
     # Re-raise or handle as appropriate
     raise
@@ -1113,34 +1147,34 @@ def get_query_results(
 def get_bigquery_project(project_id: str) -> crm.Project:
   """Attempts to retrieve project details for the supplied BigQuery project id or number.
 
-    If the project is found/accessible, it returns a Project object with the resource data.
-    If the project cannot be retrieved, the application raises one of the exceptions below.
-    The get_bigquery_project method avoids unnecessary printing of the error message to keep
-    the user interface of the tool cleaner to focus on meaningful investigation results.
-    Corresponding errors are handled gracefully downstream.
+  If the project is found/accessible, it returns a Project object with the resource data.
+  If the project cannot be retrieved, the application raises one of the exceptions below.
+  The get_bigquery_project method avoids unnecessary printing of the error message to keep
+  the user interface of the tool cleaner to focus on meaningful investigation results.
+  Corresponding errors are handled gracefully downstream.
 
-    Args:
-        project_id (str): The project id or number of
-        the project (e.g., "123456789", "example-project").
+  Args:
+      project_id (str): The project id or number of
+      the project (e.g., "123456789", "example-project").
 
-    Returns:
-        Project: An object representing the BigQuery project's full details.
+  Returns:
+      Project: An object representing the BigQuery project's full details.
 
-    Raises:
-        utils.GcpApiError: If there is an issue calling the GCP/HTTP Error API.
+  Raises:
+      utils.GcpApiError: If there is an issue calling the GCP/HTTP Error API.
 
-    Usage:
-        When using project identifier from gcpdiag.models.Context
+  Usage:
+      When using project identifier from gcpdiag.models.Context
 
-        project = crm.get_project(context.project_id)
+      project = crm.get_project(context.project_id)
 
-        An unknown project identifier
-        try:
-          project = crm.get_project("123456789")
-        except:
-          # Handle exception
-        else:
-          # use project data
+      An unknown project identifier
+      try:
+        project = crm.get_project("123456789")
+      except:
+        # Handle exception
+      else:
+        # use project data
   """
   try:
     logging.debug('retrieving project %s ', project_id)
@@ -1155,8 +1189,7 @@ def get_bigquery_project(project_id: str) -> crm.Project:
 
 
 @caching.cached_api_call
-def get_table(project_id: str, dataset_id: str,
-              table_id: str) -> Optional[Dict[str, Any]]:
+def get_table(project_id: str, dataset_id: str, table_id: str) -> Optional[Dict[str, Any]]:
   """Retrieves a BigQuery table resource if it exists.
 
   Args:
@@ -1169,9 +1202,7 @@ def get_table(project_id: str, dataset_id: str,
   """
   try:
     api = apis.get_api('bigquery', 'v2', project_id)
-    request = api.tables().get(projectId=project_id,
-                               datasetId=dataset_id,
-                               tableId=table_id)
+    request = api.tables().get(projectId=project_id, datasetId=dataset_id, tableId=table_id)
     response = request.execute(num_retries=config.API_RETRIES)
     return response
   except errors.HttpError as err:

@@ -30,8 +30,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if g.has_named_ports():
       names = [n['name'] for n in g.named_ports]
       if len(names) > len(set(names)):
-        report.add_failed(
-            g, 'Instance group contains multiple ports with the same name')
+        report.add_failed(g, 'Instance group contains multiple ports with the same name')
       else:
         report.add_ok(g)
     else:

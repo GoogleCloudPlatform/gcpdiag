@@ -41,8 +41,7 @@ import dataclasses
 import datetime
 import logging
 import threading
-from typing import (Any, Deque, Dict, List, Mapping, Optional, Sequence, Set,
-                    Tuple, Union)
+from typing import Any, Deque, Dict, List, Mapping, Optional, Sequence, Set, Tuple, Union
 
 import dateutil.parser
 import ratelimit
@@ -56,6 +55,7 @@ from gcpdiag.queries import apis
 @dataclasses.dataclass
 class _LogsQueryJob:
   """A group of log queries that will be executed with a single API call."""
+
   project_id: str
   resource_type: str
   log_name: str
@@ -65,6 +65,7 @@ class _LogsQueryJob:
 
 class LogsQuery:
   """A log search job that was started with prefetch_logs()."""
+
   job: _LogsQueryJob
 
   def __init__(self, job):
@@ -73,13 +74,13 @@ class LogsQuery:
   @property
   def entries(self) -> Sequence:
     if not self.job.future:
-      raise RuntimeError(
-          'log query was\'t executed. did you forget to call execute_queries()?'
-      )
+      raise RuntimeError("log query wasn't executed. did you forget to call execute_queries()?")
     elif self.job.future.running():
       logging.debug(
-          'waiting for logs query results (project: %s, resource type: %s)',
-          self.job.project_id, self.job.resource_type)
+        'waiting for logs query results (project: %s, resource type: %s)',
+        self.job.project_id,
+        self.job.resource_type,
+      )
     return self.job.future.result()
 
 
@@ -88,6 +89,7 @@ jobs_todo: Dict[Tuple[str, str, str], _LogsQueryJob] = {}
 
 class LogEntryShort:
   """A common log entry"""
+
   _text: str
   _timestamp: Optional[datetime.datetime]
 
@@ -120,6 +122,7 @@ class LogEntryShort:
 
 class LogExclusion(models.Resource):
   """A log exclusion entry"""
+
   _resource_data: dict
   project_id: str
 
@@ -142,44 +145,45 @@ class LogExclusion(models.Resource):
     return False
 
 
-def query(project_id: str, resource_type: str, log_name: str,
-          filter_str: str) -> LogsQuery:
+def query(project_id: str, resource_type: str, log_name: str, filter_str: str) -> LogsQuery:
   # Aggregate by project_id, resource_type, log_name
   job_key = (project_id, resource_type, log_name)
   job = jobs_todo.setdefault(
-      job_key,
-      _LogsQueryJob(
-          project_id=project_id,
-          resource_type=resource_type,
-          log_name=log_name,
-          filters=set(),
-      ))
+    job_key,
+    _LogsQueryJob(
+      project_id=project_id,
+      resource_type=resource_type,
+      log_name=log_name,
+      filters=set(),
+    ),
+  )
   job.filters.add(filter_str)
   return LogsQuery(job=job)
 
 
 @ratelimit.sleep_and_retry
-@ratelimit.limits(calls=config.get('logging_ratelimit_requests'),
-                  period=config.get('logging_ratelimit_period_seconds'))
+@ratelimit.limits(
+  calls=config.get('logging_ratelimit_requests'),
+  period=config.get('logging_ratelimit_period_seconds'),
+)
 def _ratelimited_execute(req):
   """Wrapper to req.execute() with rate limiting to avoid hitting quotas."""
   try:
     return req.execute(num_retries=config.API_RETRIES)
   except errors.HttpError as err:
-    logging.error('failed to execute logging request for request %s. Error: %s',
-                  req, err)
+    logging.error('failed to execute logging request for request %s. Error: %s', req, err)
     raise utils.GcpApiError(err) from err
 
 
-def _execute_query_job(job: _LogsQueryJob, context: models.Context):  ##  pylint: disable=unused-argument
+def _execute_query_job(job: _LogsQueryJob, context: models.Context):
   thread = threading.current_thread()
   thread.name = f'log_query:{job.log_name}'
   logging_api = apis.get_api('logging', 'v2', job.project_id)
 
   # Convert "within" relative time to an absolute timestamp.
-  start_time = datetime.datetime.now(
-      datetime.timezone.utc) - datetime.timedelta(
-          days=config.get('within_days'))
+  start_time = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
+    days=config.get('within_days')
+  )
   filter_lines = ['timestamp>"%s"' % start_time.isoformat(timespec='seconds')]
   filter_lines.append('resource.type="%s"' % job.resource_type)
   if job.log_name.startswith('log_id('):
@@ -191,21 +195,21 @@ def _execute_query_job(job: _LogsQueryJob, context: models.Context):  ##  pylint
   if len(job.filters) == 1:
     filter_lines.append('(' + next(iter(job.filters)) + ')')
   else:
-    filter_lines.append(
-        '(' + ' OR '.join(['(' + val + ')' for val in sorted(job.filters)]) +
-        ')')
+    filter_lines.append('(' + ' OR '.join(['(' + val + ')' for val in sorted(job.filters)]) + ')')
   filter_str = '\n'.join(filter_lines)
-  logging.debug('searching logs in project %s (resource type: %s)',
-                job.project_id, job.resource_type)
+  logging.debug(
+    'searching logs in project %s (resource type: %s)', job.project_id, job.resource_type
+  )
   # Fetch all logs and put the results in temporary storage (diskcache.Deque)
   deque = caching.get_tmp_deque('tmp-logs-')
   req = logging_api.entries().list(
-      body={
-          'resourceNames': [f'projects/{job.project_id}'],
-          'filter': filter_str,
-          'orderBy': 'timestamp desc',
-          'pageSize': config.get('logging_page_size')
-      })
+    body={
+      'resourceNames': [f'projects/{job.project_id}'],
+      'filter': filter_str,
+      'orderBy': 'timestamp desc',
+      'pageSize': config.get('logging_page_size'),
+    }
+  )
   fetched_entries_count = 0
   query_pages = 0
   query_start_time = datetime.datetime.now()
@@ -220,83 +224,90 @@ def _execute_query_job(job: _LogsQueryJob, context: models.Context):  ##  pylint
     # Verify that we aren't above limits, exit otherwise.
     if fetched_entries_count > config.get('logging_fetch_max_entries'):
       logging.warning(
-          'maximum number of log entries (%d) reached (project: %s, query: %s).',
-          config.get('logging_fetch_max_entries'), job.project_id,
-          filter_str.replace('\n', ' AND '))
-      return deque
-    run_time = (datetime.datetime.now() - query_start_time).total_seconds()
-    if run_time >= config.get('logging_fetch_max_time_seconds'):
-      logging.warning(
-          'maximum query runtime for log query reached (project: %s, query: %s).',
-          job.project_id, filter_str.replace('\n', ' AND '))
-      return deque
-    req = logging_api.entries().list_next(req, res)
-    if req is not None:
-      logging.debug(
-          'still fetching logs (project: %s, resource type: %s, max wait: %ds)',
-          job.project_id, job.resource_type,
-          config.get('logging_fetch_max_time_seconds') - run_time)
-
-  query_end_time = datetime.datetime.now()
-  logging.debug('logging query run time: %s, pages: %d, query: %s',
-                query_end_time - query_start_time, query_pages,
-                filter_str.replace('\n', ' AND '))
-
-  return deque
-
-
-@caching.cached_api_call
-def realtime_query(project_id,
-                   filter_str,
-                   start_time,
-                   end_time,
-                   disable_paging=False):
-  """Intended for use in only runbooks. use logs.query() for lint rules."""
-  logging_api = apis.get_api('logging', 'v2', project_id)
-
-  filter_lines = [filter_str]
-  filter_lines.append('timestamp>"%s"' %
-                      start_time.isoformat(timespec='seconds'))
-  filter_lines.append('timestamp<"%s"' % end_time.isoformat(timespec='seconds'))
-  filter_str = '\n'.join(filter_lines)
-  logging.debug('searching logs in project %s for logs between %s and %s',
-                project_id, str(start_time), str(end_time))
-  deque = Deque()
-  req = logging_api.entries().list(
-      body={
-          'resourceNames': [f'projects/{project_id}'],
-          'filter': filter_str,
-          'orderBy': 'timestamp desc',
-          'pageSize': config.get('logging_page_size')
-      })
-  fetched_entries_count = 0
-  query_pages = 0
-  query_start_time = datetime.datetime.now()
-  while req is not None:
-    query_pages += 1
-    res = _ratelimited_execute(req)
-    if 'entries' in res:
-      for e in res['entries']:
-        fetched_entries_count += 1
-        deque.appendleft(e)
-
-    # Verify that we aren't above limits, exit otherwise.
-    if fetched_entries_count > config.get('logging_fetch_max_entries'):
-      logging.warning(
-          'maximum number of log entries (%d) reached (project: %s, query:'
-          ' %s).',
-          config.get('logging_fetch_max_entries'),
-          project_id,
-          filter_str.replace('\n', ' AND '),
+        'maximum number of log entries (%d) reached (project: %s, query: %s).',
+        config.get('logging_fetch_max_entries'),
+        job.project_id,
+        filter_str.replace('\n', ' AND '),
       )
       return deque
     run_time = (datetime.datetime.now() - query_start_time).total_seconds()
     if run_time >= config.get('logging_fetch_max_time_seconds'):
       logging.warning(
-          'maximum query runtime for log query reached (project: %s, query:'
-          ' %s).',
-          project_id,
-          filter_str.replace('\n', ' AND '),
+        'maximum query runtime for log query reached (project: %s, query: %s).',
+        job.project_id,
+        filter_str.replace('\n', ' AND '),
+      )
+      return deque
+    req = logging_api.entries().list_next(req, res)
+    if req is not None:
+      logging.debug(
+        'still fetching logs (project: %s, resource type: %s, max wait: %ds)',
+        job.project_id,
+        job.resource_type,
+        config.get('logging_fetch_max_time_seconds') - run_time,
+      )
+
+  query_end_time = datetime.datetime.now()
+  logging.debug(
+    'logging query run time: %s, pages: %d, query: %s',
+    query_end_time - query_start_time,
+    query_pages,
+    filter_str.replace('\n', ' AND '),
+  )
+
+  return deque
+
+
+@caching.cached_api_call
+def realtime_query(project_id, filter_str, start_time, end_time, disable_paging=False):
+  """Intended for use in only runbooks. use logs.query() for lint rules."""
+  logging_api = apis.get_api('logging', 'v2', project_id)
+
+  filter_lines = [filter_str]
+  filter_lines.append('timestamp>"%s"' % start_time.isoformat(timespec='seconds'))
+  filter_lines.append('timestamp<"%s"' % end_time.isoformat(timespec='seconds'))
+  filter_str = '\n'.join(filter_lines)
+  logging.debug(
+    'searching logs in project %s for logs between %s and %s',
+    project_id,
+    str(start_time),
+    str(end_time),
+  )
+  deque = Deque()
+  req = logging_api.entries().list(
+    body={
+      'resourceNames': [f'projects/{project_id}'],
+      'filter': filter_str,
+      'orderBy': 'timestamp desc',
+      'pageSize': config.get('logging_page_size'),
+    }
+  )
+  fetched_entries_count = 0
+  query_pages = 0
+  query_start_time = datetime.datetime.now()
+  while req is not None:
+    query_pages += 1
+    res = _ratelimited_execute(req)
+    if 'entries' in res:
+      for e in res['entries']:
+        fetched_entries_count += 1
+        deque.appendleft(e)
+
+    # Verify that we aren't above limits, exit otherwise.
+    if fetched_entries_count > config.get('logging_fetch_max_entries'):
+      logging.warning(
+        'maximum number of log entries (%d) reached (project: %s, query: %s).',
+        config.get('logging_fetch_max_entries'),
+        project_id,
+        filter_str.replace('\n', ' AND '),
+      )
+      return deque
+    run_time = (datetime.datetime.now() - query_start_time).total_seconds()
+    if run_time >= config.get('logging_fetch_max_time_seconds'):
+      logging.warning(
+        'maximum query runtime for log query reached (project: %s, query: %s).',
+        project_id,
+        filter_str.replace('\n', ' AND '),
       )
       return deque
     if disable_paging:
@@ -304,24 +315,23 @@ def realtime_query(project_id,
     req = logging_api.entries().list_next(req, res)
     if req is not None:
       logging.debug(
-          'still fetching logs (project: %s, max wait: %ds)',
-          project_id,
-          config.get('logging_fetch_max_time_seconds') - run_time,
+        'still fetching logs (project: %s, max wait: %ds)',
+        project_id,
+        config.get('logging_fetch_max_time_seconds') - run_time,
       )
 
   query_end_time = datetime.datetime.now()
   logging.debug(
-      'logging query run time: %s, pages: %d, query: %s',
-      query_end_time - query_start_time,
-      query_pages,
-      filter_str.replace('\n', ' AND '),
+    'logging query run time: %s, pages: %d, query: %s',
+    query_end_time - query_start_time,
+    query_pages,
+    filter_str.replace('\n', ' AND '),
   )
 
   return deque
 
 
-def execute_queries(query_executor: executor.ContextAwareExecutor,
-                    context: models.Context):
+def execute_queries(query_executor: executor.ContextAwareExecutor, context: models.Context):
   global jobs_todo
   jobs_executing = jobs_todo
   jobs_todo = {}
@@ -371,7 +381,5 @@ def exclusions(project_id: str) -> Union[List[LogExclusion], None]:
         log_exclusions.append(LogExclusion(project_id, log_exclusion_resp))
     req = logging_api.exclusions().list_next(req, res)
     if req is not None:
-      # pylint: disable=logging-fstring-interpolation
       logging.debug(f'still fetching log exclusions for project {project_id}')
-      # pylint: enable=logging-fstring-interpolation
   return log_exclusions

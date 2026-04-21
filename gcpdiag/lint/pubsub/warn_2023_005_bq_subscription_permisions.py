@@ -53,25 +53,25 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not bq_subscriptions_exist:
     report.add_skipped(None, 'no BQ subscriptions found')
   else:
-    service_account_re = re.compile('serviceAccount:service-' +
-                                    str(project_nr) +
-                                    '@gcp-sa-pubsub.iam.gserviceaccount.com')
+    service_account_re = re.compile(
+      'serviceAccount:service-' + str(project_nr) + '@gcp-sa-pubsub.iam.gserviceaccount.com'
+    )
     member = next(
-        filter(
-            service_account_re.match,
-            policies[context.project_id].get_members(),
-        ),
-        None,
+      filter(
+        service_account_re.match,
+        policies[context.project_id].get_members(),
+      ),
+      None,
     )
 
     if not member:
       report.add_failed(project, 'no Pub/Sub Service Account found')
-    elif bq_subscriptions_exist and not policies[
-        context.project_id].has_role_permissions(member, role_bq_data_editor):
+    elif bq_subscriptions_exist and not policies[context.project_id].has_role_permissions(
+      member, role_bq_data_editor
+    ):
       report.add_failed(
-          project,
-          f'{member} does not have permissions for the role'
-          f' {role_bq_data_editor}',
+        project,
+        f'{member} does not have permissions for the role {role_bq_data_editor}',
       )
     else:
       report.add_ok(project)

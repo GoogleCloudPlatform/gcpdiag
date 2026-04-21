@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains generalized Cloud logging related Steps """
+"""Contains generalized Cloud logging related Steps"""
+
 import re
 from typing import Optional
 
@@ -47,52 +48,59 @@ class CheckIssueLogEntry(runbook.Step):
     project = crm.get_project(self.project_id)
 
     try:
-      fetched_logs = logs.realtime_query(project_id=self.project_id,
-                                         filter_str=self.filter_str,
-                                         start_time=op.get(flags.START_TIME),
-                                         end_time=op.get(flags.END_TIME))
+      fetched_logs = logs.realtime_query(
+        project_id=self.project_id,
+        filter_str=self.filter_str,
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME),
+      )
     except utils.GcpApiError as err:
       self.template = 'logging::default'
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        api_err=err,
-                                        query=self.filter_str))
+      op.add_skipped(
+        project, reason=op.prep_msg(op.SKIPPED_REASON, api_err=err, query=self.filter_str)
+      )
     else:
       remediation = None
       reason = None
-      self.filter_str += (f'timestamp >= "{op.get(flags.START_TIME)}"'
-                          f' AND timestamp <= "{op.get(flags.END_TIME)}"\n')
-      if fetched_logs and _pattern_exists_in_entries(self.issue_pattern,
-                                                     fetched_logs):
+      self.filter_str += (
+        f'timestamp >= "{op.get(flags.START_TIME)}" AND timestamp <= "{op.get(flags.END_TIME)}"\n'
+      )
+      if fetched_logs and _pattern_exists_in_entries(self.issue_pattern, fetched_logs):
         if self.template != 'logging::default' and self.resource_name:
-          reason = op.prep_msg(op.FAILURE_REASON,
-                               resource_name=self.resource_name,
-                               project_id=self.project_id,
-                               query=self.filter_str)
-          remediation = op.prep_msg(op.FAILURE_REMEDIATION,
-                                    query=self.filter_str,
-                                    resource_name=self.resource_name,
-                                    project_id=self.project_id)
+          reason = op.prep_msg(
+            op.FAILURE_REASON,
+            resource_name=self.resource_name,
+            project_id=self.project_id,
+            query=self.filter_str,
+          )
+          remediation = op.prep_msg(
+            op.FAILURE_REMEDIATION,
+            query=self.filter_str,
+            resource_name=self.resource_name,
+            project_id=self.project_id,
+          )
         else:
           reason = op.prep_msg(op.FAILURE_REASON, query=self.filter_str)
-          remediation = op.prep_msg(op.FAILURE_REMEDIATION,
-                                    query=self.filter_str)
+          remediation = op.prep_msg(op.FAILURE_REMEDIATION, query=self.filter_str)
 
         op.add_failed(project, reason=reason, remediation=remediation)
       else:
         if self.template != 'logging::default' and self.resource_name:
-          reason = op.prep_msg(op.UNCERTAIN_REASON,
-                               resource_name=self.resource_name,
-                               query=self.filter_str,
-                               project_id=self.project_id)
-          remediation = op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                    query=self.filter_str,
-                                    resource_name=self.resource_name,
-                                    project_id=self.project_id)
+          reason = op.prep_msg(
+            op.UNCERTAIN_REASON,
+            resource_name=self.resource_name,
+            query=self.filter_str,
+            project_id=self.project_id,
+          )
+          remediation = op.prep_msg(
+            op.UNCERTAIN_REMEDIATION,
+            query=self.filter_str,
+            resource_name=self.resource_name,
+            project_id=self.project_id,
+          )
         else:
           reason = op.prep_msg(op.UNCERTAIN_REASON, query=self.filter_str)
-          remediation = op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                    query=self.filter_str)
+          remediation = op.prep_msg(op.UNCERTAIN_REMEDIATION, query=self.filter_str)
         op.add_uncertain(project, reason=reason, remediation=remediation)
 
 

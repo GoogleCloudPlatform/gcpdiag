@@ -49,24 +49,21 @@ class MonitoringConfiguration(runbook.DiagnosticTree):
   """
 
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The ID of the project hosting the GKE Cluster',
-          'required': True
-      },
-      flags.GKE_CLUSTER_NAME: {
-          'type':
-              str,
-          'help':
-              'The name of the GKE cluster, to limit search only for this cluster',
-          'required':
-              True
-      },
-      flags.LOCATION: {
-          'type': str,
-          'help': 'The zone or region of the GKE cluster',
-          'required': True
-      }
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The ID of the project hosting the GKE Cluster',
+      'required': True,
+    },
+    flags.GKE_CLUSTER_NAME: {
+      'type': str,
+      'help': 'The name of the GKE cluster, to limit search only for this cluster',
+      'required': True,
+    },
+    flags.LOCATION: {
+      'type': str,
+      'help': 'The zone or region of the GKE cluster',
+      'required': True,
+    },
   }
 
   def build_tree(self):
@@ -74,22 +71,23 @@ class MonitoringConfiguration(runbook.DiagnosticTree):
     # Instantiate the step classes
     start = MonitoringConfigurationStart()
     project_monitoring_configuration_check = MonitoringApiConfigurationEnabled()
-    cluster_monitoring_configuration_check = ClusterLevelMonitoringConfigurationEnabled(
-    )
-    node_pool_access_scope_configuration_check = NodePoolCloudMonitoringAccessScopeConfiguration(
-    )
-    service_account_permissions_check = ServiceAccountMonitoringPermissionConfiguration(
-    )
+    cluster_monitoring_configuration_check = ClusterLevelMonitoringConfigurationEnabled()
+    node_pool_access_scope_configuration_check = NodePoolCloudMonitoringAccessScopeConfiguration()
+    service_account_permissions_check = ServiceAccountMonitoringPermissionConfiguration()
 
     # add them to the tree
     self.add_start(start)
     self.add_step(parent=start, child=project_monitoring_configuration_check)
-    self.add_step(parent=project_monitoring_configuration_check,
-                  child=cluster_monitoring_configuration_check)
-    self.add_step(parent=cluster_monitoring_configuration_check,
-                  child=node_pool_access_scope_configuration_check)
-    self.add_step(parent=node_pool_access_scope_configuration_check,
-                  child=service_account_permissions_check)
+    self.add_step(
+      parent=project_monitoring_configuration_check, child=cluster_monitoring_configuration_check
+    )
+    self.add_step(
+      parent=cluster_monitoring_configuration_check,
+      child=node_pool_access_scope_configuration_check,
+    )
+    self.add_step(
+      parent=node_pool_access_scope_configuration_check, child=service_account_permissions_check
+    )
     self.add_end(step=MonitoringConfigurationEnd())
 
 
@@ -113,9 +111,7 @@ class MonitoringConfigurationStart(runbook.StartStep):
     # Checks if there are clusters in the project
     clusters = gke.get_clusters(op.get_context())
     if not clusters:
-      op.add_skipped(
-          project_path,
-          reason=('No GKE clusters found in project {}').format(project))
+      op.add_skipped(project_path, reason=('No GKE clusters found in project {}').format(project))
       return
 
     # The following checks adjust based on the input provided:
@@ -131,10 +127,8 @@ class MonitoringConfigurationStart(runbook.StartStep):
 
     if cluster_name or cluster_location:
       for cluster in clusters.values():
-        name_match = cluster_name and (cluster_name == str(cluster).rsplit(
-            '/', 1)[-1])
-        location_match = cluster_location and (cluster_location
-                                               == str(cluster).split('/')[-3])
+        name_match = cluster_name and (cluster_name == str(cluster).rsplit('/', 1)[-1])
+        location_match = cluster_location and (cluster_location == str(cluster).split('/')[-3])
 
         if name_match:
           found_cluster = True
@@ -147,20 +141,23 @@ class MonitoringConfigurationStart(runbook.StartStep):
     # Checking the matching conditions for the required cluster in Order
     if not found_cluster_with_location and cluster_name and cluster_location:
       op.add_skipped(
-          project_path,
-          reason=('Cluster with the name {} in {} does not exist in project {}'
-                 ).format(cluster_name, cluster_location, project))
+        project_path,
+        reason=('Cluster with the name {} in {} does not exist in project {}').format(
+          cluster_name, cluster_location, project
+        ),
+      )
     elif not found_cluster and cluster_name:
       op.add_skipped(
-          project_path,
-          reason=(
-              'Cluster with the name {} does not exist in project {}').format(
-                  cluster_name, project))
+        project_path,
+        reason=('Cluster with the name {} does not exist in project {}').format(
+          cluster_name, project
+        ),
+      )
     elif not found_clusters_at_location and cluster_location:
       op.add_skipped(
-          project_path,
-          reason=('No clusters found at location {} in project {}').format(
-              cluster_location, project))
+        project_path,
+        reason=('No clusters found at location {} in project {}').format(cluster_location, project),
+      )
 
 
 class MonitoringApiConfigurationEnabled(gke_gs.ApiEnabled):
@@ -195,69 +192,72 @@ class ClusterLevelMonitoringConfigurationEnabled(runbook.Step):
 
     # Available GKE cluster metrics as of 28 April 2025
     gke_monitoring_components = {
-        'CADVISOR', 'DAEMONSET', 'DEPLOYMENT', 'HPA', 'KUBELET', 'POD',
-        'STATEFULSET', 'STORAGE', 'SYSTEM_COMPONENTS'
+      'CADVISOR',
+      'DAEMONSET',
+      'DEPLOYMENT',
+      'HPA',
+      'KUBELET',
+      'POD',
+      'STATEFULSET',
+      'STORAGE',
+      'SYSTEM_COMPONENTS',
     }
     #'APISERVER', 'CONTROLLER_MANAGER, 'SCHEDULER' => ControlPlane components
     # monitoring are not enabled by default due to which skipping its check
 
     if cluster_obj.is_autopilot:
       op.add_ok(
-          cluster_obj,
-          reason=
-          'GKE Autopilot clusters have Cloud Monitoring enabled by default.')
+        cluster_obj, reason='GKE Autopilot clusters have Cloud Monitoring enabled by default.'
+      )
       return
 
     disabled = []
 
     if cluster_obj.has_monitoring_enabled():
-
       # Enabled metrics on the provided cluster
-      cluster_enabled_monitoring_metrics = cluster_obj.enabled_monitoring_components(
-      )
+      cluster_enabled_monitoring_metrics = cluster_obj.enabled_monitoring_components()
 
       # Check if the cluster has GPU based Nodepool
       # Find any GPU node pools by taint
-      for np in cluster_obj.nodepools:  #Iterate our all available NodePool
-        # pylint: disable=protected-access
+      for np in cluster_obj.nodepools:  # Iterate our all available NodePool
         config_data = np._resource_data.get('config', {})
         taints = config_data.get('taints', [])
 
-        for t in taints:  #Iterate our the taints on the Nodepool
-          if (t.get('key') == 'nvidia.com/gpu' and
-              t.get('value') == 'present' and t.get('effect') == 'NO_SCHEDULE'):
-
+        for t in taints:  # Iterate our the taints on the Nodepool
+          if (
+            t.get('key') == 'nvidia.com/gpu'
+            and t.get('value') == 'present'
+            and t.get('effect') == 'NO_SCHEDULE'
+          ):
             gke_monitoring_components.add('DCGM')
 
-            break  #if found first occurrence then break
+            break  # if found first occurrence then break
 
       # Check missing metrics
       not_enabled_cluster_metrics = gke_monitoring_components - set(
-          cluster_enabled_monitoring_metrics)
+        cluster_enabled_monitoring_metrics
+      )
 
       if not_enabled_cluster_metrics:
-        not_enabled_cluster_metrics_string = ', '.join(
-            sorted(not_enabled_cluster_metrics))
-        disabled.append(
-            f'Missing metrics: {not_enabled_cluster_metrics_string}')
+        not_enabled_cluster_metrics_string = ', '.join(sorted(not_enabled_cluster_metrics))
+        disabled.append(f'Missing metrics: {not_enabled_cluster_metrics_string}')
     else:
       disabled.append('Monitoring entirely disabled')
 
     if not disabled:
       op.add_ok(
-          cluster_obj,
-          reason=
-          f'GKE level monitoring is fully enabled for the cluster {cluster_obj}.'
+        cluster_obj, reason=f'GKE level monitoring is fully enabled for the cluster {cluster_obj}.'
       )
     else:
       disabled_components_metrics = ', '.join(disabled)
       op.add_failed(
-          cluster_obj,
-          reason=
-          f'GKE level monitoring is not fully enabled for the cluster {cluster_obj}.',
-          remediation=(
-              f'Issues detected:\n    {disabled_components_metrics}.\n'
-              f'Please enable missing components or full GKE monitoring.'))
+        cluster_obj,
+        reason=f'GKE level monitoring is not fully enabled for the cluster {cluster_obj}.',
+        remediation=(
+          f'Issues detected:\n    {disabled_components_metrics}.\n'
+          f'Please enable missing components or full GKE monitoring.'
+        ),
+      )
 
 
 class NodePoolCloudMonitoringAccessScopeConfiguration(gke_gs.NodePoolScope):
@@ -272,15 +272,14 @@ class NodePoolCloudMonitoringAccessScopeConfiguration(gke_gs.NodePoolScope):
 
   template = 'monitoring_configuration::node_pool_access_scope_configuration_check'
   required_scopes = [
-      'https://www.googleapis.com/auth/monitoring',
-      'https://www.googleapis.com/auth/monitoring.write',
-      'https://www.googleapis.com/auth/cloud-platform'
+    'https://www.googleapis.com/auth/monitoring',
+    'https://www.googleapis.com/auth/monitoring.write',
+    'https://www.googleapis.com/auth/cloud-platform',
   ]
   service_name = 'Monitoring'
 
 
-class ServiceAccountMonitoringPermissionConfiguration(
-    gke_gs.ServiceAccountPermission):
+class ServiceAccountMonitoringPermissionConfiguration(gke_gs.ServiceAccountPermission):
   """Verifies that service accounts in GKE node pools have monitoring permissions.
 
   Checks that the service accounts used by nodes in the GKE cluster
@@ -289,10 +288,7 @@ class ServiceAccountMonitoringPermissionConfiguration(
   """
 
   template = 'monitoring_configuration::service_account_permissions_configuration_check'
-  required_roles = [
-      'roles/monitoring.metricWriter',
-      'roles/stackdriver.resourceMetadata.writer'
-  ]
+  required_roles = ['roles/monitoring.metricWriter', 'roles/stackdriver.resourceMetadata.writer']
   service_name = 'monitoring'
 
 
@@ -309,7 +305,7 @@ class MonitoringConfigurationEnd(runbook.EndStep):
   def execute(self):
     """Finalizes `GKE Monitoring` diagnostics."""
     response = op.prompt(
-        kind=op.CONFIRMATION,
-        message='Are you satisfied with the `GKE Monitoring` RCA performed?')
+      kind=op.CONFIRMATION, message='Are you satisfied with the `GKE Monitoring` RCA performed?'
+    )
     if response == op.NO:
       op.info(message=op.END_MESSAGE)

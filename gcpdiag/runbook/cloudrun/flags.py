@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Cloud Run runbook flags"""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.gcp.flags import *
 
 SERVICE_NAME = 'service_name'

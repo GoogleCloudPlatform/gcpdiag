@@ -15,6 +15,7 @@
 Performance best practices recommend that configuring session affinity
 might be beneficial in some scenarios.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import lb
 
@@ -23,7 +24,6 @@ MAX_BACKENDSERVICES_TO_REPORT = 10
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   bs_list = lb.get_backend_services(context.project_id)
 
   # return if there are no BackendServices found in the project
@@ -33,15 +33,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for bs in bs_list:
     # fail for backend services for GXLB which don't have session affinity configured
-    if (bs.load_balancing_scheme == EXTERNAL_MANAGED and not bs.region and
-        bs.session_affinity == 'NONE' and not bs.region):
+    if (
+      bs.load_balancing_scheme == EXTERNAL_MANAGED
+      and not bs.region
+      and bs.session_affinity == 'NONE'
+      and not bs.region
+    ):
       report.add_failed(bs)
 
     # pass for backend services for GXLB which have session affinity configured
-    elif (bs.load_balancing_scheme == EXTERNAL_MANAGED and not bs.region and
-          bs.session_affinity != 'NONE' and not bs.region):
+    elif (
+      bs.load_balancing_scheme == EXTERNAL_MANAGED
+      and not bs.region
+      and bs.session_affinity != 'NONE'
+      and not bs.region
+    ):
       report.add_ok(bs)
     else:
       # skip for non-global application LB backend services
-      report.add_skipped(
-          bs, 'Non Global application Load balancer backend service')
+      report.add_skipped(bs, 'Non Global application Load balancer backend service')

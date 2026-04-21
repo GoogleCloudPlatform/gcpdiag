@@ -37,10 +37,10 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='gce_snapshot',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=LOG_FILTER,
+    project_id=context.project_id,
+    resource_type='gce_snapshot',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=LOG_FILTER,
   )
 
 
@@ -58,15 +58,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   project_ok_flag = True
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
-    #Start the Iteration of Log entries
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
+    # Start the Iteration of Log entries
     for entry in logs_by_project[context.project_id].entries:
       msg = get_path(entry, ('protoPayload', 'status', 'message'), default='')
       method = get_path(entry, ('protoPayload', 'methodName'), default='')
       # find the relevant entries
-      if (entry['severity'] == 'ERROR' and METHOD_NAME_MATCH in method and
-          ERROR_MSG in msg):
+      if entry['severity'] == 'ERROR' and METHOD_NAME_MATCH in method and ERROR_MSG in msg:
         report.add_failed(project, 'Snapshot Creation limit exceeded')
         project_ok_flag = False
 

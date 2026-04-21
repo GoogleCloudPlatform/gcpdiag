@@ -1,6 +1,6 @@
 """
-  Tests for API
-  python -m unittest gcpdiag.queries.generic_api.api_build.api_unittest
+Tests for API
+python -m unittest gcpdiag.queries.generic_api.api_build.api_unittest
 """
 
 import unittest
@@ -22,15 +22,18 @@ class FakeCreds:
 
 
 class TestAPI(unittest.TestCase):
-  """ Tests for API call """
+  """Tests for API call"""
 
   def setUp(self):
     self._token = 'fake token'
     self._base_url = 'https://test.com'
-    self._api = api.API(self._base_url,
-                        creds=FakeCreds(self._token),
-                        retry_strategy=constant_time_retry_strategy.
-                        ConstantTimeoutRetryStrategy(timeout=42, retries=3))
+    self._api = api.API(
+      self._base_url,
+      creds=FakeCreds(self._token),
+      retry_strategy=constant_time_retry_strategy.ConstantTimeoutRetryStrategy(
+        timeout=42, retries=3
+      ),
+    )
 
   @patch('requests.request')
   def test_sucessful_get_request(self, mock_request):
@@ -42,10 +45,11 @@ class TestAPI(unittest.TestCase):
     self.assertEqual(response, {'hello': 'world'})
 
     mock_request.assert_called_once_with(
-        'GET',
-        f'{self._base_url}/test_endpoint',
-        headers={'test_auth': f'test_auth {self._token}'},
-        params=None)
+      'GET',
+      f'{self._base_url}/test_endpoint',
+      headers={'test_auth': f'test_auth {self._token}'},
+      params=None,
+    )
     mock_response.json.assert_called_once()
 
   @patch('requests.request')
@@ -58,8 +62,9 @@ class TestAPI(unittest.TestCase):
     with self.assertRaises(RuntimeError) as context:
       self._api.get('test_endpoint')
 
-    self.assertIn('http status 404 calling GET https://test.com/test_endpoint',
-                  str(context.exception))
+    self.assertIn(
+      'http status 404 calling GET https://test.com/test_endpoint', str(context.exception)
+    )
 
   @patch('requests.request')
   def test_max_retries_exceeded(self, mock_request):
@@ -68,14 +73,15 @@ class TestAPI(unittest.TestCase):
     mock_response.text = 'Internal Server Error'
     mock_request.return_value = mock_response
 
-    with patch.object(constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
-                      'get_sleep_intervals',
-                      return_value=[0.1, 0.2, 0.3]):
+    with patch.object(
+      constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
+      'get_sleep_intervals',
+      return_value=[0.1, 0.2, 0.3],
+    ):
       with self.assertRaises(RuntimeError) as context:
         self._api.get('test_endpoint')
 
-    self.assertIn('Failed to get an API response after maximum retries',
-                  str(context.exception))
+    self.assertIn('Failed to get an API response after maximum retries', str(context.exception))
     self.assertEqual(mock_request.call_count, 3)
 
   @patch('requests.request')
@@ -88,12 +94,12 @@ class TestAPI(unittest.TestCase):
     sucessful_response.status_code = 200
     sucessful_response.json.return_value = {'hello': 'world'}
 
-    mock_request.side_effect = [
-        temporary_failure, temporary_failure, sucessful_response
-    ]
-    with patch.object(constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
-                      'get_sleep_intervals',
-                      return_value=[0.1, 0.2, 0.3]):
+    mock_request.side_effect = [temporary_failure, temporary_failure, sucessful_response]
+    with patch.object(
+      constant_time_retry_strategy.ConstantTimeoutRetryStrategy,
+      'get_sleep_intervals',
+      return_value=[0.1, 0.2, 0.3],
+    ):
       response = self._api.get('test_endpoint')
 
     self.assertEqual(response, {'hello': 'world'})

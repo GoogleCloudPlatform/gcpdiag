@@ -36,18 +36,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
 
   for instance in instances.values():
-
     if instance.is_private:
-
       is_peered_to_tp = False
 
       if instance.network.peerings is not None:
-
-        #Check all peered connections for the correct Data Fusion one.
+        # Check all peered connections for the correct Data Fusion one.
         for peer in instance.network.peerings:
           match = re.match(
-              r'https://www.googleapis.com/compute/([^/]+)/'
-              'projects/([^/]+)/([^/]+)/networks/([^/]+)$', peer.url)
+            r'https://www.googleapis.com/compute/([^/]+)/'
+            'projects/([^/]+)/([^/]+)/networks/([^/]+)$',
+            peer.url,
+          )
 
           if match:
             peered_project = match.group(2)
@@ -55,52 +54,61 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
             if peered_project == instance.tenant_project_id:
               if instance.location in peered_network:
-
-                #Data Fusion peered VPC network name = INSTANCE_REGION-INSTANCE_ID
-                peer_instance_name = peered_network.removeprefix(
-                    instance.location)
+                # Data Fusion peered VPC network name = INSTANCE_REGION-INSTANCE_ID
+                peer_instance_name = peered_network.removeprefix(instance.location)
                 peer_instance_name = peer_instance_name.removeprefix('-')
 
                 if peer_instance_name == instance.name:
                   if peer.state == 'ACTIVE':
                     if peer.exports_custom_routes:
                       if peer.imports_custom_routes:
-
                         is_peered_to_tp = True
                         break
 
                       else:
                         report.add_failed(
-                            instance,
-                            (f'peered connection {peer.name} in network '
-                             f'{instance.network.short_path} '
-                             f'is not importing custom routes.'))
+                          instance,
+                          (
+                            f'peered connection {peer.name} in network '
+                            f'{instance.network.short_path} '
+                            f'is not importing custom routes.'
+                          ),
+                        )
 
                     else:
                       report.add_failed(
-                          instance,
-                          (f'peered connection {peer.name} in network '
-                           f'{instance.network.short_path} '
-                           f'is not exporting custom routes.'))
+                        instance,
+                        (
+                          f'peered connection {peer.name} in network '
+                          f'{instance.network.short_path} '
+                          f'is not exporting custom routes.'
+                        ),
+                      )
 
                   else:
                     report.add_failed(
-                        instance,
-                        (f'peered connection {peer.name} in network '
-                         f'{instance.network.short_path} is not active.'))
+                      instance,
+                      (
+                        f'peered connection {peer.name} in network '
+                        f'{instance.network.short_path} is not active.'
+                      ),
+                    )
 
           else:
             report.add_failed(
-                instance,
-                (f'failed to extract project id and network id from peer url '
-                 f'{peer.url}.'))
+              instance,
+              (f'failed to extract project id and network id from peer url {peer.url}.'),
+            )
 
       if not is_peered_to_tp:
         report.add_failed(
-            instance,
-            (f'private instance network {instance.network.short_path} '
-             f'is not correctly peered to tenant project '
-             f'{instance.tenant_project_id}.'))
+          instance,
+          (
+            f'private instance network {instance.network.short_path} '
+            f'is not correctly peered to tenant project '
+            f'{instance.tenant_project_id}.'
+          ),
+        )
       else:
         report.add_ok(instance)
 

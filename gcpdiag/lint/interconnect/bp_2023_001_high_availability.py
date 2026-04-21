@@ -46,23 +46,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   if len(ha_pairs) < 2:
     report.add_failed(
-        project,
-        'There are no vlan attachment pairs that can establish 99.99% high availability.'
+      project, 'There are no vlan attachment pairs that can establish 99.99% high availability.'
     )
   else:
     result = (
-        'The following vlan attachments could be used to establish 99.99% high avaiablibility:\n'
+      'The following vlan attachments could be used to establish 99.99% high avaiablibility:\n'
     )
     for region_metro, attachment_list in ha_pairs.items():
       region, metro = region_metro
       result = result + (
-          f'\n * region:{region} and metro:{metro} '
-          f'have the following attachments in different EADs: {attachment_list}'
+        f'\n * region:{region} and metro:{metro} '
+        f'have the following attachments in different EADs: {attachment_list}'
       )
-    note = '''
+    note = """
       \nYou can use vlan attachments from above list to establsh 99.99% high availability for interconnects, please ensure the following conditions:
           - Two metros are required, each metro has two attachments;
           - Attachments in same metro are in different EADs;
           - Two regions are required with four cloud router TASKS evenly distributed;
-          - Global routing must be enabled on those cloud routers.'''
+          - Global routing must be enabled on those cloud routers."""
     report.add_ok(project, result + note)

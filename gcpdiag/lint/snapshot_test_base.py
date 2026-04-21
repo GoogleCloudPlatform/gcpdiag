@@ -27,29 +27,26 @@ from gcpdiag.queries.generic_api.api_build import generic_api_stub
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
 @mock.patch(
-    'gcpdiag.queries.kubectl.check_gke_ingress',
-    new=kubectl_stub.check_gke_ingress,
+  'gcpdiag.queries.kubectl.check_gke_ingress',
+  new=kubectl_stub.check_gke_ingress,
 )
 @mock.patch(
-    'gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
-    new=generic_api_stub.get_generic_api_stub,
+  'gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
+  new=generic_api_stub.get_generic_api_stub,
 )
 class RulesSnapshotTestBase:
   """Run snapshot test"""
 
   def test_all_rules(self, snapshot):
     for rule in self._list_rules():
-      snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
-                                        'snapshots')
+      snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__), 'snapshots')
       repo = self._mk_repo(rule)
       output_stream = io.StringIO()
-      repo.result.add_result_handler(
-          self._mk_output(output_stream).result_handler)
+      repo.result.add_result_handler(self._mk_output(output_stream).result_handler)
       repo.run_rules(self._mk_context())
       snapshot.assert_match(
-          output_stream.getvalue(),
-          path.join(snapshot.snapshot_dir,
-                    f'{rule.rule_class}_{rule.rule_id}.txt'),
+        output_stream.getvalue(),
+        path.join(snapshot.snapshot_dir, f'{rule.rule_class}_{rule.rule_id}.txt'),
       )
 
   def _list_rules(self):
@@ -65,10 +62,7 @@ class RulesSnapshotTestBase:
     if rule is None:
       include = None
     else:
-      include = [
-          lint.LintRulesPattern(
-              f'{rule.product}/{rule.rule_class}/{rule.rule_id}')
-      ]
+      include = [lint.LintRulesPattern(f'{rule.product}/{rule.rule_class}/{rule.rule_id}')]
     repo = lint.LintRuleRepository(load_extended=True, include=include)
     repo.load_rules(self.rule_pkg)
     return repo

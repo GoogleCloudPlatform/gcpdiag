@@ -28,6 +28,7 @@ class Vpn(models.Resource):
   Represents a Vpn Tunnel.
   https://cloud.google.com/compute/docs/reference/rest/v1/vpnTunnels
   """
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -72,8 +73,7 @@ class Vpn(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -90,9 +90,7 @@ def get_vpn(project_id: str, vpn_name: str, region: str) -> Vpn:
   logging.debug('fetching VPN: %s', vpn_name)
   compute = apis.get_api('compute', 'v1', project_id)
 
-  request = compute.vpnTunnels().get(project=project_id,
-                                     vpnTunnel=vpn_name,
-                                     region=region)
+  request = compute.vpnTunnels().get(project=project_id, vpnTunnel=vpn_name, region=region)
   try:
     response = request.execute(num_retries=config.API_RETRIES)
   except googleapiclient_errors.HttpError as err:

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """TODO: String doc"""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.gcp.constants import *
 from gcpdiag.runbook.iam.constants import *
 

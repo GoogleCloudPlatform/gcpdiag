@@ -14,34 +14,36 @@
 # Lint as: python3
 """Number of expensive Looker Studio bigquery job.
 Checking BigQuery jobs associated with Looker Studio which are billed over 1 GB"""
+
 from boltons.iterutils import get_path  # type: ignore
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
 HIGHLY_EXTENSIVE_FILTER = [
-    'protoPayload.methodName="jobservice.jobcompleted"',
-    ('protoPayload.serviceData.jobCompletedEvent.job.'
-     'jobStatistics.totalBilledBytes>="1073741824"'),
-    ('protoPayload.serviceData.jobCompletedEvent.job.'
-     'jobConfiguration.labels.reques'
-     'tor="looker_studio"')
+  'protoPayload.methodName="jobservice.jobcompleted"',
+  ('protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.totalBilledBytes>="1073741824"'),
+  (
+    'protoPayload.serviceData.jobCompletedEvent.job.'
+    'jobConfiguration.labels.reques'
+    'tor="looker_studio"'
+  ),
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' '.join(HIGHLY_EXTENSIVE_FILTER),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' '.join(HIGHLY_EXTENSIVE_FILTER),
   )
 
 
 def run_rule(
-    context: models.Context,
-    report: lint.LintReportRuleInterface,
+  context: models.Context,
+  report: lint.LintReportRuleInterface,
 ):
   job_counts: dict[str, int] = {}
 
@@ -53,27 +55,23 @@ def run_rule(
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'bigquery api is disabled')
     return
-  if logs_by_project.get(
-      context.project_id) and logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       email_id = get_path(
-          log_entry,
-          (
-              'protoPayload',
-              'authenticationInfo',
-              'principalEmail',
-          ),
+        log_entry,
+        (
+          'protoPayload',
+          'authenticationInfo',
+          'principalEmail',
+        ),
       )
       if email_id:
         job_counts[email_id] = job_counts.get(email_id, 0) + 1
     for email_id, count in job_counts.items():
       report.add_failed(
-          project,
-          f'The user {email_id} ran {count} BigQuery jobs in LSP billed over 1 GB'
+        project, f'The user {email_id} ran {count} BigQuery jobs in LSP billed over 1 GB'
       )
     return
   # in case of there is no log or all logs are non-relevant
   else:
-    report.add_ok(
-        project,
-        'No BigQuery jobs billed over 1 GB from Looker Studio were found.')
+    report.add_ok(project, 'No BigQuery jobs billed over 1 GB from Looker Studio were found.')

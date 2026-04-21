@@ -33,9 +33,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
 
   for instance in instances.values():
-
     if instance.is_private:
-
       is_private_ip_google_access = False
 
       for subnet in instance.network.subnetworks.values():
@@ -45,10 +43,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
             break
 
       if not is_private_ip_google_access:
-        report.add_failed(instance,
-                          (f'Private Google Access is not enabled on '
-                           f'subnetwork with region {instance.location} '
-                           f'in network {instance.network.short_path}'))
+        report.add_failed(
+          instance,
+          (
+            f'Private Google Access is not enabled on '
+            f'subnetwork with region {instance.location} '
+            f'in network {instance.network.short_path}'
+          ),
+        )
       else:
         report.add_ok(instance)
 

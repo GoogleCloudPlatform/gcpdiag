@@ -16,7 +16,6 @@
 The Dataflow job will return these errors when you are hitting GCE resource
 quotas due to which workers will not be successfully launched.
 """
-# pylint: enable=line-too-long
 
 from itertools import islice
 
@@ -26,20 +25,20 @@ from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
 MATCH_STRINGS = [
-    'has insufficient quota(s) to execute this workflow',
-    'The quota check has failed',
-    'Quota exceeded',
-    'Compute Engine API has not fully initialized',
-    'Throttling logger worker',
-    'This workload is drawing too much egress bandwidth from Cloud Storage',
-    'Per-customer shuffle size limit exceeded',
-    'RESOURCE_EXHAUSTED: Exceeds \'AppendRows throughput\' quota',
-    'RESOURCE_EXHAUSTED: Exceeds \'Concurrent connections\'',
-    'RESOURCE_EXHAUSTED: Exceeds \'CreateWriteStream requests\'',
+  'has insufficient quota(s) to execute this workflow',
+  'The quota check has failed',
+  'Quota exceeded',
+  'Compute Engine API has not fully initialized',
+  'Throttling logger worker',
+  'This workload is drawing too much egress bandwidth from Cloud Storage',
+  'Per-customer shuffle size limit exceeded',
+  "RESOURCE_EXHAUSTED: Exceeds 'AppendRows throughput' quota",
+  "RESOURCE_EXHAUSTED: Exceeds 'Concurrent connections'",
+  "RESOURCE_EXHAUSTED: Exceeds 'CreateWriteStream requests'",
 ]
 LOG_FILTER = [
-    'severity>=WARNING',
-    'textPayload: ("{}")'.format('" OR "'.join(MATCH_STRINGS)),
+  'severity>=WARNING',
+  'textPayload: ("{}")'.format('" OR "'.join(MATCH_STRINGS)),
 ]
 
 project_logs = {}
@@ -50,10 +49,10 @@ def prepare_rule(context: models.Context):
   project_id = context.project_id
   log_name = 'log_id("dataflow.googleapis.com/job-message")'
   project_logs[project_id] = logs.query(
-      project_id=project_id,
-      resource_type='dataflow_step',
-      log_name=log_name,
-      filter_str=' AND '.join(LOG_FILTER),
+    project_id=project_id,
+    resource_type='dataflow_step',
+    log_name=log_name,
+    filter_str=' AND '.join(LOG_FILTER),
   )
 
 
@@ -70,29 +69,33 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'dataflow api is disabled')
     return
 
-  if (context.project_id in project_logs and
-      project_logs[context.project_id].entries):
+  if context.project_id in project_logs and project_logs[context.project_id].entries:
     failed_jobs = set()
     for log_entry in project_logs[context.project_id].entries:
       current_entry = get_path(log_entry, 'textPayload', '')
-      if (log_entry['severity'] != 'WARNING' or
-          log_entry['severity'] != 'ERROR' or
-          not any(m not in current_entry for m in MATCH_STRINGS)):
+      if (
+        log_entry['severity'] != 'WARNING'
+        or log_entry['severity'] != 'ERROR'
+        or not any(m not in current_entry for m in MATCH_STRINGS)
+      ):
         continue
 
       job_id = get_path(log_entry, ('resource', 'labels', 'job_id'))
       failed_jobs.add(job_id)
 
     if failed_jobs:
-      extra_jobs = (f', and {len(failed_jobs) - MAX_JOBS_TO_DISPLAY} more jobs'
-                    if len(failed_jobs) > MAX_JOBS_TO_DISPLAY else '')
+      extra_jobs = (
+        f', and {len(failed_jobs) - MAX_JOBS_TO_DISPLAY} more jobs'
+        if len(failed_jobs) > MAX_JOBS_TO_DISPLAY
+        else ''
+      )
 
       report.add_failed(
-          project,
-          f'{len(failed_jobs)} job(s) are unable to start due to insufficient'
-          ' quota(s). Please verify corresponding GCE quotas being exceeded'
-          ' and have the customer request an increase.'
-          f" {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
+        project,
+        f'{len(failed_jobs)} job(s) are unable to start due to insufficient'
+        ' quota(s). Please verify corresponding GCE quotas being exceeded'
+        ' and have the customer request an increase.'
+        f' {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
       )
     else:
       # only irrelevant logs were fetched

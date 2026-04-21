@@ -30,7 +30,6 @@ from gcpdiag.queries.generic_api.api_build import get_generic
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L145
-# pylint: disable=invalid-name
 IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
 
 
@@ -65,13 +64,11 @@ class Instance(models.Resource):
 
   @property
   def name(self) -> str:
-    return utils.extract_value_from_res_name(self._resource_data['name'],
-                                             'instances')
+    return utils.extract_value_from_res_name(self._resource_data['name'], 'instances')
 
   @property
   def location(self) -> str:
-    return utils.extract_value_from_res_name(self._resource_data['name'],
-                                             'locations')
+    return utils.extract_value_from_res_name(self._resource_data['name'], 'locations')
 
   @property
   def zone(self) -> str:
@@ -144,8 +141,7 @@ class Instance(models.Resource):
     """
     if 'network' in self._resource_data['networkConfig']:
       network_string = self._resource_data['networkConfig']['network']
-      match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$',
-                       network_string)
+      match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$', network_string)
       if match and match.group(1) != self.project_id:
         return True
 
@@ -155,25 +151,24 @@ class Instance(models.Resource):
   def network(self) -> network.Network:
     if 'network' in self._resource_data['networkConfig']:
       network_string = self._resource_data['networkConfig']['network']
-      match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$',
-                       network_string)
+      match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$', network_string)
       if match:
         return network.get_network(
-            match.group(1),
-            match.group(2),
-            context=models.Context(project_id=match.group(1)),
+          match.group(1),
+          match.group(2),
+          context=models.Context(project_id=match.group(1)),
         )
       else:
         return network.get_network(
-            self.project_id,
-            network_string,
-            context=models.Context(project_id=self.project_id),
+          self.project_id,
+          network_string,
+          context=models.Context(project_id=self.project_id),
         )
 
     return network.get_network(
-        self.project_id,
-        'default',
-        context=models.Context(project_id=self.project_id),
+      self.project_id,
+      'default',
+      context=models.Context(project_id=self.project_id),
     )
 
   @property
@@ -196,11 +191,13 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   if not apis.is_enabled(context.project_id, 'datafusion'):
     return instances
 
-  logging.debug('fetching list of Data Fusion instances in project %s',
-                context.project_id)
+  logging.debug('fetching list of Data Fusion instances in project %s', context.project_id)
   datafusion_api = apis.get_api('datafusion', 'v1', context.project_id)
-  query = datafusion_api.projects().locations().instances().list(
-      parent=f'projects/{context.project_id}/locations/-'
+  query = (
+    datafusion_api.projects()
+    .locations()
+    .instances()
+    .list(parent=f'projects/{context.project_id}/locations/-')
   )  #'-' (wildcard) all regions
 
   try:
@@ -210,20 +207,17 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
 
     for i in resp['instances']:
       # projects/{project}/locations/{location}/instances/{instance}.
-      result = re.match(r'projects/[^/]+/locations/([^/]+)/instances/([^/]+)',
-                        i['name'])
+      result = re.match(r'projects/[^/]+/locations/([^/]+)/instances/([^/]+)', i['name'])
       if not result:
         logging.error('invalid datafusion name: %s', i['name'])
         continue
       location = result.group(1)
       labels = i.get('labels', {})
       name = result.group(2)
-      if not context.match_project_resource(
-          location=location, labels=labels, resource=name):
+      if not context.match_project_resource(location=location, labels=labels, resource=name):
         continue
 
-      instances[i['name']] = Instance(project_id=context.project_id,
-                                      resource_data=i)
+      instances[i['name']] = Instance(project_id=context.project_id, resource_data=i)
 
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
@@ -241,9 +235,7 @@ def extract_support_datafusion_version() -> Dict[str, str]:
   page_url = 'https://cloud.google.com/data-fusion/docs/support/version-support-policy'
 
   try:
-    data_fusion_table = web.fetch_and_extract_table(page_url,
-                                                    tag='h2',
-                                                    tag_id='support_timelines')
+    data_fusion_table = web.fetch_and_extract_table(page_url, tag='h2', tag_id='support_timelines')
     if data_fusion_table:
       versions = []
       support_end_dates = []
@@ -258,10 +250,8 @@ def extract_support_datafusion_version() -> Dict[str, str]:
 
         version = version.text.strip()
         try:
-          support_end_date = datetime.datetime.strptime(support_end_date,
-                                                        '%B %d, %Y')
-          support_end_date = datetime.datetime.strftime(support_end_date,
-                                                        '%Y-%m-%d')
+          support_end_date = datetime.datetime.strptime(support_end_date, '%B %d, %Y')
+          support_end_date = datetime.datetime.strftime(support_end_date, '%Y-%m-%d')
         except ValueError:
           continue
 
@@ -275,14 +265,13 @@ def extract_support_datafusion_version() -> Dict[str, str]:
       return {}
 
   except (
-      requests.exceptions.RequestException,
-      AttributeError,
-      TypeError,
-      ValueError,
-      IndexError,
+    requests.exceptions.RequestException,
+    AttributeError,
+    TypeError,
+    ValueError,
+    IndexError,
   ) as e:
-    logging.error('Error in extracting data fusion version support policy: %s',
-                  e)
+    logging.error('Error in extracting data fusion version support policy: %s', e)
     return {}
 
 
@@ -302,8 +291,10 @@ class Profile(models.Resource):
 
     projects/{project}/instances/{instance}/computeProfiles/{profile}.
     """
-    return (f'projects/{self.project_id}/instances/{self.instance_name}'
-            f"/computeProfiles/{self._resource_data['name']}")
+    return (
+      f'projects/{self.project_id}/instances/{self.instance_name}'
+      f'/computeProfiles/{self._resource_data["name"]}'
+    )
 
   @property
   def short_path(self) -> str:
@@ -311,8 +302,7 @@ class Profile(models.Resource):
 
     {project}/{instance}/{profile}.
     """
-    return (
-        f"{self.project_id}/{self.instance_name}/{self._resource_data['name']}")
+    return f'{self.project_id}/{self.instance_name}/{self._resource_data["name"]}'
 
   @property
   def name(self) -> str:
@@ -344,8 +334,7 @@ class Profile(models.Resource):
   @property
   def autoscaling_enabled(self) -> bool:
     for value in self._resource_data['provisioner'].get('properties'):
-      if (value.get('name') == 'enablePredefinedAutoScaling' and
-          value.get('value') is not None):
+      if value.get('name') == 'enablePredefinedAutoScaling' and value.get('value') is not None:
         return value.get('value') == 'true'
     return False
 
@@ -366,28 +355,30 @@ class Profile(models.Resource):
 
 @caching.cached_api_call
 def get_instance_system_compute_profile(
-    context: models.Context, instance: Instance) -> Iterable[Profile]:
+  context: models.Context, instance: Instance
+) -> Iterable[Profile]:
   """Get a list of datafusion Instance dataproc System compute profile."""
-  logging.debug('fetching dataproc System compute profile list: %s',
-                context.project_id)
+  logging.debug('fetching dataproc System compute profile list: %s', context.project_id)
   system_profiles: List[Profile] = []
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
   response = datafusion.get_system_profiles()
   if response is not None:
     for res in response:
-      if (res['provisioner']['name'] == 'gcp-dataproc' or
-          res['provisioner']['name'] == 'gcp-existing-dataproc'):
+      if (
+        res['provisioner']['name'] == 'gcp-dataproc'
+        or res['provisioner']['name'] == 'gcp-existing-dataproc'
+      ):
         system_profiles.append(Profile(context.project_id, instance.name, res))
   return system_profiles
 
 
 @caching.cached_api_call
-def get_instance_user_compute_profile(context: models.Context,
-                                      instance: Instance) -> Iterable[Profile]:
+def get_instance_user_compute_profile(
+  context: models.Context, instance: Instance
+) -> Iterable[Profile]:
   """Get a list of datafusion Instance dataproc User compute profile."""
-  logging.debug('fetching dataproc User compute profile list: %s',
-                context.project_id)
+  logging.debug('fetching dataproc User compute profile list: %s', context.project_id)
   user_profiles: List[Profile] = []
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
@@ -397,10 +388,11 @@ def get_instance_user_compute_profile(context: models.Context,
       response = datafusion.get_user_profiles(namespace=res['name'])
       if response is not None:
         for res in response:
-          if (res['provisioner']['name'] == 'gcp-dataproc' or
-              res['provisioner']['name'] == 'gcp-existing-dataproc'):
-            user_profiles.append(Profile(context.project_id, instance.name,
-                                         res))
+          if (
+            res['provisioner']['name'] == 'gcp-dataproc'
+            or res['provisioner']['name'] == 'gcp-existing-dataproc'
+          ):
+            user_profiles.append(Profile(context.project_id, instance.name, res))
       user_profiles = list(filter(bool, user_profiles))
   return user_profiles
 
@@ -413,11 +405,9 @@ def extract_datafusion_dataproc_version() -> Dict[str, list[str]]:
   page_url = 'https://cloud.google.com/data-fusion/docs/concepts/configure-clusters'
 
   try:
-    table = web.fetch_and_extract_table(page_url,
-                                        tag='h2',
-                                        tag_id='version-compatibility')
+    table = web.fetch_and_extract_table(page_url, tag='h2', tag_id='version-compatibility')
     if table:
-      rows = table.find_all('tr')[1:]  #Skip the header row
+      rows = table.find_all('tr')[1:]  # Skip the header row
       version_dict = {}
 
       for row in rows:
@@ -442,15 +432,15 @@ def extract_datafusion_dataproc_version() -> Dict[str, list[str]]:
     else:
       return {}
   except (
-      requests.exceptions.RequestException,
-      AttributeError,
-      TypeError,
-      ValueError,
-      IndexError,
+    requests.exceptions.RequestException,
+    AttributeError,
+    TypeError,
+    ValueError,
+    IndexError,
   ) as e:
     logging.error(
-        'Error in extracting datafusion and dataproc versions: %s',
-        e,
+      'Error in extracting datafusion and dataproc versions: %s',
+      e,
     )
     return {}
 
@@ -475,12 +465,10 @@ class Preference(models.Resource):
 
   @property
   def image_version(self):
-    return self._resource_data.get('system.profile.properties.imageVersion',
-                                   None)
+    return self._resource_data.get('system.profile.properties.imageVersion', None)
 
 
-def get_system_preferences(context: models.Context,
-                           instance: Instance) -> Preference:
+def get_system_preferences(context: models.Context, instance: Instance) -> Preference:
   """Get datafusion Instance system preferences."""
   logging.debug('fetching dataproc System preferences: %s', context.project_id)
   cdap_endpoint = instance.api_endpoint
@@ -489,44 +477,44 @@ def get_system_preferences(context: models.Context,
   return Preference(context.project_id, instance, response)
 
 
-def get_namespace_preferences(context: models.Context,
-                              instance: Instance) -> Mapping[str, Preference]:
-  """Get datafusion cdap namespace preferences.
-  """
-  logging.debug('fetching dataproc namespace preferences: %s',
-                context.project_id)
+def get_namespace_preferences(
+  context: models.Context, instance: Instance
+) -> Mapping[str, Preference]:
+  """Get datafusion cdap namespace preferences."""
+  logging.debug('fetching dataproc namespace preferences: %s', context.project_id)
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
   namespaces = datafusion.get_all_namespaces()
   namespaces_preferences = {}
   if namespaces is not None:
     for namespace in namespaces:
-      response = datafusion.get_namespace_preferences(
-          namespace=namespace['name'])
+      response = datafusion.get_namespace_preferences(namespace=namespace['name'])
       if bool(response):
         namespaces_preferences[namespace['name']] = Preference(
-            context.project_id, instance, response)
+          context.project_id, instance, response
+        )
   return namespaces_preferences
 
 
-def get_application_preferences(context: models.Context,
-                                instance: Instance) -> Mapping[str, Preference]:
+def get_application_preferences(
+  context: models.Context, instance: Instance
+) -> Mapping[str, Preference]:
   """Get datafusion cdap application preferences."""
-  logging.debug('fetching dataproc application preferences: %s',
-                context.project_id)
+  logging.debug('fetching dataproc application preferences: %s', context.project_id)
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
   applications_preferences = {}
   namespaces = datafusion.get_all_namespaces()
   if namespaces is not None:
     for namespace in namespaces:
-      applications = datafusion.get_all_applications(
-          namespace=namespace['name'])
+      applications = datafusion.get_all_applications(namespace=namespace['name'])
       if applications is not None:
         for application in applications:
           response = datafusion.get_application_preferences(
-              namespace=namespace['name'], application_name=application['name'])
+            namespace=namespace['name'], application_name=application['name']
+          )
           if bool(response):
             applications_preferences[application['name']] = Preference(
-                context.project_id, instance, response)
+              context.project_id, instance, response
+            )
   return applications_preferences

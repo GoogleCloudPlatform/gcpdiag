@@ -34,27 +34,27 @@ class FailedStreamingPipeline(runbook.DiagnosticTree):
   """
 
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True,
-      },
-      flags.JOB_ID: {
-          'type': str,
-          'help': 'The Job ID returned when the launch command is submitted',
-          'deprecated': True,
-          'new_parameter': 'dataflow_job_id',
-      },
-      flags.DATAFLOW_JOB_ID: {
-          'type': str,
-          'help': 'The Job ID returned when the launch command is submitted',
-          'required': True,
-      },
-      flags.JOB_REGION: {
-          'type': str,
-          'help': 'The region configured for the job',
-          'required': True,
-      },
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.JOB_ID: {
+      'type': str,
+      'help': 'The Job ID returned when the launch command is submitted',
+      'deprecated': True,
+      'new_parameter': 'dataflow_job_id',
+    },
+    flags.DATAFLOW_JOB_ID: {
+      'type': str,
+      'help': 'The Job ID returned when the launch command is submitted',
+      'required': True,
+    },
+    flags.JOB_REGION: {
+      'type': str,
+      'help': 'The region configured for the job',
+      'required': True,
+    },
   }
 
   def legacy_parameter_handler(self, parameters):
@@ -108,16 +108,16 @@ class FailedStreamingPipelineStart(runbook.StartStep):
 
     job = dataflow.get_job(op.get(flags.PROJECT_ID), job_id, job_region)
     if job is not None:  # default=None
-      success_reason = op.prep_msg(op.SUCCESS_REASON,
-                                   job_id=job_id,
-                                   region=job_region)
+      success_reason = op.prep_msg(op.SUCCESS_REASON, job_id=job_id, region=job_region)
       op.add_ok(resource=job, reason=success_reason)
     else:
       op.add_skipped(
-          resource=project,
-          reason=(
-              'Could not find job {} or the {} API is disabled in project {}'.
-              format(job_id, product, project.id)),
+        resource=project,
+        reason=(
+          'Could not find job {} or the {} API is disabled in project {}'.format(
+            job_id, product, project.id
+          )
+        ),
       )
 
 
@@ -128,17 +128,17 @@ class JobIsStreaming(runbook.Step):
     """Checks if a Dataflow job is indeed a streaming job by field JobType."""
 
     job = dataflow.get_job(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.DATAFLOW_JOB_ID),
-        op.get(flags.JOB_REGION),
+      op.get(flags.PROJECT_ID),
+      op.get(flags.DATAFLOW_JOB_ID),
+      op.get(flags.JOB_REGION),
     )
     if job.job_type == 'JOB_TYPE_STREAMING':
       op.add_ok(resource=job, reason='Job is of type streaming')
     else:
       op.add_failed(
-          resource=job,
-          reason='Dataflow job is not a streaming job.',
-          remediation='Please pass a streaming job',
+        resource=job,
+        reason='Dataflow job is not a streaming job.',
+        remediation='Please pass a streaming job',
       )
 
 
@@ -153,9 +153,9 @@ class JobState(runbook.Step):
   def execute(self):
     """Checks that the Dataflow job's state."""
     job = dataflow.get_job(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.DATAFLOW_JOB_ID),
-        op.get(flags.JOB_REGION),
+      op.get(flags.PROJECT_ID),
+      op.get(flags.DATAFLOW_JOB_ID),
+      op.get(flags.JOB_REGION),
     )
 
     if job.state == 'JOB_STATE_FAILED':
@@ -165,37 +165,33 @@ class JobState(runbook.Step):
       project_logs = {}
 
       project_logs[project_id] = logs.query(
-          project_id=project_id,
-          resource_type='dataflow_step',
-          log_name=log_name,
-          filter_str=' AND '.join(log_filter),
+        project_id=project_id,
+        resource_type='dataflow_step',
+        log_name=log_name,
+        filter_str=' AND '.join(log_filter),
       )
 
       for log_entry in project_logs[project_id].entries:
         if log_entry['severity'] >= 'ERROR':
-          op.info(message=('Error logs found in job logs for the project'
-                           f' {job.full_path}'))
+          op.info(message=(f'Error logs found in job logs for the project {job.full_path}'))
 
-      failure_reason = op.prep_msg(op.FAILURE_REASON,
-                                   job_id=op.get(flags.DATAFLOW_JOB_ID))
+      failure_reason = op.prep_msg(op.FAILURE_REASON, job_id=op.get(flags.DATAFLOW_JOB_ID))
       failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION)
 
       op.add_failed(
-          resource=job,
-          reason=failure_reason,
-          remediation=failure_remediation,
+        resource=job,
+        reason=failure_reason,
+        remediation=failure_remediation,
       )
     elif job.state in [
-        'JOB_STATE_STOPPED',
-        'JOB_STATE_PENDING',
-        'JOB_STATE_QUEUED',
+      'JOB_STATE_STOPPED',
+      'JOB_STATE_PENDING',
+      'JOB_STATE_QUEUED',
     ]:
       op.add_uncertain(
-          resource=job,
-          reason='Job has not yet started to run',
-          remediation=(
-              'Wait for the job to start running & job graph is constructed to'
-              ' retry'),
+        resource=job,
+        reason='Job has not yet started to run',
+        remediation=('Wait for the job to start running & job graph is constructed to retry'),
       )
     elif job.state in ['JOB_STATE_CANCELLED', 'JOB_STATE_DRAINED']:
       op.add_ok(resource=job, reason='Job has been terminated successfully')
@@ -216,35 +212,31 @@ class JobGraphIsConstructed(runbook.Gateway):
   def execute(self):
     """Checks if a Dataflow job graph is successfully constructed."""
     job = dataflow.get_job(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.DATAFLOW_JOB_ID),
-        op.get(flags.JOB_REGION),
+      op.get(flags.PROJECT_ID),
+      op.get(flags.DATAFLOW_JOB_ID),
+      op.get(flags.JOB_REGION),
     )
     message = (
-        'Does the job experience any graph or pipeline construction errors'
-        ' e.g.wording like %s')
+      'Does the job experience any graph or pipeline construction errors e.g.wording like %s'
+    )
 
     example_wording = ''
     if 'java' in job.sdk_language.lower():
-      example_wording = (
-          'Exception in thread "main" java.lang.IllegalStateException')
+      example_wording = 'Exception in thread "main" java.lang.IllegalStateException'
     elif 'python' in job.sdk_language.lower():
       example_wording = (
-          'TypeCheckError: Input type hint violation at group: expected Tuple ,'
-          ' got str')
+        'TypeCheckError: Input type hint violation at group: expected Tuple , got str'
+      )
     elif 'go' in job.sdk_language.lower():
-      example_wording = (
-          'panic: Method ProcessElement in DoFn main.extractFn is missing all'
-          ' inputs')
+      example_wording = 'panic: Method ProcessElement in DoFn main.extractFn is missing all inputs'
 
-    response = op.prompt(message=message % example_wording,
-                         kind=op.CONFIRMATION)
+    response = op.prompt(message=message % example_wording, kind=op.CONFIRMATION)
 
     if response == op.YES:
       op.add_failed(
-          resource=job,
-          reason='Job was not launched',
-          remediation='Correct job launch errors and retry.',
+        resource=job,
+        reason='Job was not launched',
+        remediation='Correct job launch errors and retry.',
       )
       self.add_child(child=FailedStreamingPipelineEnd())
     else:
@@ -267,22 +259,23 @@ class JobLogsVisible(runbook.Step):
 
     if excluded is False:
       op.add_ok(
-          resource=crm.get_project(op.get(flags.PROJECT_ID)),
-          reason='Dataflow Logs are not excluded',
+        resource=crm.get_project(op.get(flags.PROJECT_ID)),
+        reason='Dataflow Logs are not excluded',
       )
     elif excluded is None:
       op.add_failed(
-          resource=None,
-          reason='logging API is disabled',
-          remediation='Enable Logging API',
+        resource=None,
+        reason='logging API is disabled',
+        remediation='Enable Logging API',
       )
     else:
       op.add_failed(
-          resource=crm.get_project(op.get(flags.PROJECT_ID)),
-          reason='Dataflow Logs are excluded',
-          remediation=(
-              'Please include Dataflow logs to allow troubleshooting job'
-              ' failures, or route them to a visible sink'),
+        resource=crm.get_project(op.get(flags.PROJECT_ID)),
+        reason='Dataflow Logs are excluded',
+        remediation=(
+          'Please include Dataflow logs to allow troubleshooting job'
+          ' failures, or route them to a visible sink'
+        ),
       )
 
 

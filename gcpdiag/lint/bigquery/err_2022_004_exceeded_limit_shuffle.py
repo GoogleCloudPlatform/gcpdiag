@@ -17,28 +17,32 @@
 The query job failed because the maximum disk and memory limit available for
 shuffle operations was exceeded for the project or organization.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = ('Your project or organization exceeded the maximum disk and mem'
-             'ory limit available for shuffle operations')
+MATCH_STR = (
+  'Your project or organization exceeded the maximum disk and mem'
+  'ory limit available for shuffle operations'
+)
 
 SHUFFLE_EXCEEDED = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(SHUFFLE_EXCEEDED))
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(SHUFFLE_EXCEEDED),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -50,19 +54,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'BigQuery api is disabled')
     return
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       project_ok_flag = True
-      if MATCH_STR not in get_path(log_entry,
-                                   ('protoPayload', 'status', 'message'),
-                                   default=''):
+      if MATCH_STR not in get_path(log_entry, ('protoPayload', 'status', 'message'), default=''):
         continue
       else:
         report.add_failed(
-            project,
-            'has BigQuery jobs failing due to shuffle operation resources '
-            'exceeded during query execution')
+          project,
+          'has BigQuery jobs failing due to shuffle operation resources '
+          'exceeded during query execution',
+        )
         project_ok_flag = False
         break
     if project_ok_flag:

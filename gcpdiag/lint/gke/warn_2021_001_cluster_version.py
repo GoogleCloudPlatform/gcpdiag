@@ -33,11 +33,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_skipped(c, 'release channel: ' + c.release_channel)
       continue
 
-    valid_master_versions = gke.get_valid_master_versions(
-        c.project_id, c.location)
+    valid_master_versions = gke.get_valid_master_versions(c.project_id, c.location)
     if c.master_version not in valid_master_versions:
-      report.add_failed(c,
-                        'valid versions: ' + ', '.join(valid_master_versions),
-                        c.master_version)
+      report.add_failed(c, 'valid versions: ' + ', '.join(valid_master_versions), c.master_version)
     else:
       report.add_ok(c, c.master_version)

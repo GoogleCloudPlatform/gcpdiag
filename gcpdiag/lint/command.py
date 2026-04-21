@@ -26,8 +26,7 @@ from typing import List, Optional
 from google.auth import exceptions
 
 from gcpdiag import config, hooks, lint, models, utils
-from gcpdiag.lint.output import (api_output, csv_output, json_output,
-                                 terminal_output)
+from gcpdiag.lint.output import api_output, csv_output, json_output, terminal_output
 from gcpdiag.queries import apis, crm, gce, kubectl
 
 
@@ -46,9 +45,7 @@ class ParseMappingArg(argparse.Action):
             k, v = re.split('[:=]', value)
             parsed_dict[k] = v
           except ValueError:
-            parser.error(
-                f'argument {option_string} expected key:value, received {value}'
-            )
+            parser.error(f'argument {option_string} expected key:value, received {value}')
     setattr(namespace, self.dest, parsed_dict)
 
 
@@ -62,184 +59,202 @@ def _flatten_multi_arg(arg_list):
 
 def init_args_parser():
   parser = argparse.ArgumentParser(
-      description='Run diagnostics in GCP projects.', prog='gcpdiag lint')
-
-  parser.add_argument(
-      '--auth-adc',
-      help='Authenticate using Application Default Credentials (default)',
-      action='store_true')
-
-  parser.add_argument(
-      '--auth-key',
-      help='Authenticate using a service account private key file',
-      metavar='FILE')
-
-  parser.add_argument('--auth-oauth',
-                      help=argparse.SUPPRESS,
-                      action='store_true')
-
-  parser.add_argument('--universe-domain',
-                      type=str,
-                      default=config.get('universe_domain'),
-                      help='Domain name of APIs')
-
-  parser.add_argument('--project',
-                      metavar='P',
-                      required=True,
-                      help='Project ID of project to inspect')
-
-  parser.add_argument(
-      '--name',
-      nargs='+',
-      metavar='n',
-      help='Resource Name(s) to inspect (e.g.: bastion-host,prod-*)')
-
-  parser.add_argument(
-      '--location',
-      nargs='+',
-      metavar='R',
-      help=
-      'Valid GCP region/zone to scope inspection (e.g.: us-central1-a,us-central1)'
+    description='Run diagnostics in GCP projects.', prog='gcpdiag lint'
   )
 
   parser.add_argument(
-      '--label',
-      action=ParseMappingArg,
-      metavar='key:value',
-      help=(
-          'One or more resource labels as key-value pair(s) to scope inspection '
-          '(e.g.: env:prod, type:frontend or env=prod type=frontend)'))
+    '--auth-adc',
+    help='Authenticate using Application Default Credentials (default)',
+    action='store_true',
+  )
 
   parser.add_argument(
-      '--billing-project',
-      metavar='P',
-      help='Project used for billing/quota of API calls done by gcpdiag '
-      '(default is the inspected project, requires '
-      '\'serviceusage.services.use\' permission)')
+    '--auth-key', help='Authenticate using a service account private key file', metavar='FILE'
+  )
 
-  parser.add_argument('--show-skipped',
-                      help='Show skipped rules',
-                      action='store_true',
-                      default=config.get('show_skipped'))
-
-  parser.add_argument('--hide-skipped',
-                      help=argparse.SUPPRESS,
-                      action='store_false',
-                      dest='show_skipped')
-
-  parser.add_argument('--hide-ok',
-                      help='Hide rules with result OK',
-                      action='store_true',
-                      default=config.get('hide_ok'))
-
-  parser.add_argument('--show-ok',
-                      help=argparse.SUPPRESS,
-                      action='store_false',
-                      dest='hide_ok')
+  parser.add_argument('--auth-oauth', help=argparse.SUPPRESS, action='store_true')
 
   parser.add_argument(
-      '--enable-gce-serial-buffer',
-      help='Fetch serial port one output directly from the Compute API. '
-      'Use this flag when not exporting serial port output to cloud logging.',
-      action='store_true',
-      dest='enable_gce_serial_buffer')
+    '--universe-domain', type=str, default=config.get('universe_domain'), help='Domain name of APIs'
+  )
 
   parser.add_argument(
-      '--include',
-      help=('Include rule pattern (e.g.: `gke`, `gke/*/2021*`). '
-            'Multiple pattern can be specified (comma separated, '
-            'or with multiple arguments)'),
-      action='append')
-
-  parser.add_argument('--exclude',
-                      help=('Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)'),
-                      action='append')
-
-  parser.add_argument('--include-extended',
-                      help=('Include extended rules. Additional rules might '
-                            'generate false positives (default: False)'),
-                      default=config.get('include_extended'),
-                      action='store_true')
-
-  parser.add_argument('--experimental-enable-async-rules',
-                      help='Run experimental async rules (default: False)',
-                      default=config.get('experimental_enable_async_rules'),
-                      action='store_true')
-
-  parser.add_argument('-v',
-                      '--verbose',
-                      action='count',
-                      default=config.get('verbose'),
-                      help='Increase log verbosity')
-
-  parser.add_argument('--within-days',
-                      metavar='D',
-                      type=int,
-                      help=(f'How far back to search logs and metrics (default:'
-                            f" {config.get('within_days')} days)"),
-                      default=config.get('within_days'))
-
-  parser.add_argument('--config',
-                      metavar='FILE',
-                      type=str,
-                      help='Read configuration from FILE')
-
-  parser.add_argument('--logging-ratelimit-requests',
-                      metavar='R',
-                      type=int,
-                      help=('Configure rate limit for logging queries (default:'
-                            f" {config.get('logging_ratelimit_requests')})"))
+    '--project', metavar='P', required=True, help='Project ID of project to inspect'
+  )
 
   parser.add_argument(
-      '--logging-ratelimit-period-seconds',
-      metavar='S',
-      type=int,
-      help=('Configure rate limit period for logging queries (default:'
-            f" {config.get('logging_ratelimit_period_seconds')} seconds)"))
-
-  parser.add_argument('--logging-page-size',
-                      metavar='P',
-                      type=int,
-                      help=('Configure page size for logging queries (default:'
-                            f" {config.get('logging_page_size')})"))
+    '--name', nargs='+', metavar='n', help='Resource Name(s) to inspect (e.g.: bastion-host,prod-*)'
+  )
 
   parser.add_argument(
-      '--logging-fetch-max-entries',
-      metavar='E',
-      type=int,
-      help=('Configure max entries to fetch by logging queries (default:'
-            f" {config.get('logging_fetch_max_entries')})"))
+    '--location',
+    nargs='+',
+    metavar='R',
+    help='Valid GCP region/zone to scope inspection (e.g.: us-central1-a,us-central1)',
+  )
 
   parser.add_argument(
-      '--logging-fetch-max-time-seconds',
-      metavar='S',
-      type=int,
-      help=('Configure timeout for logging queries (default:'
-            f" {config.get('logging_fetch_max_time_seconds')} seconds)"))
+    '--label',
+    action=ParseMappingArg,
+    metavar='key:value',
+    help=(
+      'One or more resource labels as key-value pair(s) to scope inspection '
+      '(e.g.: env:prod, type:frontend or env=prod type=frontend)'
+    ),
+  )
 
   parser.add_argument(
-      '--output',
-      metavar='FORMATTER',
-      default='terminal',
-      type=str,
-      help=(
-          'Format output as one of [terminal, json, csv] (default: terminal)'))
+    '--billing-project',
+    metavar='P',
+    help='Project used for billing/quota of API calls done by gcpdiag '
+    '(default is the inspected project, requires '
+    "'serviceusage.services.use' permission)",
+  )
 
-  parser.add_argument('--interface',
-                      metavar='FORMATTER',
-                      default=config.get('interface'),
-                      type=str,
-                      help='What interface as one of [cli, api] (default: cli)')
+  parser.add_argument(
+    '--show-skipped',
+    help='Show skipped rules',
+    action='store_true',
+    default=config.get('show_skipped'),
+  )
 
-  parser.add_argument('--reason',
-                      type=str,
-                      default=config.get('reason'),
-                      help='The reason for running gcpdiag')
+  parser.add_argument(
+    '--hide-skipped', help=argparse.SUPPRESS, action='store_false', dest='show_skipped'
+  )
+
+  parser.add_argument(
+    '--hide-ok',
+    help='Hide rules with result OK',
+    action='store_true',
+    default=config.get('hide_ok'),
+  )
+
+  parser.add_argument('--show-ok', help=argparse.SUPPRESS, action='store_false', dest='hide_ok')
+
+  parser.add_argument(
+    '--enable-gce-serial-buffer',
+    help='Fetch serial port one output directly from the Compute API. '
+    'Use this flag when not exporting serial port output to cloud logging.',
+    action='store_true',
+    dest='enable_gce_serial_buffer',
+  )
+
+  parser.add_argument(
+    '--include',
+    help=(
+      'Include rule pattern (e.g.: `gke`, `gke/*/2021*`). '
+      'Multiple pattern can be specified (comma separated, '
+      'or with multiple arguments)'
+    ),
+    action='append',
+  )
+
+  parser.add_argument(
+    '--exclude', help=('Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)'), action='append'
+  )
+
+  parser.add_argument(
+    '--include-extended',
+    help=(
+      'Include extended rules. Additional rules might generate false positives (default: False)'
+    ),
+    default=config.get('include_extended'),
+    action='store_true',
+  )
+
+  parser.add_argument(
+    '--experimental-enable-async-rules',
+    help='Run experimental async rules (default: False)',
+    default=config.get('experimental_enable_async_rules'),
+    action='store_true',
+  )
+
+  parser.add_argument(
+    '-v', '--verbose', action='count', default=config.get('verbose'), help='Increase log verbosity'
+  )
+
+  parser.add_argument(
+    '--within-days',
+    metavar='D',
+    type=int,
+    help=(f'How far back to search logs and metrics (default: {config.get("within_days")} days)'),
+    default=config.get('within_days'),
+  )
+
+  parser.add_argument('--config', metavar='FILE', type=str, help='Read configuration from FILE')
+
+  parser.add_argument(
+    '--logging-ratelimit-requests',
+    metavar='R',
+    type=int,
+    help=(
+      'Configure rate limit for logging queries (default:'
+      f' {config.get("logging_ratelimit_requests")})'
+    ),
+  )
+
+  parser.add_argument(
+    '--logging-ratelimit-period-seconds',
+    metavar='S',
+    type=int,
+    help=(
+      'Configure rate limit period for logging queries (default:'
+      f' {config.get("logging_ratelimit_period_seconds")} seconds)'
+    ),
+  )
+
+  parser.add_argument(
+    '--logging-page-size',
+    metavar='P',
+    type=int,
+    help=(f'Configure page size for logging queries (default: {config.get("logging_page_size")})'),
+  )
+
+  parser.add_argument(
+    '--logging-fetch-max-entries',
+    metavar='E',
+    type=int,
+    help=(
+      'Configure max entries to fetch by logging queries (default:'
+      f' {config.get("logging_fetch_max_entries")})'
+    ),
+  )
+
+  parser.add_argument(
+    '--logging-fetch-max-time-seconds',
+    metavar='S',
+    type=int,
+    help=(
+      'Configure timeout for logging queries (default:'
+      f' {config.get("logging_fetch_max_time_seconds")} seconds)'
+    ),
+  )
+
+  parser.add_argument(
+    '--output',
+    metavar='FORMATTER',
+    default='terminal',
+    type=str,
+    help=('Format output as one of [terminal, json, csv] (default: terminal)'),
+  )
+
+  parser.add_argument(
+    '--interface',
+    metavar='FORMATTER',
+    default=config.get('interface'),
+    type=str,
+    help='What interface as one of [cli, api] (default: cli)',
+  )
+
+  parser.add_argument(
+    '--reason', type=str, default=config.get('reason'), help='The reason for running gcpdiag'
+  )
   return parser
 
 
 def _parse_rule_pattern(
-    patterns: Optional[List[str]],) -> Optional[List[lint.LintRulesPattern]]:
+  patterns: Optional[List[str]],
+) -> Optional[List[lint.LintRulesPattern]]:
   if patterns:
     rules = []
     for arg in _flatten_multi_arg(patterns):
@@ -255,8 +270,9 @@ def _parse_rule_pattern(
 def _load_repository_rules(repo: lint.LintRuleRepository):
   """Find and load all lint rule modules dynamically"""
   for module in pkgutil.walk_packages(
-      lint.__path__,  # type: ignore
-      lint.__name__ + '.'):
+    lint.__path__,  # type: ignore
+    lint.__name__ + '.',
+  ):
     if module.ispkg:
       try:
         m = importlib.import_module(f'{module.name}')
@@ -279,12 +295,11 @@ def _get_output_constructor(output_parameter_value, interface):
 
 def _initialize_output(output_order):
   """Initialize output formatter."""
-  constructor = _get_output_constructor(config.get('output'),
-                                        config.get('interface'))
+  constructor = _get_output_constructor(config.get('output'), config.get('interface'))
   kwargs = {
-      'log_info_for_progress_only': config.get('verbose') == 0,
-      'show_ok': not config.get('hide_ok'),
-      'show_skipped': config.get('show_skipped'),
+    'log_info_for_progress_only': config.get('verbose') == 0,
+    'show_ok': not config.get('hide_ok'),
+    'show_skipped': config.get('show_skipped'),
   }
   if config.get('interface') == 'cli':
     if config.get('output') == 'terminal':
@@ -294,26 +309,25 @@ def _initialize_output(output_order):
 
 
 def create_and_load_repos(
-    include: Optional[List[str]],
-    exclude: Optional[List[str]],
-    load_extended: bool,
+  include: Optional[List[str]],
+  exclude: Optional[List[str]],
+  load_extended: bool,
 ) -> lint.LintRuleRepository:
   """Helper function to initialize the repository and load rules."""
   include_patterns = _parse_rule_pattern(include)
   exclude_patterns = _parse_rule_pattern(exclude)
 
   repo = lint.LintRuleRepository(
-      load_extended=load_extended,
-      run_async=config.get('experimental_enable_async_rules'),
-      exclude=exclude_patterns,
-      include=include_patterns,
+    load_extended=load_extended,
+    run_async=config.get('experimental_enable_async_rules'),
+    exclude=exclude_patterns,
+    include=include_patterns,
   )
   _load_repository_rules(repo)
   return repo
 
 
-def run_rules_for_context(context: models.Context,
-                          repo: lint.LintRuleRepository):
+def run_rules_for_context(context: models.Context, repo: lint.LintRuleRepository):
   """Core function to execute lint rules against a context."""
   repo.run_rules(context)
 
@@ -349,17 +363,17 @@ def run(argv) -> int:
 
     # 3. Create the linting context
     context = models.Context(
-        project_id=args.project,
-        locations=args.location,
-        resources=args.name,
-        labels=args.label,
+      project_id=args.project,
+      locations=args.location,
+      resources=args.name,
+      labels=args.label,
     )
 
     # 4. Create and load the rule repository
     repo = create_and_load_repos(
-        include=config.get('include'),
-        exclude=config.get('exclude'),
-        load_extended=config.get('include_extended'),
+      include=config.get('include'),
+      exclude=config.get('exclude'),
+      load_extended=config.get('include_extended'),
     )
 
     # 5. Set up logging and output for the terminal
@@ -380,8 +394,9 @@ def run(argv) -> int:
 
     if config.get('auth_oauth'):
       logger.error(
-          'The oauth authentication has been deprecated and does not work'
-          ' anymore. Consider using other authentication methods.')
+        'The oauth authentication has been deprecated and does not work'
+        ' anymore. Consider using other authentication methods.'
+      )
       raise ValueError('oauth authentication is no longer supported')
 
     # 6. Display CLI Banner
@@ -390,13 +405,14 @@ def run(argv) -> int:
 
     # Warn user to fallback on serial logs buffer if project isn't storing in
     # cloud logging
-    if (not gce.is_project_serial_port_logging_enabled(context.project_id) and
-        not config.get('enable_gce_serial_buffer')):
+    if not gce.is_project_serial_port_logging_enabled(context.project_id) and not config.get(
+      'enable_gce_serial_buffer'
+    ):
       # Only print the warning if GCE is enabled in the first place
       if apis.is_enabled(context.project_id, 'compute'):
         logger.warning(
-            '''Serial output to cloud logging maybe disabled for certain GCE instances.
-            Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n'''
+          """Serial output to cloud logging maybe disabled for certain GCE instances.
+            Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n"""
         )
 
     # 7. Run the rules

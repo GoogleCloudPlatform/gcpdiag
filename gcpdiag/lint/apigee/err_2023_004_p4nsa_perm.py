@@ -45,9 +45,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   else:
     # Check if Service Agent role is assigned to the SA account
     iam_policy = iam.get_project_policy(context)
-    if not iam_policy.has_role_permissions(f'serviceAccount:{service_account}',
-                                           ROLE):
-      report.add_failed(
-          project, f'service account: {service_account}\nmissing role: {ROLE}')
+    if not iam_policy.has_role_permissions(f'serviceAccount:{service_account}', ROLE):
+      report.add_failed(project, f'service account: {service_account}\nmissing role: {ROLE}')
     else:
       report.add_ok(project)

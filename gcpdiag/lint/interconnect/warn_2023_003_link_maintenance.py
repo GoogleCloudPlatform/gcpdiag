@@ -28,7 +28,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
   for c in interconnects:
     if c.under_maintenance:
-      report.add_failed(
-          c, None, ' this Interconnect link is currently under maintenance')
+      report.add_failed(c, None, ' this Interconnect link is currently under maintenance')
     else:
       report.add_ok(c)

@@ -37,24 +37,28 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       elif nodepool.config.image_type.find('WINDOWS') != -1:
         if nodepool.version < gke.Version('1.21.1'):
           report.add_skipped(
-              nodepool, f'GKE windows node pool {nodepool.version}. '
-              f'the Docker container runtime is deprecated '
-              f'only with windows image versions >= 1.21.1')
+            nodepool,
+            f'GKE windows node pool {nodepool.version}. '
+            f'the Docker container runtime is deprecated '
+            f'only with windows image versions >= 1.21.1',
+          )
         else:
           report.add_failed(
-              nodepool,
-              f'nodepool is using the deprecated Docker container runtime '
-              f'(nodepool version: {nodepool.version}, image type: {nodepool.config.image_type})'
+            nodepool,
+            f'nodepool is using the deprecated Docker container runtime '
+            f'(nodepool version: {nodepool.version}, image type: {nodepool.config.image_type})',
           )
       else:
         if nodepool.version < gke.Version('1.19.0'):
           report.add_skipped(
-              nodepool, f'GKE node pool {nodepool.version}. '
-              f'the Docker container runtime is deprecated '
-              f'only with image versions >= 1.19')
+            nodepool,
+            f'GKE node pool {nodepool.version}. '
+            f'the Docker container runtime is deprecated '
+            f'only with image versions >= 1.19',
+          )
         else:
           report.add_failed(
-              nodepool,
-              f'nodepool is using the deprecated Docker container runtime '
-              f'(nodepool version: {nodepool.version}, image type: {nodepool.config.image_type})'
+            nodepool,
+            f'nodepool is using the deprecated Docker container runtime '
+            f'(nodepool version: {nodepool.version}, image type: {nodepool.config.image_type})',
           )

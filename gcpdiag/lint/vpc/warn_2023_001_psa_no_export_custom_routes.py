@@ -47,13 +47,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if not all_custom_routes_exported:
       routes = network.get_routes(context.project_id)
       for route in routes:
-        if ((route.next_hop_hub or route.next_hop_vpn_tunnel) and
-            (net.full_path in route.network)):
-          report.add_failed(
-              net, 'Private Service Access not exporting custom routes.')
+        if (route.next_hop_hub or route.next_hop_vpn_tunnel) and (net.full_path in route.network):
+          report.add_failed(net, 'Private Service Access not exporting custom routes.')
           break
       attachments = interconnect.get_vlan_attachments(context.project_id)
       if attachments:
-        report.add_failed(
-            net, 'Private Service Access not exporting custom routes.')
+        report.add_failed(net, 'Private Service Access not exporting custom routes.')
         break

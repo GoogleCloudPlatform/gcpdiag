@@ -27,7 +27,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
     if not c.has_app_layer_enc_enabled():
-      report.add_skipped(c, 'App-layer secrets encryption isn\'t enabled')
+      report.add_skipped(c, "App-layer secrets encryption isn't enabled")
     else:
       crypto_key = kms.get_crypto_key(c.app_layer_sec_key)
       if crypto_key.is_destroyed():

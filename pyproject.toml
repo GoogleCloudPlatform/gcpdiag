@@ -1,0 +1,55 @@
+
+[tool.ruff]
+line-length = 100
+indent-width = 2
+target-version = "py39"
+exclude = ["cookiecutter-gcpdiag-rule", "third_party"]
+
+[tool.ruff.lint]
+select = [
+  "E", # pycodestyle errors
+  "F", # pyflakes
+  "W", # pycodestyle warnings
+  "I", # isort
+  "N", # pep8-naming
+]
+
+ignore = [
+  # ----Design / complexity----
+  "PLR0904",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0914",
+  "PLR0915",
+  "PLR0916",
+  "PLR1702",
+  # ----Behavioral Choices----
+  "PLW0603",
+  "PLR2004",
+  "PLR6301",
+  # ----Imports----
+  "F403",
+  # ----Line length----
+  "E501",
+  # ----Naming conventions----
+  "N804"
+]
+
+dummy-variable-rgx = "^(_|dummy_.*|unused_.*)$"
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "single"
+docstring-code-format = true
+
+[tool.ruff.lint.isort]
+known-third-party = ["enchant", "absl"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"gcpdiag/runbook/gce/ssh.py" = ["F403", "F405"]
+"gcpdiag/runbook/op.py" = ["F403", "F405"]
+"gcpdiag/runbook/**/*flags.py" = ["F403", "F405"]
+"**/*_stub.py" = ["ARG", "N802", "N803"]
+"**/*constants.py" = ["F403"]

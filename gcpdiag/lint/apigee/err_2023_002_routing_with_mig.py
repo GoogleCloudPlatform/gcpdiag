@@ -26,13 +26,12 @@ network_bridge_migs = {}
 
 
 def prefetch_rule(context: models.Context):
-  network_bridge_migs[
-      context.project_id] = apigee.get_network_bridge_instance_groups(
-          context.project_id)
+  network_bridge_migs[context.project_id] = apigee.get_network_bridge_instance_groups(
+    context.project_id
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not network_bridge_migs[context.project_id]:
     report.add_skipped(None, 'no Apigee network bridge MIGs found')
     return
@@ -53,15 +52,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for mig in network_bridge_migs[context.project_id]:
     if mig.template.network.short_path != apigee_org_network_path:
       report.add_failed(
-          mig,
-          f'Managed instance group {mig.name} is not being created under the correct network\n'
-          f'{mig.name}\'s network: {mig.template.network.short_path}\n'
-          f'The network peered with Apigee: {apigee_org_network_path}')
+        mig,
+        f'Managed instance group {mig.name} is not being created under the correct network\n'
+        f"{mig.name}'s network: {mig.template.network.short_path}\n"
+        f'The network peered with Apigee: {apigee_org_network_path}',
+      )
       apigee_org_ok_flag = False
-    if not mig.template.get_metadata('ENDPOINT') in all_instance_ips:
+    if mig.template.get_metadata('ENDPOINT') not in all_instance_ips:
       report.add_failed(
-          mig,
-          f'Managed instance group {mig.name} is not pointing to any Apigee X instance.'
+        mig, f'Managed instance group {mig.name} is not pointing to any Apigee X instance.'
       )
       apigee_org_ok_flag = False
 

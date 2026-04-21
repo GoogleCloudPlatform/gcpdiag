@@ -26,8 +26,9 @@ from gcpdiag import lint, models
 from gcpdiag.queries import apis, dataproc, logs
 
 RE_PATTERN = (
-    '(.*could only be written to .*are excluded in this operation.*)|'
-    '(.*could only be replicated to .*are excluded in this operation.*)')
+  '(.*could only be written to .*are excluded in this operation.*)|'
+  '(.*could only be replicated to .*are excluded in this operation.*)'
+)
 
 LOG_NAME = 'hadoop-hdfs-namenode'
 SEVERITY = 'DEFAULT'
@@ -41,10 +42,10 @@ clusters_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_dataproc_cluster',
-      log_name=f'log_id("{LOG_NAME}")',
-      filter_str=' AND '.join(LOG_FILTER),
+    project_id=context.project_id,
+    resource_type='cloud_dataproc_cluster',
+    log_name=f'log_id("{LOG_NAME}")',
+    filter_str=' AND '.join(LOG_FILTER),
   )
 
 
@@ -53,21 +54,21 @@ def prefetch_rule(context: models.Context):
 
 
 def is_relevant(entry, context):
-  return all([
-      get_path(entry,
-               ('resource', 'labels', 'project_id')) == context.project_id,
+  return all(
+    [
+      get_path(entry, ('resource', 'labels', 'project_id')) == context.project_id,
       get_path(entry, ('resource', 'type')) == 'cloud_dataproc_cluster',
-      get_path(entry,
-               'logName') == f'projects/{context.project_id}/logs/{LOG_NAME}',
+      get_path(entry, 'logName') == f'projects/{context.project_id}/logs/{LOG_NAME}',
       MSG_RE.match(get_path(entry, ('jsonPayload', 'message'))),
-  ])
+    ]
+  )
 
 
 def get_clusters_having_relevant_log_entries(context):
   return {
-      get_path(e, ('resource', 'labels', 'cluster_name'), default=None)
-      for e in logs_by_project[context.project_id].entries
-      if is_relevant(e, context)
+    get_path(e, ('resource', 'labels', 'cluster_name'), default=None)
+    for e in logs_by_project[context.project_id].entries
+    if is_relevant(e, context)
   }
 
 
@@ -82,8 +83,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for cluster in clusters_by_project[context.project_id]:
     if cluster.name in clusters_with_issues:
       report.add_failed(
-          cluster,
-          'HDFS could not write file(s) to DataNode(s).',
+        cluster,
+        'HDFS could not write file(s) to DataNode(s).',
       )
     else:
       report.add_ok(cluster)

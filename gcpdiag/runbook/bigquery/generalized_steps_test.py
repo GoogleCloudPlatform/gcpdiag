@@ -38,37 +38,39 @@ class RunPermissionChecksTest(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_get_user_email = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_user_email'))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_get_user_email = self.enterContext(mock.patch('gcpdiag.queries.apis.get_user_email'))
     self.mock_get_bigquery_project = self.enterContext(
-        mock.patch('gcpdiag.queries.bigquery.get_bigquery_project'))
+      mock.patch('gcpdiag.queries.bigquery.get_bigquery_project')
+    )
     self.mock_crm_get_organization = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_organization'))
+      mock.patch('gcpdiag.queries.crm.get_organization')
+    )
     self.mock_bq_get_project_policy = self.enterContext(
-        mock.patch('gcpdiag.queries.bigquery.get_project_policy'))
+      mock.patch('gcpdiag.queries.bigquery.get_project_policy')
+    )
     self.mock_bq_get_organization_policy = self.enterContext(
-        mock.patch('gcpdiag.queries.bigquery.get_organization_policy'))
+      mock.patch('gcpdiag.queries.bigquery.get_organization_policy')
+    )
     self.mock_runbook_permission_map = self.enterContext(
-        mock.patch.dict(
-            generalized_steps.RUNBOOK_PERMISSION_MAP,
-            {
-                'Failed Query Runbook': {
-                    'mandatory_project': {'p1'},
-                    'optional_project': set(),
-                    'optional_org': set(),
-                },
-                'other-runbook': {
-                    'mandatory_project': {'p1'},
-                    'optional_project': {'p2'},
-                    'optional_org': {'o1'},
-                },
-            },
-        ))
+      mock.patch.dict(
+        generalized_steps.RUNBOOK_PERMISSION_MAP,
+        {
+          'Failed Query Runbook': {
+            'mandatory_project': {'p1'},
+            'optional_project': set(),
+            'optional_org': set(),
+          },
+          'other-runbook': {
+            'mandatory_project': {'p1'},
+            'optional_project': {'p2'},
+            'optional_org': {'o1'},
+          },
+        },
+      )
+    )
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
@@ -76,10 +78,10 @@ class RunPermissionChecksTest(unittest.TestCase):
     self.operator.context = models.Context(project_id=DUMMY_PROJECT_ID)
 
     self.params = {
-        flags.PROJECT_ID: DUMMY_PROJECT_ID,
-        flags.BQ_SKIP_PERMISSION_CHECK: False,
-        'start_time': datetime.datetime.now(),
-        'end_time': datetime.datetime.now(),
+      flags.PROJECT_ID: DUMMY_PROJECT_ID,
+      flags.BQ_SKIP_PERMISSION_CHECK: False,
+      'start_time': datetime.datetime.now(),
+      'end_time': datetime.datetime.now(),
     }
     self.operator.parameters = self.params
 
@@ -110,8 +112,8 @@ class RunPermissionChecksTest(unittest.TestCase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'Permission check is being skipped',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'Permission check is being skipped',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   def test_get_user_email_fails(self):
@@ -122,8 +124,8 @@ class RunPermissionChecksTest(unittest.TestCase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        "it's not possible to successfully identify the user",
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      "it's not possible to successfully identify the user",
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   def test_get_project_policy_is_none(self):
@@ -134,8 +136,8 @@ class RunPermissionChecksTest(unittest.TestCase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        "doesn't have the resourcemanager.projects.get permission",
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      "doesn't have the resourcemanager.projects.get permission",
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   def test_missing_mandatory_permissions(self):
@@ -148,9 +150,9 @@ class RunPermissionChecksTest(unittest.TestCase):
 
   def test_missing_optional_project_permissions(self):
     generalized_steps.RUNBOOK_PERMISSION_MAP['Failed Query Runbook'] = {
-        'mandatory_project': {'p1'},
-        'optional_project': {'p2'},
-        'optional_org': set(),
+      'mandatory_project': {'p1'},
+      'optional_project': {'p2'},
+      'optional_org': set(),
     }
     self.mock_project_policy.has_permission.side_effect = lambda p, perm: perm == 'p1'
     step = generalized_steps.RunPermissionChecks()
@@ -158,10 +160,10 @@ class RunPermissionChecksTest(unittest.TestCase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_called_with(
-        'A sub-analysis was skipped: Project-level analysis requiring:'
-        ' p2.\n\tTo enable this analysis, grant the principal'
-        ' test@example.com the IAM permission at the project level',
-        'INFO',
+      'A sub-analysis was skipped: Project-level analysis requiring:'
+      ' p2.\n\tTo enable this analysis, grant the principal'
+      ' test@example.com the IAM permission at the project level',
+      'INFO',
     )
     self.mock_interface.add_ok.assert_called_once()
 
@@ -173,57 +175,60 @@ class RunPermissionChecksTest(unittest.TestCase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_called_with(
-        'A sub-analysis was skipped: Organization-level analysis requiring:'
-        ' o1.\n\tTo enable this analysis, grant the principal'
-        ' test@example.com the IAM permission at the organization level',
-        'INFO',
+      'A sub-analysis was skipped: Organization-level analysis requiring:'
+      ' o1.\n\tTo enable this analysis, grant the principal'
+      ' test@example.com the IAM permission at the organization level',
+      'INFO',
     )
     self.mock_interface.add_ok.assert_called_once()
 
   def test_get_org_fails(self):
     self.mock_crm_get_organization.side_effect = utils.GcpApiError(
-        Exception("can't access organization for project"))
+      Exception("can't access organization for project")
+    )
     step = generalized_steps.RunPermissionChecks(runbook_id='other-runbook')
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        "You don't have access to the Organization resource", 'INFO')
+      "You don't have access to the Organization resource", 'INFO'
+    )
     self.mock_interface.add_ok.assert_called_once()
 
   def test_get_org_policy_fails(self):
     self.mock_crm_get_organization.return_value = mock.Mock(id='org1')
     self.mock_bq_get_organization_policy.side_effect = utils.GcpApiError(
-        Exception('denied on resource'))
+      Exception('denied on resource')
+    )
     step = generalized_steps.RunPermissionChecks(runbook_id='other-runbook')
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
-    self.mock_interface.info.assert_has_calls([
+    self.mock_interface.info.assert_has_calls(
+      [
         mock.call(
-            'User does not have access to the organization policy.'
-            ' Investigation completeness and accuracy might depend on the'
-            ' presence of organization level permissions.',
-            'INFO',
+          'User does not have access to the organization policy.'
+          ' Investigation completeness and accuracy might depend on the'
+          ' presence of organization level permissions.',
+          'INFO',
         ),
         mock.call(
-            "User test@example.com can't access policies for organization"
-            ' org1.',
-            'INFO',
+          "User test@example.com can't access policies for organization org1.",
+          'INFO',
         ),
-    ])
+      ]
+    )
     self.mock_interface.add_ok.assert_called_once()
 
   def test_service_account_principal_gcp_sa(self):
-    self.mock_get_user_email.return_value = (
-        'test@gcp-sa-project.iam.gserviceaccount.com')
+    self.mock_get_user_email.return_value = 'test@gcp-sa-project.iam.gserviceaccount.com'
     step = generalized_steps.RunPermissionChecks()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.mock_project_policy.has_permission.assert_called_with(
-        'service_account:test@gcp-sa-project.iam.gserviceaccount.com',
-        'p1',
+      'service_account:test@gcp-sa-project.iam.gserviceaccount.com',
+      'p1',
     )
     self.mock_interface.add_ok.assert_called_once()
 
@@ -234,7 +239,7 @@ class RunPermissionChecksTest(unittest.TestCase):
       self.operator.set_step(step)
       step.execute()
     self.mock_project_policy.has_permission.assert_called_with(
-        'service_account:test@developer.gserviceaccount.com',
-        'p1',
+      'service_account:test@developer.gserviceaccount.com',
+      'p1',
     )
     self.mock_interface.add_ok.assert_called_once()

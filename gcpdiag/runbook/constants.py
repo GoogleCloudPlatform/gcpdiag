@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Common constants used within runbook"""
+
 from enum import Enum
 
 # Messaging Scenarios
@@ -51,76 +52,48 @@ INSTRUCTIONS_MESSAGE = 'instructions_message'
 STEP_LABEL = 'label'
 INSTRUCTIONS_CHOICE_OPTIONS = 'instructions_choice_options'
 DEFAULT_INSTRUCTIONS_OPTIONS = {
-    'y': 'Yes, Issue is not happening',
-    'n': 'No, Issue is occuring',
-    'u': 'Unsure'
+  'y': 'Yes, Issue is not happening',
+  'n': 'No, Issue is occuring',
+  'u': 'Unsure',
 }
 RCA = 'rca'
 
 StepConstants = {
-    STEP_LABEL:
-        'The Label used in DT images',
-    STEP_NAME:
-        'The introduction message displayed to user describing what the step does.',
-    FAILURE_REASON:
-        'The failure reason for this step.',
-    FAILURE_REMEDIATION:
-        'How to solve the main failure scenario.',
-    SUCCESS_REASON:
-        'The reason why this step is consider to be a success.',
-    UNCERTAIN_REASON:
-        'The reason why this step is uncertain of the outcome.',
-    UNCERTAIN_REMEDIATION:
-        'How to address uncertainty in the outcome.',
-    SKIPPED_REASON:
-        'The reason why this step was skipped.',
-    FAILURE_REASON_ALT1:
-        'The failure reason for Scenario 1 step.',
-    FAILURE_REMEDIATION_ALT1:
-        'How to solve the main failure scenario in Scenario 1.',
-    SUCCESS_REASON_ALT1:
-        'The reason why Scenario 1 is considered a success.',
-    UNCERTAIN_REASON_ALT1:
-        'The reason for uncertainty in the Scenario 1 outcome.',
-    UNCERTAIN_REMEDIATION_ALT1:
-        'How to address uncertainty in the Scenario 1 outcome.',
-    SKIPPED_REASON_ALT1:
-        'The reason why Scenario 1 was skipped.',
-    FAILURE_REASON_ALT2:
-        'The failure reason for Scenario 2 step.',
-    FAILURE_REMEDIATION_ALT2:
-        'How to solve the main failure scenario in Scenario 2.',
-    SUCCESS_REASON_ALT2:
-        'The reason why Scenario 2 is considered a success.',
-    UNCERTAIN_REASON_ALT2:
-        'The reason for uncertainty in the Scenario 2 outcome.',
-    UNCERTAIN_REMEDIATION_ALT2:
-        'How to address uncertainty in the Scenario 2 outcome.',
-    SKIPPED_REASON_ALT2:
-        'The reason why Scenario 2 was skipped.',
-    FAILURE_REASON_ALT3:
-        'The failure reason for Scenario 3 step.',
-    FAILURE_REMEDIATION_ALT3:
-        'How to solve the main failure scenario in Scenario 3.',
-    SUCCESS_REASON_ALT3:
-        'The reason why Scenario 3 is considered a success.',
-    UNCERTAIN_REASON_ALT3:
-        'The reason for uncertainty in the Scenario 3 outcome.',
-    UNCERTAIN_REMEDIATION_ALT3:
-        'How to address uncertainty in the Scenario 3 outcome.',
-    SKIPPED_REASON_ALT3:
-        'The reason why Scenario 3 was skipped.',
-    INSTRUCTIONS_MESSAGE:
-        'Instruction on a manual task.',
-    INSTRUCTIONS_CHOICE_OPTIONS:
-        'Options available in this manual task.',
-    RCA:
-        'Root cause analysis.'
+  STEP_LABEL: 'The Label used in DT images',
+  STEP_NAME: 'The introduction message displayed to user describing what the step does.',
+  FAILURE_REASON: 'The failure reason for this step.',
+  FAILURE_REMEDIATION: 'How to solve the main failure scenario.',
+  SUCCESS_REASON: 'The reason why this step is consider to be a success.',
+  UNCERTAIN_REASON: 'The reason why this step is uncertain of the outcome.',
+  UNCERTAIN_REMEDIATION: 'How to address uncertainty in the outcome.',
+  SKIPPED_REASON: 'The reason why this step was skipped.',
+  FAILURE_REASON_ALT1: 'The failure reason for Scenario 1 step.',
+  FAILURE_REMEDIATION_ALT1: 'How to solve the main failure scenario in Scenario 1.',
+  SUCCESS_REASON_ALT1: 'The reason why Scenario 1 is considered a success.',
+  UNCERTAIN_REASON_ALT1: 'The reason for uncertainty in the Scenario 1 outcome.',
+  UNCERTAIN_REMEDIATION_ALT1: 'How to address uncertainty in the Scenario 1 outcome.',
+  SKIPPED_REASON_ALT1: 'The reason why Scenario 1 was skipped.',
+  FAILURE_REASON_ALT2: 'The failure reason for Scenario 2 step.',
+  FAILURE_REMEDIATION_ALT2: 'How to solve the main failure scenario in Scenario 2.',
+  SUCCESS_REASON_ALT2: 'The reason why Scenario 2 is considered a success.',
+  UNCERTAIN_REASON_ALT2: 'The reason for uncertainty in the Scenario 2 outcome.',
+  UNCERTAIN_REMEDIATION_ALT2: 'How to address uncertainty in the Scenario 2 outcome.',
+  SKIPPED_REASON_ALT2: 'The reason why Scenario 2 was skipped.',
+  FAILURE_REASON_ALT3: 'The failure reason for Scenario 3 step.',
+  FAILURE_REMEDIATION_ALT3: 'How to solve the main failure scenario in Scenario 3.',
+  SUCCESS_REASON_ALT3: 'The reason why Scenario 3 is considered a success.',
+  UNCERTAIN_REASON_ALT3: 'The reason for uncertainty in the Scenario 3 outcome.',
+  UNCERTAIN_REMEDIATION_ALT3: 'How to address uncertainty in the Scenario 3 outcome.',
+  SKIPPED_REASON_ALT3: 'The reason why Scenario 3 was skipped.',
+  INSTRUCTIONS_MESSAGE: 'Instruction on a manual task.',
+  INSTRUCTIONS_CHOICE_OPTIONS: 'Options available in this manual task.',
+  RCA: 'Root cause analysis.',
 }
 
 
 class StepType(Enum):
   """Types of Diagnostic Tree Steps"""
+
   START = 'START'
   END = 'END'
   AUTOMATED = 'AUTOMATED STEP'
@@ -135,35 +108,36 @@ class StepType(Enum):
 
 
 END_MESSAGE = (
-    'Before reaching out to Google Cloud Support: \n'
-    '1. Thoroughly investigate '
-    'the issue with the most appropriate team within your organization. Many issues can be '
-    'resolved internally and fall within the scope of your operational responsibilities:'
-    'https://cloud.google.com/architecture/framework/security'
-    '/shared-responsibility-shared-fate\n\n'
-    '2. If your internal investigation suggests that the issue is related to the '
-    'Google Cloud Platform and requires intervention by Google engineers, please '
-    'contact Google Cloud Support for further assistance.\n\n'
-    '3. View our Google Cloud Service Health Dashboard to know what issues are already know'
-    'and currently being resolved:\n'
-    'https://cloud.google.com/support/docs/customer-care-procedures#view_known_issues\n\n'
-    '4. If you still need further assistance contact customer care:\n'
-    'https://cloud.google.com/support/docs/customer-care-procedures#contact_customer_care\n\n'
-    'Recommended Action: When submitting a support ticket, please include the generated '
-    'report to facilitate a quicker resolution by the Google Cloud support team.'
-    'For more information on how to get the best out of our support services visit:\n'
-    'https://cloud.google.com/support/docs/customer-care-procedures\n\n')
+  'Before reaching out to Google Cloud Support: \n'
+  '1. Thoroughly investigate '
+  'the issue with the most appropriate team within your organization. Many issues can be '
+  'resolved internally and fall within the scope of your operational responsibilities:'
+  'https://cloud.google.com/architecture/framework/security'
+  '/shared-responsibility-shared-fate\n\n'
+  '2. If your internal investigation suggests that the issue is related to the '
+  'Google Cloud Platform and requires intervention by Google engineers, please '
+  'contact Google Cloud Support for further assistance.\n\n'
+  '3. View our Google Cloud Service Health Dashboard to know what issues are already know'
+  'and currently being resolved:\n'
+  'https://cloud.google.com/support/docs/customer-care-procedures#view_known_issues\n\n'
+  '4. If you still need further assistance contact customer care:\n'
+  'https://cloud.google.com/support/docs/customer-care-procedures#contact_customer_care\n\n'
+  'Recommended Action: When submitting a support ticket, please include the generated '
+  'report to facilitate a quicker resolution by the Google Cloud support team.'
+  'For more information on how to get the best out of our support services visit:\n'
+  'https://cloud.google.com/support/docs/customer-care-procedures\n\n'
+)
 
 BOOL_VALUES = {
-    'y': True,
-    'yes': True,
-    'true': True,
-    '1': True,
-    'n': False,
-    'no': False,
-    'false': False,
-    '0': False,
-    'none': False
+  'y': True,
+  'yes': True,
+  'true': True,
+  '1': True,
+  'n': False,
+  'no': False,
+  'false': False,
+  '0': False,
+  'none': False,
 }
 
 RETEST = 'RETEST'
@@ -176,11 +150,7 @@ STOP = 'STOP'
 STEP = StepType.to_list()
 DECISION = 'DECISION'
 HUMAN_TASK = 'Choose the next action'
-HUMAN_TASK_OPTIONS = {
-    'r': 'Retest current step',
-    'c': 'Continue',
-    's': 'Stop Runbook'
-}
+HUMAN_TASK_OPTIONS = {'r': 'Retest current step', 'c': 'Continue', 's': 'Stop Runbook'}
 CONFIRMATION_OPTIONS = {'Yes/Y/y': 'Yes', 'No/N/n': 'No'}
 GENERATE_REPORT = 'GENERATE_REPORT'
 STATUS_ORDER = ['failed', 'uncertain', 'ok', 'skipped']
@@ -191,6 +161,11 @@ API = 'api'
 
 # Restricted attributes that should never be used in observations and tep naming
 RESTRICTED_ATTRIBUTES = {
-    'uuid', 'steps', 'observations', 'product', 'doc_file_name', 'type',
-    'template'
+  'uuid',
+  'steps',
+  'observations',
+  'product',
+  'doc_file_name',
+  'type',
+  'template',
 }

@@ -28,7 +28,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
   for c in attachments:
     if c.defunct_state:
-      report.add_failed(c, None,
-                        ' this VLAN attachment is in a non-functional state')
+      report.add_failed(c, None, ' this VLAN attachment is in a non-functional state')
     else:
       report.add_ok(c)

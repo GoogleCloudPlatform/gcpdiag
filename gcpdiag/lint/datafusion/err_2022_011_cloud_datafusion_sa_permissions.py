@@ -37,32 +37,25 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}'
+      None, f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}'
     )
     return
   datafusion_instances = projects_instances[context.project_id]
   if not datafusion_instances:
-    report.add_skipped(None,
-                       f'Cloud Data Fusion instances were not found {context}')
+    report.add_skipped(None, f'Cloud Data Fusion instances were not found {context}')
     return
   iam_policy = iam.get_project_policy(context)
   for datafusion_instance in sorted(datafusion_instances.values()):
     instance_dataproc_sa = datafusion_instance.dataproc_service_account
     if not instance_dataproc_sa:
-      report.add_skipped(
-          None, f'{datafusion_instance.name} '
-          f'does not have DataProc Service Account')
+      report.add_skipped(None, f'{datafusion_instance.name} does not have DataProc Service Account')
     df_instance_version = datafusion_instance.version
     if version.parse(str(df_instance_version)) < version.parse('6.2.0'):
-      report.add_skipped(None,
-                         'Rule only applicable for datafusion version >=6.2.0')
+      report.add_skipped(None, 'Rule only applicable for datafusion version >=6.2.0')
       continue
     dataproc_sa = 'serviceAccount:' + instance_dataproc_sa
-    project_policy_result = iam_policy.has_role_permissions(
-        dataproc_sa, STORAGE_ADMIN)
+    project_policy_result = iam_policy.has_role_permissions(dataproc_sa, STORAGE_ADMIN)
     if project_policy_result:
       report.add_ok(datafusion_instance)
     else:
-      report.add_failed(datafusion_instance,
-                        f'{dataproc_sa} lacks {STORAGE_ADMIN}')
+      report.add_failed(datafusion_instance, f'{dataproc_sa} lacks {STORAGE_ADMIN}')

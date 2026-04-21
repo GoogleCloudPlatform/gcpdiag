@@ -23,11 +23,8 @@ def get_api_stub(service_name, version, project_id=None):
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=get_api_stub)
 class Test:
-
   def test_get_vpn(self):
-    tunnel = vpn.get_vpn(project_id=DUMMY_PROJECT_ID,
-                         vpn_name=DUMMY_VPN_NAME,
-                         region=DUMMY_REGION)
+    tunnel = vpn.get_vpn(project_id=DUMMY_PROJECT_ID, vpn_name=DUMMY_VPN_NAME, region=DUMMY_REGION)
 
     assert tunnel.name == 'vpn-tunnel-1'
     assert tunnel.status == 'ESTABLISHED'
@@ -43,10 +40,8 @@ class Test:
     assert tunnel.short_path == f'{DUMMY_PROJECT_ID}/{DUMMY_VPN_NAME}'
 
   def test_get_vpn_failure(self):
-
     mock_request = mock.Mock()
-    mock_request.execute.side_effect = errors.HttpError(mock.Mock(status=404),
-                                                        b'Test Error')
+    mock_request.execute.side_effect = errors.HttpError(mock.Mock(status=404), b'Test Error')
 
     mock_service = mock.Mock()
     mock_service.vpnTunnels.return_value.get.return_value = mock_request
@@ -54,6 +49,5 @@ class Test:
     # Overlay the class-level patch with a new one for this test
     with mock.patch('gcpdiag.queries.apis.get_api', return_value=mock_service):
       with caching.bypass_cache():
-
         with pytest.raises(utils.GcpApiError):
           vpn.get_vpn(DUMMY_PROJECT_ID, DUMMY_VPN_NAME, DUMMY_REGION)

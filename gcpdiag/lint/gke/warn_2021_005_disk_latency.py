@@ -45,10 +45,10 @@ def prefetch_rule(context: models.Context):
   if not clusters:
     return
 
-  within_str = 'within %dd, d\'%s\'' % (config.get('within_days'),
-                                        monitoring.period_aligned_now(60))
+  within_str = "within %dd, d'%s'" % (config.get('within_days'), monitoring.period_aligned_now(60))
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id, f"""
+    context.project_id,
+    f"""
 fetch gce_instance
   | {{ metric 'compute.googleapis.com/guest/disk/operation_time' ;
       metric 'compute.googleapis.com/guest/disk/operation_count' }}
@@ -59,7 +59,8 @@ fetch gce_instance
   | ratio
   | value(val() > cast_units({SLO_LATENCY_MS}, "ms"))
   | group_by 1d, [ .count_true, .count ]
-  """)
+  """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -76,10 +77,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       node = gke.get_node_by_instance_id(context, instance_id)
     except KeyError:
       continue
-    cluster_results = per_cluster_results.setdefault(node.nodepool.cluster, {
-        'bad_instances': [],
-        'valid': False
-    })
+    cluster_results = per_cluster_results.setdefault(
+      node.nodepool.cluster, {'bad_instances': [], 'valid': False}
+    )
     # Did we miss the SLO on any day?
     # note: we don't calculate the SLO for the whole "WITHIN_DAYS" period
     # because otherwise you would get different results depending on how that
@@ -97,7 +97,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     if slo_missed:
       cluster_results['bad_instances'].append(
-          (node.instance.name, total_minutes, total_minutes_bad))
+        (node.instance.name, total_minutes, total_minutes_bad)
+      )
 
   # Go over all selected clusters and report results.
   for _, c in sorted(clusters.items()):
@@ -107,8 +108,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_ok(c)
     else:
       report.add_failed(
-          c, (f'disk latency >{SLO_LATENCY_MS}ms (1 min. avg., within'
-              f" {config.get('within_days')} days): \n. ") + '\n. '.join([
-                  f'{i[0]} ({i[2]} out of {i[1]} minutes bad)'
-                  for i in sorted(per_cluster_results[c]['bad_instances'])
-              ]))
+        c,
+        (
+          f'disk latency >{SLO_LATENCY_MS}ms (1 min. avg., within'
+          f' {config.get("within_days")} days): \n. '
+        )
+        + '\n. '.join(
+          [
+            f'{i[0]} ({i[2]} out of {i[1]} minutes bad)'
+            for i in sorted(per_cluster_results[c]['bad_instances'])
+          ]
+        ),
+      )

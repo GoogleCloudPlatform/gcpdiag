@@ -30,7 +30,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   detached_subscription_exists = False
 
   if not subscriptions:
-    report.add_skipped(None, "no subscriptions found")
+    report.add_skipped(None, 'no subscriptions found')
   for _, subscription in sorted(subscriptions.items()):
     if subscription.is_detached():
       report.add_failed(subscription)

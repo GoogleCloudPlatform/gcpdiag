@@ -32,8 +32,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for _, cluster in sorted(clusters.items()):
-    guarded_for_unaffected_versions = _guard_for_unaffected_versions(
-        cluster, report)
+    guarded_for_unaffected_versions = _guard_for_unaffected_versions(cluster, report)
     if guarded_for_unaffected_versions:
       continue
 
@@ -41,7 +40,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
 
 def _guard_for_unaffected_versions(
-    cluster: gke.Cluster, report: lint.LintReportRuleInterface) -> bool:
+  cluster: gke.Cluster, report: lint.LintReportRuleInterface
+) -> bool:
   if not cluster.has_intra_node_visibility_enabled():
     report.add_ok(cluster, 'intra node visibility disabled -> unaffected')
     return True
@@ -55,34 +55,24 @@ def _guard_for_unaffected_versions(
     return False
 
 
-def _check_for_affected_version(cluster: gke.Cluster,
-                                report: lint.LintReportRuleInterface):
-  if (cluster.master_version.minor == 18 and
-      cluster.master_version.minor >= 16):
-    report.add_failed(
-        cluster,
-        'gke version ' + cluster.master_version.version_str + ' is affected')
-  elif (cluster.master_version.minor == 19 and
-        cluster.master_version.patch >= 7 and
-        cluster.master_version.patch < 16):
-    report.add_failed(
-        cluster,
-        'gke version ' + cluster.master_version.version_str + ' is affected')
-  elif (cluster.master_version.minor == 20 and
-        cluster.master_version.patch >= 2 and
-        cluster.master_version.patch < 13):
-    report.add_failed(
-        cluster,
-        'gke version ' + cluster.master_version.version_str + ' is affected')
-  elif (cluster.master_version.minor == 21 and
-        cluster.master_version.patch < 5):
-    report.add_failed(
-        cluster,
-        'gke version ' + cluster.master_version.version_str + ' is affected')
-  elif (cluster.master_version.minor == 22 and
-        cluster.master_version.patch < 2):
-    report.add_failed(
-        cluster,
-        'gke version ' + cluster.master_version.version_str + ' is affected')
+def _check_for_affected_version(cluster: gke.Cluster, report: lint.LintReportRuleInterface):
+  if cluster.master_version.minor == 18 and cluster.master_version.minor >= 16:
+    report.add_failed(cluster, 'gke version ' + cluster.master_version.version_str + ' is affected')
+  elif (
+    cluster.master_version.minor == 19
+    and cluster.master_version.patch >= 7
+    and cluster.master_version.patch < 16
+  ):
+    report.add_failed(cluster, 'gke version ' + cluster.master_version.version_str + ' is affected')
+  elif (
+    cluster.master_version.minor == 20
+    and cluster.master_version.patch >= 2
+    and cluster.master_version.patch < 13
+  ):
+    report.add_failed(cluster, 'gke version ' + cluster.master_version.version_str + ' is affected')
+  elif cluster.master_version.minor == 21 and cluster.master_version.patch < 5:
+    report.add_failed(cluster, 'gke version ' + cluster.master_version.version_str + ' is affected')
+  elif cluster.master_version.minor == 22 and cluster.master_version.patch < 2:
+    report.add_failed(cluster, 'gke version ' + cluster.master_version.version_str + ' is affected')
   else:
     report.add_ok(cluster, 'no affected version detected')

@@ -47,43 +47,43 @@ def get_load_balancer_type_name(lb_type: LoadBalancerType) -> str:
   """Returns a human-readable name for the given load balancer type."""
 
   type_names = {
-      LoadBalancerType.LOAD_BALANCER_TYPE_UNSPECIFIED:
-          'Unspecified',
-      LoadBalancerType.EXTERNAL_PASSTHROUGH_LB:
-          ('External Passthrough Network Load Balancer'),
-      LoadBalancerType.INTERNAL_PASSTHROUGH_LB:
-          ('Internal Passthrough Network Load Balancer'),
-      LoadBalancerType.TARGET_POOL_LB:
-          'Target Pool Network Load Balancer',
-      LoadBalancerType.GLOBAL_EXTERNAL_PROXY_NETWORK_LB:
-          ('Global External Proxy Network Load Balancer'),
-      LoadBalancerType.REGIONAL_INTERNAL_PROXY_NETWORK_LB:
-          ('Regional Internal Proxy Network Load Balancer'),
-      LoadBalancerType.REGIONAL_EXTERNAL_PROXY_NETWORK_LB:
-          ('Regional External Proxy Network Load Balancer'),
-      LoadBalancerType.CROSS_REGION_INTERNAL_PROXY_NETWORK_LB:
-          ('Cross-Region Internal Proxy Network Load Balancer'),
-      LoadBalancerType.CLASSIC_PROXY_NETWORK_LB:
-          ('Classic Proxy Network Load Balancer'),
-      LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB:
-          ('Global External Application Load Balancer'),
-      LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB:
-          ('Regional Internal Application Load Balancer'),
-      LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB:
-          ('Regional External Application Load Balancer'),
-      LoadBalancerType.CROSS_REGION_INTERNAL_APPLICATION_LB:
-          ('Cross-Region Internal Application Load Balancer'),
-      LoadBalancerType.CLASSIC_APPLICATION_LB:
-          ('Classic Application Load Balancer'),
+    LoadBalancerType.LOAD_BALANCER_TYPE_UNSPECIFIED: 'Unspecified',
+    LoadBalancerType.EXTERNAL_PASSTHROUGH_LB: ('External Passthrough Network Load Balancer'),
+    LoadBalancerType.INTERNAL_PASSTHROUGH_LB: ('Internal Passthrough Network Load Balancer'),
+    LoadBalancerType.TARGET_POOL_LB: 'Target Pool Network Load Balancer',
+    LoadBalancerType.GLOBAL_EXTERNAL_PROXY_NETWORK_LB: (
+      'Global External Proxy Network Load Balancer'
+    ),
+    LoadBalancerType.REGIONAL_INTERNAL_PROXY_NETWORK_LB: (
+      'Regional Internal Proxy Network Load Balancer'
+    ),
+    LoadBalancerType.REGIONAL_EXTERNAL_PROXY_NETWORK_LB: (
+      'Regional External Proxy Network Load Balancer'
+    ),
+    LoadBalancerType.CROSS_REGION_INTERNAL_PROXY_NETWORK_LB: (
+      'Cross-Region Internal Proxy Network Load Balancer'
+    ),
+    LoadBalancerType.CLASSIC_PROXY_NETWORK_LB: ('Classic Proxy Network Load Balancer'),
+    LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB: ('Global External Application Load Balancer'),
+    LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB: (
+      'Regional Internal Application Load Balancer'
+    ),
+    LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB: (
+      'Regional External Application Load Balancer'
+    ),
+    LoadBalancerType.CROSS_REGION_INTERNAL_APPLICATION_LB: (
+      'Cross-Region Internal Application Load Balancer'
+    ),
+    LoadBalancerType.CLASSIC_APPLICATION_LB: ('Classic Application Load Balancer'),
   }
   return type_names.get(lb_type, 'Unspecified')
 
 
 def get_load_balancer_type(
-    load_balancing_scheme: str,
-    scope: str,
-    layer: Literal['application', 'network'],
-    backend_service_based: bool = True,
+  load_balancing_scheme: str,
+  scope: str,
+  layer: Literal['application', 'network'],
+  backend_service_based: bool = True,
 ) -> LoadBalancerType:
   if load_balancing_scheme == 'EXTERNAL':
     if not scope or scope == 'global':
@@ -92,8 +92,11 @@ def get_load_balancer_type(
       else:
         return LoadBalancerType.CLASSIC_PROXY_NETWORK_LB
     else:
-      return (LoadBalancerType.EXTERNAL_PASSTHROUGH_LB
-              if backend_service_based else LoadBalancerType.TARGET_POOL_LB)
+      return (
+        LoadBalancerType.EXTERNAL_PASSTHROUGH_LB
+        if backend_service_based
+        else LoadBalancerType.TARGET_POOL_LB
+      )
   elif load_balancing_scheme == 'INTERNAL':
     return LoadBalancerType.INTERNAL_PASSTHROUGH_LB
   elif load_balancing_scheme == 'INTERNAL_MANAGED':
@@ -150,8 +153,7 @@ class BackendServices(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -184,8 +186,7 @@ class BackendServices(models.Resource):
 
   @property
   def draining_timeout_sec(self) -> int:
-    return self._resource_data.get('connectionDraining',
-                                   {}).get('drainingTimeoutSec', 0)
+    return self._resource_data.get('connectionDraining', {}).get('drainingTimeoutSec', 0)
 
   @property
   def load_balancing_scheme(self) -> str:
@@ -246,8 +247,7 @@ class BackendServices(models.Resource):
     for x in self._resource_data.get('usedBy', []):
       reference = x.get('reference')
       if reference:
-        match = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                         reference)
+        match = re.match(r'https://www.googleapis.com/compute/v1/(.*)', reference)
         if match:
           used_by.append(match.group(1))
     return used_by
@@ -256,10 +256,10 @@ class BackendServices(models.Resource):
   def load_balancer_type(self) -> LoadBalancerType:
     application_protocols = ['HTTP', 'HTTPS', 'HTTP2']
     return get_load_balancer_type(
-        self.load_balancing_scheme,
-        self.region,
-        'application' if self.protocol in application_protocols else 'network',
-        backend_service_based=True,
+      self.load_balancing_scheme,
+      self.region,
+      'application' if self.protocol in application_protocols else 'network',
+      backend_service_based=True,
     )
 
 
@@ -274,28 +274,27 @@ def get_backend_services(project_id: str) -> List[BackendServices]:
   for _, data_ in backend_services_by_region.items():
     if 'backendServices' not in data_:
       continue
-    backend_services.extend([
-        BackendServices(project_id, backend_service)
-        for backend_service in data_['backendServices']
-    ])
+    backend_services.extend(
+      [BackendServices(project_id, backend_service) for backend_service in data_['backendServices']]
+    )
   return backend_services
 
 
 @caching.cached_api_call(in_memory=True)
-def get_backend_service(project_id: str,
-                        backend_service_name: str,
-                        region: str = None) -> BackendServices:
+def get_backend_service(
+  project_id: str, backend_service_name: str, region: str = None
+) -> BackendServices:
   """Returns instance object matching backend service name and region"""
   compute = apis.get_api('compute', 'v1', project_id)
   try:
     if not region or region == 'global':
       request = compute.backendServices().get(
-          project=project_id, backendService=backend_service_name)
+        project=project_id, backendService=backend_service_name
+      )
     else:
       request = compute.regionBackendServices().get(
-          project=project_id,
-          region=region,
-          backendService=backend_service_name)
+        project=project_id, region=region, backendService=backend_service_name
+      )
 
     response = request.execute(num_retries=config.API_RETRIES)
     return BackendServices(project_id, resource_data=response)
@@ -304,15 +303,15 @@ def get_backend_service(project_id: str,
 
 
 def get_backend_service_by_self_link(
-    backend_service_self_link: str,) -> Optional[BackendServices]:
+  backend_service_self_link: str,
+) -> Optional[BackendServices]:
   backend_service_name = backend_service_self_link.split('/')[-1]
   backend_service_scope = backend_service_self_link.split('/')[-3]
   match = re.match(r'projects/([^/]+)/', backend_service_self_link)
   if not match:
     return None
   project_id = match.group(1)
-  return get_backend_service(project_id, backend_service_name,
-                             backend_service_scope)
+  return get_backend_service(project_id, backend_service_name, backend_service_scope)
 
 
 class BackendHealth:
@@ -339,9 +338,9 @@ class BackendHealth:
 
 @caching.cached_api_call(in_memory=True)
 def get_backend_service_health(
-    context: models.Context,
-    backend_service_name: str,
-    backend_service_region: str = None,
+  context: models.Context,
+  backend_service_name: str,
+  backend_service_region: str = None,
 ) -> List[BackendHealth]:
   """Returns health data for backend service.
 
@@ -355,8 +354,7 @@ def get_backend_service_health(
   """
   project_id = context.project_id
   try:
-    backend_service = get_backend_service(project_id, backend_service_name,
-                                          backend_service_region)
+    backend_service = get_backend_service(project_id, backend_service_name, backend_service_region)
   except googleapiclient.errors.HttpError:
     return []
 
@@ -368,24 +366,28 @@ def get_backend_service_health(
     group = backend['group']
     if not backend_service.region:
       request = compute.backendServices().getHealth(
-          project=project_id,
-          backendService=backend_service.name,
-          body={'group': group})
+        project=project_id, backendService=backend_service.name, body={'group': group}
+      )
     else:
       request = compute.regionBackendServices().getHealth(
-          project=project_id,
-          region=backend_service.region,
-          backendService=backend_service.name,
-          body={'group': group})
+        project=project_id,
+        region=backend_service.region,
+        backendService=backend_service.name,
+        body={'group': group},
+      )
     request_map[request] = group
 
   for i, response, exception in apis_utils.execute_concurrently(
-      api=compute, requests=list(request_map.keys()), context=context):
+    api=compute, requests=list(request_map.keys()), context=context
+  ):
     group = request_map[i]
     if exception:
       logging.warning(
-          'getHealth API call failed for backend service %s, group %s: %s',
-          backend_service_name, group, exception)
+        'getHealth API call failed for backend service %s, group %s: %s',
+        backend_service_name,
+        group,
+        exception,
+      )
       continue
 
     # None is returned when backend type doesn't support health check
@@ -416,8 +418,7 @@ class SslCertificate(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -446,14 +447,13 @@ class SslCertificate(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_ssl_certificate(
-    project_id: str,
-    certificate_name: str,
+  project_id: str,
+  certificate_name: str,
 ) -> SslCertificate:
   """Returns object matching certificate name and region"""
   compute = apis.get_api('compute', 'v1', project_id)
 
-  request = compute.sslCertificates().get(project=project_id,
-                                          sslCertificate=certificate_name)
+  request = compute.sslCertificates().get(project=project_id, sslCertificate=certificate_name)
 
   response = request.execute(num_retries=config.API_RETRIES)
   return SslCertificate(project_id, resource_data=response)
@@ -479,8 +479,7 @@ class ForwardingRules(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -557,8 +556,9 @@ class ForwardingRules(models.Resource):
         # Currently it doesn't work for shared-vpc backend services
         backend_services = get_backend_services(self.project_id)
         return [
-            backend_service for backend_service in backend_services
-            if target_proxy_target in backend_service.used_by_refs
+          backend_service
+          for backend_service in backend_services
+          if target_proxy_target in backend_service.used_by_refs
         ]
     return []
 
@@ -571,16 +571,16 @@ class ForwardingRules(models.Resource):
         target_type = parts[-2]
 
     application_targets = [
-        'targetHttpProxies',
-        'targetHttpsProxies',
-        'targetGrpcProxies',
+      'targetHttpProxies',
+      'targetHttpsProxies',
+      'targetGrpcProxies',
     ]
 
     return get_load_balancer_type(
-        self.load_balancing_scheme,
-        self.region,
-        'application' if target_type in application_targets else 'network',
-        target_type != 'targetPools',
+      self.load_balancing_scheme,
+      self.region,
+      'application' if target_type in application_targets else 'network',
+      target_type != 'targetPools',
     )
 
 
@@ -607,39 +607,38 @@ def get_target_proxy_reference(target_proxy_self_link: str) -> str:
   if target_proxy_type == 'targetHttpsProxies':
     if target_proxy_scope == 'global':
       request = compute.targetHttpsProxies().get(
-          project=project_id, targetHttpsProxy=target_proxy_name)
+        project=project_id, targetHttpsProxy=target_proxy_name
+      )
     else:
       request = compute.regionTargetHttpsProxies().get(
-          project=project_id,
-          region=target_proxy_scope,
-          targetHttpsProxy=target_proxy_name,
+        project=project_id,
+        region=target_proxy_scope,
+        targetHttpsProxy=target_proxy_name,
       )
   elif target_proxy_type == 'targetHttpProxies':
     if target_proxy_scope == 'global':
       request = compute.targetHttpProxies().get(
-          project=project_id, targetHttpProxy=target_proxy_name)
+        project=project_id, targetHttpProxy=target_proxy_name
+      )
     else:
       request = compute.regionTargetHttpProxies().get(
-          project=project_id,
-          region=target_proxy_scope,
-          targetHttpProxy=target_proxy_name,
+        project=project_id,
+        region=target_proxy_scope,
+        targetHttpProxy=target_proxy_name,
       )
   elif target_proxy_type == 'targetTcpProxies':
     if target_proxy_scope == 'global':
-      request = compute.targetTcpProxies().get(project=project_id,
-                                               targetTcpProxy=target_proxy_name)
+      request = compute.targetTcpProxies().get(project=project_id, targetTcpProxy=target_proxy_name)
     else:
       request = compute.regionTargetTcpProxies().get(
-          project=project_id,
-          region=target_proxy_scope,
-          targetTcpProxy=target_proxy_name,
+        project=project_id,
+        region=target_proxy_scope,
+        targetTcpProxy=target_proxy_name,
       )
   elif target_proxy_type == 'targetSslProxies':
-    request = compute.targetSslProxies().get(project=project_id,
-                                             targetSslProxy=target_proxy_name)
+    request = compute.targetSslProxies().get(project=project_id, targetSslProxy=target_proxy_name)
   elif target_proxy_type == 'targetGrcpProxies':
-    request = compute.targetGrpcProxies().get(project=project_id,
-                                              targetGrpcProxy=target_proxy_name)
+    request = compute.targetGrpcProxies().get(project=project_id, targetGrpcProxy=target_proxy_name)
   if not request:
     # target is not target proxy
     return ''
@@ -662,25 +661,25 @@ def get_forwarding_rules(project_id: str) -> List[ForwardingRules]:
   for _, data_ in forwarding_rules_by_region.items():
     if 'forwardingRules' not in data_:
       continue
-    forwarding_rules.extend([
-        ForwardingRules(project_id, forwarding_rule)
-        for forwarding_rule in data_['forwardingRules']
-    ])
+    forwarding_rules.extend(
+      [ForwardingRules(project_id, forwarding_rule) for forwarding_rule in data_['forwardingRules']]
+    )
   return forwarding_rules
 
 
 @caching.cached_api_call(in_memory=True)
-def get_forwarding_rule(project_id: str,
-                        forwarding_rule_name: str,
-                        region: str = None) -> ForwardingRules:
+def get_forwarding_rule(
+  project_id: str, forwarding_rule_name: str, region: str = None
+) -> ForwardingRules:
   compute = apis.get_api('compute', 'v1', project_id)
   if not region or region == 'global':
     request = compute.globalForwardingRules().get(
-        project=project_id, forwardingRule=forwarding_rule_name)
+      project=project_id, forwardingRule=forwarding_rule_name
+    )
   else:
-    request = compute.forwardingRules().get(project=project_id,
-                                            region=region,
-                                            forwardingRule=forwarding_rule_name)
+    request = compute.forwardingRules().get(
+      project=project_id, region=region, forwardingRule=forwarding_rule_name
+    )
   response = request.execute(num_retries=config.API_RETRIES)
   return ForwardingRules(project_id, resource_data=response)
 
@@ -705,8 +704,7 @@ class TargetHttpsProxy(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -733,8 +731,7 @@ class TargetHttpsProxy(models.Resource):
   @property
   def certificate_map(self) -> str:
     certificate_map = self._resource_data.get('certificateMap', '')
-    result = re.match(r'https://certificatemanager.googleapis.com/v1/(.*)',
-                      certificate_map)
+    result = re.match(r'https://certificatemanager.googleapis.com/v1/(.*)', certificate_map)
     if result:
       return result.group(1)
     return certificate_map
@@ -751,10 +748,12 @@ def get_target_https_proxies(project_id: str) -> List[TargetHttpsProxy]:
   for _, data_ in target_https_proxies_by_region.items():
     if 'targetHttpsProxies' not in data_:
       continue
-    target_https_proxies.extend([
+    target_https_proxies.extend(
+      [
         TargetHttpsProxy(project_id, target_https_proxy)
         for target_https_proxy in data_['targetHttpsProxies']
-    ])
+      ]
+    )
 
   return target_https_proxies
 
@@ -779,8 +778,7 @@ class TargetSslProxy(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -807,8 +805,7 @@ class TargetSslProxy(models.Resource):
   @property
   def certificate_map(self) -> str:
     certificate_map = self._resource_data.get('certificateMap', '')
-    result = re.match(r'https://certificatemanager.googleapis.com/v1/(.*)',
-                      certificate_map)
+    result = re.match(r'https://certificatemanager.googleapis.com/v1/(.*)', certificate_map)
     if result:
       return result.group(1)
     return certificate_map
@@ -821,9 +818,7 @@ def get_target_ssl_proxies(project_id: str) -> List[TargetSslProxy]:
   request = compute.targetSslProxies().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
 
-  return [
-      TargetSslProxy(project_id, item) for item in response.get('items', [])
-  ]
+  return [TargetSslProxy(project_id, item) for item in response.get('items', [])]
 
 
 class LoadBalancerInsight(models.Resource):
@@ -848,10 +843,10 @@ class LoadBalancerInsight(models.Resource):
   @property
   def is_firewall_rule_insight(self) -> bool:
     firewall_rule_subtypes = (
-        'HEALTH_CHECK_FIREWALL_NOT_CONFIGURED',
-        'HEALTH_CHECK_FIREWALL_FULLY_BLOCKING',
-        'HEALTH_CHECK_FIREWALL_PARTIALLY_BLOCKING',
-        'HEALTH_CHECK_FIREWALL_INCONSISTENT',
+      'HEALTH_CHECK_FIREWALL_NOT_CONFIGURED',
+      'HEALTH_CHECK_FIREWALL_FULLY_BLOCKING',
+      'HEALTH_CHECK_FIREWALL_PARTIALLY_BLOCKING',
+      'HEALTH_CHECK_FIREWALL_INCONSISTENT',
     )
     return self.insight_subtype.startswith(firewall_rule_subtypes)
 
@@ -868,15 +863,15 @@ class LoadBalancerInsight(models.Resource):
 def get_lb_insights_for_a_project(project_id: str, region: str = 'global'):
   api = apis.get_api('recommender', 'v1', project_id)
 
-  insight_name = (f'projects/{project_id}/locations/{region}/insightTypes/'
-                  'google.networkanalyzer.networkservices.loadBalancerInsight')
+  insight_name = (
+    f'projects/{project_id}/locations/{region}/insightTypes/'
+    'google.networkanalyzer.networkservices.loadBalancerInsight'
+  )
   insights = []
   for insight in apis_utils.list_all(
-      request=api.projects().locations().insightTypes().insights().list(
-          parent=insight_name),
-      next_function=api.projects().locations().insightTypes().insights().
-      list_next,
-      response_keyword='insights',
+    request=api.projects().locations().insightTypes().insights().list(parent=insight_name),
+    next_function=api.projects().locations().insightTypes().insights().list_next,
+    response_keyword='insights',
   ):
     insights.append(LoadBalancerInsight(project_id, insight))
   return insights

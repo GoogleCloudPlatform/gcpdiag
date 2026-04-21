@@ -27,6 +27,7 @@ from gcpdiag.queries import apis
 
 class CloudFunction(models.Resource):
   """Represents a GCF instance."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -38,8 +39,7 @@ class CloudFunction(models.Resource):
   def name(self) -> str:
     m = re.search(r'/functions/([^/]+)$', self._resource_data['name'])
     if not m:
-      raise RuntimeError('can\'t determine name of cloudfunction %s' %
-                         (self._resource_data['name']))
+      raise RuntimeError("can't determine name of cloudfunction %s" % (self._resource_data['name']))
     return m.group(1)
 
   @property
@@ -71,10 +71,13 @@ def get_cloudfunctions(context: models.Context) -> Mapping[str, CloudFunction]:
   if not apis.is_enabled(context.project_id, 'cloudfunctions'):
     return cloudfunctions
   gcf_api = apis.get_api('cloudfunctions', 'v1', context.project_id)
-  logging.debug('fetching list of GCF functions in project %s',
-                context.project_id)
-  query = gcf_api.projects().locations().functions().list(
-      parent=f'projects/{context.project_id}/locations/-')
+  logging.debug('fetching list of GCF functions in project %s', context.project_id)
+  query = (
+    gcf_api.projects()
+    .locations()
+    .functions()
+    .list(parent=f'projects/{context.project_id}/locations/-')
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'functions' not in resp:
@@ -82,11 +85,9 @@ def get_cloudfunctions(context: models.Context) -> Mapping[str, CloudFunction]:
     for f in resp['functions']:
       # verify that we have some minimal data that we expect
       if 'name' not in f or 'runtime' not in f:
-        raise RuntimeError(
-            'missing data in projects.locations.functions.list response')
+        raise RuntimeError('missing data in projects.locations.functions.list response')
       # projects/*/locations/*/functions/*
-      result = re.match(
-          r'projects/[^/]+/(?:locations)/([^/]+)/functions/([^/]+)', f['name'])
+      result = re.match(r'projects/[^/]+/(?:locations)/([^/]+)/functions/([^/]+)', f['name'])
       if not result:
         logging.error('invalid cloud functions data: %s', f['name'])
         continue
@@ -94,12 +95,10 @@ def get_cloudfunctions(context: models.Context) -> Mapping[str, CloudFunction]:
       location = result.group(1)
       labels = f.get('labels', {})
       name = f.get('name', '')
-      if not context.match_project_resource(
-          location=location, labels=labels, resource=name):
+      if not context.match_project_resource(location=location, labels=labels, resource=name):
         continue
 
-      cloudfunctions[f['name']] = CloudFunction(project_id=context.project_id,
-                                                resource_data=f)
+      cloudfunctions[f['name']] = CloudFunction(project_id=context.project_id, resource_data=f)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return cloudfunctions

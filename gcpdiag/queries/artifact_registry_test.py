@@ -32,9 +32,9 @@ class TestArtifactRegistry:
 
   def test_get_bucket_iam_policy(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    policy = artifact_registry.get_registry_iam_policy(context,
-                                                       DUMMY_REGISTRY_LOCATION,
-                                                       DUMMY_REGISTRY_ID)
+    policy = artifact_registry.get_registry_iam_policy(
+      context, DUMMY_REGISTRY_LOCATION, DUMMY_REGISTRY_ID
+    )
     assert set(policy.get_members()) == {DUMMY_POLICY_MEMBER}
 
   def test_get_project_settings(self):

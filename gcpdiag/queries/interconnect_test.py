@@ -31,8 +31,9 @@ class TestInterconnect:
 
   def test_get_interconnect(self):
     """get interconnect by name."""
-    link = interconnect.get_interconnect(project_id=DUMMY_PROJECT_ID,
-                                         interconnect_name=DUMMY_INTERCONNECT)
+    link = interconnect.get_interconnect(
+      project_id=DUMMY_PROJECT_ID, interconnect_name=DUMMY_INTERCONNECT
+    )
     assert link.name == DUMMY_INTERCONNECT
     assert len(link.attachments) == 2
     assert link.metro == 'bos'
@@ -62,9 +63,8 @@ class TestInterconnect:
   def test_get_vlan_attachment(self):
     """get interconnect by name."""
     attachment = interconnect.get_vlan_attachment(
-        project_id=DUMMY_PROJECT_ID,
-        region='us-east4',
-        vlan_attachment='interconnect-attachment1')
+      project_id=DUMMY_PROJECT_ID, region='us-east4', vlan_attachment='interconnect-attachment1'
+    )
     assert attachment.name == DUMMY_ATTACHMENT
     assert attachment.interconnect == DUMMY_INTERCONNECT
     assert attachment.metro in ['bos', 'sjc']
@@ -136,8 +136,7 @@ class TestInterconnect:
         assert link.under_maintenance is True
 
   def test_ipv4address(self):
-    attachments = interconnect.get_vlan_attachments(
-        'gcpdiag-interconnect1-aaaa')
+    attachments = interconnect.get_vlan_attachments('gcpdiag-interconnect1-aaaa')
     for vlan in attachments:
       if vlan.name == 'dummy-attachment1':
         assert vlan.ipv4address == '169.254.1.1'

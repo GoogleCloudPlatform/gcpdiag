@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# pylint: disable=cyclic-import
-""" Output implementation that prints result in human-readable format. """
+"""Output implementation that prints result in human-readable format."""
 
 import logging
 import os
@@ -23,7 +22,6 @@ from typing import Any, Optional, TextIO
 
 import blessings
 
-# pylint: disable=unused-import (lint is used in type hints)
 from gcpdiag import config, models, runbook
 from gcpdiag.runbook import constants
 from gcpdiag.runbook.flags import INTERACTIVE_MODE
@@ -45,7 +43,8 @@ def emoji_wrap(char):
 
 
 class TerminalOutput(BaseOutput):
-  """ Output implementation that prints result in human-readable format. """
+  """Output implementation that prints result in human-readable format."""
+
   file: TextIO
   show_ok: bool
   show_skipped: bool
@@ -54,11 +53,13 @@ class TerminalOutput(BaseOutput):
   line_unfinished: bool
   term: blessings.Terminal
 
-  def __init__(self,
-               file: TextIO = sys.stdout,
-               log_info_for_progress_only: bool = True,
-               show_ok: bool = True,
-               show_skipped: bool = True):
+  def __init__(
+    self,
+    file: TextIO = sys.stdout,
+    log_info_for_progress_only: bool = True,
+    show_ok: bool = True,
+    show_skipped: bool = True,
+  ):
     self.file = file
     self.show_ok = show_ok
     self.show_skipped = show_skipped
@@ -69,7 +70,7 @@ class TerminalOutput(BaseOutput):
 
   def display_banner(self) -> None:
     if self.term.does_styling:
-      print(self.term.bold(f"gcpdiag {emoji_wrap('🩺')} {config.VERSION}\n"))
+      print(self.term.bold(f'gcpdiag {emoji_wrap("🩺")} {config.VERSION}\n'))
     else:
       print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
 
@@ -82,10 +83,9 @@ class TerminalOutput(BaseOutput):
   def display_footer(self, result) -> None:
     totals = result.get_totals_by_status()
     state_strs = [
-        f'{totals.get(state, 0)} {state}'
-        for state in ['skipped', 'ok', 'failed', 'uncertain']
+      f'{totals.get(state, 0)} {state}' for state in ['skipped', 'ok', 'failed', 'uncertain']
     ]
-    print(f"Rules summary: {', '.join(state_strs)}", file=sys.stderr)
+    print(f'Rules summary: {", ".join(state_strs)}', file=sys.stderr)
 
   def get_logging_handler(self) -> logging.Handler:
     return _LoggingHandler(self)
@@ -109,10 +109,7 @@ class TerminalOutput(BaseOutput):
   def terminal_update_line(self, text: str) -> None:
     """Update the current line on the terminal."""
     if self.term.width:
-      print(self.term.move_x(0) + self.term.clear_eol() + text,
-            end='',
-            flush=True,
-            file=self.file)
+      print(self.term.move_x(0) + self.term.clear_eol() + text, end='', flush=True, file=self.file)
       self.line_unfinished = True
     else:
       # If it's a stream, do not output anything, assuming that the
@@ -122,10 +119,7 @@ class TerminalOutput(BaseOutput):
   def terminal_erase_line(self) -> None:
     """Remove the current content on the line."""
     if self.line_unfinished and self.term.width:
-      print(self.term.move_x(0) + self.term.clear_eol(),
-            flush=True,
-            end='',
-            file=self.file)
+      print(self.term.move_x(0) + self.term.clear_eol(), flush=True, end='', file=self.file)
     self.line_unfinished = False
 
   def terminal_print_line(self, text: str = '') -> None:
@@ -149,22 +143,20 @@ class TerminalOutput(BaseOutput):
 
   def _print_long_desc(self, rule: 'runbook.DiagnosticTree') -> None:
     self.terminal_print_line()
-    self.terminal_print_line(
-        self._italic(self._wrap_indent(rule.__doc__ or '', '   ')))
+    self.terminal_print_line(self._italic(self._wrap_indent(rule.__doc__ or '', '   ')))
     self.terminal_print_line()
     self.terminal_print_line('   ' + rule.doc_url)
 
-  def print_skipped(self,
-                    resource: Optional[models.Resource],
-                    reason: str,
-                    remediation: str = None) -> None:
-
-
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
+  def print_skipped(
+    self, resource: Optional[models.Resource], reason: str, remediation: str = None
+  ) -> None:
+    short_path = (
+      resource.short_path if resource is not None and resource.short_path is not None else ''
+    )
     self.terminal_print_line()
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.yellow('SKIP') + ']')
+    self.terminal_print_line(
+      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.yellow('SKIP') + ']'
+    )
     if reason:
       self.terminal_print_line('     [' + self.term.green('REASON') + ']')
       self.terminal_print_line(textwrap.indent(reason, '     '))
@@ -176,17 +168,18 @@ class TerminalOutput(BaseOutput):
   def print_ok(self, resource: models.Resource, reason: str = '') -> None:
     if not self.show_ok:
       return
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
+    short_path = (
+      resource.short_path if resource is not None and resource.short_path is not None else ''
+    )
     self.terminal_print_line()
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.green('OK') + ']')
+    self.terminal_print_line(
+      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.green('OK') + ']'
+    )
     if reason:
       self.terminal_print_line('     [' + self.term.green('REASON') + ']')
       self.terminal_print_line(textwrap.indent(reason, '     '))
 
-  def print_failed(self, resource: models.Resource, reason: str,
-                   remediation: str) -> None:
+  def print_failed(self, resource: models.Resource, reason: str, remediation: str) -> None:
     """Output test result and registers the result to be used in
     the runbook report.
 
@@ -194,12 +187,13 @@ class TerminalOutput(BaseOutput):
     autonomously
     """
 
-
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
+    short_path = (
+      resource.short_path if resource is not None and resource.short_path is not None else ''
+    )
     self.terminal_print_line()
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.red('FAIL') + ']')
+    self.terminal_print_line(
+      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.red('FAIL') + ']'
+    )
     if reason:
       self.terminal_print_line('     [' + self.term.green('REASON') + ']')
       self.terminal_print_line(textwrap.indent(f'{reason}', '     '))
@@ -208,16 +202,16 @@ class TerminalOutput(BaseOutput):
       self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
       self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
 
-  def print_uncertain(self,
-                      resource: models.Resource,
-                      reason: str,
-                      remediation: str = None) -> None:
-
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
+  def print_uncertain(
+    self, resource: models.Resource, reason: str, remediation: str = None
+  ) -> None:
+    short_path = (
+      resource.short_path if resource is not None and resource.short_path is not None else ''
+    )
     self.terminal_print_line()
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.yellow('UNCERTAIN') + ']')
+    self.terminal_print_line(
+      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.yellow('UNCERTAIN') + ']'
+    )
     if reason:
       self.terminal_print_line('     [' + self.term.green('REASON') + ']')
       self.terminal_print_line(textwrap.indent(reason, '     '))
@@ -230,23 +224,23 @@ class TerminalOutput(BaseOutput):
     """
     For informational update and getting a response from user
     """
-    self.terminal_print_line(text='' + '[' + self.term.green(step_type) +
-                             ']: ' + f'{message}')
+    self.terminal_print_line(text='' + '[' + self.term.green(step_type) + ']: ' + f'{message}')
 
-  def prompt(self,
-             message: str,
-             kind: str = '',
-             options: dict = None,
-             choice_msg: str = 'Choose an option: ',
-             non_interactive: bool = None) -> Any:
+  def prompt(
+    self,
+    message: str,
+    kind: str = '',
+    options: dict = None,
+    choice_msg: str = 'Choose an option: ',
+    non_interactive: bool = None,
+  ) -> Any:
     """
     For informational update and getting a response from user
     """
     non_interactive = non_interactive or config.get(INTERACTIVE_MODE)
     if non_interactive:
       return
-    self.terminal_print_line(text='' + '[' + self.term.green(kind) + ']: ' +
-                             f'{message}')
+    self.terminal_print_line(text='' + '[' + self.term.green(kind) + ']: ' + f'{message}')
 
     self.default_answer = False
     self.answer = None
@@ -254,24 +248,20 @@ class TerminalOutput(BaseOutput):
     try:
       if kind in constants.HUMAN_TASK and not options:
         for option, description in constants.HUMAN_TASK_OPTIONS.items():
-          options_text += '[' + self.term.green(
-              f'{option}') + ']' + f' - {description}\n'
+          options_text += '[' + self.term.green(f'{option}') + ']' + f' - {description}\n'
       if kind in constants.CONFIRMATION and not options:
         for option, description in constants.CONFIRMATION_OPTIONS.items():
-          options_text += '[' + self.term.green(
-              f'{option}') + ']' + f' - {description}\n'
-      if (kind in constants.CONFIRMATION or kind in constants.HUMAN_TASK) \
-        and options:
+          options_text += '[' + self.term.green(f'{option}') + ']' + f' - {description}\n'
+      if (kind in constants.CONFIRMATION or kind in constants.HUMAN_TASK) and options:
         for option, description in options.items():
-          options_text += '[' + self.term.green(
-              f'{option}') + ']' + f' - {description}\n'
+          options_text += '[' + self.term.green(f'{option}') + ']' + f' - {description}\n'
 
       if options_text:
         self.terminal_print_line(text=textwrap.indent(options_text, '     '))
         self.answer = input(textwrap.indent(choice_msg, '     '))
     except EOFError:
       return self.answer
-    # pylint:disable=g-explicit-bool-comparison, We explicitly want to
+    # We explicitly want to
     # distinguish between empty string and None.
     if self.answer == '':
       # User just hit enter, return default.
@@ -290,15 +280,14 @@ class TerminalOutput(BaseOutput):
       return constants.YES
     elif self.answer.strip().lower() in ['n', 'no']:
       return constants.NO
-    elif self.answer.strip().lower() not in [
-        's', 'stop', 'c', 'continue', 'r', 'retest'
-    ]:
+    elif self.answer.strip().lower() not in ['s', 'stop', 'c', 'continue', 'r', 'retest']:
       return self.answer.strip()
     return
 
 
 class _LoggingHandler(logging.Handler):
   """logging.Handler implementation used when producing a runbook report."""
+
   output: TerminalOutput
 
   def __init__(self, output: TerminalOutput) -> None:

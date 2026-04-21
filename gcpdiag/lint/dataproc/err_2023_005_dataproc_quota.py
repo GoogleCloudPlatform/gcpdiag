@@ -41,10 +41,10 @@ log_search_pattern = re.compile(MATCH_STR)
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type=RESOURCE_TYPE,
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=LOG_FILTER,
+    project_id=context.project_id,
+    resource_type=RESOURCE_TYPE,
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=LOG_FILTER,
   )
 
 
@@ -70,29 +70,26 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if logs_by_project.get(context.project_id):
     entries = logs_by_project[context.project_id].entries
     for log_entry in entries:
-      msg = get_path(log_entry, ('protoPayload', 'status', 'message'),
-                     default='')
+      msg = get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
       is_pattern_found = log_search_pattern.search(msg)
       # Filter out non-relevant log entries.
       if not (log_entry['severity'] == 'ERROR' and is_pattern_found):
         continue
 
       cluster_name = get_path(
-          log_entry,
-          ('resource', 'labels', 'cluster_name'),
-          default='Unknown Cluster',
+        log_entry,
+        ('resource', 'labels', 'cluster_name'),
+        default='Unknown Cluster',
       )
-      uuid = get_path(log_entry, ('resource', 'labels', 'cluster_uuid'),
-                      default='')
+      uuid = get_path(log_entry, ('resource', 'labels', 'cluster_uuid'), default='')
       failed_clusters.add((cluster_name, uuid))
 
     if failed_clusters:
       report.add_failed(
-          project,
-          'The following clusters failed because of quota errors : {}'.format(
-              ', '.join(
-                  format_cluster(cluster_name, uuid)
-                  for cluster_name, uuid in failed_clusters)),
+        project,
+        'The following clusters failed because of quota errors : {}'.format(
+          ', '.join(format_cluster(cluster_name, uuid) for cluster_name, uuid in failed_clusters)
+        ),
       )
     else:
       report.add_ok(project)

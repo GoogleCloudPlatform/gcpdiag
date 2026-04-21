@@ -18,9 +18,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 from gcpdiag import utils
 from gcpdiag.queries import apis_stub
 
@@ -31,6 +28,7 @@ logging_body = None
 
 class LoggingApiStub:
   """Mock object to simulate container api calls."""
+
   body: str
 
   def __init__(self, mock_state='init', project_id=None, zone=None, page=1):
@@ -54,8 +52,9 @@ class LoggingApiStub:
         return apis_stub.RestCallStub(project, 'logging-entries-1')
     elif self.mock_state == 'exclusions':
       if parent:
-        return apis_stub.RestCallStub(project_id=parent.split('/')[1],
-                                      json_basename='log-exclusions')
+        return apis_stub.RestCallStub(
+          project_id=parent.split('/')[1], json_basename='log-exclusions'
+        )
 
   def list_next(self, req, res):
     del req, res

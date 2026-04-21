@@ -26,6 +26,7 @@ def set_lint_args_hook(args):
     # default options for internal use.
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks as google_internal
+
     google_internal.set_lint_args_hook(args)
   except ImportError:
     pass
@@ -38,6 +39,7 @@ def set_runbook_args_hook(args):
     # default options for internal use.
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks as google_internal
+
     google_internal.set_runbook_args_hook(args)
   except ImportError:
     pass
@@ -50,6 +52,7 @@ def verify_access_hook(project_id: str):
     # at Google, so this import will fail in the public version.
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks as google_internal
+
     google_internal.verify_access_hook(project_id)
   except ImportError:
     pass
@@ -63,6 +66,7 @@ def request_builder_hook(*args, **kwargs):
     # version of gcpdiag.
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks
+
     hooks.request_builder_hook(*args, **kwargs)
   except ImportError:
     pass
@@ -75,6 +79,7 @@ def post_lint_hook(report):
     # at Google, so this import will fail in the public version.
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks as google_internal
+
     google_internal.post_lint_hook(report)
   except ImportError:
     pass
@@ -87,6 +92,7 @@ def post_runbook_hook(report):
     # at Google, so this import will fail in the public version.
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks as google_internal
+
     google_internal.post_runbook_hook(report)
   except ImportError:
     pass

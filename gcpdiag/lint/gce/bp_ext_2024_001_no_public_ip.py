@@ -29,8 +29,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if instances:
     for instance in sorted(instances, key=lambda i: i.full_path):
       if not instance.is_public_machine():
-        report.add_failed(instance, "Instance does not have a public address.")
+        report.add_failed(instance, 'Instance does not have a public address.')
       else:
         report.add_ok(instance)
   else:
-    report.add_skipped(None, "No instances found")
+    report.add_skipped(None, 'No instances found')

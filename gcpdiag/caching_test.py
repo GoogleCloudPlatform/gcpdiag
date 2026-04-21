@@ -26,8 +26,7 @@ from gcpdiag import caching
 
 def simple_function(mixer_arg):
   # Generate a unique string of 10 characters
-  return mixer_arg.join(
-      secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
+  return mixer_arg.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
 
 
 # Decorated versions of the simple_function for in-memory and disk cache testing
@@ -81,10 +80,14 @@ class CacheBypassTests(unittest.TestCase):
       results.add(result)
 
     threads = [
-        threading.Thread(target=worker, args=(
-            arg,
-            results,
-        )) for arg in ['a', 'a', 'b', 'c']
+      threading.Thread(
+        target=worker,
+        args=(
+          arg,
+          results,
+        ),
+      )
+      for arg in ['a', 'a', 'b', 'c']
     ]
     for t in threads:
       t.start()

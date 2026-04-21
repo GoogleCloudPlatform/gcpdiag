@@ -53,25 +53,22 @@ def ensure_instance_resolved():
 
   if not name_or_id:
     raise runbook_exceptions.MissingParameterError(
-        'instance not resolved and instance_name or instance_id not in context')
+      'instance not resolved and instance_name or instance_id not in context'
+    )
   try:
-    instance = gce.get_instance(project_id=project_id,
-                                zone=zone,
-                                instance_name=str(name_or_id))
+    instance = gce.get_instance(project_id=project_id, zone=zone, instance_name=str(name_or_id))
     op.put(flags.INSTANCE_NAME, instance.name)
     op.put(flags.INSTANCE_ID, instance.id)
   except googleapiclient.errors.HttpError as err:
     if err.resp.status == 404:
       raise runbook_exceptions.FailedStepError(
-          f'Instance {name_or_id} not found in project {project_id} '
-          f'zone {zone}.') from err
+        f'Instance {name_or_id} not found in project {project_id} zone {zone}.'
+      ) from err
     else:
       raise utils.GcpApiError(err) from err
 
 
-def search_pattern_in_serial_logs(patterns: List,
-                                  contents: List[str],
-                                  operator='OR'):
+def search_pattern_in_serial_logs(patterns: List, contents: List[str], operator='OR'):
   # logs are by default sorted from oldest to newest. revert to get the newest first
   reversed_contents = reversed(contents)
   pattern = ''
@@ -98,8 +95,8 @@ def user_has_valid_ssh_key(local_user, keys: List[str], key_type=None) -> bool:
     - a the key type matches if specified.
   return:
     True if at least one valid key or False if none is valid
-   """
-  pattern = r'(?P<user>\w+):(?P<type>[\w-]+) \S+(?: \S+|)(?: google-ssh {"userName":"\S+","expireOn":"(?P<expire_on>[^"]+)"}|$)'  # pylint:disable=line-too-long
+  """
+  pattern = r'(?P<user>\w+):(?P<type>[\w-]+) \S+(?: \S+|)(?: google-ssh {"userName":"\S+","expireOn":"(?P<expire_on>[^"]+)"}|$)'
   # pattern the input string into key_value and if formatted the ssh info
   for key in keys:
     key = key.strip()
@@ -118,10 +115,10 @@ def user_has_valid_ssh_key(local_user, keys: List[str], key_type=None) -> bool:
 
 def ops_agent_installed(project_id, vm_id) -> bool:
   within_hours = 8
-  within_str = 'within %dh, d\'%s\'' % (within_hours,
-                                        monitoring.period_aligned_now(5))
+  within_str = "within %dh, d'%s'" % (within_hours, monitoring.period_aligned_now(5))
   ops_agent_q = monitoring.query(
-      project_id, """
+    project_id,
+    """
             fetch gce_instance
             | metric 'agent.googleapis.com/agent/uptime'
             | filter (resource.instance_id == '{}')
@@ -129,7 +126,8 @@ def ops_agent_installed(project_id, vm_id) -> bool:
             | every 1m
             | group_by [], [value_uptime_max: max(value.uptime)]
             | {}
-          """.format(vm_id, within_str))
+          """.format(vm_id, within_str),
+  )
   if ops_agent_q:
     return True
   return False

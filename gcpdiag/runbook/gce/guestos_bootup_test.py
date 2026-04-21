@@ -40,16 +40,13 @@ class BootupStepTestBase(unittest.TestCase):
     super().setUp()
     self.mock_op_get = self.enterContext(mock.patch('gcpdiag.runbook.op.get'))
     self.mock_op_put = self.enterContext(mock.patch('gcpdiag.runbook.op.put'))
-    self.mock_op_add_ok = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_ok'))
-    self.mock_op_add_failed = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_failed'))
-    self.mock_op_add_skipped = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_skipped'))
-    self.mock_gce_get_instance = self.enterContext(
-        mock.patch('gcpdiag.queries.gce.get_instance'))
+    self.mock_op_add_ok = self.enterContext(mock.patch('gcpdiag.runbook.op.add_ok'))
+    self.mock_op_add_failed = self.enterContext(mock.patch('gcpdiag.runbook.op.add_failed'))
+    self.mock_op_add_skipped = self.enterContext(mock.patch('gcpdiag.runbook.op.add_skipped'))
+    self.mock_gce_get_instance = self.enterContext(mock.patch('gcpdiag.queries.gce.get_instance'))
     self.mock_crm_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project', return_value=mock.Mock()))
+      mock.patch('gcpdiag.queries.crm.get_project', return_value=mock.Mock())
+    )
 
     self.mock_instance = mock.Mock(spec=gce_queries.Instance)
     self.mock_instance.project_id = 'test-project'
@@ -60,16 +57,15 @@ class BootupStepTestBase(unittest.TestCase):
     self.mock_gce_get_instance.return_value = self.mock_instance
 
     self.params = {
-        flags.PROJECT_ID: 'test-project',
-        flags.ZONE: 'us-central1-a',
-        flags.INSTANCE_NAME: 'test-instance',
-        flags.INSTANCE_ID: None,
-        flags.SERIAL_CONSOLE_FILE: None,
-        flags.START_TIME: datetime.datetime(2025, 10, 27),
-        flags.END_TIME: datetime.datetime(2025, 10, 28),
+      flags.PROJECT_ID: 'test-project',
+      flags.ZONE: 'us-central1-a',
+      flags.INSTANCE_NAME: 'test-instance',
+      flags.INSTANCE_ID: None,
+      flags.SERIAL_CONSOLE_FILE: None,
+      flags.START_TIME: datetime.datetime(2025, 10, 27),
+      flags.END_TIME: datetime.datetime(2025, 10, 28),
     }
-    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(
-        key, default)
+    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(key, default)
 
     # Setup operator context
     mock_interface = mock.Mock()
@@ -80,15 +76,12 @@ class BootupStepTestBase(unittest.TestCase):
     mock_step = mock.Mock()
     mock_step.execution_id = 'test-step-id'
     self.enterContext(
-        mock.patch.object(op.Operator,
-                          'step',
-                          new_callable=mock.PropertyMock,
-                          return_value=mock_step))
+      mock.patch.object(op.Operator, 'step', new_callable=mock.PropertyMock, return_value=mock_step)
+    )
     self.enterContext(op.operator_context(operator))
 
 
 class GuestosBootupStartTest(BootupStepTestBase):
-
   def test_instance_id_missing(self):
     self.mock_instance.is_running = True
     self.params[flags.INSTANCE_ID] = None
@@ -107,7 +100,8 @@ class GuestosBootupStartTest(BootupStepTestBase):
 
   def test_instance_not_found(self):
     self.mock_gce_get_instance.side_effect = googleapiclient.errors.HttpError(
-        mock.Mock(status=404), b'not found')
+      mock.Mock(status=404), b'not found'
+    )
     step = guestos_bootup.GuestosBootupStart()
     step.execute()
     self.mock_op_add_skipped.assert_called_once()
@@ -125,23 +119,21 @@ class GuestosBootupStartTest(BootupStepTestBase):
       step = guestos_bootup.GuestosBootupStart()
       step.execute()
       self.mock_op_add_skipped.assert_called_once()
-      self.assertIn('does not exists',
-                    self.mock_op_add_skipped.call_args[1]['reason'])
+      self.assertIn('does not exists', self.mock_op_add_skipped.call_args[1]['reason'])
 
   def test_serial_file_compressed(self):
     self.params[flags.SERIAL_CONSOLE_FILE] = 'compressed.log.gz'
     m = mock.mock_open(read_data=b'\x1f\x8b' + b' compressed data')
     with (
-        mock.patch('builtins.open', m),
-        mock.patch('mimetypes.guess_type',
-                   return_value=('application/gzip', 'gzip')),
+      mock.patch('builtins.open', m),
+      mock.patch('mimetypes.guess_type', return_value=('application/gzip', 'gzip')),
     ):
       step = guestos_bootup.GuestosBootupStart()
       step.execute()
       self.mock_op_add_skipped.assert_called_once()
       self.assertIn(
-          'appears to be compressed',
-          self.mock_op_add_skipped.call_args[1]['reason'],
+        'appears to be compressed',
+        self.mock_op_add_skipped.call_args[1]['reason'],
       )
 
   def test_serial_file_not_plain_text(self):
@@ -149,26 +141,26 @@ class GuestosBootupStartTest(BootupStepTestBase):
     # 0xff is invalid in utf-8
     m = mock.mock_open(read_data=b'\x01\x02\xff\xfe')
     with (
-        mock.patch('builtins.open', m),
-        mock.patch(
-            'mimetypes.guess_type',
-            return_value=('application/octet-stream', None),
-        ),
+      mock.patch('builtins.open', m),
+      mock.patch(
+        'mimetypes.guess_type',
+        return_value=('application/octet-stream', None),
+      ),
     ):
       step = guestos_bootup.GuestosBootupStart()
       step.execute()
       self.mock_op_add_skipped.assert_called_once()
       self.assertIn(
-          'does not appear to be plain text',
-          self.mock_op_add_skipped.call_args[1]['reason'],
+        'does not appear to be plain text',
+        self.mock_op_add_skipped.call_args[1]['reason'],
       )
 
   def test_serial_valid_file(self):
     self.params[flags.SERIAL_CONSOLE_FILE] = 'valid.log'
     m = mock.mock_open(read_data=b'plain text log')
     with (
-        mock.patch('builtins.open', m),
-        mock.patch('mimetypes.guess_type', return_value=('text/plain', None)),
+      mock.patch('builtins.open', m),
+      mock.patch('mimetypes.guess_type', return_value=('text/plain', None)),
     ):
       step = guestos_bootup.GuestosBootupStart()
       step.execute()
@@ -176,17 +168,17 @@ class GuestosBootupStartTest(BootupStepTestBase):
 
 
 class CloudInitChecksTest(BootupStepTestBase):
-
   def setUp(self):
     super().setUp()
     self.mock_gce_get_gce_public_licences = self.enterContext(
-        mock.patch('gcpdiag.queries.gce.get_gce_public_licences',
-                   return_value=['license1']))
+      mock.patch('gcpdiag.queries.gce.get_gce_public_licences', return_value=['license1'])
+    )
     self.mock_vm_serial_logs_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.generalized_steps.VmSerialLogsCheck'))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.VmSerialLogsCheck')
+    )
     self.mock_add_child = self.enterContext(
-        mock.patch(
-            'gcpdiag.runbook.gce.guestos_bootup.CloudInitChecks.add_child'))
+      mock.patch('gcpdiag.runbook.gce.guestos_bootup.CloudInitChecks.add_child')
+    )
 
   def test_ubuntu_license_present(self):
     self.mock_instance.check_license.return_value = True
@@ -206,16 +198,14 @@ class CloudInitChecksTest(BootupStepTestBase):
 
 
 class GuestosBootupBuildTreeTest(unittest.TestCase):
-
   def test_build_tree(self):
     self.mock_op_get = self.enterContext(mock.patch('gcpdiag.runbook.op.get'))
     self.params = {
-        flags.PROJECT_ID: 'test-project',
-        flags.ZONE: 'us-central1-a',
-        flags.INSTANCE_NAME: 'test-instance',
+      flags.PROJECT_ID: 'test-project',
+      flags.ZONE: 'us-central1-a',
+      flags.INSTANCE_NAME: 'test-instance',
     }
-    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(
-        key, default)
+    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(key, default)
 
     tree = guestos_bootup.GuestosBootup()
     tree.build_tree()
@@ -235,12 +225,15 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'gce/guestos-bootup'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-gce-vm-performance',
       'instance_name': 'faulty-linux-ssh',
-      'zone': 'europe-west2-a'
-  }, {
+      'zone': 'europe-west2-a',
+    },
+    {
       'project_id': 'gcpdiag-gce-vm-performance',
       'instance_name': 'valid-linux-ssh',
-      'zone': 'europe-west2-a'
-  }]
+      'zone': 'europe-west2-a',
+    },
+  ]

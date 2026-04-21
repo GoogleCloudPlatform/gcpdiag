@@ -16,8 +16,6 @@
 import json
 import os
 
-# pylint: disable=unused-argument
-
 
 class GenericApiStub:
   """Attributes:
@@ -28,9 +26,9 @@ class GenericApiStub:
 
   def __init__(self, service_name: str):
     self.project_root = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
-    self.data_dir = os.path.join(self.project_root, 'test-data', service_name,
-                                 'json-dumps')
+      os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')
+    )
+    self.data_dir = os.path.join(self.project_root, 'test-data', service_name, 'json-dumps')
 
   def _load_json(self, file_name: str) -> dict:
     file_path = os.path.join(self.data_dir, file_name)
@@ -42,12 +40,11 @@ class GenericApiStub:
 
 
 def get_generic_api_stub(service_name: str, api_base_url: str):
-
   # Avoid circular import dependencies by importing the required modules here.
-  # pylint: disable=import-outside-toplevel
 
   if service_name == 'datafusion':
     from gcpdiag.queries.generic_api.datafusion import datafusion_stub
+
     return datafusion_stub.DataFusionApiStub()
   else:
     raise ValueError('unsupported endpoint: %s' % service_name)

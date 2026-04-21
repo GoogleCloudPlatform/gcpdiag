@@ -61,10 +61,12 @@ def local_realtime_query(in_start_time, in_end_time, filter_str):
   Returns:
     A dqueue collection containing cloud logging query output entries.
   """
-  result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time=in_start_time,
-                               end_time=in_end_time,
-                               filter_str=filter_str)
+  result = logs.realtime_query(
+    project_id=op.get(flags.PROJECT_ID),
+    start_time=in_start_time,
+    end_time=in_end_time,
+    filter_str=filter_str,
+  )
   return result
 
 
@@ -81,36 +83,32 @@ class BgpDownFlap(runbook.DiagnosticTree):
            are associated with the BGP flaps.
 
   """
+
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True
-      },
-      flags.REGION: {
-          'type': str,
-          'help': 'The region where the vlan attachment is located',
-          'required': True,
-      },
-      flags.ATTACHMENT_NAME: {
-          'type': str,
-          'help':
-              'The attachment name(s) as comma-separated values or a regular expression. '
-              'eg: vlan1,vlan2 or vlan.* or .* for all attachments',
-          'required': True,
-      },
-      flags.START_TIME: {
-          'type':
-              datetime,
-          'help':
-              'The start window to investigate BGP flap. Format: YYYY-MM-DDTHH:MM:SSZ'
-      },
-      flags.END_TIME: {
-          'type':
-              datetime,
-          'help':
-              'The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ'
-      }
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.REGION: {
+      'type': str,
+      'help': 'The region where the vlan attachment is located',
+      'required': True,
+    },
+    flags.ATTACHMENT_NAME: {
+      'type': str,
+      'help': 'The attachment name(s) as comma-separated values or a regular expression. '
+      'eg: vlan1,vlan2 or vlan.* or .* for all attachments',
+      'required': True,
+    },
+    flags.START_TIME: {
+      'type': datetime,
+      'help': 'The start window to investigate BGP flap. Format: YYYY-MM-DDTHH:MM:SSZ',
+    },
+    flags.END_TIME: {
+      'type': datetime,
+      'help': 'The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ',
+    },
   }
 
   def build_tree(self):
@@ -158,24 +156,25 @@ class BgpDownFlapStart(runbook.StartStep):
     try:
       attachments = interconnect.get_vlan_attachments(project_id)
     except googleapiclient.errors.HttpError:
-      op.add_skipped(proj,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        project_id=project_id))
+      op.add_skipped(proj, reason=op.prep_msg(op.SKIPPED_REASON, project_id=project_id))
       return
     else:
       for vlan in attachments:
         if vlan.region == op.get(flags.REGION):
-          if vlan.name in attachments_in_list or re.search(
-              attachments_in, vlan.name):
+          if vlan.name in attachments_in_list or re.search(attachments_in, vlan.name):
             found_attachment_list.append(vlan.name)
 
       if len(found_attachment_list) >= len(attachments_in_list):
         op.put(flags.ATTACHMENT_LIST, ','.join(found_attachment_list))
-        op.add_ok(proj,
-                  reason=op.prep_msg(op.SUCCESS_REASON,
-                                     total_num=len(found_attachment_list),
-                                     region=op.get(flags.REGION),
-                                     project_id=project_id))
+        op.add_ok(
+          proj,
+          reason=op.prep_msg(
+            op.SUCCESS_REASON,
+            total_num=len(found_attachment_list),
+            region=op.get(flags.REGION),
+            project_id=project_id,
+          ),
+        )
 
         return
 
@@ -185,11 +184,15 @@ class BgpDownFlapStart(runbook.StartStep):
           err_names += item + ','
 
       err_names = err_names.rstrip(',')
-      op.add_skipped(proj,
-                     reason=op.prep_msg(op.SKIPPED_REASON_ALT1,
-                                        err_names=err_names,
-                                        region=op.get(flags.REGION),
-                                        project_id=project_id))
+      op.add_skipped(
+        proj,
+        reason=op.prep_msg(
+          op.SKIPPED_REASON_ALT1,
+          err_names=err_names,
+          region=op.get(flags.REGION),
+          project_id=project_id,
+        ),
+      )
 
 
 class CheckBgpDown(runbook.Step):
@@ -197,6 +200,7 @@ class CheckBgpDown(runbook.Step):
 
   Check if any vlan attachments have in BGP down state.
   """
+
   template = 'bgp_down_flap::bgpdown'
 
   def execute(self):
@@ -227,9 +231,9 @@ class CheckBgpDown(runbook.Step):
       if router_name in processed_routers:
         bgp_status = processed_routers[router_name]
       else:
-        vlan_router_status = network.nat_router_status(project.id,
-                                                       router_name=vlan.router,
-                                                       region=vlan.region)
+        vlan_router_status = network.nat_router_status(
+          project.id, router_name=vlan.router, region=vlan.region
+        )
         bgp_status = vlan_router_status.bgp_peer_status
         processed_routers[router_name] = bgp_status
 
@@ -244,23 +248,25 @@ class CheckBgpDown(runbook.Step):
     if len(error_interconnects) == 0:
       op.put(flags.ERROR_LIST, '')
       op.add_ok(
-          project,
-          op.prep_msg(op.SUCCESS_REASON,
-                      region=op.get(flags.REGION),
-                      project_id=project_id))
+        project, op.prep_msg(op.SUCCESS_REASON, region=op.get(flags.REGION), project_id=project_id)
+      )
     else:
       # display interconnect name with BGP down status
       reason = '\n\t Attachments with BGP down status:\n'
       for ic, vlans in bgpdown_list.items():
         for item in vlans:
-          reason += op.prep_msg(op.FAILURE_REASON,
-                                interconnect_name=ic,
-                                attachment_name=item,
-                                router_name=vlan_router_map[item])
+          reason += op.prep_msg(
+            op.FAILURE_REASON,
+            interconnect_name=ic,
+            attachment_name=item,
+            router_name=vlan_router_map[item],
+          )
 
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON_ALT1, reason=reason),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project,
+        reason=op.prep_msg(op.FAILURE_REASON_ALT1, reason=reason),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
       if len(error_interconnects) > 0:
         error_interconnects = error_interconnects[:-1]
@@ -272,6 +278,7 @@ class CheckInterconnectMaintenance(runbook.Step):
 
   Check if any interconnects with BGP down are in maintenance state.
   """
+
   template = 'bgp_down_flap::interconnect_maintenance'
 
   def execute(self):
@@ -280,10 +287,10 @@ class CheckInterconnectMaintenance(runbook.Step):
     err_list = op.get(flags.ERROR_LIST)
 
     if len(err_list) == 0:
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        region=op.get(flags.REGION),
-                                        project_id=project.id))
+      op.add_skipped(
+        project,
+        reason=op.prep_msg(op.SKIPPED_REASON, region=op.get(flags.REGION), project_id=project.id),
+      )
       return
 
     interconnects = interconnect.get_links(project.id)
@@ -325,10 +332,11 @@ class CheckInterconnectMaintenance(runbook.Step):
                *   Check cloud console interconnect details or cloud logging
                *   Check other potential issues, or Contact Google Cloud Support."""
 
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON_ALT1, reason=reason),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            remediation=remediation_details))
+      op.add_failed(
+        project,
+        reason=op.prep_msg(op.FAILURE_REASON_ALT1, reason=reason),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, remediation=remediation_details),
+      )
 
 
 class CheckCloudRouterMaintenance(runbook.Step):
@@ -337,6 +345,7 @@ class CheckCloudRouterMaintenance(runbook.Step):
   Check if any Cloud Router had maintenance event.
   Report BGP flaps without Cloud Router maintenance event.
   """
+
   template = 'bgp_down_flap::cloud_router_maintenance'
 
   def execute(self):
@@ -356,10 +365,10 @@ class CheckCloudRouterMaintenance(runbook.Step):
 
     # Skip if no uncertain BGP flas need to be checked
     if uncertain is False:
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        region=op.get(flags.REGION),
-                                        project_id=project.id))
+      op.add_skipped(
+        project,
+        reason=op.prep_msg(op.SKIPPED_REASON, region=op.get(flags.REGION), project_id=project.id),
+      )
       return
 
     # Fetch cloud logging router maintenance events
@@ -368,9 +377,7 @@ class CheckCloudRouterMaintenance(runbook.Step):
     # value : list of maintenance event timestamps
     maintenance_list = {}
     for router_id in checklist:
-      filter_str = [
-          'resource.type="gce_router"', '"Maintenance of router task"'
-      ]
+      filter_str = ['resource.type="gce_router"', '"Maintenance of router task"']
       region = op.get(flags.REGION)
       if region:
         filter_str.append(f'resource.labels.region="{region}"')
@@ -392,14 +399,12 @@ class CheckCloudRouterMaintenance(runbook.Step):
         end_time = end_time.replace(tzinfo=datetime.timezone.utc)
 
       serial_log_entries = None
-      serial_log_entries = local_realtime_query(start_time, end_time,
-                                                filter_str)
+      serial_log_entries = local_realtime_query(start_time, end_time, filter_str)
 
       times = []
       for item in serial_log_entries:
         payload = get_path(item, ('textPayload'), default=None)
-        log_region = get_path(item, ('resource', 'labels', 'region'),
-                              default=None)
+        log_region = get_path(item, ('resource', 'labels', 'region'), default=None)
 
         if log_region != region:
           continue
@@ -422,8 +427,7 @@ class CheckCloudRouterMaintenance(runbook.Step):
       if value['uncertain_flag'] != 'True':
         continue
       router_id = value['router_id']
-      if router_id not in maintenance_list or len(
-          maintenance_list[router_id]) == 0:
+      if router_id not in maintenance_list or len(maintenance_list[router_id]) == 0:
         err_list[key] = value['events']
         continue
 
@@ -454,14 +458,16 @@ class CheckCloudRouterMaintenance(runbook.Step):
           flap_details = flap_details + '\n\t\t' + ','.join(item)
         flap_details += '\n'
 
-        reason += op.prep_msg(op.FAILURE_REASON,
-                              router_id=bgp_flaps[key]['router_id'],
-                              local_ip=bgp_flaps[key]['local_ip'],
-                              remote_ip=bgp_flaps[key]['remote_ip'],
-                              router_name=bgp_flaps[key]['router_name'],
-                              attachment=bgp_flaps[key]['attachment_name'],
-                              project_id=bgp_flaps[key]['project_id'],
-                              flap_details=flap_details)
+        reason += op.prep_msg(
+          op.FAILURE_REASON,
+          router_id=bgp_flaps[key]['router_id'],
+          local_ip=bgp_flaps[key]['local_ip'],
+          remote_ip=bgp_flaps[key]['remote_ip'],
+          router_name=bgp_flaps[key]['router_name'],
+          attachment=bgp_flaps[key]['attachment_name'],
+          project_id=bgp_flaps[key]['project_id'],
+          flap_details=flap_details,
+        )
 
       example_query = """ \nExample query:
             resource.type="gce_router"
@@ -470,16 +476,15 @@ class CheckCloudRouterMaintenance(runbook.Step):
             r.esource.labels.router_id="<router_id>"
             """
 
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON_ALT1,
-                                       timer=GRACEFUL_RESTART_TIMER,
-                                       reason=reason),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            timer=GRACEFUL_RESTART_TIMER,
-                                            example_query=example_query))
+      op.add_failed(
+        project,
+        reason=op.prep_msg(op.FAILURE_REASON_ALT1, timer=GRACEFUL_RESTART_TIMER, reason=reason),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION, timer=GRACEFUL_RESTART_TIMER, example_query=example_query
+        ),
+      )
     else:
-      op.add_ok(project,
-                op.prep_msg(op.SUCCESS_REASON, timer=GRACEFUL_RESTART_TIMER))
+      op.add_ok(project, op.prep_msg(op.SUCCESS_REASON, timer=GRACEFUL_RESTART_TIMER))
 
 
 class CheckBgpFlap(runbook.Step):
@@ -495,23 +500,19 @@ class CheckBgpFlap(runbook.Step):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     region = op.get(flags.REGION)
 
-    attachments_in = op.get(flags.ATTACHMENT_NAME).rstrip(
-        ', \n')  # regexp or comma separated names
+    attachments_in = op.get(flags.ATTACHMENT_NAME).rstrip(', \n')  # regexp or comma separated names
     attachments_in_list = attachments_in.split(',')
     found_attachment_list = []
 
     try:
       attachments = interconnect.get_vlan_attachments(project.id)
     except googleapiclient.errors.HttpError:
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        project_id=project.id))
+      op.add_skipped(project, reason=op.prep_msg(op.SKIPPED_REASON, project_id=project.id))
       return
 
     for vlan in attachments:
       if vlan.region == op.get(flags.REGION):
-        if vlan.name in attachments_in_list or re.search(
-            attachments_in, vlan.name):
+        if vlan.name in attachments_in_list or re.search(attachments_in, vlan.name):
           found_attachment_list.append(vlan.name)
 
     peerip_router_map = {}
@@ -536,9 +537,7 @@ class CheckBgpFlap(runbook.Step):
       peerip_router_map[key].append(project.id)
       peerip_router_map[key].append(vlan.name)
 
-    filter_str = [
-        'resource.type="gce_router"', '"BGP "', '("came up" OR "went down")'
-    ]
+    filter_str = ['resource.type="gce_router"', '"BGP "', '("came up" OR "went down")']
 
     # cloud logging query takes time
     # run query once to get logging for all attachments
@@ -590,16 +589,14 @@ class CheckBgpFlap(runbook.Step):
       errflag = False
       payload = get_path(item, ('textPayload'), default=None)
       timestamp = get_path(item, ('timestamp'), default=None)
-      router_id = get_path(item, ('resource', 'labels', 'router_id'),
-                           default=None)
+      router_id = get_path(item, ('resource', 'labels', 'router_id'), default=None)
 
-      log_region = get_path(item, ('resource', 'labels', 'region'),
-                            default=None)
+      log_region = get_path(item, ('resource', 'labels', 'region'), default=None)
 
       if log_region != region:
         continue
 
-      if not 'BGP Event: BGP peering with' in payload:
+      if 'BGP Event: BGP peering with' not in payload:
         continue
 
       tmp = payload.split('peering with ')[1]
@@ -677,21 +674,27 @@ class CheckBgpFlap(runbook.Step):
               flap_details = flap_details + '\n\t\t' + ','.join(oneflap)
             flap_details += '\n'
 
-            reason += op.prep_msg(op.UNCERTAIN_REASON,
-                                  router_id=item['router_id'],
-                                  local_ip=item['local_ip'],
-                                  remote_ip=item['remote_ip'],
-                                  router_name=item['router_name'],
-                                  attachment=item['attachment_name'],
-                                  project_id=item['project_id'],
-                                  flap_details=flap_details)
+            reason += op.prep_msg(
+              op.UNCERTAIN_REASON,
+              router_id=item['router_id'],
+              local_ip=item['local_ip'],
+              remote_ip=item['remote_ip'],
+              router_name=item['router_name'],
+              attachment=item['attachment_name'],
+              project_id=item['project_id'],
+              flap_details=flap_details,
+            )
 
-        op.add_uncertain(project,
-                         reason=op.prep_msg(op.UNCERTAIN_REASON_ALT1,
-                                            project_id=project.id,
-                                            timer=GRACEFUL_RESTART_TIMER,
-                                            reason=reason),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+        op.add_uncertain(
+          project,
+          reason=op.prep_msg(
+            op.UNCERTAIN_REASON_ALT1,
+            project_id=project.id,
+            timer=GRACEFUL_RESTART_TIMER,
+            reason=reason,
+          ),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+        )
 
       else:
         # process BGP flaps with time duration longer than graceful restart timer.
@@ -705,14 +708,16 @@ class CheckBgpFlap(runbook.Step):
               flap_details = flap_details + '\n\t\t' + ','.join(oneflap)
             flap_details += '\n'
 
-            reason += op.prep_msg(op.FAILURE_REASON,
-                                  router_id=item['router_id'],
-                                  local_ip=item['local_ip'],
-                                  remote_ip=item['remote_ip'],
-                                  router_name=item['router_name'],
-                                  attachment=item['attachment_name'],
-                                  project_id=item['project_id'],
-                                  flap_details=flap_details)
+            reason += op.prep_msg(
+              op.FAILURE_REASON,
+              router_id=item['router_id'],
+              local_ip=item['local_ip'],
+              remote_ip=item['remote_ip'],
+              router_name=item['router_name'],
+              attachment=item['attachment_name'],
+              project_id=item['project_id'],
+              flap_details=flap_details,
+            )
 
         example_query = """ \n\nExample query:
             resource.type="gce_router"
@@ -721,20 +726,24 @@ class CheckBgpFlap(runbook.Step):
             r.esource.labels.router_id="<router_id>"
             """
 
-        op.add_failed(project,
-                      reason=op.prep_msg(op.FAILURE_REASON_ALT1,
-                                         project_id=project.id,
-                                         timer=GRACEFUL_RESTART_TIMER,
-                                         reason=reason),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              timer=GRACEFUL_RESTART_TIMER,
-                                              example_query=example_query))
+        op.add_failed(
+          project,
+          reason=op.prep_msg(
+            op.FAILURE_REASON_ALT1,
+            project_id=project.id,
+            timer=GRACEFUL_RESTART_TIMER,
+            reason=reason,
+          ),
+          remediation=op.prep_msg(
+            op.FAILURE_REMEDIATION, timer=GRACEFUL_RESTART_TIMER, example_query=example_query
+          ),
+        )
         return
     else:
-      op.add_ok(project,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   region=op.get(flags.REGION),
-                                   project_id=project.id))
+      op.add_ok(
+        project,
+        reason=op.prep_msg(op.SUCCESS_REASON, region=op.get(flags.REGION), project_id=project.id),
+      )
 
 
 class BgpDownFlapEnd(runbook.EndStep):
@@ -752,5 +761,7 @@ class BgpDownFlapEnd(runbook.EndStep):
 
   def execute(self):
     """Finalizing connectivity diagnostics."""
-    op.info('If any further debugging is needed, '
-            'consider please contact GCP support for further troubleshooting')
+    op.info(
+      'If any further debugging is needed, '
+      'consider please contact GCP support for further troubleshooting'
+    )

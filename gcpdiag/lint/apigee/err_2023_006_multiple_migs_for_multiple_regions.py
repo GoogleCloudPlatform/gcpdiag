@@ -24,13 +24,12 @@ network_bridge_migs = {}
 
 
 def prefetch_rule(context: models.Context):
-  network_bridge_migs[
-      context.project_id] = apigee.get_network_bridge_instance_groups(
-          context.project_id)
+  network_bridge_migs[context.project_id] = apigee.get_network_bridge_instance_groups(
+    context.project_id
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not network_bridge_migs[context.project_id]:
     report.add_skipped(None, 'no Apigee network bridge MIGs found')
     return
@@ -50,14 +49,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for mig in network_bridge_migs[context.project_id]:
     mig_regions.append(mig.region)
 
-  for instance in sorted(instances_list.values(),
-                         key=lambda instance: instance.name):
+  for instance in sorted(instances_list.values(), key=lambda instance: instance.name):
     curr_instance_location = instance.location
 
-    if not curr_instance_location in mig_regions:
+    if curr_instance_location not in mig_regions:
       report.add_failed(
-          instance,
-          (f'Instance {instance.name} in region {curr_instance_location} '
-           f'has no MIG in the region {curr_instance_location}'))
+        instance,
+        (
+          f'Instance {instance.name} in region {curr_instance_location} '
+          f'has no MIG in the region {curr_instance_location}'
+        ),
+      )
     else:
       report.add_ok(instance)

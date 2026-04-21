@@ -1,11 +1,12 @@
-""" Tests for search expressions for LogsQuery """
+"""Tests for search expressions for LogsQuery"""
+
 from unittest import TestCase
 
 from .search_exprs import AnyREFound, Equals, REFound
 
 
 class TestEquals(TestCase):
-  """ Test Equals search expression """
+  """Test Equals search expression"""
 
   def test_stackdriver_expr(self):
     expr = Equals(field='hello', value='world')
@@ -37,7 +38,7 @@ class TestEquals(TestCase):
 
 
 class TestREFound(TestCase):
-  """ Test TestREFound search expression """
+  """Test TestREFound search expression"""
 
   def test_stackdriver_expr(self):
     expr = REFound(field='hello', re_exp='.*world.*')
@@ -69,7 +70,7 @@ class TestREFound(TestCase):
 
 
 class TestAnyREFound(TestCase):
-  """ Test TestAnyREFound search expression """
+  """Test TestAnyREFound search expression"""
 
   def test_stackdriver_expr_one_re(self):
     expr = AnyREFound(field='one', re_exps=['.*two.*'])
@@ -77,8 +78,7 @@ class TestAnyREFound(TestCase):
 
   def test_stackdriver_expr_many_res(self):
     expr = AnyREFound(field='one', re_exps=['.*two.*', 'three', 'four'])
-    self.assertEqual(expr.stackdriver_expr,
-                     'one=~(".*two.*" OR "three" OR "four")')
+    self.assertEqual(expr.stackdriver_expr, 'one=~(".*two.*" OR "three" OR "four")')
 
   def test_found(self):
     entry = {'one': 'two three four'}
@@ -91,19 +91,15 @@ class TestAnyREFound(TestCase):
     self.assertFalse(expr.is_log_entry_matches(entry))
 
   def test_nested_stackdriver_expr_many_res(self):
-    expr = AnyREFound(field='one.two.three',
-                      re_exps=['.*four.*', 'five', 'six'])
-    self.assertEqual(expr.stackdriver_expr,
-                     'one.two.three=~(".*four.*" OR "five" OR "six")')
+    expr = AnyREFound(field='one.two.three', re_exps=['.*four.*', 'five', 'six'])
+    self.assertEqual(expr.stackdriver_expr, 'one.two.three=~(".*four.*" OR "five" OR "six")')
 
   def test_nested_found(self):
     entry = {'one': {'two': {'three': 'five four six'}}}
-    expr = AnyREFound(field='one.two.three',
-                      re_exps=['.*four.*', '.*seven.*', '.*eight.*'])
+    expr = AnyREFound(field='one.two.three', re_exps=['.*four.*', '.*seven.*', '.*eight.*'])
     self.assertTrue(expr.is_log_entry_matches(entry))
 
   def test_nested_not_found(self):
     entry = {'one': {'two': {'three': 'five four six'}}}
-    expr = AnyREFound(field='one.two.three',
-                      re_exps=['.*seven.*', '.*eight.*', '.*nine.*'])
+    expr = AnyREFound(field='one.two.three', re_exps=['.*seven.*', '.*eight.*', '.*nine.*'])
     self.assertFalse(expr.is_log_entry_matches(entry))

@@ -1,4 +1,5 @@
-""" Gateway for Dataproc service """
+"""Gateway for Dataproc service"""
+
 import asyncio
 import functools
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Protocol
@@ -8,7 +9,8 @@ from gcpdiag.queries import dataproc
 
 
 class Region:
-  """ Helper class encapsulating Dataproc operations within a region """
+  """Helper class encapsulating Dataproc operations within a region"""
+
   _api: protocols.API
   _project_id: str
   _region: str
@@ -23,10 +25,11 @@ class Region:
   async def load(self) -> None:
     assert self._data is None
     self._data = await self._api.call(
-        method='GET',
-        url=
-        'https://dataproc.googleapis.com/v1/projects/{project_id}/regions/{region}/clusters'
-        .format(project_id=self._project_id, region=self._region))
+      method='GET',
+      url='https://dataproc.googleapis.com/v1/projects/{project_id}/regions/{region}/clusters'.format(
+        project_id=self._project_id, region=self._region
+      ),
+    )
 
   @functools.cached_property
   def clusters(self) -> List[dataproc.Cluster]:
@@ -43,27 +46,26 @@ class Region:
     assert isinstance(desc, Mapping)
     assert 'clusterName' in desc
     assert isinstance(desc['clusterName'], str)
-    return dataproc.Cluster(name=desc['clusterName'],
-                            project_id=self._project_id,
-                            resource_data=desc)
+    return dataproc.Cluster(
+      name=desc['clusterName'], project_id=self._project_id, resource_data=desc
+    )
 
 
 class ProjectRegions(Protocol):
-
   async def get_all(self) -> Iterable[str]:
     pass
 
 
 class Dataproc:
-  """ Gateway for Dataproc service """
+  """Gateway for Dataproc service"""
+
   _api: protocols.API
   _project_id: str
   _project_regions: ProjectRegions
   _clusters_by_name: Dict[str, dataproc.Cluster]
   _loader: loader.Loader
 
-  def __init__(self, api: protocols.API, project_id: str,
-               project_regions: ProjectRegions) -> None:
+  def __init__(self, api: protocols.API, project_id: str, project_regions: ProjectRegions) -> None:
     self._api = api
     self._project_id = project_id
     self._project_regions = project_regions

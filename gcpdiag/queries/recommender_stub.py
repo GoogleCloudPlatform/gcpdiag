@@ -16,10 +16,8 @@
 
 Instead of doing real API calls, we return test JSON data.
 """
-from gcpdiag.queries import apis_stub, billing_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
+from gcpdiag.queries import apis_stub, billing_stub
 
 
 class RecommenderApiStub:
@@ -43,12 +41,11 @@ class RecommenderApiStub:
   def list(self, parent):
     parent_split = parent.split('/')
     project, scope, insight_type = (
-        parent_split[1],
-        parent_split[3],
-        parent_split[-1],
+      parent_split[1],
+      parent_split[3],
+      parent_split[-1],
     )
-    if (insight_type ==
-        'google.networkanalyzer.networkservices.loadBalancerInsight'):
+    if insight_type == 'google.networkanalyzer.networkservices.loadBalancerInsight':
       return apis_stub.RestCallStub(project, f'lb-insights-{scope}')
 
   def list_next(self, previous_request, previous_response):

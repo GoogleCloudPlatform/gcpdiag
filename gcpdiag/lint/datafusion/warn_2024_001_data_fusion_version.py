@@ -49,40 +49,35 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        'Cloud Data Fusion API is not enabled in'
-        f' {crm.get_project(context.project_id)}',
+      None,
+      f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}',
     )
     return
 
   datafusion_instances = projects_instances[context.project_id]
   if not datafusion_instances:
-    report.add_skipped(None,
-                       f'Cloud Data Fusion instances were not found {context}')
+    report.add_skipped(None, f'Cloud Data Fusion instances were not found {context}')
     return
 
   current_date = datetime.now().strftime('%Y-%m-%d')
 
   for datafusion_instance in sorted(datafusion_instances.values()):
-
     df_instance_parsed_version = version.parse(str(datafusion_instance.version))
 
-    version_to_compare = (
-        f'{df_instance_parsed_version.major}.{df_instance_parsed_version.minor}'
-    )
+    version_to_compare = f'{df_instance_parsed_version.major}.{df_instance_parsed_version.minor}'
 
     if version_to_compare in version_policy:
       if current_date <= version_policy[version_to_compare]:
         report.add_ok(
-            datafusion_instance,
-            f'\n\tDatafusion Version: {datafusion_instance.version}'
-            f'\n\tSupports till {version_policy[version_to_compare]}',
+          datafusion_instance,
+          f'\n\tDatafusion Version: {datafusion_instance.version}'
+          f'\n\tSupports till {version_policy[version_to_compare]}',
         )
       else:
         report.add_failed(
-            datafusion_instance,
-            '\n\tDatafusion Version:'
-            f' {datafusion_instance.version}\n\tSupported till'
-            f' {version_policy[version_to_compare]}(Upgrade DataFusion'
-            ' Environment)',
+          datafusion_instance,
+          '\n\tDatafusion Version:'
+          f' {datafusion_instance.version}\n\tSupported till'
+          f' {version_policy[version_to_compare]}(Upgrade DataFusion'
+          ' Environment)',
         )

@@ -30,13 +30,15 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'nat/public-nat-ip-allocation-failed'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-nat1-aaaa',
       'region': 'europe-west4',
       'nat_gateway_name': 'public-nat-gateway',
       'cloud_router_name': 'public-nat-cloud-router',
-      'network': 'nat-vpc-network'
-  }]
+      'network': 'nat-vpc-network',
+    }
+  ]
 
 
 class MockMessage:
@@ -51,7 +53,6 @@ class MockMessage:
 
 
 class MockMonitoringResult:
-
   def __init__(self, data):
     self._data = data
 
@@ -69,14 +70,12 @@ def make_ip_exhaustion_result(is_failed):
 
 
 class MockRouterStatus:
-
   def __init__(self, min_extra_nat_ips_needed, num_vms_with_nat_mappings):
     self.min_extra_nat_ips_needed = min_extra_nat_ips_needed
     self.num_vms_with_nat_mappings = num_vms_with_nat_mappings
 
 
 class MockNatIpInfo:
-
   def __init__(self, result):
     self.result = result
 
@@ -84,11 +83,7 @@ class MockNatIpInfo:
 class MockRouter:
   """Mock network.Router object."""
 
-  def __init__(self,
-               name,
-               nats,
-               ip_allocate_option='MANUAL_ONLY',
-               dynamic_ports=False):
+  def __init__(self, name, nats, ip_allocate_option='MANUAL_ONLY', dynamic_ports=False):
     self.name = name
     self.nats = nats
     self._ip_allocate_option = ip_allocate_option
@@ -104,56 +99,43 @@ class MockRouter:
 
 
 class PublicNatIpAllocationFailedTest(unittest.TestCase):
-
   def setUp(self):
     super().setUp()
-    self.mock_monitoring_query = self.enterContext(
-        mock.patch('gcpdiag.queries.monitoring.query'))
-    self.mock_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project'))
-    self.mock_get_network = self.enterContext(
-        mock.patch('gcpdiag.queries.network.get_network'))
-    self.mock_get_routers = self.enterContext(
-        mock.patch('gcpdiag.queries.network.get_routers'))
+    self.mock_monitoring_query = self.enterContext(mock.patch('gcpdiag.queries.monitoring.query'))
+    self.mock_get_project = self.enterContext(mock.patch('gcpdiag.queries.crm.get_project'))
+    self.mock_get_network = self.enterContext(mock.patch('gcpdiag.queries.network.get_network'))
+    self.mock_get_routers = self.enterContext(mock.patch('gcpdiag.queries.network.get_routers'))
     self.mock_nat_router_status = self.enterContext(
-        mock.patch('gcpdiag.queries.network.nat_router_status'))
+      mock.patch('gcpdiag.queries.network.nat_router_status')
+    )
     self.mock_get_nat_ip_info = self.enterContext(
-        mock.patch('gcpdiag.queries.network.get_nat_ip_info'))
+      mock.patch('gcpdiag.queries.network.get_nat_ip_info')
+    )
     self.mock_get_api = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+      mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+    )
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
     self.params = {
-        flags.PROJECT_ID:
-            'test-project',
-        flags.REGION:
-            'us-central1',
-        flags.NAT_GATEWAY_NAME:
-            'test-nat-gw',
-        flags.CLOUD_ROUTER_NAME:
-            'test-router',
-        flags.NAT_NETWORK:
-            'test-network',
-        'start_time':
-            datetime.datetime(2025, 1, 1, 0, 0, 0,
-                              tzinfo=datetime.timezone.utc),
-        'end_time':
-            datetime.datetime(2025, 1, 1, 1, 0, 0,
-                              tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: 'test-project',
+      flags.REGION: 'us-central1',
+      flags.NAT_GATEWAY_NAME: 'test-nat-gw',
+      flags.CLOUD_ROUTER_NAME: 'test-router',
+      flags.NAT_NETWORK: 'test-network',
+      'start_time': datetime.datetime(2025, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
+      'end_time': datetime.datetime(2025, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
     }
-    self.mock_get_project.return_value = crm.Project({
-        'projectId': 'test-project',
-        'name': 'projects/123'
-    })
+    self.mock_get_project.return_value = crm.Project(
+      {'projectId': 'test-project', 'name': 'projects/123'}
+    )
     self.mock_get_network.return_value = mock.MagicMock()
     self.op_get_dict = {
-        flags.PROJECT_ID: 'test-project',
-        'nat_gateway_name': 'test-nat-gw',
+      flags.PROJECT_ID: 'test-project',
+      'nat_gateway_name': 'test-nat-gw',
     }
 
   def test_legacy_parameter_handler_network_present(self):
@@ -171,7 +153,8 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     mock_response = mock.Mock()
     mock_response.status = 404
     self.mock_get_network.side_effect = googleapiclient.errors.HttpError(
-        mock_response, b'not found')
+      mock_response, b'not found'
+    )
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -184,7 +167,8 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     mock_response = mock.Mock()
     mock_response.status = 404
     self.mock_get_routers.side_effect = googleapiclient.errors.HttpError(
-        mock_response, b'not found')
+      mock_response, b'not found'
+    )
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -195,9 +179,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test start step when router name not in list."""
     step = public_nat_ip_allocation_failed.NatIpAllocationFailedStart()
     self.mock_get_routers.return_value = [
-        MockRouter('other-router', nats=[{
-            'name': 'test-nat-gw'
-        }])
+      MockRouter('other-router', nats=[{'name': 'test-nat-gw'}])
     ]
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -209,9 +191,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test start step when nat gw name not in router."""
     step = public_nat_ip_allocation_failed.NatIpAllocationFailedStart()
     self.mock_get_routers.return_value = [
-        MockRouter('test-router', nats=[{
-            'name': 'other-nat-gw'
-        }])
+      MockRouter('test-router', nats=[{'name': 'other-nat-gw'}])
     ]
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -223,8 +203,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test allocation check when router status is missing."""
     step = public_nat_ip_allocation_failed.NatAllocationFailedCheck()
     self.mock_nat_router_status.return_value = None
-    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(
-        is_failed=False)
+    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(is_failed=False)
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -247,8 +226,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test allocation check when nat_allocation_failed metric is true."""
     step = public_nat_ip_allocation_failed.NatAllocationFailedCheck()
     self.mock_nat_router_status.return_value = MockRouterStatus(None, 10)
-    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(
-        is_failed=True)
+    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(is_failed=True)
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -259,8 +237,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test allocation check when min_extra_ips_needed > 0."""
     step = public_nat_ip_allocation_failed.NatAllocationFailedCheck()
     self.mock_nat_router_status.return_value = MockRouterStatus(5, 10)
-    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(
-        is_failed=False)
+    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(is_failed=False)
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -271,8 +248,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test allocation check passes."""
     step = public_nat_ip_allocation_failed.NatAllocationFailedCheck()
     self.mock_nat_router_status.return_value = MockRouterStatus(0, 10)
-    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(
-        is_failed=False)
+    self.mock_monitoring_query.return_value = make_ip_exhaustion_result(is_failed=False)
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -284,36 +260,25 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test allocation method check branches to auto."""
     step = public_nat_ip_allocation_failed.NatIpAllocationMethodCheck()
     self.mock_get_routers.return_value = [
-        MockRouter('test-router',
-                   nats=[{
-                       'name': 'test-nat-gw'
-                   }],
-                   ip_allocate_option='AUTO_ONLY')
+      MockRouter('test-router', nats=[{'name': 'test-nat-gw'}], ip_allocate_option='AUTO_ONLY')
     ]
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
       step.execute()
-    self.assertIsInstance(
-        step.steps[0], public_nat_ip_allocation_failed.NatIpAllocationAutoOnly)
+    self.assertIsInstance(step.steps[0], public_nat_ip_allocation_failed.NatIpAllocationAutoOnly)
 
   def test_nat_ip_allocation_method_check_manual(self):
     """Test allocation method check branches to manual."""
     step = public_nat_ip_allocation_failed.NatIpAllocationMethodCheck()
     self.mock_get_routers.return_value = [
-        MockRouter('test-router',
-                   nats=[{
-                       'name': 'test-nat-gw'
-                   }],
-                   ip_allocate_option='MANUAL_ONLY')
+      MockRouter('test-router', nats=[{'name': 'test-nat-gw'}], ip_allocate_option='MANUAL_ONLY')
     ]
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
       step.execute()
-    self.assertIsInstance(
-        step.steps[0],
-        public_nat_ip_allocation_failed.NatIpAllocationManualOnly)
+    self.assertIsInstance(step.steps[0], public_nat_ip_allocation_failed.NatIpAllocationManualOnly)
 
   def test_nat_ip_allocation_auto_only(self):
     """Test NatIpAllocationAutoOnly step."""
@@ -328,20 +293,15 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test NatIpAllocationManualOnly when quota increase is needed."""
     step = public_nat_ip_allocation_failed.NatIpAllocationManualOnly()
     self.mock_get_routers.return_value = [
-        MockRouter('test-router',
-                   nats=[{
-                       'name': 'test-nat-gw'
-                   }],
-                   ip_allocate_option='MANUAL_ONLY')
+      MockRouter('test-router', nats=[{'name': 'test-nat-gw'}], ip_allocate_option='MANUAL_ONLY')
     ]
     self.mock_nat_router_status.return_value = MockRouterStatus(5, 10)
-    nat_ip_info_result = [{
+    nat_ip_info_result = [
+      {
         'natName': 'test-nat-gw',
-        'natIpInfoMappings': [{
-            'natIp': '1.1.1.1',
-            'usage': 'IN_USE'
-        }] * 300
-    }]
+        'natIpInfoMappings': [{'natIp': '1.1.1.1', 'usage': 'IN_USE'}] * 300,
+      }
+    ]
     self.mock_get_nat_ip_info.return_value = MockNatIpInfo(nat_ip_info_result)
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -354,20 +314,15 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     """Test NatIpAllocationManualOnly when no quota increase is needed."""
     step = public_nat_ip_allocation_failed.NatIpAllocationManualOnly()
     self.mock_get_routers.return_value = [
-        MockRouter('test-router',
-                   nats=[{
-                       'name': 'test-nat-gw'
-                   }],
-                   ip_allocate_option='MANUAL_ONLY')
+      MockRouter('test-router', nats=[{'name': 'test-nat-gw'}], ip_allocate_option='MANUAL_ONLY')
     ]
     self.mock_nat_router_status.return_value = MockRouterStatus(5, 10)
-    nat_ip_info_result = [{
+    nat_ip_info_result = [
+      {
         'natName': 'test-nat-gw',
-        'natIpInfoMappings': [{
-            'natIp': '1.1.1.1',
-            'usage': 'IN_USE'
-        }] * 100
-    }]
+        'natIpInfoMappings': [{'natIp': '1.1.1.1', 'usage': 'IN_USE'}] * 100,
+      }
+    ]
     self.mock_get_nat_ip_info.return_value = MockNatIpInfo(nat_ip_info_result)
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -380,8 +335,10 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
   def test_end_step(self):
     """Test NatIpAllocationFailedEnd step."""
     step = public_nat_ip_allocation_failed.NatIpAllocationFailedEnd()
-    with mock.patch('gcpdiag.config.get', return_value=False), \
-         mock.patch('gcpdiag.runbook.op.prompt', return_value=op.NO):
+    with (
+      mock.patch('gcpdiag.config.get', return_value=False),
+      mock.patch('gcpdiag.runbook.op.prompt', return_value=op.NO),
+    ):
       with op.operator_context(self.operator):
         self.operator.parameters = self.params
         self.operator.set_step(step)
@@ -391,24 +348,15 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
   def test_build_tree(self):
     tree = public_nat_ip_allocation_failed.PublicNatIpAllocationFailed()
     tree.build_tree()
-    self.assertIsInstance(
-        tree.start, public_nat_ip_allocation_failed.NatIpAllocationFailedStart)
+    self.assertIsInstance(tree.start, public_nat_ip_allocation_failed.NatIpAllocationFailedStart)
 
   def test_nat_ip_allocation_manual_only_no_router_status(self):
     step = public_nat_ip_allocation_failed.NatIpAllocationManualOnly()
-    self.mock_get_routers.return_value = [
-        MockRouter('test-router', nats=[{
-            'name': 'test-nat-gw'
-        }])
-    ]
+    self.mock_get_routers.return_value = [MockRouter('test-router', nats=[{'name': 'test-nat-gw'}])]
     self.mock_nat_router_status.return_value = None
-    nat_ip_info_result = [{
-        'natName': 'test-nat-gw',
-        'natIpInfoMappings': [{
-            'natIp': '1.1.1.1',
-            'usage': 'IN_USE'
-        }]
-    }]
+    nat_ip_info_result = [
+      {'natName': 'test-nat-gw', 'natIpInfoMappings': [{'natIp': '1.1.1.1', 'usage': 'IN_USE'}]}
+    ]
     self.mock_get_nat_ip_info.return_value = MockNatIpInfo(nat_ip_info_result)
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -421,7 +369,8 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     mock_response = mock.Mock()
     mock_response.status = 404
     self.mock_get_network.side_effect = googleapiclient.errors.HttpError(
-        mock_response, b'not found')
+      mock_response, b'not found'
+    )
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -433,7 +382,8 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     mock_response = mock.Mock()
     mock_response.status = 404
     self.mock_get_routers.side_effect = googleapiclient.errors.HttpError(
-        mock_response, b'not found')
+      mock_response, b'not found'
+    )
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -443,9 +393,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
   def test_nat_ip_allocation_method_check_no_router_found(self):
     step = public_nat_ip_allocation_failed.NatIpAllocationMethodCheck()
     self.mock_get_routers.return_value = [
-        MockRouter('other-router', nats=[{
-            'name': 'test-nat-gw'
-        }])
+      MockRouter('other-router', nats=[{'name': 'test-nat-gw'}])
     ]
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
@@ -456,8 +404,10 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
   def test_end_step_interactive_no(self):
     """Test NatIpAllocationFailedEnd step with interactive mode."""
     step = public_nat_ip_allocation_failed.NatIpAllocationFailedEnd()
-    with mock.patch('gcpdiag.config.get', return_value=True), \
-         mock.patch('gcpdiag.runbook.op.prompt', return_value=op.NO):
+    with (
+      mock.patch('gcpdiag.config.get', return_value=True),
+      mock.patch('gcpdiag.runbook.op.prompt', return_value=op.NO),
+    ):
       with op.operator_context(self.operator):
         self.operator.parameters = self.params
         self.operator.set_step(step)
@@ -469,7 +419,8 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     mock_response = mock.Mock()
     mock_response.status = 404
     self.mock_get_network.side_effect = googleapiclient.errors.HttpError(
-        mock_response, b'not found')
+      mock_response, b'not found'
+    )
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -481,7 +432,8 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     mock_response = mock.Mock()
     mock_response.status = 404
     self.mock_get_routers.side_effect = googleapiclient.errors.HttpError(
-        mock_response, b'not found')
+      mock_response, b'not found'
+    )
     with op.operator_context(self.operator):
       self.operator.parameters = self.params
       self.operator.set_step(step)
@@ -490,11 +442,7 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
 
   def test_nat_ip_allocation_manual_only_no_nat_ip_info(self):
     step = public_nat_ip_allocation_failed.NatIpAllocationManualOnly()
-    self.mock_get_routers.return_value = [
-        MockRouter('test-router', nats=[{
-            'name': 'test-nat-gw'
-        }])
-    ]
+    self.mock_get_routers.return_value = [MockRouter('test-router', nats=[{'name': 'test-nat-gw'}])]
     self.mock_nat_router_status.return_value = MockRouterStatus(0, 10)
     self.mock_get_nat_ip_info.return_value = MockNatIpInfo(None)
     with op.operator_context(self.operator):
@@ -513,8 +461,10 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
     self.mock_interface.add_skipped.assert_called_once()
 
   def test_end_step_interactive_yes(self):
-    with mock.patch('gcpdiag.config.get', return_value=False), \
-         mock.patch('gcpdiag.runbook.op.prompt', return_value=op.YES):
+    with (
+      mock.patch('gcpdiag.config.get', return_value=False),
+      mock.patch('gcpdiag.runbook.op.prompt', return_value=op.YES),
+    ):
       step = public_nat_ip_allocation_failed.NatIpAllocationFailedEnd()
       with op.operator_context(self.operator):
         self.operator.parameters = self.params
@@ -524,36 +474,25 @@ class PublicNatIpAllocationFailedTest(unittest.TestCase):
 
 
 class PublicNatIpAllocationFailedStubDataTest(unittest.TestCase):
-
   def setUp(self):
     super().setUp()
     self.mock_get_api = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_monitoring_query = self.enterContext(
-        mock.patch('gcpdiag.queries.monitoring.query'))
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+      mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+    )
+    self.mock_monitoring_query = self.enterContext(mock.patch('gcpdiag.queries.monitoring.query'))
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
     self.params = {
-        flags.PROJECT_ID:
-            'gcpdiag-nat1-aaaa',
-        flags.REGION:
-            'europe-west4',
-        flags.NAT_GATEWAY_NAME:
-            'public-nat-gateway',
-        flags.CLOUD_ROUTER_NAME:
-            'public-nat-cloud-router',
-        flags.NAT_NETWORK:
-            'nat-vpc-network',
-        'start_time':
-            datetime.datetime(2025, 1, 1, 0, 0, 0,
-                              tzinfo=datetime.timezone.utc),
-        'end_time':
-            datetime.datetime(2025, 1, 1, 1, 0, 0,
-                              tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: 'gcpdiag-nat1-aaaa',
+      flags.REGION: 'europe-west4',
+      flags.NAT_GATEWAY_NAME: 'public-nat-gateway',
+      flags.CLOUD_ROUTER_NAME: 'public-nat-cloud-router',
+      flags.NAT_NETWORK: 'nat-vpc-network',
+      'start_time': datetime.datetime(2025, 1, 1, 0, 0, 0, tzinfo=datetime.timezone.utc),
+      'end_time': datetime.datetime(2025, 1, 1, 1, 0, 0, tzinfo=datetime.timezone.utc),
     }
 
   def test_start_step_success_with_stub_data(self):
@@ -567,8 +506,10 @@ class PublicNatIpAllocationFailedStubDataTest(unittest.TestCase):
     self.mock_interface.add_skipped.assert_not_called()
 
   def test_end_step_interactive_yes(self):
-    with mock.patch('gcpdiag.config.get', return_value=False), \
-         mock.patch('gcpdiag.runbook.op.prompt', return_value=op.YES):
+    with (
+      mock.patch('gcpdiag.config.get', return_value=False),
+      mock.patch('gcpdiag.runbook.op.prompt', return_value=op.YES),
+    ):
       step = public_nat_ip_allocation_failed.NatIpAllocationFailedEnd()
       with op.operator_context(self.operator):
         self.operator.parameters = self.params

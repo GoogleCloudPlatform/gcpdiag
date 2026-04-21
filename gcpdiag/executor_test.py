@@ -22,7 +22,6 @@ from gcpdiag import executor, models
 
 
 class ContextAwareExecutorTest(unittest.TestCase):
-
   def test_context_propagation_with_submit(self):
     """Test that context is setup and torn down with submit()."""
     mock_provider = mock.Mock()

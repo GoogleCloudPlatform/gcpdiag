@@ -26,10 +26,10 @@ PRODUCT_FLAG = 'dataflow'
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(
-      project_id=op.get(flags.PROJECT_ID),
-      start_time=op.get(flags.START_TIME),
-      end_time=op.get(flags.END_TIME),
-      filter_str=filter_str,
+    project_id=op.get(flags.PROJECT_ID),
+    start_time=op.get(flags.START_TIME),
+    end_time=op.get(flags.END_TIME),
+    filter_str=filter_str,
   )
   return result
 
@@ -58,32 +58,32 @@ class JobPermissions(runbook.DiagnosticTree):
   """
 
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True,
-      },
-      flags.PRINCIPAL: {
-          'type': str,
-          'help': ('The authenticated user account email. This is the '
-                   'user account that is used to authenticate the user to the '
-                   'console or the gcloud CLI.'),
-          'required': True,
-      },
-      flags.WORKER_SERVICE_ACCOUNT: {
-          'type': str,
-          'help':
-              ('Dataflow Worker Service Account used for Dataflow Job Creation'
-               'and execution'),
-          'required': True,
-      },
-      flags.CROSS_PROJECT_ID: {
-          'type':
-              str,
-          'help':
-              ('Cross Project ID, where service account is located if it is not'
-               ' in the same project as the Dataflow Job'),
-      },
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.PRINCIPAL: {
+      'type': str,
+      'help': (
+        'The authenticated user account email. This is the '
+        'user account that is used to authenticate the user to the '
+        'console or the gcloud CLI.'
+      ),
+      'required': True,
+    },
+    flags.WORKER_SERVICE_ACCOUNT: {
+      'type': str,
+      'help': ('Dataflow Worker Service Account used for Dataflow Job Creationand execution'),
+      'required': True,
+    },
+    flags.CROSS_PROJECT_ID: {
+      'type': str,
+      'help': (
+        'Cross Project ID, where service account is located if it is not'
+        ' in the same project as the Dataflow Job'
+      ),
+    },
   }
 
   def build_tree(self):
@@ -101,8 +101,8 @@ class JobPermissions(runbook.DiagnosticTree):
     service_agent_check = iam_gs.IamPolicyCheck()
     service_agent_check.project = op.get(flags.PROJECT_ID)
     service_agent_check.roles = [dataflow_constants.DATAFLOW_SERVICE_AGENT_ROLE]
-    service_agent_check.principal = f'serviceAccount:service-{project.number}@dataflow-service-producer-prod.iam.gserviceaccount.com'  # pylint: disable=line-too-long
-    service_agent_check.template = 'gcpdiag.runbook.dataflow::permissions::dataflow_service_account'  # pylint: disable=line-too-long
+    service_agent_check.principal = f'serviceAccount:service-{project.number}@dataflow-service-producer-prod.iam.gserviceaccount.com'
+    service_agent_check.template = 'gcpdiag.runbook.dataflow::permissions::dataflow_service_account'
     service_agent_check.require_all = False
     self.add_step(parent=start, child=service_agent_check)
 
@@ -128,8 +128,8 @@ class DataflowUserAccountPermissions(runbook.Step):
     dataflow_developer_role_check = iam_gs.IamPolicyCheck()
     dataflow_developer_role_check.project = op.get(flags.PROJECT_ID)
     dataflow_developer_role_check.roles = [
-        dataflow_constants.DATAFLOW_DEVELOPER_ROLE,
-        dataflow_constants.DATAFLOW_IAM_SERVICE_ACCOUNT_USER,
+      dataflow_constants.DATAFLOW_DEVELOPER_ROLE,
+      dataflow_constants.DATAFLOW_IAM_SERVICE_ACCOUNT_USER,
     ]
     dataflow_developer_role_check.principal = f'user:{op.get(flags.PRINCIPAL)}'
     dataflow_developer_role_check.require_all = True
@@ -144,6 +144,7 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
   For the worker service account to be able to run a job,
   it must have the roles/dataflow.worker role.
   """
+
   template = 'permissions::projectcheck'
 
   def execute(self):
@@ -151,37 +152,36 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
     sa_email = op.get(flags.WORKER_SERVICE_ACCOUNT)
     project = crm.get_project(op.get(flags.PROJECT_ID))
     op.info(op.get(flags.WORKER_SERVICE_ACCOUNT))
-    sa_exists = iam.is_service_account_existing(email=sa_email,
-                                                context=op.get_context())
+    sa_exists = iam.is_service_account_existing(email=sa_email, context=op.get_context())
     cross_project_id = op.get(flags.CROSS_PROJECT_ID)
     sa_exists_cross_project = False
     if cross_project_id:
-      cross_project_context = op.get_context().copy_with(
-          project_id=cross_project_id)
+      cross_project_context = op.get_context().copy_with(project_id=cross_project_id)
       sa_exists_cross_project = iam.is_service_account_existing(
-          email=sa_email, context=cross_project_context)
+        email=sa_email, context=cross_project_context
+      )
     if sa_exists and op.get(flags.CROSS_PROJECT_ID) is None:
-      op.info('Service Account associated with Dataflow Job was found in the'
-              ' same project')
+      op.info('Service Account associated with Dataflow Job was found in the same project')
       op.info('Checking permissions.')
       # Check for Service Account permissions
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.PROJECT_ID)
-      sa_permission_check.principal = (
-          f'serviceAccount:{op.get(flags.WORKER_SERVICE_ACCOUNT)}')
-      sa_permission_check.template = 'gcpdiag.runbook.dataflow::permissions::dataflow_worker_service_account'  # pylint: disable=line-too-long
+      sa_permission_check.principal = f'serviceAccount:{op.get(flags.WORKER_SERVICE_ACCOUNT)}'
+      sa_permission_check.template = (
+        'gcpdiag.runbook.dataflow::permissions::dataflow_worker_service_account'  # pylint: disable=line-too-long
+      )
       sa_permission_check.require_all = True
       sa_permission_check.roles = [dataflow_constants.DATAFLOW_WORKER_ROLE]
       self.add_child(child=sa_permission_check)
     elif sa_exists_cross_project:
-      op.info('Service Account associated with Dataflow Job was found in cross '
-              'project')
+      op.info('Service Account associated with Dataflow Job was found in cross project')
       # Check if constraint is enforced
       op.info('Checking constraints on service account project.')
       orgpolicy_constraint_check = crm_gs.OrgPolicyCheck()
       orgpolicy_constraint_check.project = op.get(flags.CROSS_PROJECT_ID)
       orgpolicy_constraint_check.constraint = (
-          'constraints/iam.disableCrossProjectServiceAccountUsage')
+        'constraints/iam.disableCrossProjectServiceAccountUsage'
+      )
       orgpolicy_constraint_check.is_enforced = False
       self.add_child(orgpolicy_constraint_check)
 
@@ -189,54 +189,57 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
       op.info('Checking roles in service account project.')
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.CROSS_PROJECT_ID)
-      sa_permission_check.principal = (
-          f'serviceAccount:{op.get(flags.WORKER_SERVICE_ACCOUNT)}')
-      sa_permission_check.template = 'gcpdiag.runbook.dataflow::permissions::dataflow_cross_project_worker_service_account'  # pylint: disable=line-too-long
+      sa_permission_check.principal = f'serviceAccount:{op.get(flags.WORKER_SERVICE_ACCOUNT)}'
+      sa_permission_check.template = (
+        'gcpdiag.runbook.dataflow::permissions::dataflow_cross_project_worker_service_account'  # pylint: disable=line-too-long
+      )
       sa_permission_check.require_all = True
       sa_permission_check.roles = [dataflow_constants.DATAFLOW_WORKER_ROLE]
       self.add_child(child=sa_permission_check)
 
       # Check Service Agent Service Account roles
-      op.info('Checking service agent service account roles on service account '
-              'project.')
+      op.info('Checking service agent service account roles on service account project.')
       service_agent_sa = (
-          f'service-{project.number}@dataflow-service-producer-prod.iam.gserviceaccount.com'
+        f'service-{project.number}@dataflow-service-producer-prod.iam.gserviceaccount.com'
       )
       service_agent_permission_check = iam_gs.IamPolicyCheck()
       service_agent_permission_check.project = op.get(flags.CROSS_PROJECT_ID)
-      service_agent_permission_check.principal = (
-          f'serviceAccount:{service_agent_sa}')
-      service_agent_permission_check.template = 'gcpdiag.runbook.dataflow::permissions::dataflow_cross_project_worker_service_account'  # pylint: disable=line-too-long
+      service_agent_permission_check.principal = f'serviceAccount:{service_agent_sa}'
+      service_agent_permission_check.template = (
+        'gcpdiag.runbook.dataflow::permissions::dataflow_cross_project_worker_service_account'  # pylint: disable=line-too-long
+      )
       service_agent_permission_check.require_all = True
       service_agent_permission_check.roles = [
-          dataflow_constants.DATAFLOW_IAM_SERVICE_ACCOUNT_USER,
-          'roles/iam.serviceAccountTokenCreator'
+        dataflow_constants.DATAFLOW_IAM_SERVICE_ACCOUNT_USER,
+        'roles/iam.serviceAccountTokenCreator',
       ]
       self.add_child(child=service_agent_permission_check)
 
       # Check Compute Agent Service Account
-      op.info('Checking compute agent service account roles on service account '
-              'project.')
-      compute_agent_sa = (
-          f'service-{project.number}@compute-system.iam.gserviceaccount.com')
+      op.info('Checking compute agent service account roles on service account project.')
+      compute_agent_sa = f'service-{project.number}@compute-system.iam.gserviceaccount.com'
       compute_agent_permission_check = iam_gs.IamPolicyCheck()
       compute_agent_permission_check.project = op.get(flags.CROSS_PROJECT_ID)
-      compute_agent_permission_check.principal = (
-          f'serviceAccount:{compute_agent_sa}')
-      compute_agent_permission_check.template = 'gcpdiag.runbook.dataflow::permissions::dataflow_cross_project_worker_service_account'  # pylint: disable=line-too-long
+      compute_agent_permission_check.principal = f'serviceAccount:{compute_agent_sa}'
+      compute_agent_permission_check.template = (
+        'gcpdiag.runbook.dataflow::permissions::dataflow_cross_project_worker_service_account'  # pylint: disable=line-too-long
+      )
       compute_agent_permission_check.require_all = True
       compute_agent_permission_check.roles = [
-          dataflow_constants.DATAFLOW_IAM_SERVICE_ACCOUNT_USER,
-          'roles/iam.serviceAccountTokenCreator'
+        dataflow_constants.DATAFLOW_IAM_SERVICE_ACCOUNT_USER,
+        'roles/iam.serviceAccountTokenCreator',
       ]
       self.add_child(child=compute_agent_permission_check)
     else:
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       service_account=op.get(
-                                           flags.WORKER_SERVICE_ACCOUNT),
-                                       project_id=op.get(flags.PROJECT_ID)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          service_account=op.get(flags.WORKER_SERVICE_ACCOUNT),
+          project_id=op.get(flags.PROJECT_ID),
+        ),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
 
 class DataflowResourcePermissions(runbook.Step):
@@ -251,10 +254,12 @@ class DataflowResourcePermissions(runbook.Step):
   def execute(self):
     """Check the Dataflow Resource permissions."""
     filter_str = [
-        'log_id("dataflow.googleapis.com/job-message")',
-        'resource.type="dataflow_step"',
-        ('textPayload=~("Failed to write a file to temp location" OR "Unable'
-         ' to rename output files" OR "Unable to delete temp files")'),
+      'log_id("dataflow.googleapis.com/job-message")',
+      'resource.type="dataflow_step"',
+      (
+        'textPayload=~("Failed to write a file to temp location" OR "Unable'
+        ' to rename output files" OR "Unable to delete temp files")'
+      ),
     ]
     filter_str = '\n'.join(filter_str)
     log_entries = local_realtime_query(filter_str)
@@ -266,7 +271,8 @@ class DataflowResourcePermissions(runbook.Step):
         dataflow_storage_role_check.project = op.get(flags.CROSS_PROJECT_ID)
       dataflow_storage_role_check.roles = ['roles/storage.objectAdmin']
       dataflow_storage_role_check.principal = (
-          f'serviceAccount:{op.get(flags.WORKER_SERVICE_ACCOUNT)}')
+        f'serviceAccount:{op.get(flags.WORKER_SERVICE_ACCOUNT)}'
+      )
       dataflow_storage_role_check.require_all = True
       self.add_child(dataflow_storage_role_check)
     else:

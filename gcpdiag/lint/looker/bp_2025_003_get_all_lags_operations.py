@@ -12,17 +12,19 @@ from gcpdiag.queries import looker
 def format_operation_message(operation):
   """Helper function to format the operation message."""
   if operation.status == 'In Progress':
-    action_message = (
-        f'Activity: {operation.operation_type} | Status: {operation.status}.')
+    action_message = f'Activity: {operation.operation_type} | Status: {operation.status}.'
 
   else:
     action_message = (
-        f'Activity: {operation.operation_type} | Action: {operation.action} | '
-        f'Status: {operation.status}.')
+      f'Activity: {operation.operation_type} | Action: {operation.action} | '
+      f'Status: {operation.status}.'
+    )
 
-  return (f'\n  Location: {operation.location_id}\n'
-          f'  Instance: {operation.instance_name}\n'
-          f'    - {action_message}')
+  return (
+    f'\n  Location: {operation.location_id}\n'
+    f'  Instance: {operation.instance_name}\n'
+    f'    - {action_message}'
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

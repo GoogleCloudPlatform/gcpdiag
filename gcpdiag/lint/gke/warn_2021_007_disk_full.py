@@ -40,9 +40,10 @@ def prefetch_rule(context: models.Context):
     return
 
   # Only check the latest usage values
-  within_str = 'within 5m, d\'%s\'' % (monitoring.period_aligned_now(300))
+  within_str = "within 5m, d'%s'" % (monitoring.period_aligned_now(300))
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id, f"""
+    context.project_id,
+    f"""
   fetch gce_instance
   | metric 'compute.googleapis.com/guest/disk/bytes_used'
   | filter metric.device_name == 'sda1'
@@ -50,7 +51,8 @@ def prefetch_rule(context: models.Context):
   | next_older 5m
   | filter_ratio_by [resource.instance_id], metric.state == 'free'
   | every 5m
-  """)
+  """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -82,7 +84,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_ok(c)
     else:
       report.add_failed(
-          c,
-          'nodes found founds with boot disk free space less than %d%%:\n. ' %
-          (MIN_FREE_THRESHOLD * 100) + '\n. '.join(
-              [node.instance.name for node in bad_nodes_per_cluster[c]]))
+        c,
+        'nodes found founds with boot disk free space less than %d%%:\n. '
+        % (MIN_FREE_THRESHOLD * 100)
+        + '\n. '.join([node.instance.name for node in bad_nodes_per_cluster[c]]),
+      )

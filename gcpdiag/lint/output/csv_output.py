@@ -22,15 +22,17 @@ from gcpdiag.lint.output import base_output
 
 
 class CSVOutput(base_output.BaseOutput):
-  """ Output implementation that prints result in CSV format. """
+  """Output implementation that prints result in CSV format."""
 
   columns = ['rule', 'resource', 'status', 'message', 'doc_url']
 
-  def __init__(self,
-               file: TextIO = sys.stdout,
-               log_info_for_progress_only: bool = True,
-               show_ok: bool = True,
-               show_skipped: bool = False):
+  def __init__(
+    self,
+    file: TextIO = sys.stdout,
+    log_info_for_progress_only: bool = True,
+    show_ok: bool = True,
+    show_skipped: bool = False,
+  ):
     super().__init__(file, log_info_for_progress_only, show_ok, show_skipped)
     self.writer = csv.DictWriter(sys.stdout, fieldnames=self.columns)
 
@@ -38,27 +40,29 @@ class CSVOutput(base_output.BaseOutput):
   def result_handler(self) -> 'lint.LintResultsHandler':
     return self
 
-  def process_rule_report(self,
-                          rule_report: lint.LintReportRuleInterface) -> None:
+  def process_rule_report(self, rule_report: lint.LintReportRuleInterface) -> None:
     with self.lock:
       self._print_rule_report(rule_report)
 
-  def _print_rule_report(self,
-                         rule_report: lint.LintReportRuleInterface) -> None:
+  def _print_rule_report(self, rule_report: lint.LintReportRuleInterface) -> None:
     for result in rule_report.results:
       if not self._should_result_be_skipped(result):
-        self._add_result(rule=rule_report.rule,
-                         resource=result.resource,
-                         status=result.status,
-                         reason=result.reason,
-                         short_info=result.short_info)
+        self._add_result(
+          rule=rule_report.rule,
+          resource=result.resource,
+          status=result.status,
+          reason=result.reason,
+          short_info=result.short_info,
+        )
 
-  def _add_result(self,
-                  rule: lint.LintRule,
-                  resource: Optional[models.Resource],
-                  status: str,
-                  short_info: Optional[str] = None,
-                  reason: Optional[str] = None) -> None:
+  def _add_result(
+    self,
+    rule: lint.LintRule,
+    resource: Optional[models.Resource],
+    status: str,
+    short_info: Optional[str] = None,
+    reason: Optional[str] = None,
+  ) -> None:
     self.rule_has_results = True
     rule_id = f'{rule.product}/{rule.rule_class}/{rule.rule_id}'
     if reason:
@@ -67,13 +71,15 @@ class CSVOutput(base_output.BaseOutput):
       message = '' + short_info
     else:
       message = '-'
-    self.writer.writerow({
+    self.writer.writerow(
+      {
         'rule': rule_id,
         'resource': resource.full_path if resource else '-',
         'status': status,
         'message': message,
-        'doc_url': rule.doc_url
-    })
+        'doc_url': rule.doc_url,
+      }
+    )
 
   def display_header(self, context):
     super().display_header(context)

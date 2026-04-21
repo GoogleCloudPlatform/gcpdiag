@@ -58,8 +58,8 @@ def _estimate_oss_release_date(version: Version) -> date:
     return FUTURE_OSS_K8S_RELEASE_DATE
   # Calculate a possible release date
   return BASE_OSS_K8S_RELEASE_DATE + timedelta(
-      days=(version.minor - BASE_OSS_K8S_VERSION.minor) *
-      MINOR_RELEASE_PACE_IN_DAYS)
+    days=(version.minor - BASE_OSS_K8S_VERSION.minor) * MINOR_RELEASE_PACE_IN_DAYS
+  )
 
 
 def _estimate_gke_eol_date(version: Version, eol_schedule: Dict):
@@ -73,24 +73,26 @@ def _estimate_gke_eol_date(version: Version, eol_schedule: Dict):
 
   short_version = f'{version.major}.{version.minor}'
 
-  regular_release = get_path(eol_schedule, (short_version, 'regular_avail'),
-                             None)
+  regular_release = get_path(eol_schedule, (short_version, 'regular_avail'), None)
   rapid_release = get_path(eol_schedule, (short_version, 'rapid_avail'), None)
   oss_release = get_path(eol_schedule, (short_version, 'oss_release'), None)
 
   if regular_release and regular_release != TBD:
     return regular_release + timedelta(days=GKE_REGULAR_SUPPORT_PERIOD_IN_DAYS)
   if rapid_release and rapid_release != TBD:
-    return rapid_release + timedelta(days=GKE_TIME_TO_REGULAR_IN_DAYS +
-                                     GKE_REGULAR_SUPPORT_PERIOD_IN_DAYS)
+    return rapid_release + timedelta(
+      days=GKE_TIME_TO_REGULAR_IN_DAYS + GKE_REGULAR_SUPPORT_PERIOD_IN_DAYS
+    )
 
   if oss_release and oss_release != TBD:
     base_oss_release = oss_release
   else:
     base_oss_release = _estimate_oss_release_date(version)
-  return base_oss_release + timedelta(days=GKE_TIME_TO_RAPID_IN_DAYS +
-                                      GKE_TIME_TO_REGULAR_IN_DAYS +
-                                      GKE_REGULAR_SUPPORT_PERIOD_IN_DAYS)
+  return base_oss_release + timedelta(
+    days=GKE_TIME_TO_RAPID_IN_DAYS
+    + GKE_TIME_TO_REGULAR_IN_DAYS
+    + GKE_REGULAR_SUPPORT_PERIOD_IN_DAYS
+  )
 
 
 def _notification_required(version: Version, eol_schedule: Dict) -> bool:
@@ -106,8 +108,11 @@ def _notification_required(version: Version, eol_schedule: Dict) -> bool:
     eol_schedule[short_version] = {'eol': 'already reached EOL', 'eoled': True}
     return True
 
-  if not eol_schedule or (short_version not in eol_schedule) or (
-      eol_schedule[short_version]['eol'] == TBD):
+  if (
+    not eol_schedule
+    or (short_version not in eol_schedule)
+    or (eol_schedule[short_version]['eol'] == TBD)
+  ):
     # The version is NOT defined in the static EOL versions file or is unknowd (TBD)
     eol_date = _estimate_gke_eol_date(version, eol_schedule)
     # Update the EOL date in the `eol_schedule` dict
@@ -120,7 +125,7 @@ def _notification_required(version: Version, eol_schedule: Dict) -> bool:
 
 def _get_notification_msg(version: Version, eol_schedule: Dict) -> str:
   short_version = f'{version.major}.{version.minor}'
-  msg = f"GKE version {short_version} scheduled end of life: {eol_schedule[short_version]['eol']}"
+  msg = f'GKE version {short_version} scheduled end of life: {eol_schedule[short_version]["eol"]}'
   if 'estimated' in eol_schedule[short_version]:
     msg += ' (estimation)'
   return msg
@@ -138,8 +143,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_skipped(c, 'release channel: ' + c.release_channel)
       continue
     if _notification_required(c.master_version, eol_schedule):
-      report.add_failed(c, _get_notification_msg(c.master_version,
-                                                 eol_schedule))
+      report.add_failed(c, _get_notification_msg(c.master_version, eol_schedule))
       continue
     for np in c.nodepools:
       if _notification_required(np.version, eol_schedule):

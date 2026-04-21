@@ -26,7 +26,6 @@ RESOURCE_TYPE_ORGANIZATION = 'organizations'
 
 
 class PolicyConstraint:
-
   def __init__(self, name, resource_data):
     self.name = name
     self._resource_data = resource_data
@@ -38,13 +37,11 @@ class PolicyConstraint:
 
 
 class BooleanPolicyConstraint(PolicyConstraint):
-
   def is_enforced(self) -> bool:
     return self._resource_data.get('enforced', False)
 
 
 class ListPolicyConstraint(PolicyConstraint):
-
   def allowed_values(self) -> List[str]:
     return self._resource_data.get('allowedValues', [])
 
@@ -53,15 +50,13 @@ class ListPolicyConstraint(PolicyConstraint):
 
 
 class RestoreDefaultPolicyConstraint(PolicyConstraint):
-
   def is_default_restored(self) -> bool:
     """Indicates that the constraintDefault enforcement behavior is restored."""
     return True
 
 
 @caching.cached_api_call
-def _get_effective_org_policy_all_constraints(
-    project_id: str) -> Dict[str, PolicyConstraint]:
+def _get_effective_org_policy_all_constraints(project_id: str) -> Dict[str, PolicyConstraint]:
   # NOTE: this function doesn't get the "effective" org policy, but just
   # the policies that are directly set on the project. This is a deliberate
   # choice to improve performance.
@@ -92,14 +87,14 @@ def get_effective_org_policy(project_id: str, constraint: str):
   crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
   try:
     req = crm_api.projects().getEffectiveOrgPolicy(
-        resource=f'projects/{project_id}', body={'constraint': constraint})
+      resource=f'projects/{project_id}', body={'constraint': constraint}
+    )
     result = req.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
 
   if 'booleanPolicy' in result:
-    return BooleanPolicyConstraint(result['constraint'],
-                                   result['booleanPolicy'])
+    return BooleanPolicyConstraint(result['constraint'], result['booleanPolicy'])
   elif 'listPolicy' in result:
     return ListPolicyConstraint(result['constraint'], result['listPolicy'])
   else:
@@ -139,13 +134,16 @@ def get_all_project_org_policies(project_id: str):
 
       if 'booleanPolicy' in policy:
         all_constraints[constraint_name] = BooleanPolicyConstraint(
-            constraint_name, policy['booleanPolicy'])
+          constraint_name, policy['booleanPolicy']
+        )
       elif 'listPolicy' in policy:
         all_constraints[constraint_name] = ListPolicyConstraint(
-            constraint_name, policy['listPolicy'])
+          constraint_name, policy['listPolicy']
+        )
       elif 'restoreDefault' in policy:
         all_constraints[constraint_name] = RestoreDefaultPolicyConstraint(
-            constraint_name, policy['restoreDefault'])
+          constraint_name, policy['restoreDefault']
+        )
       else:
         logging.warning('unknown constraint type: %s', policy)
 

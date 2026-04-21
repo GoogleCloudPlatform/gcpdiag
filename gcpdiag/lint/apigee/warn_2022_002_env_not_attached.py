@@ -39,8 +39,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   all_attached_envs_list: Set[str] = set()
   instances_list = apigee.get_instances(apigee_org)
-  for instance in sorted(instances_list.values(),
-                         key=lambda instance: instance.name):
+  for instance in sorted(instances_list.values(), key=lambda instance: instance.name):
     instance_envs = set(apigee.get_instances_attachments(instance.full_path))
     if instance_envs:
       all_attached_envs_list = all_attached_envs_list.union(instance_envs)
@@ -48,8 +47,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for env in all_envs_list:
     if env.name not in all_attached_envs_list:
       report.add_failed(
-          env,
-          f'Environment: {env.name} is not being attached to any Apigee X instance \n'
-          f'All API proxy deployment will fail in this environment')
+        env,
+        f'Environment: {env.name} is not being attached to any Apigee X instance \n'
+        f'All API proxy deployment will fail in this environment',
+      )
     else:
       report.add_ok(env)

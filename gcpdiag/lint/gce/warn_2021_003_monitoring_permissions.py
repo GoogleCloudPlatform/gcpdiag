@@ -29,16 +29,15 @@ from gcpdiag.queries import apis, crm, gce, iam
 
 ROLE = 'roles/monitoring.metricWriter'
 MONITORING_SCOPES = [
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/monitoring',
-    'https://www.googleapis.com/auth/monitoring.write',
+  'https://www.googleapis.com/auth/cloud-platform',
+  'https://www.googleapis.com/auth/monitoring',
+  'https://www.googleapis.com/auth/monitoring.write',
 ]
 
-ENABLE_MONITORING_API_PROMOT = (
-    """Please enable Cloud Monitoring API on the project with the command:\
+ENABLE_MONITORING_API_PROMOT = """Please enable Cloud Monitoring API on the project with the command:\
 \ngcloud services enable monitoring.googleapis.com --project=%s\nOps \
 Agent requires the API to collect metrics from GCE VMs and display on \
-Metrics Explorer""")
+Metrics Explorer"""
 VM_NO_MONITORING_SCOPE = """Follow \
 https://cloud.google.com/compute/docs/instances/change-service-account\
 #changeserviceaccountandscopes\nto enable monitoring.write VM Access Scope."""
@@ -61,47 +60,43 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'monitoring'):
     report.add_failed(
-        crm.get_project(context.project_id),
-        ENABLE_MONITORING_API_PROMOT % (context.project_id),
-        'Cloud Monitoring API Not Enabled on project %s' % (context.project_id),
+      crm.get_project(context.project_id),
+      ENABLE_MONITORING_API_PROMOT % (context.project_id),
+      'Cloud Monitoring API Not Enabled on project %s' % (context.project_id),
     )
     return
 
   instances = gce.get_instances(context)
   if not instances:
-    report.add_skipped(
-        None, '', f'No VM instances found in project: {context.project_id}.')
+    report.add_skipped(None, '', f'No VM instances found in project: {context.project_id}.')
     return
 
-  for i in sorted(instances.values(),
-                  key=op.attrgetter('project_id', 'full_path')):
+  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'full_path')):
     # GKE nodes are checked by another test.
     if i.is_gke_node():
       continue
 
     sa = i.service_account
     if not sa:
-      report.add_failed(i, VM_NO_SA % (i.name),
-                        'VM does not have a Service Account attached')
+      report.add_failed(i, VM_NO_SA % (i.name), 'VM does not have a Service Account attached')
       continue
 
     has_scope = set(MONITORING_SCOPES) & set(i.access_scopes)
     if not has_scope:
       report.add_failed(
-          i,
-          VM_NO_MONITORING_SCOPE,
-          'VM does not have monitoring.write Access Scope',
+        i,
+        VM_NO_MONITORING_SCOPE,
+        'VM does not have monitoring.write Access Scope',
       )
       continue
 
-    iam_policy = iam.get_project_policy(
-        context.copy_with(project_id=i.project_id))
+    iam_policy = iam.get_project_policy(context.copy_with(project_id=i.project_id))
     if not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
       report.add_failed(
-          i,
-          SA_NO_METRICS_WRITER % (sa),
-          'The attached Service Account of the VM does not have the required'
-          ' IAM role: roles/monitoring.metricWriter',
+        i,
+        SA_NO_METRICS_WRITER % (sa),
+        'The attached Service Account of the VM does not have the required'
+        ' IAM role: roles/monitoring.metricWriter',
       )
       continue
     report.add_ok(i)

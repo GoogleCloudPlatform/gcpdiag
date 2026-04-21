@@ -38,10 +38,10 @@ def prefetch_rule(context: models.Context):
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_composer_environment',
-      log_name='log_id("cloudaudit.googleapis.com%2Factivity")',
-      filter_str=' AND '.join(FILTER_1),
+    project_id=context.project_id,
+    resource_type='cloud_composer_environment',
+    log_name='log_id("cloudaudit.googleapis.com%2Factivity")',
+    filter_str=' AND '.join(FILTER_1),
   )
 
 
@@ -62,12 +62,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   env_name_set = set()
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), ''):
+        log_entry, ('protoPayload', 'status', 'message'), ''
+      ):
         continue
       env_name = get_path(log_entry, ('resource', 'labels', 'environment_name'))
       env_name_set.add(env_name)

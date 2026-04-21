@@ -20,6 +20,7 @@ components and uploads the logs to Cloud Logging. All fluentd pods in an
 environment could be stuck in a CrashLoopBackOff state after upgrading the
 environment and no logs appear in the Cloud Logging.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -30,10 +31,10 @@ MATCH_STR2 = "undefined method `subscription' for nil:NilClass"
 POD_NAME = 'composer-builder-fluentd'
 
 LOG_FILTER = [
-    'severity=INFO',
-    f'labels.k8s-pod/name="{POD_NAME}"',
-    f'textPayload:"{MATCH_STR}"',
-    f'textPayload:"{MATCH_STR2}"',
+  'severity=INFO',
+  f'labels.k8s-pod/name="{POD_NAME}"',
+  f'textPayload:"{MATCH_STR}"',
+  f'textPayload:"{MATCH_STR2}"',
 ]
 
 logs_by_project = {}
@@ -46,10 +47,11 @@ def prefetch_rule(context: models.Context):
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='k8s_container',
-      log_name='log_id("stdout")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='k8s_container',
+    log_name='log_id("stdout")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -69,31 +71,26 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   stuck_in_crashloop_envs = []
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'INFO' or \
-         POD_NAME != get_path(log_entry,
-                     ('labels', 'k8s-pod/name'), default='') or \
-         MATCH_STR not in log_entry.get('textPayload', '') or \
-         MATCH_STR2 not in log_entry.get('textPayload', ''):
+      if (
+        log_entry['severity'] != 'INFO'
+        or POD_NAME != get_path(log_entry, ('labels', 'k8s-pod/name'), default='')
+        or MATCH_STR not in log_entry.get('textPayload', '')
+        or MATCH_STR2 not in log_entry.get('textPayload', '')
+      ):
         continue
 
       # region-name-suffix-gke format (us-east4-composer-stg-v2-a106130c-gke)
-      cluster_name = get_path(log_entry, ('resource', 'labels', 'cluster_name'),
-                              default='')
+      cluster_name = get_path(log_entry, ('resource', 'labels', 'cluster_name'), default='')
 
       env_name = '-'.join(cluster_name.split('-')[2:-2])
       if env_name and env_name not in stuck_in_crashloop_envs:
         stuck_in_crashloop_envs.append(env_name)
 
   for env_name in stuck_in_crashloop_envs:
-    report.add_failed(name_to_env[env_name],
-                      'has fluentd pods stuck in the crashloop')
+    report.add_failed(name_to_env[env_name], 'has fluentd pods stuck in the crashloop')
 
-  for env_name in [
-      env_name for env_name in name_to_env
-      if env_name not in stuck_in_crashloop_envs
-  ]:
+  for env_name in [env_name for env_name in name_to_env if env_name not in stuck_in_crashloop_envs]:
     report.add_ok(name_to_env[env_name])

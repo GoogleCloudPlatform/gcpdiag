@@ -20,8 +20,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-
 
 class MonitoringApiStub:
   """Mock object to simulate monitoring.googleapis.com calls."""
@@ -35,7 +33,6 @@ class MonitoringApiStub:
   def projects(self):
     return self
 
-  # pylint: disable=invalid-name
   def timeSeries(self):
     return self
 
@@ -49,23 +46,25 @@ class MonitoringApiStub:
     m = re.match(r'projects/([^/]+)', name)
     project_id = m.group(1) if m else 'unknown-project'
     return apis_stub.RestCallStub(
-        project_id=project_id,
-        json_basename='monitoring-query-range',
-        default={
-            'status': 'success',
-            'data': {
-                'resultType':
-                    'matrix',
-                'result': [{
-                    'metric': {
-                        '__name__': 'vpn_gateway_tunnel_is_up',
-                        'tunnel_id': 'tunnel-abc-123',
-                        'project_id': project_id
-                    },
-                    'values': [[1621438831, '0'], [1621439131, '1']]
-                }]
+      project_id=project_id,
+      json_basename='monitoring-query-range',
+      default={
+        'status': 'success',
+        'data': {
+          'resultType': 'matrix',
+          'result': [
+            {
+              'metric': {
+                '__name__': 'vpn_gateway_tunnel_is_up',
+                'tunnel_id': 'tunnel-abc-123',
+                'project_id': project_id,
+              },
+              'values': [[1621438831, '0'], [1621439131, '1']],
             }
-        })
+          ],
+        },
+      },
+    )
 
   def query(self, name, body):
     del body

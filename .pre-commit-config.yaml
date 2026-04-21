@@ -53,20 +53,12 @@ repos:
       '--implicit-optional', '--no-namespace-packages', '--install-types',
       '--non-interactive']
 
-- repo: https://github.com/timothycrosley/isort
-  rev: 5.12.0
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.15.12
   hooks:
-  - id: isort
-
-- repo: https://github.com/google/yapf
-  rev: v0.40.2
-  hooks:
-  - id: yapf
-
-- repo: https://github.com/pylint-dev/pylint
-  rev: v3.3.1
-  hooks:
-  - id: pylint
+    - id: ruff
+      args: [--fix, --exit-non-zero-on-fix]
+    - id: ruff-format
 
 - repo: https://github.com/antonbabenko/pre-commit-terraform
   rev: v1.96.1

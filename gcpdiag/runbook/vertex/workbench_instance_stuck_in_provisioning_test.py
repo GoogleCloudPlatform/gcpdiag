@@ -22,8 +22,10 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'vertex/workbench-instance-stuck-in-provisioning'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-notebooks2-aaaa',
       'instance_name': 'notebooks2instance-provisioning-stuck',
-      'zone': 'us-west1-a'
-  }]
+      'zone': 'us-west1-a',
+    }
+  ]

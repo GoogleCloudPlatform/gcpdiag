@@ -18,6 +18,7 @@ In such a situation it might be interrupted by Negsignal.SIGKILL. The system
 sends this signal to avoid further memory consumption which might impact the
 execution of other Airflow tasks.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -35,10 +36,11 @@ def prefetch_rule(context: models.Context):
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_composer_environment',
-      log_name='log_id("airflow-worker")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='cloud_composer_environment',
+    log_name='log_id("airflow-worker")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -58,12 +60,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   sigkilled_envs = set()
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'INFO' or \
-          MATCH_STR not in log_entry.get('textPayload', ''):
+      if log_entry['severity'] != 'INFO' or MATCH_STR not in log_entry.get('textPayload', ''):
         continue
 
       env_name = get_path(log_entry, ('resource', 'labels', 'environment_name'))

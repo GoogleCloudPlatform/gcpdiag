@@ -34,18 +34,21 @@ def local_log_search(cluster_name, cluster_location, error_message):
     A string representing the filter for the logs query.
   """
   filter_list = [
-      'log_id("container.googleapis.com/cluster-autoscaler-visibility")',
-      'resource.type="k8s_cluster"',
-      f'resource.labels.location="{cluster_location}"',
-      f'resource.labels.cluster_name="{cluster_name}"', f'{error_message}'
+    'log_id("container.googleapis.com/cluster-autoscaler-visibility")',
+    'resource.type="k8s_cluster"',
+    f'resource.labels.location="{cluster_location}"',
+    f'resource.labels.cluster_name="{cluster_name}"',
+    f'{error_message}',
   ]
 
   filter_str = '\n'.join(filter_list)
 
-  log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                                    start_time=op.get(flags.START_TIME),
-                                    end_time=op.get(flags.END_TIME),
-                                    filter_str=filter_str)
+  log_entries = logs.realtime_query(
+    project_id=op.get(flags.PROJECT_ID),
+    start_time=op.get(flags.START_TIME),
+    end_time=op.get(flags.END_TIME),
+    filter_str=filter_str,
+  )
 
   return log_entries
 
@@ -78,36 +81,30 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
   - no.scale.down.node.pod.unexpected.error
 
   """
+
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The ID of the project hosting the GKE Cluster',
-          'required': True
-      },
-      flags.NAME: {
-          'type':
-              str,
-          'help':
-              'The name of the GKE cluster, to limit search only for this cluster',
-          'deprecated':
-              True,
-          'new_parameter':
-              'gke_cluster_name',
-      },
-      flags.GKE_CLUSTER_NAME: {
-          'type':
-              str,
-          'help':
-              'The name of the GKE cluster, to limit search only for this cluster',
-          'required':
-              True
-      },
-      flags.LOCATION: {
-          'type': str,
-          'help': 'The zone or region of the GKE cluster',
-          'required': True
-      }
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The ID of the project hosting the GKE Cluster',
+      'required': True,
+    },
+    flags.NAME: {
+      'type': str,
+      'help': 'The name of the GKE cluster, to limit search only for this cluster',
+      'deprecated': True,
+      'new_parameter': 'gke_cluster_name',
+    },
+    flags.GKE_CLUSTER_NAME: {
+      'type': str,
+      'help': 'The name of the GKE cluster, to limit search only for this cluster',
+      'required': True,
+    },
+    flags.LOCATION: {
+      'type': str,
+      'help': 'The zone or region of the GKE cluster',
+      'required': True,
+    },
   }
 
   def legacy_parameter_handler(self, parameters):
@@ -144,14 +141,10 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
     self.add_step(parent=min_size_reached, child=failed_to_evict_pods)
     self.add_step(parent=failed_to_evict_pods, child=disabled_annotation)
     self.add_step(parent=disabled_annotation, child=min_resource_limit_exceeded)
-    self.add_step(parent=min_resource_limit_exceeded,
-                  child=no_place_to_move_pods)
-    self.add_step(parent=no_place_to_move_pods,
-                  child=pod_not_backed_by_controller)
-    self.add_step(parent=pod_not_backed_by_controller,
-                  child=not_safe_to_evict_annotation)
-    self.add_step(parent=not_safe_to_evict_annotation,
-                  child=pod_kube_system_unmovable)
+    self.add_step(parent=min_resource_limit_exceeded, child=no_place_to_move_pods)
+    self.add_step(parent=no_place_to_move_pods, child=pod_not_backed_by_controller)
+    self.add_step(parent=pod_not_backed_by_controller, child=not_safe_to_evict_annotation)
+    self.add_step(parent=not_safe_to_evict_annotation, child=pod_kube_system_unmovable)
     self.add_step(parent=pod_kube_system_unmovable, child=pod_not_enough_pdb)
     self.add_step(parent=pod_not_enough_pdb, child=pod_controller_not_found)
     self.add_step(parent=pod_controller_not_found, child=pod_unexpected_error)
@@ -174,31 +167,36 @@ class ClusterAutoscalerStart(runbook.StartStep):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     if not apis.is_enabled(project, 'logging'):
-      op.add_skipped(project_path,
-                     reason=('Logging disabled in project {}').format(project))
+      op.add_skipped(project_path, reason=('Logging disabled in project {}').format(project))
       return
 
     # verify if the provided cluster at location is present
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
-      cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                                cluster_id=op.get(flags.GKE_CLUSTER_NAME),
-                                location=op.get(flags.LOCATION))
+      cluster = gke.get_cluster(
+        op.get(flags.PROJECT_ID),
+        cluster_id=op.get(flags.GKE_CLUSTER_NAME),
+        location=op.get(flags.LOCATION),
+      )
     except GcpApiError:
       op.add_skipped(
-          project,
-          reason=('Cluster {} does not exist in {} for project {}').format(
-              op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION),
-              op.get(flags.PROJECT_ID)))
+        project,
+        reason=('Cluster {} does not exist in {} for project {}').format(
+          op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION), op.get(flags.PROJECT_ID)
+        ),
+      )
     else:
-      op.add_ok(project,
-                reason=('Cluster {} found in {} for project {}').format(
-                    cluster.name, op.get(flags.LOCATION),
-                    op.get(flags.PROJECT_ID)))
+      op.add_ok(
+        project,
+        reason=('Cluster {} found in {} for project {}').format(
+          cluster.name, op.get(flags.LOCATION), op.get(flags.PROJECT_ID)
+        ),
+      )
 
 
 class CaOutOfResources(runbook.Step):
   """Check for "scale.up.error.out.of.resources" log entries"""
+
   template = 'clusterautoscaler::out_of_resources'
 
   def execute(self):
@@ -209,24 +207,28 @@ class CaOutOfResources(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
-    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
-                     '"scale.up.error.out.of.resources"')
+    error_message = (
+      'jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.out.of.resources"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaQuotaExceeded(runbook.Step):
@@ -242,24 +244,28 @@ class CaQuotaExceeded(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
-    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
-                     '"scale.up.error.quota.exceeded"')
+    error_message = (
+      'jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.quota.exceeded"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaInstanceTimeout(runbook.Step):
@@ -275,24 +281,29 @@ class CaInstanceTimeout(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
-    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
-                     '"scale.up.error.waiting.for.instances.timeout"')
+    error_message = (
+      'jsonPayload.resultInfo.results.errorMsg.messageId='
+      '"scale.up.error.waiting.for.instances.timeout"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaIpSpaceExhausted(runbook.Step):
@@ -308,24 +319,28 @@ class CaIpSpaceExhausted(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
-    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
-                     '"scale.up.error.ip.space.exhausted"')
+    error_message = (
+      'jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.ip.space.exhausted"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaServiceAccountDeleted(runbook.Step):
@@ -341,24 +356,28 @@ class CaServiceAccountDeleted(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
-    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
-                     '"scale.up.error.service.account.deleted"')
+    error_message = (
+      'jsonPayload.resultInfo.results.errorMsg.messageId="scale.up.error.service.account.deleted"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaMinSizeReached(runbook.Step):
@@ -375,23 +394,27 @@ class CaMinSizeReached(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.node.group.min.size.reached"')
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.node.group.min.size.reached"'
+    )
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaFailedToEvictPods(runbook.Step):
@@ -407,24 +430,28 @@ class CaFailedToEvictPods(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
-    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
-                     '"scale.down.error.failed.to.evict.pods"')
+    error_message = (
+      'jsonPayload.resultInfo.results.errorMsg.messageId="scale.down.error.failed.to.evict.pods"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaDisabledAnnotation(runbook.Step):
@@ -441,24 +468,28 @@ class CaDisabledAnnotation(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.scale.down.disabled.annotation"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.scale.down.disabled.annotation"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaMinResourceLimitExceeded(runbook.Step):
@@ -475,24 +506,28 @@ class CaMinResourceLimitExceeded(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.minimal.resource.limits.exceeded"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.minimal.resource.limits.exceeded"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaNoPlaceToMovePods(runbook.Step):
@@ -509,24 +544,28 @@ class CaNoPlaceToMovePods(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.no.place.to.move.pods"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.no.place.to.move.pods"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaPodsNotBackedByController(runbook.Step):
@@ -543,24 +582,28 @@ class CaPodsNotBackedByController(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.pod.not.backed.by.controller"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.pod.not.backed.by.controller"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaNotSafeToEvictAnnotation(runbook.Step):
@@ -577,24 +620,28 @@ class CaNotSafeToEvictAnnotation(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.pod.not.safe.to.evict.annotation"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.pod.not.safe.to.evict.annotation"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaPodKubeSystemUnmovable(runbook.Step):
@@ -611,24 +658,28 @@ class CaPodKubeSystemUnmovable(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.pod.kube.system.unmovable"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.pod.kube.system.unmovable"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaPodNotEnoughPdb(runbook.Step):
@@ -645,24 +696,28 @@ class CaPodNotEnoughPdb(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.pod.not.enough.pdb"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.pod.not.enough.pdb"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaPodControllerNotFound(runbook.Step):
@@ -679,24 +734,28 @@ class CaPodControllerNotFound(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.pod.controller.not.found"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.pod.controller.not.found"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class CaPodUnexpectedError(runbook.Step):
@@ -713,24 +772,28 @@ class CaPodUnexpectedError(runbook.Step):
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
-        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
-        '"no.scale.down.node.pod.unexpected.error"')
+      'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+      '"no.scale.down.node.pod.unexpected.error"'
+    )
 
-    log_entries = local_log_search(cluster_name, cluster_location,
-                                   error_message)
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
 
     if log_entries:
       for log_entry in log_entries:
         sample_log = json.dumps(log_entry, indent=2)
         break
-      op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project_path,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
 
 
 class ClusterAutoscalerEnd(runbook.EndStep):
@@ -746,8 +809,8 @@ class ClusterAutoscalerEnd(runbook.EndStep):
   def execute(self):
     """Finalize `Cluster Autoscaler` diagnostics."""
     response = op.prompt(
-        kind=op.CONFIRMATION,
-        message=
-        'Are you satisfied with the `GKE Cluster Autoscaler` RCA performed?')
+      kind=op.CONFIRMATION,
+      message='Are you satisfied with the `GKE Cluster Autoscaler` RCA performed?',
+    )
     if response == op.NO:
       op.info(message=op.END_MESSAGE)

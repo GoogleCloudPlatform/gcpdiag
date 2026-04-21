@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Contains interconnect specific flags"""
-# pylint: disable=wildcard-import, unused-wildcard-import
+
 from gcpdiag.runbook.iam.flags import *
 from gcpdiag.runbook.interconnect.flags import *
 

@@ -1,6 +1,6 @@
 instance_name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
 
-gce/vm-performance:  Google Compute Engine VM performance checks
+gce/vm-performance: Google Compute Engine VM performance checks
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the performance issues of your Google Compute Engine VMs within Google Cloud Platform.
@@ -306,7 +306,7 @@ Live Migration Detected at 2021/11/24 16:35:22, Checking further
 
 instance_name=faulty-windows-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
 
-gce/vm-performance:  Google Compute Engine VM performance checks
+gce/vm-performance: Google Compute Engine VM performance checks
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the performance issues of your Google Compute Engine VMs within Google Cloud Platform.

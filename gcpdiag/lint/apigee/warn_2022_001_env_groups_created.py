@@ -18,6 +18,7 @@ Verify that environment groups are created in the runtime plane.
 If not, we should make sure every environment group is included
 in all override files where the environment is used.
 """
+
 import re
 from typing import Dict
 
@@ -31,17 +32,19 @@ MATCH_STR = 'INTERNAL: NOT_FOUND: failed to create ApigeeRoute'
 k8s_container_logs_by_project = {}
 
 APIGEE_WATCHER_FILTER = [
-    'severity=ERROR', 'resource.labels.container_name= "apigee-watcher"',
-    f'jsonPayload.error: "{MATCH_STR}"'
+  'severity=ERROR',
+  'resource.labels.container_name= "apigee-watcher"',
+  f'jsonPayload.error: "{MATCH_STR}"',
 ]
 
 
 def prepare_rule(context: models.Context):
   k8s_container_logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='k8s_container',
-      log_name='log_id("stdout")',
-      filter_str=' AND '.join(APIGEE_WATCHER_FILTER))
+    project_id=context.project_id,
+    resource_type='k8s_container',
+    log_name='log_id("stdout")',
+    filter_str=' AND '.join(APIGEE_WATCHER_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -57,36 +60,40 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
   env_group_errors: Dict[str, Dict[str, str]] = {}
   # Process apigee_watcher container logs and search for env group creation errors
-  if k8s_container_logs_by_project.get(context.project_id) and \
-    k8s_container_logs_by_project[context.project_id].entries:
+  if (
+    k8s_container_logs_by_project.get(context.project_id)
+    and k8s_container_logs_by_project[context.project_id].entries
+  ):
     for log_entry in k8s_container_logs_by_project[context.project_id].entries:
       # Determine the problematic environment group name
       m = re.findall(
-          r'cannot find ApigeeRouteConfig for environment group "([^"]*)":',
-          get_path(log_entry, ('jsonPayload', 'error'), default=''))
+        r'cannot find ApigeeRouteConfig for environment group "([^"]*)":',
+        get_path(log_entry, ('jsonPayload', 'error'), default=''),
+      )
       if not m:
         continue
       for env_group_name in m:
-        cluster_name = get_path(log_entry,
-                                ('resource', 'labels', 'cluster_name'),
-                                default='Unknown')
-        location = get_path(log_entry, ('resource', 'labels', 'location'),
-                            default='Unknown')
-        organization = get_path(log_entry, ('labels', 'k8s-pod/org'),
-                                default='Unknown')
+        cluster_name = get_path(
+          log_entry, ('resource', 'labels', 'cluster_name'), default='Unknown'
+        )
+        location = get_path(log_entry, ('resource', 'labels', 'location'), default='Unknown')
+        organization = get_path(log_entry, ('labels', 'k8s-pod/org'), default='Unknown')
         if organization not in env_group_errors:
           env_group_errors[organization] = {}
         if env_group_name not in env_group_errors[organization].keys():
           env_group_errors[organization][env_group_name] = (
-              f'Environment group {env_group_name} in '
-              f'organization {organization}: is not created in cluster: '
-              f'{cluster_name}, location: {location}')
+            f'Environment group {env_group_name} in '
+            f'organization {organization}: is not created in cluster: '
+            f'{cluster_name}, location: {location}'
+          )
 
     for org_name, env_group_error in env_group_errors.items():
-      apigee_org = apigee.ApigeeOrganization(project_id=context.project_id,
-                                             org_name=org_name)
+      apigee_org = apigee.ApigeeOrganization(project_id=context.project_id, org_name=org_name)
       if env_group_error:
-        report.add_failed(apigee_org, 'Environment group creation issue detected: \n. '+\
-                          '\n. '.join(err for _, err in env_group_error.items()))
+        report.add_failed(
+          apigee_org,
+          'Environment group creation issue detected: \n. '
+          + '\n. '.join(err for _, err in env_group_error.items()),
+        )
   else:
     report.add_ok(project)

@@ -35,39 +35,37 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}'
+      None, f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}'
     )
     return
   datafusion_instances = projects_instances[context.project_id]
   if not datafusion_instances:
-    report.add_skipped(None,
-                       f'no Cloud Data Fusion instances were found {context}')
+    report.add_skipped(None, f'no Cloud Data Fusion instances were found {context}')
     return
 
   iam_policy = iam.get_project_policy(context)
-  constructed_datafusion_sa = ('serviceAccount:service-{project_number}'
-                               '@gcp-sa-datafusion.iam.gserviceaccount.com')
-  project_iam_policy_result = iam_policy.has_role_permissions(
-      constructed_datafusion_sa, IAM_ROLE)
+  constructed_datafusion_sa = (
+    'serviceAccount:service-{project_number}@gcp-sa-datafusion.iam.gserviceaccount.com'
+  )
+  project_iam_policy_result = iam_policy.has_role_permissions(constructed_datafusion_sa, IAM_ROLE)
 
   for _, datafusion_instance in sorted(datafusion_instances.items()):
     dataproc_service_account = datafusion_instance.dataproc_service_account
     if not dataproc_service_account:
-      report.add_skipped(
-          None, f'{datafusion_instance.name} '
-          'does not have DataProc Service Account')
+      report.add_skipped(None, f'{datafusion_instance.name} does not have DataProc Service Account')
       continue
     service_account_iam_policy = iam.get_service_account_iam_policy(
-        context, dataproc_service_account)
+      context, dataproc_service_account
+    )
     p4sa = datafusion_instance.api_service_agent
     datafusion_sa = 'serviceAccount:' + p4sa
-    sa_iam_policy_result = service_account_iam_policy.has_role_permissions(
-        datafusion_sa, IAM_ROLE)
+    sa_iam_policy_result = service_account_iam_policy.has_role_permissions(datafusion_sa, IAM_ROLE)
     if project_iam_policy_result or sa_iam_policy_result:
       report.add_ok(datafusion_instance)
     else:
       report.add_failed(
-          datafusion_instance, f'{datafusion_sa}\nlacks {IAM_ROLE} '
-          f'on DataProc SA ({dataproc_service_account}) associated with '
-          f'{datafusion_instance.name}')
+        datafusion_instance,
+        f'{datafusion_sa}\nlacks {IAM_ROLE} '
+        f'on DataProc SA ({dataproc_service_account}) associated with '
+        f'{datafusion_instance.name}',
+      )

@@ -22,10 +22,7 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-INCORRECT_RESOURCE_ERROR = ('incorrect resource format. Use '
-                            'projects/*/locations/*/repositories/')
+INCORRECT_RESOURCE_ERROR = 'incorrect resource format. Use projects/*/locations/*/repositories/'
 
 
 class ArtifactRegistryApiStub:
@@ -41,8 +38,7 @@ class ArtifactRegistryApiStub:
     return self
 
   def getIamPolicy(self, resource: str) -> apis_stub.RestCallStub:
-    m = re.match(r'projects/([^/]+)/locations/([^/]+)/repositories/([^/]+)',
-                 resource)
+    m = re.match(r'projects/([^/]+)/locations/([^/]+)/repositories/([^/]+)', resource)
     if m:
       project_id = m.group(1)
       return apis_stub.RestCallStub(project_id, 'artifact-registry-policy')
@@ -53,7 +49,6 @@ class ArtifactRegistryApiStub:
     m = re.match(r'projects/([^/]+)/projectSettings', name)
     if m:
       project_id = m.group(1)
-      return apis_stub.RestCallStub(project_id,
-                                    'artifact-registry-project-settings')
+      return apis_stub.RestCallStub(project_id, 'artifact-registry-project-settings')
     else:
       raise ValueError(INCORRECT_RESOURCE_ERROR)

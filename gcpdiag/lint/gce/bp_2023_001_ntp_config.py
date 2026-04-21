@@ -29,17 +29,16 @@ from gcpdiag.queries import gce
 from gcpdiag.queries.logs import LogEntryShort
 
 NTP_TIME_SYNC_MESSAGES = ['Time synchronized with', 'Selected source']
-RECOMMENDED_NTP_SERVERS = [
-    'metadata.google.internal', '169.254.169.254', 'metadata.google'
-]
+RECOMMENDED_NTP_SERVERS = ['metadata.google.internal', '169.254.169.254', 'metadata.google']
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  filter_str = '''textPayload:("chronyd" OR "ntpd")
-   AND ("Selected source" OR "Time synchronized with")'''
+  filter_str = """textPayload:("chronyd" OR "ntpd")
+   AND ("Selected source" OR "Time synchronized with")"""
   logs_by_project[context.project_id] = utils.SerialOutputSearch(
-      context, search_strings=NTP_TIME_SYNC_MESSAGES, custom_filter=filter_str)
+    context, search_strings=NTP_TIME_SYNC_MESSAGES, custom_filter=filter_str
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -54,13 +53,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   if instances:
     for instance in sorted(instances, key=lambda i: i.name):
-      match: Optional[LogEntryShort] = search.get_last_match(
-          instance_id=instance.id)
+      match: Optional[LogEntryShort] = search.get_last_match(instance_id=instance.id)
       if not match:
         report.add_skipped(instance, 'No indication of NTP Service time sync')
       elif not any(server in match.text for server in RECOMMENDED_NTP_SERVERS):
-        report.add_failed(instance, (f"{match.text.split(']:')[1][:-4]}"
-                                     'is not a GCP recommended NTP server'))
+        report.add_failed(
+          instance, (f'{match.text.split("]:")[1][:-4]}is not a GCP recommended NTP server')
+        )
       else:
         report.add_ok(instance)
   else:

@@ -30,12 +30,12 @@ GCE_SERVICE_NAME = 'compute.googleapis.com'
 QUOTA_LIMIT_NAME = '.*-ADDRESSES-per-project.*'
 # name of the quota metric
 QUOTA_METRIC_NAMES = (
-    'compute.googleapis.com/regional_in_use_addresses',
-    'compute.googleapis.com/global_in_use_addresses',
-    'compute.googleapis.com/regional_static_addresses',
-    'compute.googleapis.com/global_static_addresses',
-    'compute.googleapis.com/regional_static_byoip_addresses',
-    'compute.googleapis.com/global_static_byoip_addresses',
+  'compute.googleapis.com/regional_in_use_addresses',
+  'compute.googleapis.com/global_in_use_addresses',
+  'compute.googleapis.com/regional_static_addresses',
+  'compute.googleapis.com/global_static_addresses',
+  'compute.googleapis.com/regional_static_byoip_addresses',
+  'compute.googleapis.com/global_static_byoip_addresses',
 )
 # percentage of the quota limit usage
 QUOTA_LIMIT_THRESHOLD = 0.80
@@ -43,22 +43,20 @@ _query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
 
 def prefetch_rule(context: models.Context):
-
   # fetch the metrics if we have any instances
   regions_with_instances = gce.get_regions_with_instances(context)
   if not regions_with_instances:
     return
 
   params = {
-      'service_name': GCE_SERVICE_NAME,
-      'limit_name': QUOTA_LIMIT_NAME,
-      'within_days': config.get('within_days')
+    'service_name': GCE_SERVICE_NAME,
+    'limit_name': QUOTA_LIMIT_NAME,
+    'within_days': config.get('within_days'),
   }
 
-  _query_results_per_project_id[context.project_id] = \
-      monitoring.query(
-          context.project_id,
-          quotas.CONSUMER_QUOTA_QUERY_TEMPLATE.format_map(params))
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id, quotas.CONSUMER_QUOTA_QUERY_TEMPLATE.format_map(params)
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -70,12 +68,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for region in sorted(regions_with_instances, key=lambda r: r.name):
     all_skipped = True
     for quota_metric_name in QUOTA_METRIC_NAMES:
-
-      ts_key = frozenset({
+      ts_key = frozenset(
+        {
           f'resource.project_id:{context.project_id}',
           f'metric.quota_metric:{quota_metric_name}',
-          f'resource.location:{region.name}'
-      })
+          f'resource.location:{region.name}',
+        }
+      )
       try:
         ts = _query_results_per_project_id[context.project_id][ts_key]
         all_skipped = False
@@ -92,9 +91,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           exceeded = True
 
       if exceeded:
-        report.add_failed(region,
-                          (f'Region has reached {ratio:.0%} of {limit} limit:\n'
-                           f' quota metric: {quota_metric_name}'))
+        report.add_failed(
+          region,
+          (f'Region has reached {ratio:.0%} of {limit} limit:\n quota metric: {quota_metric_name}'),
+        )
       else:
         report.add_ok(region)
 

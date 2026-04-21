@@ -35,14 +35,12 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}'
+      None, f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}'
     )
     return
   datafusion_instances = projects_instances[context.project_id]
   if not datafusion_instances:
-    report.add_skipped(None,
-                       f'no Cloud Data Fusion instances not found {context}')
+    report.add_skipped(None, f'no Cloud Data Fusion instances not found {context}')
     return
 
   iam_policy = iam.get_project_policy(context)
@@ -50,13 +48,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for _, datafusion_instance in sorted(datafusion_instances.items()):
     instance_dataproc_sa = datafusion_instance.dataproc_service_account
     if not instance_dataproc_sa:
-      report.add_skipped(
-          None, f'{datafusion_instance.name} '
-          'does not have Dataproc Service Account')
+      report.add_skipped(None, f'{datafusion_instance.name} does not have Dataproc Service Account')
       continue
     dataproc_sa = 'serviceAccount:' + instance_dataproc_sa
-    project_policy_result = iam_policy.has_role_permissions(
-        dataproc_sa, DP_WORKER)
+    project_policy_result = iam_policy.has_role_permissions(dataproc_sa, DP_WORKER)
     if project_policy_result:
       report.add_ok(datafusion_instance)
     else:

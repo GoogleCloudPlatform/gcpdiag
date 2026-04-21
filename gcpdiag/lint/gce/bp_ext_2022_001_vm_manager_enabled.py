@@ -18,6 +18,7 @@
 Google recommends enabling VM Manager. It provides visibility on software vulnerabilities,
 missing updates and enables to set configuration management policies
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm
 
@@ -27,5 +28,4 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if apis.is_enabled(context.project_id, 'osconfig'):
     report.add_ok(project)
   else:
-    report.add_failed(project,
-                      'it is recommended to enable VM Manager on your project')
+    report.add_failed(project, 'it is recommended to enable VM Manager on your project')

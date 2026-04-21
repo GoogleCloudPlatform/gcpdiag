@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" No Unused Service Accounts Found
+"""No Unused Service Accounts Found
 
 Unused service accounts create an unnecessary security risk,
 so we recommend disabling unused service accounts then deleting the service
@@ -31,8 +31,8 @@ unique_id_set = set()
 def prefetch_rule(context: models.Context):
   iam.get_service_account_list(context.project_id)
   query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id,
-      """
+    context.project_id,
+    """
       fetch iam_service_account
       | metric 'iam.googleapis.com/service_account/authn_events_count'
       | within 12w
@@ -41,8 +41,7 @@ def prefetch_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  service_accounts[context.project_id] = iam.get_service_account_list(
-      context.project_id)
+  service_accounts[context.project_id] = iam.get_service_account_list(context.project_id)
   accounts = service_accounts[context.project_id]
   if len(accounts) == 0:
     report.add_skipped(None, 'No Service accounts found')

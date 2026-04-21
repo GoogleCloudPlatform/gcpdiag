@@ -24,13 +24,11 @@ _real_executor: Optional[concurrent.futures.ThreadPoolExecutor] = None
 def _get_real_executor() -> concurrent.futures.ThreadPoolExecutor:
   global _real_executor
   if _real_executor is None:
-    _real_executor = concurrent.futures.ThreadPoolExecutor(
-        max_workers=config.MAX_WORKERS)
+    _real_executor = concurrent.futures.ThreadPoolExecutor(max_workers=config.MAX_WORKERS)
   return _real_executor
 
 
 def _context_wrapper(fn, context: models.Context):
-
   def wrapped(*args, **kwargs):
     provider = context.context_provider
     if provider:
@@ -55,23 +53,21 @@ class ContextAwareExecutor:
     self._context = context
     self._executor = _get_real_executor()
 
-  def submit(self, fn: Callable[..., Any], *args: Any,
-             **kwargs: Any) -> concurrent.futures.Future[Any]:
+  def submit(
+    self, fn: Callable[..., Any], *args: Any, **kwargs: Any
+  ) -> concurrent.futures.Future[Any]:
     wrapped_fn = _context_wrapper(fn, self._context)
     return self._executor.submit(wrapped_fn, *args, **kwargs)
 
   def map(
-      self,
-      fn: Callable[..., Any],
-      *iterables: Iterable[Any],
-      timeout: Optional[float] = None,
-      chunksize: int = 1,
+    self,
+    fn: Callable[..., Any],
+    *iterables: Iterable[Any],
+    timeout: Optional[float] = None,
+    chunksize: int = 1,
   ):
     wrapped_fn = _context_wrapper(fn, self._context)
-    return self._executor.map(wrapped_fn,
-                              *iterables,
-                              timeout=timeout,
-                              chunksize=chunksize)
+    return self._executor.map(wrapped_fn, *iterables, timeout=timeout, chunksize=chunksize)
 
   def shutdown(self, wait: bool = True):
     # We don't shut down the underlying global executor here

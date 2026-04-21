@@ -13,7 +13,6 @@ from gcpdiag.queries import gce, gke
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   instances = gce.get_instances(context=context)
   clusters = gke.get_clusters(context=context)
 
@@ -46,6 +45,4 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if c not in failed_clusters:
       report.add_ok(c)
     else:
-      report.add_failed(c, (
-          f'Stateful workload is running on preemptible/spot node(s) "{c.name}"'
-      ))
+      report.add_failed(c, (f'Stateful workload is running on preemptible/spot node(s) "{c.name}"'))

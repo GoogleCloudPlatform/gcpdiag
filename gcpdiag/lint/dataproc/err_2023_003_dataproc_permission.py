@@ -30,7 +30,7 @@ MATCH_STR = 'Required .*permission for'
 RESOURCE_TYPE = 'cloud_dataproc_cluster'
 
 contains_required_pattern = re.compile(MATCH_STR)
-#contains_permission_for_pattern = re.compile('"permission for"')
+# contains_permission_for_pattern = re.compile('"permission for"')
 
 # Criteria to filter for logs
 LOG_FILTER = ['severity=ERROR', f'protoPayload.status.message=~"{MATCH_STR}"']
@@ -40,10 +40,11 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type=RESOURCE_TYPE,
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type=RESOURCE_TYPE,
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -61,12 +62,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   failed_clusters = set()
-  if logs_by_project.get(context.project_id) and \
-    logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
-
-      msg = get_path(log_entry, ('protoPayload', 'status', 'message'),
-                     default='')
+      msg = get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
 
       contains_required = contains_required_pattern.search(msg)
 
@@ -74,16 +72,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       if not (log_entry['severity'] == 'ERROR' and contains_required):
         continue
 
-      entry_clusters = get_path(log_entry,
-                                ('resource', 'labels', 'cluster_name'),
-                                default='Unknown Cluster')
+      entry_clusters = get_path(
+        log_entry, ('resource', 'labels', 'cluster_name'), default='Unknown Cluster'
+      )
 
       failed_clusters.add(entry_clusters)
 
     if failed_clusters:
       report.add_failed(
-          project, 'The following clusters failed : {}'.format(
-              ', '.join(failed_clusters)))
+        project, 'The following clusters failed : {}'.format(', '.join(failed_clusters))
+      )
     else:
       report.add_ok(project)
   else:

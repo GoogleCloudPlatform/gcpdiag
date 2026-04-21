@@ -40,10 +40,11 @@ clusters_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_dataproc_cluster',
-      log_name=f'log_id("{LOG_NAME}")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='cloud_dataproc_cluster',
+    log_name=f'log_id("{LOG_NAME}")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def prefetch_rule(context: models.Context):
@@ -51,22 +52,22 @@ def prefetch_rule(context: models.Context):
 
 
 def is_relevant(entry, context):
-  return all([
-      get_path(entry,
-               ('resource', 'labels', 'project_id')) == context.project_id,
+  return all(
+    [
+      get_path(entry, ('resource', 'labels', 'project_id')) == context.project_id,
       get_path(entry, ('resource', 'type')) == 'cloud_dataproc_cluster',
-      get_path(entry,
-               'logName') == f'projects/{context.project_id}/logs/{LOG_NAME}',
+      get_path(entry, 'logName') == f'projects/{context.project_id}/logs/{LOG_NAME}',
       get_path(entry, 'severity') == SEVERITY,
-      MSG_RE.match(get_path(entry, ('jsonPayload', 'message')))
-  ])
+      MSG_RE.match(get_path(entry, ('jsonPayload', 'message'))),
+    ]
+  )
 
 
 def get_clusters_having_relevant_log_entries(context):
   return {
-      get_path(e, ('resource', 'labels', 'cluster_name'), default=None)
-      for e in logs_by_project[context.project_id].entries
-      if is_relevant(e, context)
+    get_path(e, ('resource', 'labels', 'cluster_name'), default=None)
+    for e in logs_by_project[context.project_id].entries
+    if is_relevant(e, context)
   }
 
 
@@ -76,14 +77,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'logging api is disabled')
     return
 
-  clusters_with_safemode_enabled = get_clusters_having_relevant_log_entries(
-      context)
+  clusters_with_safemode_enabled = get_clusters_having_relevant_log_entries(context)
 
   for cluster in clusters_by_project[context.project_id]:
     if cluster.name in clusters_with_safemode_enabled:
       report.add_failed(
-          cluster,
-          'The HDFS NameNode Safemode was reported as enabled.',
+        cluster,
+        'The HDFS NameNode Safemode was reported as enabled.',
       )
     else:
       report.add_ok(cluster)

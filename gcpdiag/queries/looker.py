@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Queries related to GCP Looker Core."""
+
 import logging
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, MutableMapping
@@ -24,6 +25,7 @@ from gcpdiag.queries import apis, apis_utils
 
 class Instance(models.Resource):
   """Represents a Looker Core Instance."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -126,11 +128,9 @@ class Operation(models.Resource):
 
   @property
   def create_time(self) -> datetime:
-    create_time_str = self._resource_data.get('metadata',
-                                              {}).get('createTime', '')
+    create_time_str = self._resource_data.get('metadata', {}).get('createTime', '')
     if create_time_str:
-      return datetime.fromisoformat(
-          create_time_str.rstrip('Z')).replace(tzinfo=timezone.utc)
+      return datetime.fromisoformat(create_time_str.rstrip('Z')).replace(tzinfo=timezone.utc)
     return datetime.now(timezone.utc)
 
 
@@ -139,13 +139,14 @@ def _get_locations_to_scan(context: models.Context, looker_api) -> List[str]:
   if context.locations_pattern:
     return str(context.locations_pattern.pattern).split('|')
   try:
-    request = looker_api.projects().locations().list(
-        name=f'projects/{context.project_id}')
+    request = looker_api.projects().locations().list(name=f'projects/{context.project_id}')
     return [
-        loc['locationId'] for loc in apis_utils.list_all(
-            request=request,
-            next_function=looker_api.projects().locations().list_next,
-            response_keyword='locations')
+      loc['locationId']
+      for loc in apis_utils.list_all(
+        request=request,
+        next_function=looker_api.projects().locations().list_next,
+        response_keyword='locations',
+      )
     ]
   except googleapiclient.errors.HttpError as err:
     logging.error('Error fetching locations: %s', err)
@@ -168,30 +169,28 @@ def get_instances(context: models.Context) -> Dict[str, Instance]:
   for loc_id in locations_to_scan:
     try:
       parent_path = f'projects/{context.project_id}/locations/{loc_id}'
-      request = looker_api.projects().locations().instances().list(
-          parent=parent_path)
+      request = looker_api.projects().locations().instances().list(parent=parent_path)
       for inst in apis_utils.list_all(
-          request=request,
-          next_function=looker_api.projects().locations().instances().list_next,
-          response_keyword='instances'):
+        request=request,
+        next_function=looker_api.projects().locations().instances().list_next,
+        response_keyword='instances',
+      ):
         if not context.match_project_resource(resource=inst.get('name', '')):
           continue
         instance = Instance(project_id=context.project_id, resource_data=inst)
         instances[instance.name] = instance
     except googleapiclient.errors.HttpError as err:
-      logging.warning('Could not list instances for location %s: %s', loc_id,
-                      err)
+      logging.warning('Could not list instances for location %s: %s', loc_id, err)
       continue
   return instances
 
 
 @caching.cached_api_call
 def get_operations(
-    context: models.Context
+  context: models.Context,
 ) -> MutableMapping[str, MutableMapping[str, List[Operation]]]:
   """Get a list of recent operations from the given GCP project."""
-  location_instance_operations: MutableMapping[str, MutableMapping[
-      str, List[Operation]]] = {}
+  location_instance_operations: MutableMapping[str, MutableMapping[str, List[Operation]]] = {}
   if not apis.is_enabled(context.project_id, 'looker'):
     return location_instance_operations
 
@@ -208,25 +207,27 @@ def get_operations(
   for location_id in locations_to_scan:
     try:
       op_request_name = f'projects/{context.project_id}/locations/{location_id}'
-      operations_request = looker_api.projects().locations().operations().list(
-          name=op_request_name)
-      for resp_op in apis_utils.list_all(request=operations_request,
-                                         next_function=looker_api.projects().
-                                         locations().operations().list_next,
-                                         response_keyword='operations'):
-        operation_details = looker_api.projects().locations().operations().get(
-            name=resp_op['name']).execute(num_retries=config.API_RETRIES)
-        operation = Operation(project_id=context.project_id,
-                              resource_data=operation_details)
+      operations_request = looker_api.projects().locations().operations().list(name=op_request_name)
+      for resp_op in apis_utils.list_all(
+        request=operations_request,
+        next_function=looker_api.projects().locations().operations().list_next,
+        response_keyword='operations',
+      ):
+        operation_details = (
+          looker_api.projects()
+          .locations()
+          .operations()
+          .get(name=resp_op['name'])
+          .execute(num_retries=config.API_RETRIES)
+        )
+        operation = Operation(project_id=context.project_id, resource_data=operation_details)
 
         if operation.create_time >= one_day_ago:
-          location_instance_operations.setdefault(operation.location_id,
-                                                  {}).setdefault(
-                                                      operation.instance_name,
-                                                      []).append(operation)
+          location_instance_operations.setdefault(operation.location_id, {}).setdefault(
+            operation.instance_name, []
+          ).append(operation)
     except googleapiclient.errors.HttpError as err:
-      logging.warning('Could not list operations for location %s: %s',
-                      location_id, err)
+      logging.warning('Could not list operations for location %s: %s', location_id, err)
       continue
 
   return location_instance_operations

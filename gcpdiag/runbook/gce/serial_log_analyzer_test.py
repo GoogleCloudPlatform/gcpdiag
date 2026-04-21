@@ -29,15 +29,18 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'gce/serial-log-analyzer'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-gce-vm-performance',
       'instance_name': 'faulty-linux-ssh',
-      'zone': 'europe-west2-a'
-  }, {
+      'zone': 'europe-west2-a',
+    },
+    {
       'project_id': 'gcpdiag-gce-vm-performance',
       'name': 'valid-linux-ssh',
-      'zone': 'europe-west2-a'
-  }]
+      'zone': 'europe-west2-a',
+    },
+  ]
 
 
 class SerialLogAnalyzerTreeTest(GceStepTestBase):
@@ -53,8 +56,7 @@ class SerialLogAnalyzerTreeTest(GceStepTestBase):
       tree.build_tree()
 
     self.assertIsNotNone(tree.start)
-    self.assertIsInstance(tree.start,
-                          serial_log_analyzer.SerialLogAnalyzerStart)
+    self.assertIsInstance(tree.start, serial_log_analyzer.SerialLogAnalyzerStart)
 
     diagnostic_steps = tree.start.steps[0].steps
     step_types = [type(step) for step in diagnostic_steps]
@@ -75,11 +77,9 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
 
   def setUp(self):
     super().setUp()
-    self.mock_crm_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project'))
+    self.mock_crm_get_project = self.enterContext(mock.patch('gcpdiag.queries.crm.get_project'))
     self.mock_gce_get_instance.return_value = self.mock_instance
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
 
   def test_start_success(self):
     """Test successful VM detail fetching and ID assignment (Lines 255-270)."""
@@ -104,22 +104,20 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
       step = serial_log_analyzer.SerialLogAnalyzerStart()
       self.operator.set_step(step)
       step.execute()
-    self.assertEqual(self.operator.parameters[flags.INSTANCE_NAME],
-                     'metadata-name')
+    self.assertEqual(self.operator.parameters[flags.INSTANCE_NAME], 'metadata-name')
 
   def test_instance_not_found_error_handling(self):
     """Test handling of API errors."""
     self.mock_gce_get_instance.side_effect = apiclient.errors.HttpError(
-        mock.Mock(status=404), b'not found')
+      mock.Mock(status=404), b'not found'
+    )
     with op.operator_context(self.operator):
       step = serial_log_analyzer.SerialLogAnalyzerStart()
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
 
-  @mock.patch('builtins.open',
-              new_callable=mock.mock_open,
-              read_data=b'plain text')
+  @mock.patch('builtins.open', new_callable=mock.mock_open, read_data=b'plain text')
   @mock.patch('mimetypes.guess_type')
   def test_serial_console_file_checks(self, mock_guess, mock_open):
     """Test sanity checks for local log files."""
@@ -132,9 +130,7 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
       step.execute()
     mock_open.assert_called_with('test_logs.txt', 'rb')
 
-  @mock.patch('builtins.open',
-              new_callable=mock.mock_open,
-              read_data=b'\x1f\x8b\x08')
+  @mock.patch('builtins.open', new_callable=mock.mock_open, read_data=b'\x1f\x8b\x08')
   @mock.patch('mimetypes.guess_type')
   def test_serial_console_file_compressed(self, mock_guess, unused_mock_open):
     """Test detection of compressed files via magic number."""
@@ -146,14 +142,13 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.add_skipped.assert_called_with(
-        run_id='test-run',
-        resource=mock.ANY,
-        reason='File logs.gz appears to be compressed, not plain text.',
-        step_execution_id=mock.ANY)
+      run_id='test-run',
+      resource=mock.ANY,
+      reason='File logs.gz appears to be compressed, not plain text.',
+      step_execution_id=mock.ANY,
+    )
 
-  @mock.patch('builtins.open',
-              new_callable=mock.mock_open,
-              read_data=b'\xff\xfe\xfd')
+  @mock.patch('builtins.open', new_callable=mock.mock_open, read_data=b'\xff\xfe\xfd')
   @mock.patch('mimetypes.guess_type')
   def test_serial_console_file_binary_error(self, mock_guess, unused_mock_open):
     """Test handling of non-UTF8 binary files."""
@@ -165,10 +160,11 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.add_skipped.assert_called_with(
-        run_id='test-run',
-        resource=mock.ANY,
-        reason='File binary.bin does not appear to be plain text.',
-        step_execution_id=mock.ANY)
+      run_id='test-run',
+      resource=mock.ANY,
+      reason='File binary.bin does not appear to be plain text.',
+      step_execution_id=mock.ANY,
+    )
 
 
 class CloudInitChecksTest(GceStepTestBase):
@@ -176,10 +172,10 @@ class CloudInitChecksTest(GceStepTestBase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
     self.mock_add_child = self.enterContext(
-        mock.patch.object(serial_log_analyzer.CloudInitChecks, 'add_child'))
+      mock.patch.object(serial_log_analyzer.CloudInitChecks, 'add_child')
+    )
 
   def test_ubuntu_triggers_child_steps(self):
     """Test child steps are added for Ubuntu instances."""
@@ -192,10 +188,8 @@ class CloudInitChecksTest(GceStepTestBase):
     self.assertEqual(len(self.mock_add_child.call_args_list), 2)
 
     added_steps = [args[0][0] for args in self.mock_add_child.call_args_list]
-    self.assertIsInstance(added_steps[0],
-                          serial_log_analyzer.gce_gs.VmSerialLogsCheck)
-    self.assertIsInstance(added_steps[1],
-                          serial_log_analyzer.gce_gs.VmSerialLogsCheck)
+    self.assertIsInstance(added_steps[0], serial_log_analyzer.gce_gs.VmSerialLogsCheck)
+    self.assertIsInstance(added_steps[1], serial_log_analyzer.gce_gs.VmSerialLogsCheck)
 
   def test_non_ubuntu_skips_checks(self):
     """Test skipping checks for non-Ubuntu OS."""
@@ -213,10 +207,9 @@ class AnalysingSerialLogsEndTest(GceStepTestBase):
   def test_end_step_output_non_interactive(self):
     """Test that the end message is displayed correctly in non-interactive mode."""
     with (
-        mock.patch.object(serial_log_analyzer.config, 'get',
-                          return_value=False),
-        mock.patch.object(serial_log_analyzer.op, 'prompt', return_value=op.NO),
-        mock.patch.object(serial_log_analyzer.op, 'info') as mock_info,
+      mock.patch.object(serial_log_analyzer.config, 'get', return_value=False),
+      mock.patch.object(serial_log_analyzer.op, 'prompt', return_value=op.NO),
+      mock.patch.object(serial_log_analyzer.op, 'info') as mock_info,
     ):
       with op.operator_context(self.operator):
         step = serial_log_analyzer.AnalysingSerialLogsEnd()
@@ -227,9 +220,9 @@ class AnalysingSerialLogsEndTest(GceStepTestBase):
   def test_end_step_output_interactive_mode(self):
     """Test that the end message is skipped in interactive mode."""
     with (
-        mock.patch.object(serial_log_analyzer.config, 'get', return_value=True),
-        mock.patch.object(serial_log_analyzer.op, 'prompt') as mock_prompt,
-        mock.patch.object(serial_log_analyzer.op, 'info') as mock_info,
+      mock.patch.object(serial_log_analyzer.config, 'get', return_value=True),
+      mock.patch.object(serial_log_analyzer.op, 'prompt') as mock_prompt,
+      mock.patch.object(serial_log_analyzer.op, 'info') as mock_info,
     ):
       with op.operator_context(self.operator):
         step = serial_log_analyzer.AnalysingSerialLogsEnd()

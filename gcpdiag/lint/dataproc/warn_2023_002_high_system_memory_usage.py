@@ -36,10 +36,11 @@ clusters_by_project = []
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_dataproc_cluster',
-      log_name='log_id("google.dataproc.agent")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='cloud_dataproc_cluster',
+    log_name='log_id("google.dataproc.agent")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -57,30 +58,26 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'no clusters found')
     return
 
-
-  if logs_by_project.get(context.project_id) and \
-    logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'WARNING' or \
-         CLASS_NAME not in get_path(log_entry,
-                     ('jsonPayload', 'class'), default='') or \
-         MATCH_STR not in get_path(log_entry,
-                     ('jsonPayload',  'message'), default=''):
+      if (
+        log_entry['severity'] != 'WARNING'
+        or CLASS_NAME not in get_path(log_entry, ('jsonPayload', 'class'), default='')
+        or MATCH_STR not in get_path(log_entry, ('jsonPayload', 'message'), default='')
+      ):
         continue
 
-      cluster_name = get_path(log_entry, ('resource', 'labels', 'cluster_name'),
-                              default='')
+      cluster_name = get_path(log_entry, ('resource', 'labels', 'cluster_name'), default='')
 
       if cluster_name and cluster_name not in clusters_by_project:
         clusters_by_project.append(cluster_name)
 
   for cluster_name in clusters_by_project:
     report.add_failed(
-        name_to_cluster[cluster_name],
-        'some jobs were throttled due to High system memory usage')
+      name_to_cluster[cluster_name], 'some jobs were throttled due to High system memory usage'
+    )
   for cluster_name in [
-      cluster_name for cluster_name in name_to_cluster
-      if cluster_name not in clusters_by_project
+    cluster_name for cluster_name in name_to_cluster if cluster_name not in clusters_by_project
   ]:
     report.add_ok(name_to_cluster[cluster_name])

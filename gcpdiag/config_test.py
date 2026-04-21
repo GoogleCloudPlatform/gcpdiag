@@ -19,7 +19,7 @@ import pytest
 
 from gcpdiag import config
 
-SAMPLE_CONFIG = '''
+SAMPLE_CONFIG = """
 ---
 billing_project: sample
 include:
@@ -30,20 +30,20 @@ exclude:
 include_extended: True
 verbose: 3
 within_days: 5
-'''
+"""
 
-LOGGING_CONFIG = '''
+LOGGING_CONFIG = """
 ---
 logging_ratelimit_requests: 120
 logging_ratelimit_period_seconds: 120
 logging_page_size: 1000
 logging_fetch_max_entries: 20000
 logging_fetch_max_time_seconds: 300
-'''
+"""
 
 EMPTY_CONFIG = ''
 
-PER_PROJECT_CONFIG = '''
+PER_PROJECT_CONFIG = """
 ---
 logging_fetch_max_time_seconds: 300
 verbose: 3
@@ -58,7 +58,7 @@ projects:
     - '*SEC*'
     - '*ERR*'
     include_extended: True
-'''
+"""
 
 
 class Test:
@@ -67,7 +67,6 @@ class Test:
   @pytest.fixture(autouse=True)
   def clear_globals(self):
     """These tests modify global state, so it is important to clean it."""
-    # pylint: disable=protected-access
     yield
     config._args = {}
     config._config = {}
@@ -89,12 +88,7 @@ class Test:
     assert config.get('reason') is None
 
   def test_overwrite_dynamic_properties(self):
-    config.init({
-        'auth_adc': True,
-        'include_extended': True,
-        'verbose': 3,
-        'within_days': 7
-    })
+    config.init({'auth_adc': True, 'include_extended': True, 'verbose': 3, 'within_days': 7})
     assert config.get('auth_adc') is True
     assert config.get('include_extended') is True
     assert config.get('verbose') == 3

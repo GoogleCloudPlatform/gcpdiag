@@ -20,3 +20,4 @@ gcpdiag/testpsa.py
 .vscode/launch.json
 **/.DS_STORE
 venv/
+.ruff_cache/

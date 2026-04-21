@@ -110,29 +110,29 @@ def _get_default_report_dir():
 
 
 _defaults: Dict[str, Any] = {
-    'auth_adc': False,
-    'auth_key': None,
-    'billing_project': None,
-    'show_skipped': False,
-    'hide_ok': False,
-    'include': None,
-    'exclude': None,
-    'include_extended': False,
-    'verbose': 0,
-    'within_days': 3,
-    'hide_skipped': True,
-    'show_ok': True,
-    'logging_ratelimit_requests': 60,
-    'logging_ratelimit_period_seconds': 60,
-    'logging_page_size': 500,
-    'logging_fetch_max_entries': 10000,
-    'logging_fetch_max_time_seconds': 120,
-    'enable_gce_serial_buffer': False,
-    'auto': False,
-    'report_dir': _get_default_report_dir(),
-    'interface': 'cli',
-    'universe_domain': 'googleapis.com',
-    'reason': None
+  'auth_adc': False,
+  'auth_key': None,
+  'billing_project': None,
+  'show_skipped': False,
+  'hide_ok': False,
+  'include': None,
+  'exclude': None,
+  'include_extended': False,
+  'verbose': 0,
+  'within_days': 3,
+  'hide_skipped': True,
+  'show_ok': True,
+  'logging_ratelimit_requests': 60,
+  'logging_ratelimit_period_seconds': 60,
+  'logging_page_size': 500,
+  'logging_fetch_max_entries': 10000,
+  'logging_fetch_max_time_seconds': 120,
+  'enable_gce_serial_buffer': False,
+  'auto': False,
+  'report_dir': _get_default_report_dir(),
+  'interface': 'cli',
+  'universe_domain': 'googleapis.com',
+  'reason': None,
 }
 
 #
@@ -160,8 +160,7 @@ def init(args, is_cloud_shell=False):
       with open(file, encoding='utf-8') as f:
         content = f.read()
     else:
-      print(f'ERROR: Configuration file: {file} does not exist!',
-            file=sys.stderr)
+      print(f'ERROR: Configuration file: {file} does not exist!', file=sys.stderr)
       raise FileNotFoundError
 
     # Parse the content of the file as YAML
@@ -169,8 +168,7 @@ def init(args, is_cloud_shell=False):
       try:
         _config = yaml.safe_load(content)
       except yaml.YAMLError as err:
-        print(f"ERROR: can't parse content of the file as YAML: {err}",
-              file=sys.stderr)
+        print(f"ERROR: can't parse content of the file as YAML: {err}", file=sys.stderr)
         raise err
 
 

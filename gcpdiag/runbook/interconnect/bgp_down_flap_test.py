@@ -31,26 +31,26 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   project_id = 'gcpdiag-interconnect1-aaaa'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-interconnect1-aaaa',
       'region': 'us-central1',
       'custom_flag': 'interconnect',
-      'attachment_name': 'dummy-attachment11'
-  }, {
-      'project_id':
-          'gcpdiag-interconnect1-aaaa',
-      'region':
-          'us-east4',
-      'custom_flag':
-          'interconnect',
-      'attachment_name':
-          'dummy-attachment1,dummy-attachment2,dummy-attachment3,dummy-attachment4'
-  }, {
+      'attachment_name': 'dummy-attachment11',
+    },
+    {
+      'project_id': 'gcpdiag-interconnect1-aaaa',
+      'region': 'us-east4',
+      'custom_flag': 'interconnect',
+      'attachment_name': 'dummy-attachment1,dummy-attachment2,dummy-attachment3,dummy-attachment4',
+    },
+    {
       'project_id': 'gcpdiag-interconnect1-aaaa',
       'region': 'us-west2',
       'custom_flag': 'interconnect',
-      'attachment_name': 'dummy-attachment5,dummy-attachment6'
-  }]
+      'attachment_name': 'dummy-attachment5,dummy-attachment6',
+    },
+  ]
 
 
 class TestBgpDownFlap(unittest.TestCase):
@@ -64,39 +64,33 @@ class TestBgpDownFlap(unittest.TestCase):
     self.project.id = self.project_id
 
     # Global mocks for queries to prevent 403 errors and real API calls
-    self.mock_get_project = mock.patch('gcpdiag.queries.crm.get_project',
-                                       return_value=self.project).start()
-    self.mock_get_vlan = mock.patch(
-        'gcpdiag.queries.interconnect.get_vlan_attachments').start()
-    self.mock_get_links = mock.patch(
-        'gcpdiag.queries.interconnect.get_links').start()
-    self.mock_logs_query = mock.patch(
-        'gcpdiag.queries.logs.realtime_query').start()
-    self.mock_router_status = mock.patch(
-        'gcpdiag.queries.network.nat_router_status').start()
+    self.mock_get_project = mock.patch(
+      'gcpdiag.queries.crm.get_project', return_value=self.project
+    ).start()
+    self.mock_get_vlan = mock.patch('gcpdiag.queries.interconnect.get_vlan_attachments').start()
+    self.mock_get_links = mock.patch('gcpdiag.queries.interconnect.get_links').start()
+    self.mock_logs_query = mock.patch('gcpdiag.queries.logs.realtime_query').start()
+    self.mock_router_status = mock.patch('gcpdiag.queries.network.nat_router_status').start()
 
     # Mock the op context for runbook flags and reporting
     self.mock_op_get = mock.patch('gcpdiag.runbook.op.get').start()
     self.mock_op_put = mock.patch('gcpdiag.runbook.op.put').start()
     self.mock_op_add_ok = mock.patch('gcpdiag.runbook.op.add_ok').start()
-    self.mock_op_add_failed = mock.patch(
-        'gcpdiag.runbook.op.add_failed').start()
-    self.mock_op_add_skipped = mock.patch(
-        'gcpdiag.runbook.op.add_skipped').start()
-    self.mock_op_add_uncertain = mock.patch(
-        'gcpdiag.runbook.op.add_uncertain').start()
+    self.mock_op_add_failed = mock.patch('gcpdiag.runbook.op.add_failed').start()
+    self.mock_op_add_skipped = mock.patch('gcpdiag.runbook.op.add_skipped').start()
+    self.mock_op_add_uncertain = mock.patch('gcpdiag.runbook.op.add_uncertain').start()
     self.mock_op_prep_msg = mock.patch('gcpdiag.runbook.op.prep_msg').start()
     self.mock_op_info = mock.patch('gcpdiag.runbook.op.info').start()
 
     self.op_flags = {
-        flags.PROJECT_ID: self.project_id,
-        flags.REGION: self.region,
-        flags.ATTACHMENT_NAME: 'vlan1',
-        flags.ATTACHMENT_LIST: 'vlan1',
-        flags.ERROR_LIST: '',
-        flags.START_TIME: datetime(2025, 1, 1, tzinfo=timezone.utc),
-        flags.END_TIME: datetime(2025, 1, 2, tzinfo=timezone.utc),
-        flags.BGP_FLAP_LIST: '{}'
+      flags.PROJECT_ID: self.project_id,
+      flags.REGION: self.region,
+      flags.ATTACHMENT_NAME: 'vlan1',
+      flags.ATTACHMENT_LIST: 'vlan1',
+      flags.ERROR_LIST: '',
+      flags.START_TIME: datetime(2025, 1, 1, tzinfo=timezone.utc),
+      flags.END_TIME: datetime(2025, 1, 2, tzinfo=timezone.utc),
+      flags.BGP_FLAP_LIST: '{}',
     }
     self.mock_op_get.side_effect = self.op_flags.get
     self.mock_operator = mock.MagicMock(parameters={})
@@ -117,8 +111,7 @@ class TestBgpDownFlap(unittest.TestCase):
     return v
 
   def test_get_time_delta(self):
-    result = bgp_down_flap.get_time_delta('2025-01-01T10:00:00Z',
-                                          '2025-01-01T10:00:05.5Z')
+    result = bgp_down_flap.get_time_delta('2025-01-01T10:00:00Z', '2025-01-01T10:00:05.5Z')
     self.assertEqual(result, '5.5')
 
   def test_local_realtime_query(self):
@@ -127,7 +120,8 @@ class TestBgpDownFlap(unittest.TestCase):
 
   def test_start_step_handles_api_failure(self):
     self.mock_get_vlan.side_effect = googleapiclient.errors.HttpError(
-        mock.MagicMock(status=403), b'Forbidden')
+      mock.MagicMock(status=403), b'Forbidden'
+    )
     step = bgp_down_flap.BgpDownFlapStart()
     with bgp_down_flap.op.operator_context(self.mock_operator):
       step.execute()
@@ -140,9 +134,9 @@ class TestBgpDownFlap(unittest.TestCase):
     region = 'us-central1'
 
     self.mock_op_get.side_effect = lambda key, default=None: {
-        flags.PROJECT_ID: project_id,
-        flags.REGION: region,
-        flags.ATTACHMENT_LIST: attachment_name
+      flags.PROJECT_ID: project_id,
+      flags.REGION: region,
+      flags.ATTACHMENT_LIST: attachment_name,
     }.get(key, default)
 
     project = mock.MagicMock()
@@ -172,10 +166,7 @@ class TestBgpDownFlap(unittest.TestCase):
     vlan = self._create_vlan_mock(ipv4=test_ip)
     self.mock_get_vlan.return_value = [vlan]
     router_status = mock.MagicMock()
-    router_status.bgp_peer_status = [{
-        'ipAddress': test_ip,
-        'state': 'Established'
-    }]
+    router_status.bgp_peer_status = [{'ipAddress': test_ip, 'state': 'Established'}]
     self.mock_router_status.return_value = router_status
     step = bgp_down_flap.CheckBgpDown()
     with bgp_down_flap.op.operator_context(self.mock_operator):
@@ -239,25 +230,16 @@ class TestBgpDownFlap(unittest.TestCase):
 
   def test_check_cr_maintenance_detects_unexplained_flap(self):
     flap_data = {
-        'r1_id--2.2.2.2': {
-            'uncertain_flag':
-                'True',
-            'router_id':
-                'r1_id',
-            'local_ip':
-                '1.1.1.1',
-            'remote_ip':
-                '2.2.2.2',
-            'router_name':
-                'r1',
-            'attachment_name':
-                'vlan1',
-            'project_id':
-                self.project_id,
-            'events': [[
-                'went down,2025-01-01T12:00:00Z,came up,2025-01-01T12:01:00Z'
-            ]],
-        }
+      'r1_id--2.2.2.2': {
+        'uncertain_flag': 'True',
+        'router_id': 'r1_id',
+        'local_ip': '1.1.1.1',
+        'remote_ip': '2.2.2.2',
+        'router_name': 'r1',
+        'attachment_name': 'vlan1',
+        'project_id': self.project_id,
+        'events': [['went down,2025-01-01T12:00:00Z,came up,2025-01-01T12:01:00Z']],
+      }
     }
     self.op_flags[flags.BGP_FLAP_LIST] = json.dumps(flap_data)
     self.mock_logs_query.return_value = []
@@ -276,38 +258,27 @@ class TestBgpDownFlap(unittest.TestCase):
 
   def test_check_cr_maintenance_ok(self):
     flap_data = {
-        'r1_id--2.2.2.2': {
-            'uncertain_flag':
-                'True',
-            'router_id':
-                'r1_id',
-            'local_ip':
-                '1.1.1.1',
-            'remote_ip':
-                '2.2.2.2',
-            'router_name':
-                'r1',
-            'attachment_name':
-                'vlan1',
-            'project_id':
-                self.project_id,
-            'events': [[
-                'went down,2025-01-01T12:00:00Z,came up,2025-01-01T12:01:00Z',
-                '60.0', 'Uncertain'
-            ]],
-        }
+      'r1_id--2.2.2.2': {
+        'uncertain_flag': 'True',
+        'router_id': 'r1_id',
+        'local_ip': '1.1.1.1',
+        'remote_ip': '2.2.2.2',
+        'router_name': 'r1',
+        'attachment_name': 'vlan1',
+        'project_id': self.project_id,
+        'events': [
+          ['went down,2025-01-01T12:00:00Z,came up,2025-01-01T12:01:00Z', '60.0', 'Uncertain']
+        ],
+      }
     }
     self.op_flags[flags.BGP_FLAP_LIST] = json.dumps(flap_data)
-    self.mock_logs_query.return_value = [{
+    self.mock_logs_query.return_value = [
+      {
         'textPayload': 'Maintenance of router task',
         'timestamp': '2025-01-01T12:00:30Z',
-        'resource': {
-            'labels': {
-                'router_id': 'r1_id',
-                'region': self.region
-            }
-        },
-    }]
+        'resource': {'labels': {'router_id': 'r1_id', 'region': self.region}},
+      }
+    ]
     step = bgp_down_flap.CheckCloudRouterMaintenance()
     with bgp_down_flap.op.operator_context(self.mock_operator):
       step.execute()
@@ -319,26 +290,16 @@ class TestBgpDownFlap(unittest.TestCase):
     self.mock_get_vlan.return_value = [vlan]
 
     self.mock_logs_query.return_value = [
-        {
-            'textPayload': 'BGP Event: BGP peering with 2.2.2.2 went down',
-            'timestamp': '2025-01-01T12:00:00Z',
-            'resource': {
-                'labels': {
-                    'router_id': 'r1_id',
-                    'region': self.region
-                }
-            },
-        },
-        {
-            'textPayload': 'BGP Event: BGP peering with 2.2.2.2 came up',
-            'timestamp': '2025-01-01T12:05:00Z',
-            'resource': {
-                'labels': {
-                    'router_id': 'r1_id',
-                    'region': self.region
-                }
-            },
-        },
+      {
+        'textPayload': 'BGP Event: BGP peering with 2.2.2.2 went down',
+        'timestamp': '2025-01-01T12:00:00Z',
+        'resource': {'labels': {'router_id': 'r1_id', 'region': self.region}},
+      },
+      {
+        'textPayload': 'BGP Event: BGP peering with 2.2.2.2 came up',
+        'timestamp': '2025-01-01T12:05:00Z',
+        'resource': {'labels': {'router_id': 'r1_id', 'region': self.region}},
+      },
     ]
     step = bgp_down_flap.CheckBgpFlap()
     with bgp_down_flap.op.operator_context(self.mock_operator):
@@ -347,7 +308,8 @@ class TestBgpDownFlap(unittest.TestCase):
 
   def test_check_bgp_flap_skipped_on_api_error(self):
     self.mock_get_vlan.side_effect = googleapiclient.errors.HttpError(
-        mock.MagicMock(status=403), b'Forbidden')
+      mock.MagicMock(status=403), b'Forbidden'
+    )
     step = bgp_down_flap.CheckBgpFlap()
     with bgp_down_flap.op.operator_context(self.mock_operator):
       step.execute()
@@ -368,26 +330,16 @@ class TestBgpDownFlap(unittest.TestCase):
     vlan.remoteip = '2.2.2.2'
     self.mock_get_vlan.return_value = [vlan]
     self.mock_logs_query.return_value = [
-        {
-            'textPayload': 'BGP Event: BGP peering with 2.2.2.2 went down',
-            'timestamp': '2025-01-01T12:00:00Z',
-            'resource': {
-                'labels': {
-                    'router_id': 'r1_id',
-                    'region': self.region
-                }
-            },
-        },
-        {
-            'textPayload': 'BGP Event: BGP peering with 2.2.2.2 came up',
-            'timestamp': '2025-01-01T12:01:00Z',
-            'resource': {
-                'labels': {
-                    'router_id': 'r1_id',
-                    'region': self.region
-                }
-            },
-        },
+      {
+        'textPayload': 'BGP Event: BGP peering with 2.2.2.2 went down',
+        'timestamp': '2025-01-01T12:00:00Z',
+        'resource': {'labels': {'router_id': 'r1_id', 'region': self.region}},
+      },
+      {
+        'textPayload': 'BGP Event: BGP peering with 2.2.2.2 came up',
+        'timestamp': '2025-01-01T12:01:00Z',
+        'resource': {'labels': {'router_id': 'r1_id', 'region': self.region}},
+      },
     ]
     step = bgp_down_flap.CheckBgpFlap()
     with bgp_down_flap.op.operator_context(self.mock_operator):
@@ -399,26 +351,16 @@ class TestBgpDownFlap(unittest.TestCase):
     vlan.remoteip = '2.2.2.2'
     self.mock_get_vlan.return_value = [vlan]
     self.mock_logs_query.return_value = [
-        {
-            'textPayload': 'BGP Event: BGP peering with 2.2.2.2 came up',
-            'timestamp': '2025-01-01T12:01:00Z',
-            'resource': {
-                'labels': {
-                    'router_id': 'r1_id',
-                    'region': self.region
-                }
-            },
-        },
-        {
-            'textPayload': 'BGP Event: BGP peering with 2.2.2.2 went down',
-            'timestamp': '2025-01-01T12:00:00Z',
-            'resource': {
-                'labels': {
-                    'router_id': 'r1_id',
-                    'region': self.region
-                }
-            },
-        },
+      {
+        'textPayload': 'BGP Event: BGP peering with 2.2.2.2 came up',
+        'timestamp': '2025-01-01T12:01:00Z',
+        'resource': {'labels': {'router_id': 'r1_id', 'region': self.region}},
+      },
+      {
+        'textPayload': 'BGP Event: BGP peering with 2.2.2.2 went down',
+        'timestamp': '2025-01-01T12:00:00Z',
+        'resource': {'labels': {'router_id': 'r1_id', 'region': self.region}},
+      },
     ]
     step = bgp_down_flap.CheckBgpFlap()
     with bgp_down_flap.op.operator_context(self.mock_operator):

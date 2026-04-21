@@ -28,19 +28,19 @@ MATCH_STRING = 'permission'
 NOTEBOOKS_SA = '^service-.*@gcp-sa-notebooks.iam.gserviceaccount.com$'
 
 NOTEBOOKS_MISSING_PERMISSIONS_FILTER = [
-    'severity=ERROR',
-    'protoPayload.serviceName = "notebooks.googleapis.com"',
-    f'protoPayload.status.message =~ "{MATCH_STRING}"',
-    'protoPayload.status.code = 7',
+  'severity=ERROR',
+  'protoPayload.serviceName = "notebooks.googleapis.com"',
+  f'protoPayload.status.message =~ "{MATCH_STRING}"',
+  'protoPayload.status.code = 7',
 ]
 
 COMPUTE_ENGINE_MISSING_PERMISSIONS_FILTER = [
-    'severity=ERROR',
-    'protoPayload.serviceName = "compute.googleapis.com"',
-    'protoPayload.authorizationInfo.granted != True',
-    f'protoPayload.authenticationInfo.principalEmail =~ "{NOTEBOOKS_SA}"',
-    f'protoPayload.status.message =~ "{MATCH_STRING}"',
-    'protoPayload.status.code = 7',
+  'severity=ERROR',
+  'protoPayload.serviceName = "compute.googleapis.com"',
+  'protoPayload.authorizationInfo.granted != True',
+  f'protoPayload.authenticationInfo.principalEmail =~ "{NOTEBOOKS_SA}"',
+  f'protoPayload.status.message =~ "{MATCH_STRING}"',
+  'protoPayload.status.code = 7',
 ]
 
 logs_by_project_notebooks = {}
@@ -53,26 +53,27 @@ def prepare_rule(context: models.Context):
   log_name = 'log_id("cloudaudit.googleapis.com/activity")'
 
   logs_by_project_notebooks[context.project_id] = logs.query(
-      project_id=project_id,
-      log_name=log_name,
-      resource_type='audited_resource',
-      filter_str=' AND '.join(NOTEBOOKS_MISSING_PERMISSIONS_FILTER))
+    project_id=project_id,
+    log_name=log_name,
+    resource_type='audited_resource',
+    filter_str=' AND '.join(NOTEBOOKS_MISSING_PERMISSIONS_FILTER),
+  )
 
   logs_by_project_compute[context.project_id] = logs.query(
-      project_id=project_id,
-      log_name=log_name,
-      resource_type='gce_instance',
-      filter_str=' AND '.join(COMPUTE_ENGINE_MISSING_PERMISSIONS_FILTER))
+    project_id=project_id,
+    log_name=log_name,
+    resource_type='gce_instance',
+    filter_str=' AND '.join(COMPUTE_ENGINE_MISSING_PERMISSIONS_FILTER),
+  )
 
 
-def find_logs_with_permission_errors(context: models.Context,
-                                     logs_by_project: dict):
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+def find_logs_with_permission_errors(context: models.Context, logs_by_project: dict):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant and repeated log entries.
-      if (log_entry['severity'] == 'ERROR' and MATCH_STRING in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), default='')):
+      if log_entry['severity'] == 'ERROR' and MATCH_STRING in get_path(
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         return True
   return False
 
@@ -90,13 +91,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   # Logs-based rule as any user account or SA can create/use/own notebooks
-  if (find_logs_with_permission_errors(context, logs_by_project_notebooks) or
-      find_logs_with_permission_errors(context, logs_by_project_compute)):
+  if find_logs_with_permission_errors(
+    context, logs_by_project_notebooks
+  ) or find_logs_with_permission_errors(context, logs_by_project_compute):
     report.add_failed(
-        project,
-        ('Missing permissions: '
-         '@gcp-sa-notebooks.iam.gserviceaccount.com Service Account must '
-         'have "AI Platform Notebooks Service Agent" role and user account '
-         'must have "Service Account User" role'))
+      project,
+      (
+        'Missing permissions: '
+        '@gcp-sa-notebooks.iam.gserviceaccount.com Service Account must '
+        'have "AI Platform Notebooks Service Agent" role and user account '
+        'must have "Service Account User" role'
+      ),
+    )
   else:
     report.add_ok(project)

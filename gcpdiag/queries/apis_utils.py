@@ -27,7 +27,7 @@ from gcpdiag import config, executor, models, utils
 
 
 def execute_concurrently(
-    api: Any, requests: List[Any], context: models.Context
+  api: Any, requests: List[Any], context: models.Context
 ) -> Iterator[Tuple[Any, Optional[Any], Optional[Exception]]]:
   """
   Executes a list of API requests concurrently.
@@ -40,9 +40,7 @@ def execute_concurrently(
   if context.context_provider:
     # API Server context: Use ThreadPoolExecutor
     exec_ = executor.get_executor(context)
-    future_to_request = {
-        exec_.submit(execute_single_request, req): req for req in requests
-    }
+    future_to_request = {exec_.submit(execute_single_request, req): req for req in requests}
 
     for future in concurrent.futures.as_completed(future_to_request):
       request = future_to_request[future]
@@ -57,25 +55,23 @@ def execute_concurrently(
 
 
 def _execute_with_pagination_in_api_context(
-    api: Any,
-    requests: List[Any],
-    next_function: Callable,
-    context: models.Context,
-    response_keyword: str = 'items') -> Iterator[Any]:
+  api: Any,
+  requests: List[Any],
+  next_function: Callable,
+  context: models.Context,
+  response_keyword: str = 'items',
+) -> Iterator[Any]:
   """
   Executes and paginates a list of API 'list' requests concurrently in an API context.
   """
   pending_requests = list(requests)
   while pending_requests:
     next_page_requests = []
-    results_iterator = execute_concurrently(api=api,
-                                            requests=pending_requests,
-                                            context=context)
+    results_iterator = execute_concurrently(api=api, requests=pending_requests, context=context)
 
     for request, response, exception in results_iterator:
       if exception:
-        if (isinstance(exception, apiclient.errors.HttpError) and
-            exception.resp.status == 404):
+        if isinstance(exception, apiclient.errors.HttpError) and exception.resp.status == 404:
           continue
         raise utils.GcpApiError(exception) from exception
 
@@ -85,8 +81,7 @@ def _execute_with_pagination_in_api_context(
       yield from response.get(response_keyword, [])
 
       if 'nextPageToken' in response:
-        next_req = next_function(previous_request=request,
-                                 previous_response=response)
+        next_req = next_function(previous_request=request, previous_response=response)
         if next_req:
           next_page_requests.append(next_req)
 
@@ -94,28 +89,26 @@ def _execute_with_pagination_in_api_context(
 
 
 def execute_concurrently_with_pagination(
-    api: Any,
-    requests: List[Any],
-    next_function: Callable,
-    context: models.Context,
-    log_text: Optional[str] = None,
-    response_keyword: str = 'items') -> Iterator[Any]:
+  api: Any,
+  requests: List[Any],
+  next_function: Callable,
+  context: models.Context,
+  log_text: Optional[str] = None,
+  response_keyword: str = 'items',
+) -> Iterator[Any]:
   """
   Executes and paginates a list of API 'list' requests concurrently.
   """
   if not context.context_provider:
-    yield from batch_list_all(api, requests, next_function, log_text,
-                              response_keyword)
+    yield from batch_list_all(api, requests, next_function, log_text, response_keyword)
     return
 
-  yield from _execute_with_pagination_in_api_context(api, requests,
-                                                     next_function, context,
-                                                     response_keyword)
+  yield from _execute_with_pagination_in_api_context(
+    api, requests, next_function, context, response_keyword
+  )
 
 
-def list_all(request,
-             next_function: Callable,
-             response_keyword='items') -> Iterator[Any]:
+def list_all(request, next_function: Callable, response_keyword='items') -> Iterator[Any]:
   """Execute GCP API `request` and subsequently call `next_function` until
   there are no more results. Assumes that it is a list method and that
   the results are under a `items` key."""
@@ -130,25 +123,26 @@ def list_all(request,
     if response_keyword in response:
       yield from response[response_keyword]
 
-    request = next_function(previous_request=request,
-                            previous_response=response)
+    request = next_function(previous_request=request, previous_response=response)
     if request is None:
       break
 
 
 def multi_list_all(
-    requests: list,
-    next_function: Callable,
+  requests: list,
+  next_function: Callable,
 ) -> Iterator[Any]:
   for req in requests:
     yield from list_all(req, next_function)
 
 
-def batch_list_all(api,
-                   requests: list,
-                   next_function: Callable,
-                   log_text: Optional[str] = None,
-                   response_keyword='items'):
+def batch_list_all(
+  api,
+  requests: list,
+  next_function: Callable,
+  log_text: Optional[str] = None,
+  response_keyword='items',
+):
   """Similar to list_all but using batch API except in TPC environment."""
 
   if 'googleapis.com' not in requests[0].uri:
@@ -157,15 +151,16 @@ def batch_list_all(api,
     for req in requests:
       yield from list_all(req, next_function)
   else:
-    yield from _original_batch(api, requests, next_function, log_text,
-                               response_keyword)
+    yield from _original_batch(api, requests, next_function, log_text, response_keyword)
 
 
-def _original_batch(api,
-                    requests: list,
-                    next_function: Callable,
-                    log_text: Optional[str] = None,
-                    response_keyword='items'):
+def _original_batch(
+  api,
+  requests: list,
+  next_function: Callable,
+  log_text: Optional[str] = None,
+  response_keyword='items',
+):
   """Similar to list_all but using batch API."""
   pending_requests = requests
 
@@ -178,10 +173,9 @@ def _original_batch(api,
         logging.info(log_text)
       else:
         logging.info('%s (page: %d)', log_text, page)
-    for (request, response, exception) in batch_execute_all(api, next_requests):
+    for request, response, exception in batch_execute_all(api, next_requests):
       if exception:
-        logging.info('Exception requesting %s: %s', request.uri,
-                     exception.message)
+        logging.info('Exception requesting %s: %s', request.uri, exception.message)
         raise exception
 
       # add request for next page if required
@@ -224,16 +218,19 @@ def batch_execute_all(api, requests: list):
       request = requests_in_flight[int(request_id)]
     except (IndexError, ValueError, TypeError):
       logging.debug(
-          'BUG: Cannot find request %r in list of pending requests, dropping request.',
-          request_id)
+        'BUG: Cannot find request %r in list of pending requests, dropping request.', request_id
+      )
       return
 
     if exception:
-      if isinstance(exception, googleapiclient.errors.HttpError) and \
-        should_retry(exception.status_code) and \
-        retry_count < config.API_RETRIES:
-        logging.debug('received HTTP error status code %d from API, retrying',
-                      exception.status_code)
+      if (
+        isinstance(exception, googleapiclient.errors.HttpError)
+        and should_retry(exception.status_code)
+        and retry_count < config.API_RETRIES
+      ):
+        logging.debug(
+          'received HTTP error status code %d from API, retrying', exception.status_code
+        )
         requests_todo.append(request)
       else:
         results.append((request, None, utils.GcpApiError(exception)))
@@ -260,9 +257,9 @@ def batch_execute_all(api, requests: list):
         error_msg = f'received HTTP error status code {err.status_code} from Batch API, retrying'
       else:
         error_msg = f'received exception from Batch API: {err}, retrying'
-      if (not isinstance(err, googleapiclient.errors.HttpError) or \
-          should_retry(err.status_code)) \
-          and retry_count < config.API_RETRIES:
+      if (
+        not isinstance(err, googleapiclient.errors.HttpError) or should_retry(err.status_code)
+      ) and retry_count < config.API_RETRIES:
         logging.debug(error_msg)
         requests_todo = requests_in_flight
         results = []
@@ -278,17 +275,16 @@ def batch_execute_all(api, requests: list):
 
     # for example: retry delay: 20% is random, progression: 1, 1.4, 2.0, 2.7, ... 28.9 (10 retries)
     sleep_time = get_nth_exponential_random_retry(
-        n=retry_count,
-        random_pct=config.API_RETRY_SLEEP_RANDOMNESS_PCT,
-        multiplier=config.API_RETRY_SLEEP_MULTIPLIER)
-    logging.debug('sleeping %.2f seconds before retry #%d', sleep_time,
-                  retry_count + 1)
+      n=retry_count,
+      random_pct=config.API_RETRY_SLEEP_RANDOMNESS_PCT,
+      multiplier=config.API_RETRY_SLEEP_MULTIPLIER,
+    )
+    logging.debug('sleeping %.2f seconds before retry #%d', sleep_time, retry_count + 1)
     time.sleep(sleep_time)
     retry_count += 1
 
 
-def execute_single_request(
-    request: Any) -> Tuple[Optional[Any], Optional[Exception]]:
+def execute_single_request(request: Any) -> Tuple[Optional[Any], Optional[Exception]]:
   """Executes a single API request and returns the response and exception."""
   try:
     response = request.execute(num_retries=config.API_RETRIES)

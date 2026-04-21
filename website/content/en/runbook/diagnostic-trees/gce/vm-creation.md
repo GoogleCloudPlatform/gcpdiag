@@ -14,9 +14,9 @@ description: >
 
 This runbook helps identify and resolve issues related to VM creation in Google Cloud.
 
-    - Checks for quota-related issues.
-    - Checks for permission-related issues.
-    - Checks for conflicts such as resource already existing.
+  - Checks for quota-related issues.
+  - Checks for permission-related issues.
+  - Checks for conflicts such as resource already existing.
 
 ### Executing this runbook
 

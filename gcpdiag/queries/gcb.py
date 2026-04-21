@@ -29,44 +29,44 @@ from gcpdiag.queries import apis, apis_utils
 # List of locations from https://cloud.google.com/build/docs/locations
 # There is no API to get them programmatically.
 LOCATIONS = [
-    '-',  # global
-    'asia-east1',
-    'asia-east2',
-    'asia-northeast1',
-    'asia-northeast2',
-    'asia-northeast3',
-    'asia-south1',
-    'asia-southeast1',
-    'asia-southeast2',
-    'australia-southeast1',
-    'europe-central2',
-    'europe-north1',
-    'europe-west1',
-    'europe-west2',
-    'europe-west3',
-    'europe-west4',
-    'europe-west6',
-    'northamerica-northeast1',
-    'southamerica-east1',
-    'us-central1',
-    'us-east1',
-    'us-east4',
-    'us-west1',
-    'us-west2',
-    'us-west3',
-    'us-west4',
+  '-',  # global
+  'asia-east1',
+  'asia-east2',
+  'asia-northeast1',
+  'asia-northeast2',
+  'asia-northeast3',
+  'asia-south1',
+  'asia-southeast1',
+  'asia-southeast2',
+  'australia-southeast1',
+  'europe-central2',
+  'europe-north1',
+  'europe-west1',
+  'europe-west2',
+  'europe-west3',
+  'europe-west4',
+  'europe-west6',
+  'northamerica-northeast1',
+  'southamerica-east1',
+  'us-central1',
+  'us-east1',
+  'us-east4',
+  'us-west1',
+  'us-west2',
+  'us-west3',
+  'us-west4',
 ]
 
 
 @dataclasses.dataclass(frozen=True)
 class BuildOptions:
   """representation of build.options object"""
+
   logging: str
   log_streaming_option: str
 
   def is_bucket_streaming_enabled(self) -> bool:
-    return (self.logging != 'GCS_ONLY' or
-            self.log_streaming_option != 'STREAM_OFF')
+    return self.logging != 'GCS_ONLY' or self.log_streaming_option != 'STREAM_OFF'
 
 
 class BuildOptionsBuilder:
@@ -77,8 +77,8 @@ class BuildOptionsBuilder:
 
   def build(self) -> BuildOptions:
     return BuildOptions(
-        logging=self._get_logging(),
-        log_streaming_option=self._get_log_streaming_option(),
+      logging=self._get_logging(),
+      log_streaming_option=self._get_log_streaming_option(),
     )
 
   def _get_logging(self) -> str:
@@ -91,6 +91,7 @@ class BuildOptionsBuilder:
 @dataclasses.dataclass(frozen=True)
 class FailureInfo:
   """Wrapper around build.failureInfo object."""
+
   failure_type: str
 
 
@@ -109,6 +110,7 @@ class FailureInfoBuilder:
 
 class Build(models.Resource):
   """Represents a Cloud Build execution."""
+
   _resource_data: dict
 
   def __init__(self, project_id, location, resource_data):
@@ -151,12 +153,12 @@ class Build(models.Resource):
 
   @property
   def failure_info(self) -> FailureInfo:
-    return FailureInfoBuilder(self._resource_data.get('failureInfo',
-                                                      {})).build()
+    return FailureInfoBuilder(self._resource_data.get('failureInfo', {})).build()
 
 
 class Trigger(models.Resource):
   """Represents a Cloud Build trigger instance."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -191,17 +193,24 @@ def get_builds(context: models.Context) -> Mapping[str, Build]:
   build_api = apis.get_api('cloudbuild', 'v1', context.project_id)
   batch = []
   builds = {}
-  start_time = datetime.datetime.now(
-      datetime.timezone.utc) - datetime.timedelta(
-          days=config.get('within_days'))
+  start_time = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
+    days=config.get('within_days')
+  )
   logging.debug('fetching list of builds in the project %s', context.project_id)
   for location in LOCATIONS:
-    query = build_api.projects().locations().builds().list(
+    query = (
+      build_api.projects()
+      .locations()
+      .builds()
+      .list(
         parent=f'projects/{context.project_id}/locations/{location}',
-        filter=f'create_time>"{start_time.isoformat()}"')
+        filter=f'create_time>"{start_time.isoformat()}"',
+      )
+    )
     batch.append(query)
   for request, response, exception in apis_utils.execute_concurrently(
-      api=build_api, requests=batch, context=context):
+    api=build_api, requests=batch, context=context
+  ):
     if exception:
       if isinstance(exception, googleapiclient.errors.HttpError):
         raise utils.GcpApiError(exception) from exception
@@ -219,10 +228,8 @@ def get_builds(context: models.Context) -> Mapping[str, Build]:
     for build in response['builds']:
       # verify that we have some minimal data that we expect
       if 'id' not in build:
-        raise RuntimeError(
-            'missing data in projects.locations.builds.list response')
-      r = re.search(r'projects/([^/]+)/locations/([^/]+)/builds/([^/]+)',
-                    build['name'])
+        raise RuntimeError('missing data in projects.locations.builds.list response')
+      r = re.search(r'projects/([^/]+)/locations/([^/]+)/builds/([^/]+)', build['name'])
       if not r:
         logging.error('build has invalid data: %s', build['name'])
         continue
@@ -230,24 +237,25 @@ def get_builds(context: models.Context) -> Mapping[str, Build]:
       if not context.match_project_resource(resource=r.group(3)):
         continue
 
-      builds[build['id']] = Build(project_id=project_id,
-                                  location=location,
-                                  resource_data=build)
+      builds[build['id']] = Build(project_id=project_id, location=location, resource_data=build)
   return builds
 
 
 @caching.cached_api_call
 def get_triggers(context: models.Context) -> Mapping[str, Trigger]:
   """Get a list of Cloud Build triggers matching the given context,
-     indexed by Cloud Build trigger id."""
+  indexed by Cloud Build trigger id."""
   triggers: Dict[str, Trigger] = {}
   if not apis.is_enabled(context.project_id, 'cloudbuild'):
     return triggers
   build_api = apis.get_api('cloudbuild', 'v1', context.project_id)
-  logging.debug('fetching list of triggers in the project %s',
-                context.project_id)
-  query = build_api.projects().locations().triggers().list(
-      parent=f'projects/{context.project_id}/locations/global')
+  logging.debug('fetching list of triggers in the project %s', context.project_id)
+  query = (
+    build_api.projects()
+    .locations()
+    .triggers()
+    .list(parent=f'projects/{context.project_id}/locations/global')
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'triggers' not in resp:
@@ -255,8 +263,7 @@ def get_triggers(context: models.Context) -> Mapping[str, Trigger]:
     for resp_f in resp['triggers']:
       # verify that we have some minimal data that we expect
       if 'id' not in resp_f:
-        raise RuntimeError(
-            'missing data in projects.locations.triggers.list response')
+        raise RuntimeError('missing data in projects.locations.triggers.list response')
       f = Trigger(project_id=context.project_id, resource_data=resp_f)
       triggers[f.id] = f
   except googleapiclient.errors.HttpError as err:

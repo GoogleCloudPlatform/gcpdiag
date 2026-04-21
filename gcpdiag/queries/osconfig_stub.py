@@ -22,9 +22,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 DUMMY_PROJECT_NAME = 'gcpdiag-osconfig1-aaaa'
 DUMMY_NON_EXISTENT_INSTANCE_NAME = 'instance-does-not-exist'
 

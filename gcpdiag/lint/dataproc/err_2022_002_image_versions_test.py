@@ -36,7 +36,6 @@ class TestDataprocImageVersions:
     self.dotest(['2.x.24-debian10', 'x.0.24-debian10', '2.0.x-debian10'], False)
 
   def test_missing_parts(self):
-    self.dotest([
-        '2', '2.0', '2.0.24', '2.0.24-42', '2.0.24-msdos', '.0.24-msdos42',
-        '2.0.-msdos42'
-    ], False)
+    self.dotest(
+      ['2', '2.0', '2.0.24', '2.0.24-42', '2.0.24-msdos', '.0.24-msdos42', '2.0.-msdos42'], False
+    )

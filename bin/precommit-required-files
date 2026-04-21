@@ -21,7 +21,7 @@ from gcpdiag.product_list import get_product_list
 from gcpdiag.rule_classes import get_rule_classes
 from gcpdiag.runbook import DiagnosticTree, util
 
-#Lint Rules Doc
+# Lint Rules Doc
 WEBSITE_RULES_DIR = 'website/content/en/rules'
 LINT_RULES_DIR = 'gcpdiag/lint'
 # Runbook Docs
@@ -46,27 +46,29 @@ def gen_rule_page(rule, rule_page_path):
     class_dir = pathlib.Path(f'{WEBSITE_RULES_DIR}/{rule.product}')
     class_dir.mkdir()
     with open(class_dir / '_index.md', 'w', encoding='utf-8') as f:
-      print(textwrap.dedent(f'''\
+      print(
+        textwrap.dedent(f"""\
           ---
           title: "{rule.product.upper()}"
           linkTitle: "{rule.product}"
           type: docs
           ---
-          '''),
-            file=f)
+          """),
+        file=f,
+      )
   except FileExistsError:
     pass
 
   # Create rule class directory
   try:
-    class_dir = pathlib.Path(
-        f'{WEBSITE_RULES_DIR}/{rule.product}/{rule.rule_class}')
+    class_dir = pathlib.Path(f'{WEBSITE_RULES_DIR}/{rule.product}/{rule.rule_class}')
     class_dir.mkdir()
   except FileExistsError:
     pass
 
   with open(rule_page_path, 'w', encoding='utf-8') as f:
-    print(textwrap.dedent(f'''\
+    print(
+      textwrap.dedent(f"""\
     ---
     title: "{rule.product}/{rule.rule_class}/{rule.rule_id}"
     linkTitle: "{rule.rule_class}/{rule.rule_id}"
@@ -80,15 +82,18 @@ def gen_rule_page(rule, rule_page_path):
     **Rule class**: {rule.rule_class} - {RULE_CLASSES[str(rule.rule_class)]}
 
     ### Description
-    '''),
-          file=f)
+    """),
+      file=f,
+    )
     print(rule.long_desc, file=f)
-    print(textwrap.dedent('''\
+    print(
+      textwrap.dedent("""\
 
     ### Remediation
 
-    ### Further information'''),
-          file=f)
+    ### Further information"""),
+      file=f,
+    )
 
 
 def check_runbook(files):
@@ -114,14 +119,14 @@ def check_runbook(files):
     mod_dt_count = 0
     for name, obj in inspect.getmembers(module, inspect.isclass):
       # Handle DiagnosticTree classes.
-      if issubclass(
-          obj, runbook.DiagnosticTree) and obj is not runbook.DiagnosticTree:
+      if issubclass(obj, runbook.DiagnosticTree) and obj is not runbook.DiagnosticTree:
         mod_dt_count += 1
         if mod_dt_count > 1:
           raise RuntimeError(
-              f'Multiple Diagnostic Trees found in {file_path}\n'
-              f'For readability each Diagnostic Tree should have it own file'
-              f'Only keep custom steps for this Diagnostic Tree in the file')
+            f'Multiple Diagnostic Trees found in {file_path}\n'
+            f'For readability each Diagnostic Tree should have it own file'
+            f'Only keep custom steps for this Diagnostic Tree in the file'
+          )
         inscope_dts.append(obj)
 
       # Store Step classes that have possibly been modified.
@@ -141,22 +146,25 @@ def gen_dt_rule_and_steps_page(dt, in_scope_steps):
   """
   if dt.product not in PRODUCTS and dt.product not in PRODUCTS_EXCEPTIONS:
     print(
-        f'ERROR: Product "{dt.product}" for Diagnostic Tree '
-        f'"{dt.__class__.__name__}" is not defined in the "PRODUCTS" '
-        'dictionary.',
-        file=sys.stderr)
+      f'ERROR: Product "{dt.product}" for Diagnostic Tree '
+      f'"{dt.__class__.__name__}" is not defined in the "PRODUCTS" '
+      'dictionary.',
+      file=sys.stderr,
+    )
     print(
-        'To resolve this pre-commit error, you must add the new product to '
-        '"bin/precommit-required-files.py".',
-        file=sys.stderr)
+      'To resolve this pre-commit error, you must add the new product to '
+      '"bin/precommit-required-files.py".',
+      file=sys.stderr,
+    )
     print(
-        'Specifically, update the `PRODUCTS` dictionary in the '
-        '`get_product_list()` function.',
-        file=sys.stderr)
+      'Specifically, update the `PRODUCTS` dictionary in the `get_product_list()` function.',
+      file=sys.stderr,
+    )
     print(
-        'Example: "your_new_product": "[Your New Product Name]"'
-        '(https://cloud.google.com/your-new-product-url)',
-        file=sys.stderr)
+      'Example: "your_new_product": "[Your New Product Name]"'
+      '(https://cloud.google.com/your-new-product-url)',
+      file=sys.stderr,
+    )
     sys.exit(1)
 
   # Expand the full diagnostic tree from the AST nodes.
@@ -183,27 +191,29 @@ def gen_dt_rule_and_steps_page(dt, in_scope_steps):
     # Make both diagnostic-trees
     dt_dir.mkdir(parents=True)
     with open(dt_dir / '_index.md', 'w', encoding='utf-8') as f:
-      print(textwrap.dedent('''\
+      print(
+        textwrap.dedent("""\
           ---
           title: "Debugging Trees"
           linkTitle: "Debugging Trees"
           type: docs
           weight: 1
           ---
-          '''),
-            file=f,
-            end='')
+          """),
+        file=f,
+        end='',
+      )
   except FileExistsError:
     pass
 
   # Create dt product directory if doesn't exist and sub folder images.
   try:
-    product_dt_dir = pathlib.Path(
-        f'{WEBSITE_RUNBOOK_DIR}/diagnostic-trees/{dt.product}')
+    product_dt_dir = pathlib.Path(f'{WEBSITE_RUNBOOK_DIR}/diagnostic-trees/{dt.product}')
     # Make both diagnostic-trees
     product_dt_dir.mkdir(parents=True)
     with open(product_dt_dir / '_index.md', 'w', encoding='utf-8') as f:
-      print(textwrap.dedent(f'''\
+      print(
+        textwrap.dedent(f"""\
           ---
           title: "{dt.product.upper()}"
           linkTitle: "{dt.product}"
@@ -212,9 +222,10 @@ def gen_dt_rule_and_steps_page(dt, in_scope_steps):
           ---
 
           All diagnostic tree available in {dt.product}
-          '''),
-            file=f,
-            end='')
+          """),
+        file=f,
+        end='',
+      )
   except FileExistsError:
     pass
 
@@ -225,22 +236,21 @@ def gen_dt_rule_and_steps_page(dt, in_scope_steps):
     pass
 
   context = {
-      'rule': expanded_dt,
-      'util': util,
-      'title': util.pascal_case_to_title(dt.__class__.__name__),
-      'PRODUCTS': PRODUCTS,
-      'ROOT_DIR': WEBSITE_RUNBOOK_DIR
+    'rule': expanded_dt,
+    'util': util,
+    'title': util.pascal_case_to_title(dt.__class__.__name__),
+    'PRODUCTS': PRODUCTS,
+    'ROOT_DIR': WEBSITE_RUNBOOK_DIR,
   }
   # Render the template with the context
-  rendered_content = runbook.util.render_template('bin/templates',
-                                                  'diagnostic-tree.jinja',
-                                                  context).rstrip('\n')
+  rendered_content = runbook.util.render_template(
+    'bin/templates', 'diagnostic-tree.jinja', context
+  ).rstrip('\n')
   dt_path = f'{dt_dir}/{expanded_dt.name}.md'
   md_page_content = ''
   if os.path.exists(dt_path):
     # Check if the content changed.
-    md_page_content = runbook.util.render_template(dt_dir,
-                                                   f'{expanded_dt.name}.md', {})
+    md_page_content = runbook.util.render_template(dt_dir, f'{expanded_dt.name}.md', {})
   if rendered_content != md_page_content:
     with open(dt_path, 'w', encoding='utf-8') as f:
       f.write(rendered_content)
@@ -259,29 +269,33 @@ def gen_step_page(step: runbook.Step):
   """
   if step.product not in PRODUCTS and step.product not in PRODUCTS_EXCEPTIONS:
     print(
-        f'ERROR: Product "{step.product}" for Diagnostic Tree '
-        f'"{step.__class__.__name__}" is not defined in the "PRODUCTS" '
-        f'dictionary.',
-        file=sys.stderr)
+      f'ERROR: Product "{step.product}" for Diagnostic Tree '
+      f'"{step.__class__.__name__}" is not defined in the "PRODUCTS" '
+      f'dictionary.',
+      file=sys.stderr,
+    )
     print(
-        'To resolve this pre-commit error, you must add the new product to '
-        '"bin/precommit-required-files.py".',
-        file=sys.stderr)
+      'To resolve this pre-commit error, you must add the new product to '
+      '"bin/precommit-required-files.py".',
+      file=sys.stderr,
+    )
     print(
-        'Specifically, update the `PRODUCTS` dictionary in the '
-        '`get_product_list()` function.',
-        file=sys.stderr)
+      'Specifically, update the `PRODUCTS` dictionary in the `get_product_list()` function.',
+      file=sys.stderr,
+    )
     print(
-        'Example: "your_new_product": "[Your New Product Name]"'
-        '(https://cloud.google.com/your-new-product-url)',
-        file=sys.stderr)
+      'Example: "your_new_product": "[Your New Product Name]"'
+      '(https://cloud.google.com/your-new-product-url)',
+      file=sys.stderr,
+    )
     sys.exit(1)  # Exit with an error to prevent further issues
 
   try:
     steps_dir = pathlib.Path(f'{WEBSITE_RUNBOOK_DIR}/steps')
     steps_dir.mkdir(parents=True)
     with open(steps_dir / '_index.md', 'w', encoding='utf-8') as f:
-      print(textwrap.dedent('''\
+      print(
+        textwrap.dedent("""\
           ---
           title: "All Steps"
           linkTitle: "steps"
@@ -290,18 +304,19 @@ def gen_step_page(step: runbook.Step):
           ---
 
           All steps available in the runbook by products
-          '''),
-            file=f,
-            end='')
+          """),
+        file=f,
+        end='',
+      )
   except FileExistsError:
     pass
 
   try:
-    product_steps_dir = pathlib.Path(
-        f'{WEBSITE_RUNBOOK_DIR}/steps/{step.product}')
+    product_steps_dir = pathlib.Path(f'{WEBSITE_RUNBOOK_DIR}/steps/{step.product}')
     product_steps_dir.mkdir()
     with open(product_steps_dir / '_index.md', 'w', encoding='utf-8') as f:
-      print(textwrap.dedent(f'''\
+      print(
+        textwrap.dedent(f"""\
           ---
           title: "{step.product.upper()}"
           linkTitle: "{step.product}"
@@ -310,34 +325,33 @@ def gen_step_page(step: runbook.Step):
           ---
 
           All steps available in {step.product}
-          '''),
-            file=f,
-            end='')
+          """),
+        file=f,
+        end='',
+      )
   except FileExistsError:
     pass
 
   msgs = {}
   try:
     filepath, block_prefix = step.template.split('::')
-    msgs = runbook.util.load_template_block(module_name=step.__module__,
-                                            file_name=filepath.strip(),
-                                            block_name=block_prefix.strip())
+    msgs = runbook.util.load_template_block(
+      module_name=step.__module__, file_name=filepath.strip(), block_name=block_prefix.strip()
+    )
   except UndefinedError as e:
     print(f'Encounted a block error while parsing {e} used in step {step.id}')
   except TemplateNotFound as e:
-    print(
-        f'Step "{step.id}" is using a non-existent jinja file with the name: {e}'
-    )
-  except AttributeError as e:
+    print(f'Step "{step.id}" is using a non-existent jinja file with the name: {e}')
+  except AttributeError:
     pass
   except ValueError as e:
-    print('Ensure that your template string uses '
-          f'the following format "template_file::block_name":{e}')
+    print(
+      f'Ensure that your template string uses the following format "template_file::block_name":{e}'
+    )
 
   context = {'step': step, 'msgs': msgs, 'PRODUCTS': PRODUCTS}
   step_page = f'{product_steps_dir}/{step.doc_file_name}.md'
-  rendered_content = runbook.util.render_template('bin/templates/',
-                                                  'steps.jinja', context)
+  rendered_content = runbook.util.render_template('bin/templates/', 'steps.jinja', context)
   # For some reason there are \n at the end despite striping new line and block lines
   # Many strip it if any still exists at the end.
   rendered_content = rendered_content.rstrip('\n')
@@ -345,9 +359,9 @@ def gen_step_page(step: runbook.Step):
 
   if os.path.exists(step_page):
     # Check if the content changed.
-    md_page_content = runbook.util.render_template(product_steps_dir,
-                                                   f'{step.doc_file_name}.md',
-                                                   {})
+    md_page_content = runbook.util.render_template(
+      product_steps_dir, f'{step.doc_file_name}.md', {}
+    )
 
   if rendered_content != md_page_content:
     with open(step_page, 'w', encoding='utf-8') as f:
@@ -358,9 +372,9 @@ def gen_step_page(step: runbook.Step):
 def check_rule_page(rule):
   rule_page_path = f'{WEBSITE_RULES_DIR}/{rule.product}/{rule.rule_class}/{rule.rule_id}.md'
   # check that rule page exists and is staged
-  lsfiles = subprocess.run(['git', 'ls-files', '-s', rule_page_path],
-                           stdout=subprocess.PIPE,
-                           check=False)
+  lsfiles = subprocess.run(
+    ['git', 'ls-files', '-s', rule_page_path], stdout=subprocess.PIPE, check=False
+  )
   if len(lsfiles.stdout) > 0:
     return True
   elif path.exists(rule_page_path):
@@ -373,22 +387,21 @@ def check_rule_page(rule):
 
 
 def check_rule_snapshot(rule):
-  rule_snapshot_path = (f'{LINT_RULES_DIR}/{rule.product}/snapshots/'
-                        f'{rule.rule_class}_{rule.rule_id}.txt')
+  rule_snapshot_path = (
+    f'{LINT_RULES_DIR}/{rule.product}/snapshots/{rule.rule_class}_{rule.rule_id}.txt'
+  )
 
   # check that rule snapshot exists and is staged
-  lsfiles = subprocess.run(['git', 'ls-files', '-s', rule_snapshot_path],
-                           stdout=subprocess.PIPE,
-                           check=False)
+  lsfiles = subprocess.run(
+    ['git', 'ls-files', '-s', rule_snapshot_path], stdout=subprocess.PIPE, check=False
+  )
   if len(lsfiles.stdout) > 0:
     return True
   elif path.exists(rule_snapshot_path):
     print(f'rule snapshot not staged: {rule_snapshot_path}', file=sys.stderr)
     return False
   else:
-    print(
-        f'run "make snapshots" to generate rule snapshot: {rule_snapshot_path} ',
-        file=sys.stderr)
+    print(f'run "make snapshots" to generate rule snapshot: {rule_snapshot_path} ', file=sys.stderr)
     return False
 
 

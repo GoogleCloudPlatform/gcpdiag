@@ -25,7 +25,6 @@ ip_addresses = {}
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   ip_addresses[context.project_id] = network.get_addresses(context.project_id)
 
   addresses = ip_addresses[context.project_id]

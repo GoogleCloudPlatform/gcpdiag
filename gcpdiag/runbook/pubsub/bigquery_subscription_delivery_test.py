@@ -23,8 +23,10 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   project_id = 'gcpdiag-pubsub1-aaaa'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-pubsub1-aaaa',
       'subscription_name': 'gcpdiag-pubsub1subscription2-9pm6hng1',
-      'table_id': 'test_dataset.test_table'
-  }]
+      'table_id': 'test_dataset.test_table',
+    }
+  ]

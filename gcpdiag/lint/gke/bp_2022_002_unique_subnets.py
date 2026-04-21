@@ -34,12 +34,21 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     subnetwork_config = c.subnetwork
     if subnetwork_config is None:
       report.add_skipped(
-          c, (f'Cluster "{c.name}" is using Legacy VPC with no'
-              f' support for subnets. Suggest change to modern VPC.'))
+        c,
+        (
+          f'Cluster "{c.name}" is using Legacy VPC with no'
+          f' support for subnets. Suggest change to modern VPC.'
+        ),
+      )
       continue
     if subnetwork_config.short_path not in subnets:
       subnets[subnetwork_config.short_path] = c.short_path
       report.add_ok(c)
     else:
-      report.add_failed(c, (f'Subnet "{c.subnetwork.short_path}" is used by'
-                            f' "{subnets[c.subnetwork.short_path]}" cluster'))
+      report.add_failed(
+        c,
+        (
+          f'Subnet "{c.subnetwork.short_path}" is used by'
+          f' "{subnets[c.subnetwork.short_path]}" cluster'
+        ),
+      )

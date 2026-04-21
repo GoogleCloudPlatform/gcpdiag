@@ -45,9 +45,10 @@ class VersionParser:
     self.fill_properties_from_match()
 
   def match_re(self):
-    self.match = re.match((r'^(?P<major>\d+).(?P<minor>\d+)(?:.\d+)?'
-                           r'(?:-(?P<os_n>[a-zA-Z]+)?(?P<os_v>\d+)?)$'),
-                          self.str)
+    self.match = re.match(
+      (r'^(?P<major>\d+).(?P<minor>\d+)(?:.\d+)?' r'(?:-(?P<os_n>[a-zA-Z]+)?(?P<os_v>\d+)?)$'),
+      self.str,
+    )
 
   def fill_properties_from_match(self):
     self.matches_format = True
@@ -86,8 +87,7 @@ def prefetch_rule(context: models.Context):
   clusters_by_project[context.project_id] = dataproc.get_clusters(context)
 
 
-def run_rule(context: models.Context,
-             report: lint.LintReportRuleInterface) -> None:
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   clusters = clusters_by_project[context.project_id]
   if not clusters:
     report.add_skipped(None, 'no dataproc clusters found')

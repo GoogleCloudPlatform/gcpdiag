@@ -19,15 +19,13 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def fetch_and_extract_table(page_url: str,
-                            tag: str = None,
-                            tag_id: str = None,
-                            class_name: str = None):
+def fetch_and_extract_table(
+  page_url: str, tag: str = None, tag_id: str = None, class_name: str = None
+):
   """Fetch the table from the given page url and return it."""
   table = None
   response = get(url=page_url, timeout=10)
-  response.raise_for_status(
-  )  # Raise an exception if the response is not successful
+  response.raise_for_status()  # Raise an exception if the response is not successful
   soup = BeautifulSoup(response.content, 'html.parser')
   content_fetched = None
   if tag:
@@ -52,16 +50,12 @@ def fetch_and_extract_table(page_url: str,
 
 
 def get(
-    url,
-    params=None,
-    timeout=10,
-    *,
-    data=None,
-    headers=None,
+  url,
+  params=None,
+  timeout=10,
+  *,
+  data=None,
+  headers=None,
 ) -> requests.Response:
   """A wrapper around requests.get for http calls which can't use the google discovery api"""
-  return requests.get(url=url,
-                      params=params,
-                      timeout=timeout,
-                      data=data,
-                      headers=headers)
+  return requests.get(url=url, params=params, timeout=timeout, data=data, headers=headers)

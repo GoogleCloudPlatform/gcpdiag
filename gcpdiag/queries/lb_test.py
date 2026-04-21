@@ -58,8 +58,7 @@ class TestURLMap(unittest.TestCase):
 
   def test_get_backend_service_regional(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
-    obj = lb.get_backend_service(context.project_id, 'backend-service-2',
-                                 'europe-west4')
+    obj = lb.get_backend_service(context.project_id, 'backend-service-2', 'europe-west4')
 
     assert obj.name == 'backend-service-2'
     assert obj.region == 'europe-west4'
@@ -79,16 +78,14 @@ class TestURLMap(unittest.TestCase):
 
   def test_get_backend_service_health_explicit_global(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
-    states_list = lb.get_backend_service_health(context, 'web-backend-service',
-                                                'global')
+    states_list = lb.get_backend_service_health(context, 'web-backend-service', 'global')
 
     assert len(states_list) == 2
     assert states_list[0].health_state == 'UNHEALTHY'
 
   def test_get_backend_service_health_regional(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
-    states_list = lb.get_backend_service_health(context, 'backend-service-2',
-                                                'europe-west4')
+    states_list = lb.get_backend_service_health(context, 'backend-service-2', 'europe-west4')
 
     assert len(states_list) == 1
     assert states_list[0].health_state == 'UNHEALTHY'
@@ -104,28 +101,29 @@ class TestURLMap(unittest.TestCase):
   def test_get_forwarding_rule_regional(self):
     """get_forwarding_rule returns the right forwarding rule matched by name."""
     forwarding_rule = lb.get_forwarding_rule(
-        project_id=DUMMY_PROJECT2_ID,
-        forwarding_rule_name='forwardingRule1',
-        region='us-west1',
+      project_id=DUMMY_PROJECT2_ID,
+      forwarding_rule_name='forwardingRule1',
+      region='us-west1',
     )
     assert forwarding_rule.name == 'forwardingRule1'
     assert forwarding_rule.short_path == 'gcpdiag-lb2-aaaa/forwardingRule1'
-    assert (forwarding_rule.load_balancer_type ==
-            lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB)
+    assert (
+      forwarding_rule.load_balancer_type == lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB
+    )
 
   def test_get_forwarding_rule_global(self):
     """get_forwarding_rule returns the right forwarding rule matched by name."""
     forwarding_rule = lb.get_forwarding_rule(
-        project_id=DUMMY_PROJECT3_ID,
-        forwarding_rule_name='https-content-rule',
+      project_id=DUMMY_PROJECT3_ID,
+      forwarding_rule_name='https-content-rule',
     )
     assert forwarding_rule.name == 'https-content-rule'
-    assert (forwarding_rule.load_balancer_type ==
-            lb.LoadBalancerType.CLASSIC_APPLICATION_LB)
+    assert forwarding_rule.load_balancer_type == lb.LoadBalancerType.CLASSIC_APPLICATION_LB
 
   def test_forwarding_rule_related_backend_service_http(self):
     forwarding_rule = lb.get_forwarding_rule(
-        project_id=DUMMY_PROJECT3_ID, forwarding_rule_name='https-content-rule')
+      project_id=DUMMY_PROJECT3_ID, forwarding_rule_name='https-content-rule'
+    )
 
     related_backend_service = forwarding_rule.get_related_backend_services()
 
@@ -134,18 +132,15 @@ class TestURLMap(unittest.TestCase):
 
   def test_get_ssl_certificate_global(self):
     """get_ssl_certificate returns the right SSL certificate matched by name."""
-    obj = lb.get_ssl_certificate(project_id=DUMMY_PROJECT3_ID,
-                                 certificate_name='cert1')
+    obj = lb.get_ssl_certificate(project_id=DUMMY_PROJECT3_ID, certificate_name='cert1')
     assert obj.name == 'cert1'
     assert obj.type == 'MANAGED'
     self.assertTrue(
-        any(
-            urllib.parse.urlparse('//' + d).hostname == 'natka123.com'
-            for d in obj.domains))
+      any(urllib.parse.urlparse('//' + d).hostname == 'natka123.com' for d in obj.domains)
+    )
     self.assertTrue(
-        any(
-            urllib.parse.urlparse('//' + d).hostname == 'second.natka123.com'
-            for d in obj.domains))
+      any(urllib.parse.urlparse('//' + d).hostname == 'second.natka123.com' for d in obj.domains)
+    )
 
   def test_get_target_https_proxies(self):
     """get_target_https_proxy returns the list of target https proxies."""
@@ -154,8 +149,8 @@ class TestURLMap(unittest.TestCase):
     assert len(items) == 2
     assert items[0].name == 'https-lb-proxy'
     assert (
-        items[0].full_path ==
-        'projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy')
+      items[0].full_path == 'projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy'
+    )
     assert items[1].name == 'https-lb-proxy-working'
 
   def test_get_target_ssl_proxies(self):
@@ -164,8 +159,7 @@ class TestURLMap(unittest.TestCase):
 
     assert len(items) == 1
     assert items[0].name == 'ssl-proxy'
-    assert (items[0].full_path ==
-            'projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy')
+    assert items[0].full_path == 'projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy'
 
   def test_get_lb_insights_for_a_project(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)

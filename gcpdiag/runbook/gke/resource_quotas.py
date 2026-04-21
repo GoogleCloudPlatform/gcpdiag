@@ -35,41 +35,37 @@ class ResourceQuotas(runbook.DiagnosticTree):
 
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True,
-      },
-      flags.NAME: {
-          'type': str,
-          'help': ('The name of the GKE cluster, to limit search only for this'
-                   ' cluster'),
-          'deprecated': True,
-          'new_parameter': 'gke_cluster_name',
-      },
-      flags.GKE_CLUSTER_NAME: {
-          'type': str,
-          'help': ('The name of the GKE cluster, to limit search only for'
-                   ' this cluster'),
-          'required': True,
-      },
-      flags.LOCATION: {
-          'type': str,
-          'help': '(Optional) The zone or region of the GKE cluster',
-          'required': True,
-      },
-      flags.START_TIME: {
-          'type': datetime,
-          'help': ('(Optional) The start window to query the logs. Format:'
-                   ' YYYY-MM-DDTHH:MM:SSZ'),
-          'required': False,
-      },
-      flags.END_TIME: {
-          'type': datetime,
-          'help': ('(Optional) The end window for the logs. Format:'
-                   ' YYYY-MM-DDTHH:MM:SSZ'),
-          'required': False,
-      },
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.NAME: {
+      'type': str,
+      'help': ('The name of the GKE cluster, to limit search only for this cluster'),
+      'deprecated': True,
+      'new_parameter': 'gke_cluster_name',
+    },
+    flags.GKE_CLUSTER_NAME: {
+      'type': str,
+      'help': ('The name of the GKE cluster, to limit search only for this cluster'),
+      'required': True,
+    },
+    flags.LOCATION: {
+      'type': str,
+      'help': '(Optional) The zone or region of the GKE cluster',
+      'required': True,
+    },
+    flags.START_TIME: {
+      'type': datetime,
+      'help': ('(Optional) The start window to query the logs. Format: YYYY-MM-DDTHH:MM:SSZ'),
+      'required': False,
+    },
+    flags.END_TIME: {
+      'type': datetime,
+      'help': ('(Optional) The end window for the logs. Format: YYYY-MM-DDTHH:MM:SSZ'),
+      'required': False,
+    },
   }
 
   def legacy_parameter_handler(self, parameters):
@@ -77,7 +73,6 @@ class ResourceQuotas(runbook.DiagnosticTree):
       parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
-
     start = ResourceQuotasStart()
     project_logging_check = gcp_gs.ServiceApiStatusCheck()
     project_logging_check.api_name = 'logging'
@@ -110,24 +105,30 @@ class ResourceQuotasStart(runbook.StartStep):
     """
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
-      cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                                cluster_id=op.get(flags.GKE_CLUSTER_NAME),
-                                location=op.get(flags.LOCATION))
+      cluster = gke.get_cluster(
+        op.get(flags.PROJECT_ID),
+        cluster_id=op.get(flags.GKE_CLUSTER_NAME),
+        location=op.get(flags.LOCATION),
+      )
     except GcpApiError:
       op.add_skipped(
-          project,
-          reason=('Cluster {} does not exist in {} for project {}').format(
-              op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION),
-              op.get(flags.PROJECT_ID)))
+        project,
+        reason=('Cluster {} does not exist in {} for project {}').format(
+          op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION), op.get(flags.PROJECT_ID)
+        ),
+      )
     else:
-      op.add_ok(project,
-                reason=('Cluster {} found in {} for project {}').format(
-                    cluster.name, op.get(flags.LOCATION),
-                    op.get(flags.PROJECT_ID)))
+      op.add_ok(
+        project,
+        reason=('Cluster {} found in {} for project {}').format(
+          cluster.name, op.get(flags.LOCATION), op.get(flags.PROJECT_ID)
+        ),
+      )
 
 
 class ClusterVersion(runbook.Step):
   """Check for cluster version"""
+
   GKE_QUOTA_ENFORCEMENT_MIN_VERSION = Version('1.28.0')
 
   def execute(self):
@@ -135,9 +136,11 @@ class ClusterVersion(runbook.Step):
     Verify cluster's running version. GKE doesn't enforce the Kubernetes
     resource quotas for clusters running version 1.28 or later.
     """
-    cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                              cluster_id=op.get(flags.GKE_CLUSTER_NAME),
-                              location=op.get(flags.LOCATION))
+    cluster = gke.get_cluster(
+      op.get(flags.PROJECT_ID),
+      cluster_id=op.get(flags.GKE_CLUSTER_NAME),
+      location=op.get(flags.LOCATION),
+    )
     resource_quota_exceeded = ResourceQuotaExceeded()
     resource_quota_exceeded.cluster_name = cluster.name
     resource_quota_exceeded.project_id = op.get(flags.PROJECT_ID)
@@ -152,6 +155,7 @@ class ClusterVersion(runbook.Step):
 
 class ResourceQuotaExceeded(runbook.Step):
   """Verify that Kubernetes resource quotas have not been exceeded."""
+
   cluster_name: str
   cluster_location: str
   project_id: str
@@ -166,45 +170,54 @@ class ResourceQuotaExceeded(runbook.Step):
 
     project = crm.get_project(self.project_id)
     filter_list = [
-        'log_id("cloudaudit.googleapis.com/activity")',
-        'resource.type="k8s_cluster"',
-        f'resource.labels.location="{self.cluster_location}"',
-        f'resource.labels.cluster_name="{self.cluster_name}"',
-        'protoPayload.status.message:"forbidden: exceeded quota"'
+      'log_id("cloudaudit.googleapis.com/activity")',
+      'resource.type="k8s_cluster"',
+      f'resource.labels.location="{self.cluster_location}"',
+      f'resource.labels.cluster_name="{self.cluster_name}"',
+      'protoPayload.status.message:"forbidden: exceeded quota"',
     ]
 
     filter_str = '\n'.join(filter_list)
 
-    log_entries = logs.realtime_query(project_id=project.project_id,
-                                      filter_str=filter_str,
-                                      start_time=op.get(flags.START_TIME),
-                                      end_time=op.get(flags.END_TIME))
+    log_entries = logs.realtime_query(
+      project_id=project.project_id,
+      filter_str=filter_str,
+      start_time=op.get(flags.START_TIME),
+      end_time=op.get(flags.END_TIME),
+    )
 
     if log_entries:
       # taking the last log entry to provide as output, because the latest log entry is always
       # more relevant than the 1st
 
-      json_payload = get_path(log_entries[-1], ('protoPayload', 'status'),
-                              default={})
-      sample_log = f"Log Message: {json_payload.get('message', 'N/A')}"
+      json_payload = get_path(log_entries[-1], ('protoPayload', 'status'), default={})
+      sample_log = f'Log Message: {json_payload.get("message", "N/A")}'
 
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       log_entry=sample_log,
-                                       cluster=self.cluster_name,
-                                       project=project,
-                                       location=self.cluster_location,
-                                       start_time=op.get(flags.START_TIME),
-                                       end_time=op.get(flags.END_TIME)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          log_entry=sample_log,
+          cluster=self.cluster_name,
+          project=project,
+          location=self.cluster_location,
+          start_time=op.get(flags.START_TIME),
+          end_time=op.get(flags.END_TIME),
+        ),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(project,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   cluster=self.cluster_name,
-                                   project=project,
-                                   location=self.cluster_location,
-                                   start_time=op.get(flags.START_TIME),
-                                   end_time=op.get(flags.END_TIME)))
+      op.add_ok(
+        project,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON,
+          cluster=self.cluster_name,
+          project=project,
+          location=self.cluster_location,
+          start_time=op.get(flags.START_TIME),
+          end_time=op.get(flags.END_TIME),
+        ),
+      )
 
 
 class ResourceQuotasEnd(runbook.EndStep):
@@ -220,8 +233,8 @@ class ResourceQuotasEnd(runbook.EndStep):
   def execute(self):
     """Finalize `Resource Quotas` diagnostics."""
     response = op.prompt(
-        kind=op.CONFIRMATION,
-        message='Are you satisfied with the `GKE Resource Quotas` RCA performed?'
+      kind=op.CONFIRMATION,
+      message='Are you satisfied with the `GKE Resource Quotas` RCA performed?',
     )
     if response == op.NO:
       op.info(message=op.END_MESSAGE)

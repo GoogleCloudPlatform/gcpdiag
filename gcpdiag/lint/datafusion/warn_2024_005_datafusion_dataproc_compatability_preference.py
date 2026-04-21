@@ -44,9 +44,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   """
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        'Cloud Data Fusion API is not enabled in'
-        f' {crm.get_project(context.project_id)}',
+      None,
+      f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}',
     )
     return
 
@@ -57,105 +56,99 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   if not datafusion_dataproc_version:
-    report.add_skipped(None,
-                       "No datafusion and dataproc version's data obtained")
+    report.add_skipped(None, "No datafusion and dataproc version's data obtained")
 
   for _, datafusion_instance in sorted(datafusion_instances.items()):
-    system_preferences = datafusion.get_system_preferences(
-        context, datafusion_instance)
-    namespace_preferences = datafusion.get_namespace_preferences(
-        context, datafusion_instance)
-    application_preferences = datafusion.get_application_preferences(
-        context, datafusion_instance)
+    system_preferences = datafusion.get_system_preferences(context, datafusion_instance)
+    namespace_preferences = datafusion.get_namespace_preferences(context, datafusion_instance)
+    application_preferences = datafusion.get_application_preferences(context, datafusion_instance)
     datafusion_version = datafusion_instance.version
     if application_preferences:
       for (
-          application_name,
-          application_preference,
+        application_name,
+        application_preference,
       ) in application_preferences.items():
         if application_preference.image_version:
           dataproc_version = application_preference.image_version
-          dataproc_valid_version = check_dataproc_version_valid(
-              dataproc_version)
+          dataproc_valid_version = check_dataproc_version_valid(dataproc_version)
           if not dataproc_valid_version:
-            report.add_skipped(
-                None, f'Dataproc version : {dataproc_version} is not valid')
+            report.add_skipped(None, f'Dataproc version : {dataproc_version} is not valid')
           else:
             compatible = check_datafusion_dataproc_version_compatibility(
-                datafusion_version, dataproc_valid_version)
+              datafusion_version, dataproc_valid_version
+            )
             if compatible:
               report.add_ok(
-                  datafusion_instance,
-                  'Application preferences found\npipeline name :'
-                  f' {application_name}\n\tDatafusion version :'
-                  f' {datafusion_version}\n\tDataproc version :'
-                  f' {dataproc_version}\n',
+                datafusion_instance,
+                'Application preferences found\npipeline name :'
+                f' {application_name}\n\tDatafusion version :'
+                f' {datafusion_version}\n\tDataproc version :'
+                f' {dataproc_version}\n',
               )
             else:
               report.add_failed(
-                  datafusion_instance,
-                  'Application preferences found\npipeline name :'
-                  f' {application_name}\n\tDatafusion version :'
-                  f' {datafusion_version}\n\tDataproc version :'
-                  f' {dataproc_version}\n\tCheck Datafusion version is'
-                  ' compatible with Dataproc version (VERSION INCOMPATIBILITY'
-                  ' FOUND)\n',
+                datafusion_instance,
+                'Application preferences found\npipeline name :'
+                f' {application_name}\n\tDatafusion version :'
+                f' {datafusion_version}\n\tDataproc version :'
+                f' {dataproc_version}\n\tCheck Datafusion version is'
+                ' compatible with Dataproc version (VERSION INCOMPATIBILITY'
+                ' FOUND)\n',
               )
     if namespace_preferences:
       for namespace_name, namespace_preference in namespace_preferences.items():
         if namespace_preference.image_version:
           dataproc_version = namespace_preference.image_version
-          dataproc_valid_version = check_dataproc_version_valid(
-              dataproc_version)
+          dataproc_valid_version = check_dataproc_version_valid(dataproc_version)
           if not dataproc_valid_version:
-            report.add_skipped(
-                None, f'Dataproc version : {dataproc_version} is not valid')
+            report.add_skipped(None, f'Dataproc version : {dataproc_version} is not valid')
           else:
             compatible = check_datafusion_dataproc_version_compatibility(
-                datafusion_version, dataproc_valid_version)
+              datafusion_version, dataproc_valid_version
+            )
             if compatible:
               report.add_ok(
-                  datafusion_instance,
-                  '\n\tNamespace preferences found'
-                  f'\n\tnamespace name : {namespace_name}'
-                  '\n\tDatafusion version :'
-                  f' {datafusion_version}\n\tDataproc version :'
-                  f' {dataproc_version}\n',
+                datafusion_instance,
+                '\n\tNamespace preferences found'
+                f'\n\tnamespace name : {namespace_name}'
+                '\n\tDatafusion version :'
+                f' {datafusion_version}\n\tDataproc version :'
+                f' {dataproc_version}\n',
               )
             else:
               report.add_failed(
-                  datafusion_instance,
-                  '\tNamespace preferences found\n\tnamespace name :'
-                  f' {namespace_name}\n\tDatafusion version :'
-                  f' {datafusion_version}\n\tDataproc version :'
-                  f' {dataproc_version}\n\tCheck Datafusion version is'
-                  ' compatible with Dataproc version (VERSION INCOMPATIBILITY'
-                  ' FOUND)\n',
+                datafusion_instance,
+                '\tNamespace preferences found\n\tnamespace name :'
+                f' {namespace_name}\n\tDatafusion version :'
+                f' {datafusion_version}\n\tDataproc version :'
+                f' {dataproc_version}\n\tCheck Datafusion version is'
+                ' compatible with Dataproc version (VERSION INCOMPATIBILITY'
+                ' FOUND)\n',
               )
     if system_preferences.image_version:
       dataproc_version = system_preferences.image_version
       dataproc_valid_version = check_dataproc_version_valid(dataproc_version)
       if not dataproc_valid_version:
-        report.add_skipped(
-            None, f'Dataproc version : {dataproc_version} is not valid')
+        report.add_skipped(None, f'Dataproc version : {dataproc_version} is not valid')
       else:
         compatible = check_datafusion_dataproc_version_compatibility(
-            datafusion_version, dataproc_valid_version)
+          datafusion_version, dataproc_valid_version
+        )
         if compatible:
           report.add_ok(
-              datafusion_instance,
-              '\n\tSystem preferences found\n\tDatafusion version :'
-              f' {datafusion_version}\n\tDataproc version :'
-              f' {dataproc_version}\n',
+            datafusion_instance,
+            '\n\tSystem preferences found\n\tDatafusion version :'
+            f' {datafusion_version}\n\tDataproc version :'
+            f' {dataproc_version}\n',
           )
         else:
           report.add_failed(
-              datafusion_instance,
-              '\tSystem preferences found\n\tDatafusion version :'
-              f' {datafusion_version}\n\tDataproc version :'
-              f' {dataproc_version}\n'
-              '\tCheck Datafusion version compatible with Dataproc'
-              ' version (VERSION INCOMPATIBILITY FOUND)\n',
+            datafusion_instance,
+            '\tSystem preferences found\n\tDatafusion version :'
+            f' {datafusion_version}\n\tDataproc version :'
+            f' {dataproc_version}\n'
+            '\tCheck Datafusion version compatible with Dataproc'
+            ' version (VERSION INCOMPATIBILITY FOUND)\n',
           )
 
 
@@ -168,8 +161,8 @@ def check_dataproc_version_valid(preference_image_version: str):
 
 
 def check_datafusion_dataproc_version_compatibility(
-    datafusion_version: version,
-    dataproc_version: str,
+  datafusion_version: version,
+  dataproc_version: str,
 ) -> bool:
   """Checks if the datafusion version is compatible with dataproc version."""
   datafusion_version = version.parse(str(datafusion_version))

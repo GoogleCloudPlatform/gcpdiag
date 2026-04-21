@@ -14,21 +14,21 @@
 """Custom exception classes for handling specific errors in the diagnostic process."""
 
 
-class InvalidDiagnosticTree(Exception):
+class InvalidDiagnosticTreeError(Exception):
   """Exception raised for invalid diagnostic tree definition"""
 
   def __init__(self, message: str):
     super().__init__(message)
 
 
-class InvalidStepOperation(Exception):
+class InvalidStepOperationError(Exception):
   """Exception raised for invalid operations on a diagnostic step."""
 
   def __init__(self, message: str):
     super().__init__(message)
 
 
-class DiagnosticTreeNotFound(Exception):
+class DiagnosticTreeNotFoundError(Exception):
   """Exception raised when a diagnostic tree cannot be found."""
 
 
@@ -42,12 +42,11 @@ class DiagnosticTreeConstructionError(Exception):
 class MissingParameterError(ValueError):
   """Raised when a required runbook parameter is missing."""
 
-  def __init__(self,
-               message: str,
-               missing_parameters_list: list[str] | None = None):
+  def __init__(self, message: str, missing_parameters_list: list[str] | None = None):
     super().__init__(message)
-    self.missing_parameters_list = (missing_parameters_list if
-                                    missing_parameters_list is not None else [])
+    self.missing_parameters_list = (
+      missing_parameters_list if missing_parameters_list is not None else []
+    )
 
 
 class InvalidParameterError(ValueError):
@@ -56,4 +55,5 @@ class InvalidParameterError(ValueError):
 
 class FailedStepError(Exception):
   """Exception raised for a failed step."""
+
   pass

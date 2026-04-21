@@ -42,15 +42,14 @@ def prefetch_rule(context: models.Context):
     return
 
   params = {
-      'service_name': GCE_SERVICE_NAME,
-      'limit_name': QUOTA_LIMIT_NAME,
-      'within_days': config.get('within_days')
+    'service_name': GCE_SERVICE_NAME,
+    'limit_name': QUOTA_LIMIT_NAME,
+    'within_days': config.get('within_days'),
   }
 
-  _query_results_per_project_id[context.project_id] = \
-      monitoring.query(
-          context.project_id,
-          quotas.CONSUMER_QUOTA_QUERY_TEMPLATE.format_map(params))
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id, quotas.CONSUMER_QUOTA_QUERY_TEMPLATE.format_map(params)
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -60,11 +59,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for region in sorted(regions_with_instances, key=lambda r: r.name):
-    ts_key = frozenset({
+    ts_key = frozenset(
+      {
         f'resource.project_id:{context.project_id}',
         f'metric.quota_metric:{QUOTA_METRIC_NAME}',
-        f'resource.location:{region.name}'
-    })
+        f'resource.location:{region.name}',
+      }
+    )
     try:
       ts = _query_results_per_project_id[context.project_id][ts_key]
     except KeyError:
@@ -80,9 +81,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         exceeded = True
 
     if exceeded:
-      report.add_failed(region,
-                        (f'Region has reached {ratio:.0%} of {limit} limit:\n'
-                         f' quota limit: {QUOTA_LIMIT_NAME}\n'
-                         f' quota metric: {QUOTA_METRIC_NAME}'))
+      report.add_failed(
+        region,
+        (
+          f'Region has reached {ratio:.0%} of {limit} limit:\n'
+          f' quota limit: {QUOTA_LIMIT_NAME}\n'
+          f' quota metric: {QUOTA_METRIC_NAME}'
+        ),
+      )
     else:
       report.add_ok(region)

@@ -41,11 +41,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if sa:
       # Verify service account exists for VM
       if not iam.is_service_account_existing(sa, context):
-        report.add_failed(instance,
-                          f'attached service account is deleted: {sa}')
+        report.add_failed(instance, f'attached service account is deleted: {sa}')
       elif not iam.is_service_account_enabled(sa, context):
-        report.add_failed(instance,
-                          f'attached service account is disabled: {sa}')
+        report.add_failed(instance, f'attached service account is disabled: {sa}')
       else:
         report.add_ok(instance)
     else:

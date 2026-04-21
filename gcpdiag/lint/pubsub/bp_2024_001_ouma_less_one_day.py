@@ -37,20 +37,21 @@ def prefetch_rule(context: models.Context):
   """Gathers the metric values for the ouma for all subscriptions."""
   subscription_name = ''
   query_ouma = (
-      'fetch pubsub_subscription | metric'
-      ' "pubsub.googleapis.com/subscription/oldest_unacked_message_age" |'
-      ' filter resource.project_id == "{}" &&'
-      ' (resource.subscription_id == "{}") | group_by 1m,'
-      ' [value_oldest_unacked_message_age_mean:'
-      ' mean(value.oldest_unacked_message_age)]| every 1m')
+    'fetch pubsub_subscription | metric'
+    ' "pubsub.googleapis.com/subscription/oldest_unacked_message_age" |'
+    ' filter resource.project_id == "{}" &&'
+    ' (resource.subscription_id == "{}") | group_by 1m,'
+    ' [value_oldest_unacked_message_age_mean:'
+    ' mean(value.oldest_unacked_message_age)]| every 1m'
+  )
 
   subscriptions = pubsub.get_subscriptions(context)
 
   for _, subscription in subscriptions.items():
     subscription_name = subscription.name
     ouma_tracker[subscription_name] = monitoring.query(
-        context.project_id,
-        query_ouma.format(context.project_id, subscription_name),
+      context.project_id,
+      query_ouma.format(context.project_id, subscription_name),
     )
 
 
@@ -72,17 +73,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if failing_subs:
     extra_subs = ''
     if len(failing_subs) > MAX_SUBSCRIPTIONS_TO_DISPLAY:
-      extra_subs = (', and'
-                    f' {len(failing_subs) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more'
-                    ' subscriptions')
+      extra_subs = f', and {len(failing_subs) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more subscriptions'
 
-    # pylint: disable=line-too-long
     report.add_failed(
-        project,
-        f'{len(failing_subs)} subscriptions have an'
-        ' oldest_unacked_message_age of more than 24 hours'
-        f" {', '.join(islice(failing_subs, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subs}",
+      project,
+      f'{len(failing_subs)} subscriptions have an'
+      ' oldest_unacked_message_age of more than 24 hours'
+      f' {", ".join(islice(failing_subs, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subs}',
     )
-  # pylint: enable=line-too-long
   else:
     report.add_ok(project)

@@ -24,8 +24,7 @@ class RegionFromZoneTest(unittest.TestCase):
   def test_region_from_zone(self):
     self.assertEqual(utils.region_from_zone('us-central1-a'), 'us-central1')
     self.assertEqual(utils.region_from_zone('europe-west1-b'), 'europe-west1')
-    self.assertEqual(utils.region_from_zone('asia-northeast3-c'),
-                     'asia-northeast3')
+    self.assertEqual(utils.region_from_zone('asia-northeast3-c'), 'asia-northeast3')
     self.assertEqual(utils.region_from_zone('us-east4-a'), 'us-east4')
 
   def test_no_match(self):

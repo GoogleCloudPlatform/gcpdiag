@@ -31,48 +31,48 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_id = 'Failed Query Runbook'
   config.init({'auto': True, 'interface': 'cli'})
   rule_parameters = [
-      # Test Case 1: A failed job with a known error (CSV).
-      {
-          'project_id': 'gcpdiag-bigquery1-aaaa',
-          'bigquery_job_id': 'test_csv_error',
-          'bigquery_job_region': 'us',
-          'bigquery_skip_permission_check': False,
-      },
-      # Test Case 2: A failed job with an unknown error.
-      {
-          'project_id': 'gcpdiag-bigquery1-aaaa',
-          'bigquery_job_id': 'test_unknown',
-          'bigquery_job_region': 'us',
-          'bigquery_skip_permission_check': False,
-      },
-      # Test Case 3: A job that completed successfully (no error).
-      {
-          'project_id': 'gcpdiag-bigquery1-aaaa',
-          'bigquery_job_id': 'test_success',
-          'bigquery_job_region': 'us',
-          'bigquery_skip_permission_check': False,
-      },
-      # Test Case 4: A job that is still running.
-      {
-          'project_id': 'gcpdiag-bigquery1-aaaa',
-          'bigquery_job_id': 'test_running',
-          'bigquery_job_region': 'us',
-          'bigquery_skip_permission_check': False,
-      },
-      # Test Case 5: A job ID that does not exist.
-      {
-          'project_id': 'gcpdiag-bigquery1-aaaa',
-          'bigquery_job_id': 'test_notfound',
-          'bigquery_job_region': 'us',
-          'bigquery_skip_permission_check': False,
-      },
-      # Test Case 6: An invalid region is provided.
-      {
-          'project_id': 'gcpdiag-bigquery1-aaaa',
-          'bigquery_job_id': 'any_id',
-          'bigquery_job_region': 'invalid-region',
-          'bigquery_skip_permission_check': False,
-      },
+    # Test Case 1: A failed job with a known error (CSV).
+    {
+      'project_id': 'gcpdiag-bigquery1-aaaa',
+      'bigquery_job_id': 'test_csv_error',
+      'bigquery_job_region': 'us',
+      'bigquery_skip_permission_check': False,
+    },
+    # Test Case 2: A failed job with an unknown error.
+    {
+      'project_id': 'gcpdiag-bigquery1-aaaa',
+      'bigquery_job_id': 'test_unknown',
+      'bigquery_job_region': 'us',
+      'bigquery_skip_permission_check': False,
+    },
+    # Test Case 3: A job that completed successfully (no error).
+    {
+      'project_id': 'gcpdiag-bigquery1-aaaa',
+      'bigquery_job_id': 'test_success',
+      'bigquery_job_region': 'us',
+      'bigquery_skip_permission_check': False,
+    },
+    # Test Case 4: A job that is still running.
+    {
+      'project_id': 'gcpdiag-bigquery1-aaaa',
+      'bigquery_job_id': 'test_running',
+      'bigquery_job_region': 'us',
+      'bigquery_skip_permission_check': False,
+    },
+    # Test Case 5: A job ID that does not exist.
+    {
+      'project_id': 'gcpdiag-bigquery1-aaaa',
+      'bigquery_job_id': 'test_notfound',
+      'bigquery_job_region': 'us',
+      'bigquery_skip_permission_check': False,
+    },
+    # Test Case 6: An invalid region is provided.
+    {
+      'project_id': 'gcpdiag-bigquery1-aaaa',
+      'bigquery_job_id': 'any_id',
+      'bigquery_job_region': 'invalid-region',
+      'bigquery_skip_permission_check': False,
+    },
   ]
 
 
@@ -92,17 +92,13 @@ class FailedQueryStepTestBase(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_get_user_email = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_user_email'))
-    self.mock_is_enabled = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.is_enabled'))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_get_user_email = self.enterContext(mock.patch('gcpdiag.queries.apis.get_user_email'))
+    self.mock_is_enabled = self.enterContext(mock.patch('gcpdiag.queries.apis.is_enabled'))
     self.mock_is_enabled.return_value = True
     self.mock_get_user_email.return_value = 'test@example.com'
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
@@ -110,18 +106,12 @@ class FailedQueryStepTestBase(unittest.TestCase):
     self.operator.context = models.Context(project_id=DUMMY_PROJECT_ID)
 
     self.params = {
-        flags.PROJECT_ID:
-            DUMMY_PROJECT_ID,
-        flags.BQ_JOB_REGION:
-            'us',
-        flags.BQ_JOB_ID:
-            'test_success',
-        flags.BQ_SKIP_PERMISSION_CHECK:
-            True,
-        'start_time':
-            datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
-        'end_time':
-            datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: DUMMY_PROJECT_ID,
+      flags.BQ_JOB_REGION: 'us',
+      flags.BQ_JOB_ID: 'test_success',
+      flags.BQ_SKIP_PERMISSION_CHECK: True,
+      'start_time': datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
+      'end_time': datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
     }
     self.operator.parameters = self.params
 
@@ -147,42 +137,43 @@ class BigQueryFailedQueryStartTest(FailedQueryStepTestBase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'not found or you lack access permissions',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'not found or you lack access permissions',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   @mock.patch('gcpdiag.queries.bigquery.get_bigquery_project')
   def test_get_project_api_error_not_found(self, mock_get_project):
-    mock_get_project.side_effect = utils.GcpApiError(
-        {'message': 'not found or deleted'})
+    mock_get_project.side_effect = utils.GcpApiError({'message': 'not found or deleted'})
     step = failed_query.BigQueryFailedQueryStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'not found or deleted',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'not found or deleted',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   @mock.patch('gcpdiag.queries.bigquery.get_bigquery_project')
   def test_get_project_api_error_permission_denied(self, mock_get_project):
     mock_get_project.side_effect = utils.GcpApiError(
-        {'message': 'caller does not have required permission to use project'})
+      {'message': 'caller does not have required permission to use project'}
+    )
     step = failed_query.BigQueryFailedQueryStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'You do not have permissions',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'You do not have permissions',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   @mock.patch('gcpdiag.queries.bigquery.get_bigquery_project')
   def test_get_project_api_error_rm_permission_denied(self, mock_get_project):
     mock_get_project.side_effect = utils.GcpApiError(
-        {'message': 'resourcemanager.projects.get denied on resource'})
+      {'message': 'resourcemanager.projects.get denied on resource'}
+    )
     step = failed_query.BigQueryFailedQueryStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -200,8 +191,8 @@ class BigQueryFailedQueryStartTest(FailedQueryStepTestBase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'Invalid project identifier',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'Invalid project identifier',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   def test_invalid_region(self):
@@ -212,8 +203,8 @@ class BigQueryFailedQueryStartTest(FailedQueryStepTestBase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'Invalid job region',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'Invalid job region',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   def test_invalid_job_id(self):
@@ -224,8 +215,8 @@ class BigQueryFailedQueryStartTest(FailedQueryStepTestBase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'Invalid job identifier',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'Invalid job identifier',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   def test_bq_api_not_enabled(self):
@@ -236,23 +227,24 @@ class BigQueryFailedQueryStartTest(FailedQueryStepTestBase):
       step.execute()
     self.mock_interface.add_skipped.assert_called_once()
     self.assertIn(
-        'BigQuery API is not enabled',
-        self.mock_interface.add_skipped.call_args[1]['reason'],
+      'BigQuery API is not enabled',
+      self.mock_interface.add_skipped.call_args[1]['reason'],
     )
 
   def test_get_user_email_attribute_error(self):
     self.mock_get_user_email.side_effect = AttributeError(
-        "'ResourceManager' object has no attribute 'with_quota_project'")
+      "'ResourceManager' object has no attribute 'with_quota_project'"
+    )
     step = failed_query.BigQueryFailedQueryStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        'Running the investigation within the GCA context.', 'INFO')
+      'Running the investigation within the GCA context.', 'INFO'
+    )
 
   def test_is_enabled_api_error(self):
-    self.mock_is_enabled.side_effect = utils.GcpApiError(
-        {'message': 'access denied'})
+    self.mock_is_enabled.side_effect = utils.GcpApiError({'message': 'access denied'})
     step = failed_query.BigQueryFailedQueryStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -260,17 +252,16 @@ class BigQueryFailedQueryStartTest(FailedQueryStepTestBase):
     self.mock_interface.info.assert_called()
 
   def test_get_user_email_runtime_error(self):
-    self.mock_get_user_email.side_effect = RuntimeError(
-        'Failed to get credentials')
+    self.mock_get_user_email.side_effect = RuntimeError('Failed to get credentials')
     step = failed_query.BigQueryFailedQueryStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        'Unable to fetch user email. Please make sure to authenticate properly'
-        ' before executing the investigation. Attempting to run the'
-        ' investigation.',
-        'INFO',
+      'Unable to fetch user email. Please make sure to authenticate properly'
+      ' before executing the investigation. Attempting to run the'
+      ' investigation.',
+      'INFO',
     )
 
 
@@ -284,8 +275,7 @@ class BigQueryJobExistsTest(FailedQueryStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.add_ok.assert_called_once()
-    assert any(
-        isinstance(c, failed_query.ConfirmBQJobIsDone) for c in step.steps)
+    assert any(isinstance(c, failed_query.ConfirmBQJobIsDone) for c in step.steps)
 
   def test_get_job_not_found_gcp_api_error(self):
     self.params[flags.BQ_JOB_ID] = 'test_notfound_exception'
@@ -334,8 +324,7 @@ class BigQueryJobExistsTest(FailedQueryStepTestBase):
   @mock.patch('gcpdiag.queries.bigquery.get_bigquery_job')
   def test_get_job_access_denied_runtime_error(self, mock_get_job):
     mock_get_job.side_effect = utils.GcpApiError('access denied')
-    self.mock_get_user_email.side_effect = RuntimeError(
-        'Failed to get credentials')
+    self.mock_get_user_email.side_effect = RuntimeError('Failed to get credentials')
     self.params[flags.BQ_JOB_ID] = 'some_job'
     step = failed_query.BigQueryJobExists()
     with op.operator_context(self.operator):
@@ -347,7 +336,8 @@ class BigQueryJobExistsTest(FailedQueryStepTestBase):
   def test_get_job_access_denied_attribute_error(self, mock_get_job):
     mock_get_job.side_effect = utils.GcpApiError('access denied')
     self.mock_get_user_email.side_effect = AttributeError(
-        "'ResourceManager' object has no attribute 'with_quota_project'")
+      "'ResourceManager' object has no attribute 'with_quota_project'"
+    )
     self.params[flags.BQ_JOB_ID] = 'some_job'
     step = failed_query.BigQueryJobExists()
     with op.operator_context(self.operator):
@@ -480,8 +470,7 @@ class BigQueryEndTest(FailedQueryStepTestBase):
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
-    self.mock_interface.info.assert_called_with('No more checks to perform.',
-                                                'INFO')
+    self.mock_interface.info.assert_called_with('No more checks to perform.', 'INFO')
 
   def test_no_error_message_found(self):
     self.params[flags.BQ_JOB_ID] = 'test_no_error_found'
@@ -493,7 +482,6 @@ class BigQueryEndTest(FailedQueryStepTestBase):
 
 
 class FailedQueryTest(unittest.TestCase):
-
   def test_build_tree(self):
     dq = failed_query.FailedQuery()
     dq.build_tree()
@@ -502,8 +490,8 @@ class FailedQueryTest(unittest.TestCase):
     self.assertEqual(len(start_step_children), 2)
     permission_check_step = start_step_children[0]
     self.assertIsInstance(
-        permission_check_step,
-        failed_query.bigquery_gs.RunPermissionChecks,
+      permission_check_step,
+      failed_query.bigquery_gs.RunPermissionChecks,
     )
     permission_check_step_children = permission_check_step.steps
     self.assertEqual(len(permission_check_step_children), 1)

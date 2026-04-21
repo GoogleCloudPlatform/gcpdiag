@@ -40,17 +40,18 @@ UTILIZATION_THRESHOLD = 0.95
 def _get_operator_fn(op_str: str):
   """Maps an operator string to a function from the operator module."""
   operators = {
-      'eq': operator_mod.eq,
-      'ne': operator_mod.ne,
-      'lt': operator_mod.lt,
-      'le': operator_mod.le,
-      'gt': operator_mod.gt,
-      'ge': operator_mod.ge,
+    'eq': operator_mod.eq,
+    'ne': operator_mod.ne,
+    'lt': operator_mod.lt,
+    'le': operator_mod.le,
+    'gt': operator_mod.gt,
+    'ge': operator_mod.ge,
   }
   if op_str not in operators:
     raise ValueError(
-        f"Unsupported operator: '{op_str}'. Supported operators are: "
-        f"{list(operators.keys()) + ['contains', 'matches']}")
+      f"Unsupported operator: '{op_str}'. Supported operators are: "
+      f'{list(operators.keys()) + ["contains", "matches"]}'
+    )
   return operators[op_str]
 
 
@@ -60,14 +61,15 @@ def _resolve_expected_value(value_str: str) -> Any:
     const_name = value_str[4:]
     resolved_value = getattr(constants, const_name, None)
     if resolved_value is None:
-      raise ValueError(f"Could not resolve constant reference: '{value_str}'. "
-                       f"Ensure '{const_name}' is defined in gce/constants.py.")
+      raise ValueError(
+        f"Could not resolve constant reference: '{value_str}'. "
+        f"Ensure '{const_name}' is defined in gce/constants.py."
+      )
     return resolved_value
   return value_str
 
 
-def _check_condition(actual_value: Any, expected_value: Any,
-                     op_str: str) -> bool:
+def _check_condition(actual_value: Any, expected_value: Any, op_str: str) -> bool:
   """Compares actual and expected values using the specified operator."""
   # Handle collection/regex operators first
   if op_str == 'contains':
@@ -78,13 +80,12 @@ def _check_condition(actual_value: Any, expected_value: Any,
   if op_str == 'matches':
     try:
       if isinstance(actual_value, (list, set, tuple)):
-        return any(
-            re.search(str(expected_value), str(item)) for item in actual_value)
+        return any(re.search(str(expected_value), str(item)) for item in actual_value)
       else:
         return bool(re.search(str(expected_value), str(actual_value)))
     except re.error as e:
       raise ValueError(
-          f"Invalid regex pattern provided in expected_value: '{expected_value}'"
+        f"Invalid regex pattern provided in expected_value: '{expected_value}'"
       ) from e
 
   op_fn = _get_operator_fn(op_str)
@@ -112,6 +113,7 @@ class HighVmMemoryUtilization(runbook.Step):
   and those without, and employs a different strategy for 'e2' machine types to accurately assess
   memory utilization.
   """
+
   template = 'vm_performance::high_memory_utilization'
 
   project_id: Optional[str] = None
@@ -134,34 +136,34 @@ class HighVmMemoryUtilization(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       vm = gce.get_instance(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name,
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
       )
 
     if not vm:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
-    start_formatted_string = op.get(
-        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    start_formatted_string = op.get(flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
     end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
-    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
+    within_str = f"within d'{start_formatted_string}', d'{end_formatted_string}'"
 
     mark_no_ops_agent = False
 
@@ -169,17 +171,20 @@ class HighVmMemoryUtilization(runbook.Step):
 
     if util.ops_agent_installed(self.project_id, vm.id):
       mem_usage_metrics = monitoring.query(
-          self.project_id, """
+        self.project_id,
+        """
           fetch gce_instance
             | metric 'agent.googleapis.com/memory/percent_used'
             | filter (resource.instance_id == '{}')
             | group_by [resource.instance_id], 3m, [percent_used: mean(value.percent_used)]
             | filter (cast_units(percent_used,"")/100) >= {}
             | {}
-          """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
+          """.format(vm.id, UTILIZATION_THRESHOLD, within_str),
+      )
     elif 'e2' in vm.machine_type():
       mem_usage_metrics = monitoring.query(
-          self.project_id, """
+        self.project_id,
+        """
               fetch gce_instance
                 | {{ metric 'compute.googleapis.com/instance/memory/balloon/ram_used'
                 ; metric 'compute.googleapis.com/instance/memory/balloon/ram_size' }}
@@ -189,26 +194,22 @@ class HighVmMemoryUtilization(runbook.Step):
                 | group_by [resource.instance_id], 3m, [ram_left: mean(val())]
                 | filter ram_left >= {}
                 | {}
-              """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
+              """.format(vm.id, UTILIZATION_THRESHOLD, within_str),
+      )
     else:
       mark_no_ops_agent = True
-      op.info(
-          f'VM instance {vm.id} not export memory metrics. Falling back on serial logs'
-      )
+      op.info(f'VM instance {vm.id} not export memory metrics. Falling back on serial logs')
 
     if mem_usage_metrics:
-      op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       full_resource_path=vm.full_path),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        vm,
+        reason=op.prep_msg(op.FAILURE_REASON, full_resource_path=vm.full_path),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     elif mark_no_ops_agent:
-      op.add_skipped(vm,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        full_resource_path=vm.full_path))
+      op.add_skipped(vm, reason=op.prep_msg(op.SKIPPED_REASON, full_resource_path=vm.full_path))
     else:
-      op.add_ok(vm,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   full_resource_path=vm.full_path))
+      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON, full_resource_path=vm.full_path))
 
     # Checking for OOM related errors
     oom_errors = VmSerialLogsCheck()
@@ -227,6 +228,7 @@ class HighVmDiskUtilization(runbook.Step):
   This approach ensures comprehensive coverage across different scenarios,
   including VMs without metrics data.
   """
+
   template = 'vm_performance::high_disk_utilization'
 
   project_id: Optional[str] = None
@@ -247,35 +249,34 @@ class HighVmDiskUtilization(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       vm = gce.get_instance(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name,
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
       )
 
     if not vm:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
-    start_formatted_string = op.get(
-        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    start_formatted_string = op.get(flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
     end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
-    within_str = (
-        f"within d'{start_formatted_string}', d'{end_formatted_string}'")
+    within_str = f"within d'{start_formatted_string}', d'{end_formatted_string}'"
 
     mark_no_ops_agent = False
 
@@ -283,28 +284,28 @@ class HighVmDiskUtilization(runbook.Step):
 
     if util.ops_agent_installed(self.project_id, vm.id):
       disk_usage_metrics = monitoring.query(
-          self.project_id, """
+        self.project_id,
+        """
           fetch gce_instance
             | metric 'agent.googleapis.com/disk/percent_used'
             | filter (resource.instance_id == '{}' && metric.device !~ '/dev/loop.*' && metric.state == 'used')
             | group_by [resource.instance_id], 3m, [percent_used: mean(value.percent_used)]
             | filter (cast_units(percent_used,"")/100) >= {}
             | {}
-          """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
-      op.add_metadata('Disk Utilization Threshold (fraction of 1)',
-                      UTILIZATION_THRESHOLD)
+          """.format(vm.id, UTILIZATION_THRESHOLD, within_str),
+      )
+      op.add_metadata('Disk Utilization Threshold (fraction of 1)', UTILIZATION_THRESHOLD)
     else:
       mark_no_ops_agent = True
 
     if disk_usage_metrics:
-      op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            full_resource_path=vm.full_path))
+      op.add_failed(
+        vm,
+        reason=op.prep_msg(op.FAILURE_REASON),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, full_resource_path=vm.full_path),
+      )
     elif mark_no_ops_agent:
-      op.add_skipped(vm,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        full_resource_path=vm.full_path))
+      op.add_skipped(vm, reason=op.prep_msg(op.SKIPPED_REASON, full_resource_path=vm.full_path))
       # Fallback to check for filesystem utilization related messages in Serial logs
       fs_util = VmSerialLogsCheck()
       fs_util.vm = vm
@@ -313,9 +314,7 @@ class HighVmDiskUtilization(runbook.Step):
       fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
       self.add_child(fs_util)
     else:
-      op.add_ok(vm,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   full_resource_path=vm.full_path))
+      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON, full_resource_path=vm.full_path))
 
 
 class HighVmCpuUtilization(runbook.Step):
@@ -345,70 +344,71 @@ class HighVmCpuUtilization(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       vm = gce.get_instance(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name,
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
       )
 
     if not vm:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
-    start_formatted_string = op.get(
-        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    start_formatted_string = op.get(flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
     end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
-    within_str = (
-        f"within d'{start_formatted_string}', d'{end_formatted_string}'")
+    within_str = f"within d'{start_formatted_string}', d'{end_formatted_string}'"
 
     cpu_usage_metrics = None
 
     if util.ops_agent_installed(self.project_id, vm.id):
       cpu_usage_metrics = monitoring.query(
-          self.project_id, """
+        self.project_id,
+        """
           fetch gce_instance
             | metric 'agent.googleapis.com/cpu/utilization'
             | filter (resource.instance_id == '{}')
             | group_by [resource.instance_id], 3m, [value_utilization_mean: mean(value.utilization)]
             | filter (cast_units(value_utilization_mean,"")/100) >= {}
             | {}
-          """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
+          """.format(vm.id, UTILIZATION_THRESHOLD, within_str),
+      )
     else:
       # use CPU utilization visible to the hypervisor
       cpu_usage_metrics = monitoring.query(
-          self.project_id, """
+        self.project_id,
+        """
             fetch gce_instance
               | metric 'compute.googleapis.com/instance/cpu/utilization'
               | filter (resource.instance_id == '{}')
               | group_by [resource.instance_id], 3m, [value_utilization_max: max(value.utilization)]
               | filter value_utilization_max >= {}
               | {}
-            """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
+            """.format(vm.id, UTILIZATION_THRESHOLD, within_str),
+      )
     # Get Performance issues corrected.
     if cpu_usage_metrics:
-      op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       full_resource_path=vm.full_path),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            full_resource_path=vm.full_path))
+      op.add_failed(
+        vm,
+        reason=op.prep_msg(op.FAILURE_REASON, full_resource_path=vm.full_path),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, full_resource_path=vm.full_path),
+      )
     else:
-      op.add_ok(vm,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   full_resource_path=vm.full_path))
+      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON, full_resource_path=vm.full_path))
 
 
 class VmLifecycleState(runbook.Step):
@@ -436,40 +436,40 @@ class VmLifecycleState(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
-      vm = gce.get_instance(project_id=self.project_id,
-                            zone=self.zone,
-                            instance_name=self.instance_name)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
+      vm = gce.get_instance(
+        project_id=self.project_id, zone=self.zone, instance_name=self.instance_name
+      )
     if not vm:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
     if vm.status == self.expected_lifecycle_status:
-      op.add_ok(vm,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   full_resource_path=vm.full_path,
-                                   status=vm.status))
+      op.add_ok(
+        vm, reason=op.prep_msg(op.SUCCESS_REASON, full_resource_path=vm.full_path, status=vm.status)
+      )
     else:
-      op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       full_resource_path=vm.full_path,
-                                       status=vm.status),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            full_resource_path=vm.full_path,
-                                            status=vm.status))
+      op.add_failed(
+        vm,
+        reason=op.prep_msg(op.FAILURE_REASON, full_resource_path=vm.full_path, status=vm.status),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION, full_resource_path=vm.full_path, status=vm.status
+        ),
+      )
 
 
 class VmSerialLogsCheck(runbook.Step):
@@ -501,11 +501,9 @@ class VmSerialLogsCheck(runbook.Step):
     if op.get('template'):
       self.template = op.get('template')
     if op.get('positive_patterns'):
-      self.positive_pattern = runbook_util.resolve_patterns(
-          op.get('positive_patterns'), constants)
+      self.positive_pattern = runbook_util.resolve_patterns(op.get('positive_patterns'), constants)
     if op.get('negative_patterns'):
-      self.negative_pattern = runbook_util.resolve_patterns(
-          op.get('negative_patterns'), constants)
+      self.negative_pattern = runbook_util.resolve_patterns(op.get('negative_patterns'), constants)
 
     if self.vm:
       vm = self.vm
@@ -516,27 +514,28 @@ class VmSerialLogsCheck(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       vm = gce.get_instance(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name,
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
       )
 
     if not vm:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
@@ -553,89 +552,114 @@ class VmSerialLogsCheck(runbook.Step):
         serial_log_file_content = serial_log_file_content + serial_log_file_content
     else:
       instance_serial_logs = gce.get_instance_serial_port_output(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name)
+        project_id=self.project_id, zone=self.zone, instance_name=self.instance_name
+      )
 
     if instance_serial_logs or serial_log_file_content:
-      instance_serial_log = instance_serial_logs.contents if \
-        instance_serial_logs else serial_log_file_content
+      instance_serial_log = (
+        instance_serial_logs.contents if instance_serial_logs else serial_log_file_content
+      )
 
       if hasattr(self, 'positive_pattern'):
         good_pattern_detected = util.search_pattern_in_serial_logs(
-            patterns=self.positive_pattern,
-            contents=instance_serial_log,
-            operator=self.positive_pattern_operator)
-        op.add_metadata('Positive patterns searched in serial logs',
-                        self.positive_pattern)
+          patterns=self.positive_pattern,
+          contents=instance_serial_log,
+          operator=self.positive_pattern_operator,
+        )
+        op.add_metadata('Positive patterns searched in serial logs', self.positive_pattern)
         if good_pattern_detected:
-          op.add_ok(vm,
-                    reason=op.prep_msg(
-                        op.SUCCESS_REASON,
-                        full_resource_path=vm.full_path,
-                        start_time=op.get(flags.START_TIME),
-                        end_time=op.get(flags.END_TIME),
-                    ))
+          op.add_ok(
+            vm,
+            reason=op.prep_msg(
+              op.SUCCESS_REASON,
+              full_resource_path=vm.full_path,
+              start_time=op.get(flags.START_TIME),
+              end_time=op.get(flags.END_TIME),
+            ),
+          )
       if hasattr(self, 'negative_pattern'):
         # Check for bad patterns
         bad_pattern_detected = util.search_pattern_in_serial_logs(
-            patterns=self.negative_pattern,
-            contents=instance_serial_log,
-            operator=self.negative_pattern_operator)
-        op.add_metadata('Negative patterns searched in serial logs',
-                        self.negative_pattern)
+          patterns=self.negative_pattern,
+          contents=instance_serial_log,
+          operator=self.negative_pattern_operator,
+        )
+        op.add_metadata('Negative patterns searched in serial logs', self.negative_pattern)
 
         if bad_pattern_detected:
-          op.add_failed(vm,
-                        reason=op.prep_msg(op.FAILURE_REASON,
-                                           start_time=op.get(flags.START_TIME),
-                                           end_time=op.get(flags.END_TIME),
-                                           full_resource_path=vm.full_path,
-                                           instance_name=vm.name),
-                        remediation=op.prep_msg(
-                            op.FAILURE_REMEDIATION,
-                            full_resource_path=vm.full_path,
-                            start_time=op.get(flags.START_TIME),
-                            end_time=op.get(flags.END_TIME)))
+          op.add_failed(
+            vm,
+            reason=op.prep_msg(
+              op.FAILURE_REASON,
+              start_time=op.get(flags.START_TIME),
+              end_time=op.get(flags.END_TIME),
+              full_resource_path=vm.full_path,
+              instance_name=vm.name,
+            ),
+            remediation=op.prep_msg(
+              op.FAILURE_REMEDIATION,
+              full_resource_path=vm.full_path,
+              start_time=op.get(flags.START_TIME),
+              end_time=op.get(flags.END_TIME),
+            ),
+          )
 
-      if hasattr(self, 'positive_pattern') and not hasattr(
-          self, 'negative_pattern') and good_pattern_detected is False:
+      if (
+        hasattr(self, 'positive_pattern')
+        and not hasattr(self, 'negative_pattern')
+        and good_pattern_detected is False
+      ):
         op.add_uncertain(
-            vm,
-            reason=op.prep_msg(op.UNCERTAIN_REASON,
-                               full_resource_path=vm.full_path,
-                               start_time=op.get(flags.START_TIME),
-                               end_time=op.get(flags.END_TIME)),
-            # uncertain uses the same remediation steps as failed
-            remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                    full_resource_path=vm.full_path,
-                                    start_time=op.get(flags.START_TIME),
-                                    end_time=op.get(flags.END_TIME)))
-      elif hasattr(self, 'negative_pattern') and not hasattr(
-          self, 'positive_pattern') and bad_pattern_detected is False:
+          vm,
+          reason=op.prep_msg(
+            op.UNCERTAIN_REASON,
+            full_resource_path=vm.full_path,
+            start_time=op.get(flags.START_TIME),
+            end_time=op.get(flags.END_TIME),
+          ),
+          # uncertain uses the same remediation steps as failed
+          remediation=op.prep_msg(
+            op.FAILURE_REMEDIATION,
+            full_resource_path=vm.full_path,
+            start_time=op.get(flags.START_TIME),
+            end_time=op.get(flags.END_TIME),
+          ),
+        )
+      elif (
+        hasattr(self, 'negative_pattern')
+        and not hasattr(self, 'positive_pattern')
+        and bad_pattern_detected is False
+      ):
         op.add_uncertain(
-            vm,
-            reason=op.prep_msg(op.UNCERTAIN_REASON,
-                               full_resource_path=vm.full_path),
-            # uncertain uses the same remediation steps as failed
-            remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                    full_resource_path=vm.full_path,
-                                    start_time=op.get(flags.START_TIME),
-                                    end_time=op.get(flags.END_TIME)))
-      elif (hasattr(self, 'positive_pattern') and
-            good_pattern_detected is False) and (hasattr(
-                self, 'negative_pattern') and bad_pattern_detected is False):
+          vm,
+          reason=op.prep_msg(op.UNCERTAIN_REASON, full_resource_path=vm.full_path),
+          # uncertain uses the same remediation steps as failed
+          remediation=op.prep_msg(
+            op.FAILURE_REMEDIATION,
+            full_resource_path=vm.full_path,
+            start_time=op.get(flags.START_TIME),
+            end_time=op.get(flags.END_TIME),
+          ),
+        )
+      elif (hasattr(self, 'positive_pattern') and good_pattern_detected is False) and (
+        hasattr(self, 'negative_pattern') and bad_pattern_detected is False
+      ):
         op.add_uncertain(
-            vm,
-            reason=op.prep_msg(op.UNCERTAIN_REASON,
-                               full_resource_path=vm.full_path,
-                               start_time=op.get(flags.START_TIME),
-                               end_time=op.get(flags.END_TIME)),
-            # uncertain uses the same remediation steps as failed
-            remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                    full_resource_path=vm.full_path,
-                                    start_time=op.get(flags.START_TIME),
-                                    end_time=op.get(flags.END_TIME)))
+          vm,
+          reason=op.prep_msg(
+            op.UNCERTAIN_REASON,
+            full_resource_path=vm.full_path,
+            start_time=op.get(flags.START_TIME),
+            end_time=op.get(flags.END_TIME),
+          ),
+          # uncertain uses the same remediation steps as failed
+          remediation=op.prep_msg(
+            op.FAILURE_REMEDIATION,
+            full_resource_path=vm.full_path,
+            start_time=op.get(flags.START_TIME),
+            end_time=op.get(flags.END_TIME),
+          ),
+        )
     else:
       op.add_skipped(None, reason=op.prep_msg(op.SKIPPED_REASON))
 
@@ -674,8 +698,7 @@ class VmMetadataCheck(runbook.Step):
     # Determine the type of the expected value
     if isinstance(self.expected_value, bool):
       # Convert the string metadata value to a bool for comparison
-      return op.BOOL_VALUES.get(str(actual_value).lower(),
-                                False) == self.expected_value
+      return op.BOOL_VALUES.get(str(actual_value).lower(), False) == self.expected_value
     elif isinstance(self.expected_value, str):
       # Directly compare string values
       return actual_value == self.expected_value
@@ -686,23 +709,21 @@ class VmMetadataCheck(runbook.Step):
     else:
       # Handle other types or raise an error
       logging.error(
-          'Error while processing %s: Unsupported expected value type: %s',
-          self.__class__.__name__, type(self.expected_value))
+        'Error while processing %s: Unsupported expected value type: %s',
+        self.__class__.__name__,
+        type(self.expected_value),
+      )
       raise ValueError('Unsupported Type')
 
   def execute(self):
     """Verify VM metadata value."""
-    metadata_key_str = op.get('metadata_key') or getattr(
-        self, 'metadata_key', None)
-    expected_value_str = op.get('expected_value') or getattr(
-        self, 'expected_value', None)
+    metadata_key_str = op.get('metadata_key') or getattr(self, 'metadata_key', None)
+    expected_value_str = op.get('expected_value') or getattr(self, 'expected_value', None)
 
     if not metadata_key_str:
-      raise runbook_exceptions.MissingParameterError(
-          "'metadata_key' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'metadata_key' is required for this step.")
     if expected_value_str is None:
-      raise runbook_exceptions.MissingParameterError(
-          "'expected_value' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'expected_value' is required for this step.")
 
     if metadata_key_str.startswith('ref:'):
       self.metadata_key = getattr(constants, metadata_key_str[4:])
@@ -713,8 +734,7 @@ class VmMetadataCheck(runbook.Step):
       resolved_expected_value = _resolve_expected_value(str(expected_value_str))
       # convert to bool if it looks like one.
       if str(resolved_expected_value).lower() in op.BOOL_VALUES:
-        self.expected_value = op.BOOL_VALUES[str(
-            resolved_expected_value).lower()]
+        self.expected_value = op.BOOL_VALUES[str(resolved_expected_value).lower()]
       else:
         self.expected_value = resolved_expected_value
       self.expected_value_type = type(self.expected_value)
@@ -730,56 +750,67 @@ class VmMetadataCheck(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       try:
-        vm = gce.get_instance(project_id=self.project_id,
-                              zone=self.zone,
-                              instance_name=self.instance_name)
+        vm = gce.get_instance(
+          project_id=self.project_id, zone=self.zone, instance_name=self.instance_name
+        )
       except googleapiclient.errors.HttpError as err:
         if err.resp.status == 404:
           op.add_skipped(
-              None,
-              reason=(f'VM instance {self.instance_name} not found in project'
-                      f' {self.project_id} zone {self.zone}'),
+            None,
+            reason=(
+              f'VM instance {self.instance_name} not found in project'
+              f' {self.project_id} zone {self.zone}'
+            ),
           )
           return
         else:
           raise utils.GcpApiError(err) from err
     if not vm:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
     if self.is_expected_md_value(vm.get_metadata(self.metadata_key)):
       op.add_ok(
-          vm,
-          op.prep_msg(op.SUCCESS_REASON,
-                      metadata_key=self.metadata_key,
-                      expected_value=self.expected_value,
-                      expected_value_type=self.expected_value_type))
+        vm,
+        op.prep_msg(
+          op.SUCCESS_REASON,
+          metadata_key=self.metadata_key,
+          expected_value=self.expected_value,
+          expected_value_type=self.expected_value_type,
+        ),
+      )
     else:
       op.add_failed(
-          vm,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             metadata_key=self.metadata_key,
-                             expected_value=self.expected_value,
-                             expected_value_type=self.expected_value_type),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                  metadata_key=self.metadata_key,
-                                  expected_value=self.expected_value,
-                                  expected_value_type=self.expected_value_type))
+        vm,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          metadata_key=self.metadata_key,
+          expected_value=self.expected_value,
+          expected_value_type=self.expected_value_type,
+        ),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION,
+          metadata_key=self.metadata_key,
+          expected_value=self.expected_value,
+          expected_value_type=self.expected_value_type,
+        ),
+      )
 
 
 class GceVpcConnectivityCheck(runbook.Step):
@@ -788,6 +819,7 @@ class GceVpcConnectivityCheck(runbook.Step):
   Evaluates VPC firewall rules to verify if a GCE Instance permits ingress or egress traffic from a
   designated source IP through a specified port and protocol.
   """
+
   project_id: Optional[str] = None
   zone: Optional[str] = None
   instance_name: Optional[str] = None
@@ -806,62 +838,72 @@ class GceVpcConnectivityCheck(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       vm = gce.get_instance(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name,
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
       )
     if not vm:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
     result = None
     if self.traffic == 'ingress':
       result = vm.network.firewall.check_connectivity_ingress(
-          src_ip=self.src_ip,
-          ip_protocol=self.protocol_type,
-          port=self.port,
-          target_service_account=vm.service_account,
-          target_tags=vm.tags)
+        src_ip=self.src_ip,
+        ip_protocol=self.protocol_type,
+        port=self.port,
+        target_service_account=vm.service_account,
+        target_tags=vm.tags,
+      )
     if self.traffic == 'egress':
       result = vm.network.firewall.check_connectivity_egress(
-          src_ip=vm.network_ips,
-          ip_protocol=self.protocol_type,
-          port=self.port,
-          target_service_account=vm.service_account,
-          target_tags=vm.tags)
+        src_ip=vm.network_ips,
+        ip_protocol=self.protocol_type,
+        port=self.port,
+        target_service_account=vm.service_account,
+        target_tags=vm.tags,
+      )
     if result.action == 'deny':
-      op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       address=self.src_ip,
-                                       protocol=self.protocol_type,
-                                       port=self.port,
-                                       name=vm.name,
-                                       result=result.matched_by_str),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        vm,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          address=self.src_ip,
+          protocol=self.protocol_type,
+          port=self.port,
+          name=vm.name,
+          result=result.matched_by_str,
+        ),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     elif result.action == 'allow':
       op.add_ok(
-          vm,
-          op.prep_msg(op.SUCCESS_REASON,
-                      address=self.src_ip,
-                      protocol=self.protocol_type,
-                      port=self.port,
-                      name=vm.name,
-                      result=result.matched_by_str))
+        vm,
+        op.prep_msg(
+          op.SUCCESS_REASON,
+          address=self.src_ip,
+          protocol=self.protocol_type,
+          port=self.port,
+          name=vm.name,
+          result=result.matched_by_str,
+        ),
+      )
 
 
 class VmScope(runbook.Step):
@@ -892,26 +934,27 @@ class VmScope(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       instance = gce.get_instance(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name,
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
       )
     if not instance:
       op.add_skipped(
-          None,
-          reason=(f'VM instance {self.instance_name} not found in project'
-                  f' {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name} not found in project'
+          f' {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
@@ -934,25 +977,31 @@ class VmScope(runbook.Step):
     outcome = all_present if self.require_all else any_present
 
     if outcome:
-      op.add_ok(resource=instance,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   full_resource_path=instance.full_path,
-                                   present_access_scopes=', '.join(
-                                       sorted(present_access_scopes))))
+      op.add_ok(
+        resource=instance,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON,
+          full_resource_path=instance.full_path,
+          present_access_scopes=', '.join(sorted(present_access_scopes)),
+        ),
+      )
     else:
       op.add_failed(
-          resource=instance,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              full_resource_path=instance.full_path,
-              required_access_scope=', '.join(sorted(self.access_scopes)),
-              missing_access_scopes=', '.join(sorted(missing_access_scopes))),
-          remediation=op.prep_msg(
-              op.FAILURE_REMEDIATION,
-              full_resource_path=instance.full_path,
-              required_access_scope=', '.join(sorted(self.access_scopes)),
-              present_access_scopes=', '.join(sorted(present_access_scopes)),
-              missing_access_scopes=', '.join(sorted(missing_access_scopes))))
+        resource=instance,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          full_resource_path=instance.full_path,
+          required_access_scope=', '.join(sorted(self.access_scopes)),
+          missing_access_scopes=', '.join(sorted(missing_access_scopes)),
+        ),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION,
+          full_resource_path=instance.full_path,
+          required_access_scope=', '.join(sorted(self.access_scopes)),
+          present_access_scopes=', '.join(sorted(present_access_scopes)),
+          missing_access_scopes=', '.join(sorted(missing_access_scopes)),
+        ),
+      )
 
 
 class VmHasOpsAgent(runbook.Step):
@@ -979,15 +1028,9 @@ class VmHasOpsAgent(runbook.Step):
 
   def _has_ops_agent_subagent(self, metric_data):
     """Checks if ops agent logging agent and metric agent is installed"""
-    subagents = {
-        'metrics_subagent_installed': False,
-        'logging_subagent_installed': False
-    }
+    subagents = {'metrics_subagent_installed': False, 'logging_subagent_installed': False}
     if not metric_data:
-      return {
-          'metrics_subagent_installed': False,
-          'logging_subagent_installed': False
-      }
+      return {'metrics_subagent_installed': False, 'logging_subagent_installed': False}
 
     for entry in metric_data.values():
       version = get_path(entry, ('labels', 'metric.version'), '')
@@ -1010,62 +1053,65 @@ class VmHasOpsAgent(runbook.Step):
       try:
         util.ensure_instance_resolved()
       except (
-          runbook_exceptions.FailedStepError,
-          runbook_exceptions.MissingParameterError,
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
       ) as e:
         project = crm.get_project(op.get(flags.PROJECT_ID))
         op.add_skipped(project, reason=str(e))
         return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
-      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
-          flags.INSTANCE_ID)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID)
       instance = gce.get_instance(
-          project_id=self.project_id,
-          zone=self.zone,
-          instance_name=self.instance_name or self.instance_id,
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name or self.instance_id,
       )
     if not instance:
       op.add_skipped(
-          None,
-          reason=(
-              f'VM instance {self.instance_name or self.instance_id} not found'
-              f' in project {self.project_id} zone {self.zone}'),
+        None,
+        reason=(
+          f'VM instance {self.instance_name or self.instance_id} not found'
+          f' in project {self.project_id} zone {self.zone}'
+        ),
       )
       return
 
     self.end_time = getattr(self, 'end_time', None) or op.get(flags.END_TIME)
-    self.start_time = getattr(self, 'start_time', None) or op.get(
-        flags.START_TIME)
+    self.start_time = getattr(self, 'start_time', None) or op.get(flags.START_TIME)
 
     if self.check_logging:
       serial_log_entries = logs.realtime_query(
-          project_id=self.project_id,
-          filter_str='''resource.type="gce_instance"
+        project_id=self.project_id,
+        filter_str='''resource.type="gce_instance"
                           log_name="projects/{}/logs/ops-agent-health"
                           resource.labels.instance_id="{}"
-                          "LogPingOpsAgent"'''.format(self.project_id,
-                                                      instance.id),
-          start_time=self.start_time,
-          end_time=self.end_time)
+                          "LogPingOpsAgent"'''.format(self.project_id, instance.id),
+        start_time=self.start_time,
+        end_time=self.end_time,
+      )
       if serial_log_entries:
-        op.add_ok(resource=instance,
-                  reason=op.prep_msg(op.SUCCESS_REASON,
-                                     full_resource_path=instance.full_path,
-                                     subagent='logging'))
+        op.add_ok(
+          resource=instance,
+          reason=op.prep_msg(
+            op.SUCCESS_REASON, full_resource_path=instance.full_path, subagent='logging'
+          ),
+        )
       else:
-        op.add_failed(resource=instance,
-                      reason=op.prep_msg(op.FAILURE_REASON,
-                                         full_resource_path=instance.full_path,
-                                         subagent='logging'),
-                      remediation=op.prep_msg(
-                          op.FAILURE_REMEDIATION,
-                          full_resource_path=instance.full_path,
-                          subagent='logging'))
+        op.add_failed(
+          resource=instance,
+          reason=op.prep_msg(
+            op.FAILURE_REASON, full_resource_path=instance.full_path, subagent='logging'
+          ),
+          remediation=op.prep_msg(
+            op.FAILURE_REMEDIATION, full_resource_path=instance.full_path, subagent='logging'
+          ),
+        )
 
     if self.check_metrics:
       ops_agent_uptime = monitoring.query(
-          self.project_id, """
+        self.project_id,
+        """
                 fetch gce_instance
                 | metric 'agent.googleapis.com/agent/uptime'
                 | filter (resource.instance_id == '{}')
@@ -1073,22 +1119,26 @@ class VmHasOpsAgent(runbook.Step):
                 | every 1m
                 | group_by [resource.instance_id, metric.version],
                     [value_uptime_aggregate: aggregate(value.uptime)]
-              """.format(instance.id))
+              """.format(instance.id),
+      )
       subagents = self._has_ops_agent_subagent(ops_agent_uptime)
       if subagents['metrics_subagent_installed']:
-        op.add_ok(resource=instance,
-                  reason=op.prep_msg(op.SUCCESS_REASON,
-                                     full_resource_path=instance.full_path,
-                                     subagent='metrics'))
+        op.add_ok(
+          resource=instance,
+          reason=op.prep_msg(
+            op.SUCCESS_REASON, full_resource_path=instance.full_path, subagent='metrics'
+          ),
+        )
       else:
-        op.add_failed(resource=instance,
-                      reason=op.prep_msg(op.FAILURE_REASON,
-                                         full_resource_path=instance.full_path,
-                                         subagent='metrics'),
-                      remediation=op.prep_msg(
-                          op.FAILURE_REMEDIATION,
-                          full_resource_path=instance.full_path,
-                          subagent='metrics'))
+        op.add_failed(
+          resource=instance,
+          reason=op.prep_msg(
+            op.FAILURE_REASON, full_resource_path=instance.full_path, subagent='metrics'
+          ),
+          remediation=op.prep_msg(
+            op.FAILURE_REMEDIATION, full_resource_path=instance.full_path, subagent='metrics'
+          ),
+        )
 
 
 class MigAutoscalingPolicyCheck(runbook.Step):
@@ -1135,57 +1185,50 @@ class MigAutoscalingPolicyCheck(runbook.Step):
     try:
       # If instance details are provided, find MIG from instance
       if self.instance_name and self.zone:
-        instance = gce.get_instance(self.project_id, self.zone,
-                                    self.instance_name)
+        instance = gce.get_instance(self.project_id, self.zone, self.instance_name)
         if instance.created_by_mig:
           mig = instance.mig
           self.location = mig.zone or mig.region
           if not self.location:
             op.add_skipped(
-                instance,
-                reason=
-                f'Could not determine location for MIG of instance {self.instance_name}.',
+              instance,
+              reason=f'Could not determine location for MIG of instance {self.instance_name}.',
             )
             return
         else:
           op.add_skipped(
-              instance,
-              reason=
-              f'Instance {self.instance_name} is not part of any Managed Instance Group.',
+            instance,
+            reason=f'Instance {self.instance_name} is not part of any Managed Instance Group.',
           )
           return
       # If MIG details are provided, fetch MIG directly
       elif self.mig_name and self.location:
         if self.location.count('-') == 2:  # zone
-          mig = gce.get_instance_group_manager(self.project_id, self.location,
-                                               self.mig_name)
+          mig = gce.get_instance_group_manager(self.project_id, self.location, self.mig_name)
         elif self.location.count('-') == 1:  # region
-          mig = gce.get_region_instance_group_manager(self.project_id,
-                                                      self.location,
-                                                      self.mig_name)
+          mig = gce.get_region_instance_group_manager(self.project_id, self.location, self.mig_name)
         else:
           raise runbook_exceptions.InvalidParameterError(
-              f"Cannot determine if location '{self.location}' is a zone or region."
+            f"Cannot determine if location '{self.location}' is a zone or region."
           )
       else:
         raise runbook_exceptions.MissingParameterError(
-            'Either instance_name and zone, or mig_name and location must be provided.'
+          'Either instance_name and zone, or mig_name and location must be provided.'
         )
     except googleapiclient.errors.HttpError as err:
       if err.resp.status == 404:
         resource = self.instance_name or self.mig_name
         op.add_skipped(
-            None,
-            reason=
-            f'Resource {resource} not found in project {self.project_id}.',
+          None,
+          reason=f'Resource {resource} not found in project {self.project_id}.',
         )
         return
       else:
         raise utils.GcpApiError(err) from err
     except AttributeError:
       op.add_skipped(
-          None,
-          reason=f'Could not determine MIG for instance {self.instance_name}.',
+        None,
+        reason=f'Could not determine MIG for instance {self.instance_name}.',
       )
       return
 
@@ -1195,11 +1238,9 @@ class MigAutoscalingPolicyCheck(runbook.Step):
 
     # Generic check if property_path is provided
     if not property_path:
-      raise runbook_exceptions.MissingParameterError(
-          "'property_path' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'property_path' is required for this step.")
     if expected_value_str is None:
-      raise runbook_exceptions.MissingParameterError(
-          "'expected_value' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'expected_value' is required for this step.")
 
     try:
       expected_value = _resolve_expected_value(expected_value_str)
@@ -1212,8 +1253,7 @@ class MigAutoscalingPolicyCheck(runbook.Step):
           autoscaler = gce.get_autoscaler(self.project_id, mig.zone, mig.name)
           actual_value = autoscaler.get(property_path, default=None)
         else:  # regional
-          autoscaler = gce.get_region_autoscaler(self.project_id, mig.region,
-                                                 mig.name)
+          autoscaler = gce.get_region_autoscaler(self.project_id, mig.region, mig.name)
           actual_value = autoscaler.get(property_path, default=None)
       except googleapiclient.errors.HttpError as err:
         if err.resp.status == 404:
@@ -1232,28 +1272,28 @@ class MigAutoscalingPolicyCheck(runbook.Step):
 
     if _check_condition(actual_value, expected_value, operator):
       op.add_ok(
-          mig,
-          reason=op.prep_msg(
-              op.SUCCESS_REASON,
-              mig_name=mig.name,
-              property_path=property_path,
-              expected_value=expected_value,
-              operator=operator,
-              actual_value=actual_value,
-          ),
+        mig,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON,
+          mig_name=mig.name,
+          property_path=property_path,
+          expected_value=expected_value,
+          operator=operator,
+          actual_value=actual_value,
+        ),
       )
     else:
       op.add_failed(
-          mig,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              mig_name=mig.name,
-              property_path=property_path,
-              expected_value=expected_value,
-              operator=operator,
-              actual_value=actual_value,
-          ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION, mig_name=mig.name),
+        mig,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          mig_name=mig.name,
+          property_path=property_path,
+          expected_value=expected_value,
+          operator=operator,
+          actual_value=actual_value,
+        ),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, mig_name=mig.name),
       )
 
 
@@ -1291,8 +1331,8 @@ class InstancePropertyCheck(runbook.Step):
     try:
       util.ensure_instance_resolved()
     except (
-        runbook_exceptions.FailedStepError,
-        runbook_exceptions.MissingParameterError,
+      runbook_exceptions.FailedStepError,
+      runbook_exceptions.MissingParameterError,
     ) as e:
       project = crm.get_project(op.get(flags.PROJECT_ID))
       op.add_skipped(project, reason=str(e))
@@ -1306,25 +1346,24 @@ class InstancePropertyCheck(runbook.Step):
     operator: str = op.get('operator', 'eq')
 
     if not self.instance_name or not self.zone:
-      raise runbook_exceptions.MissingParameterError(
-          'instance_name and zone must be provided.')
+      raise runbook_exceptions.MissingParameterError('instance_name and zone must be provided.')
     if not property_path:
-      raise runbook_exceptions.MissingParameterError(
-          "'property_path' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'property_path' is required for this step.")
     if property_path.startswith('ref:'):
       property_path = getattr(constants, property_path[4:])
     if expected_value_str is None:
-      raise runbook_exceptions.MissingParameterError(
-          "'expected_value' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'expected_value' is required for this step.")
 
     try:
       vm = gce.get_instance(self.project_id, self.zone, self.instance_name)
     except googleapiclient.errors.HttpError as err:
       if err.resp.status == 404:
         op.add_skipped(
-            None,
-            reason=(f'VM instance {self.instance_name} not found in project'
-                    f' {self.project_id} zone {self.zone}'),
+          None,
+          reason=(
+            f'VM instance {self.instance_name} not found in project'
+            f' {self.project_id} zone {self.zone}'
+          ),
         )
         return
       else:
@@ -1343,7 +1382,7 @@ class InstancePropertyCheck(runbook.Step):
       actual_value = getattr(vm, property_path)
     except (AttributeError, KeyError) as e:
       raise ValueError(
-          f"Could not access property_path '{property_path}' on VM instance {self.instance_name}"
+        f"Could not access property_path '{property_path}' on VM instance {self.instance_name}"
       ) from e
 
     op.add_metadata('instance_name', vm.name)
@@ -1354,34 +1393,34 @@ class InstancePropertyCheck(runbook.Step):
 
     if _check_condition(actual_value, expected_value, operator):
       op.add_ok(
-          vm,
-          reason=op.prep_msg(
-              op.SUCCESS_REASON,
-              instance_name=vm.name,
-              property_path=property_path,
-              expected_value=expected_value,
-              operator=operator,
-              actual_value=actual_value,
-          ),
+        vm,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON,
+          instance_name=vm.name,
+          property_path=property_path,
+          expected_value=expected_value,
+          operator=operator,
+          actual_value=actual_value,
+        ),
       )
     else:
       op.add_failed(
-          vm,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              instance_name=vm.name,
-              property_path=property_path,
-              expected_value=expected_value,
-              operator=operator,
-              actual_value=actual_value,
-          ),
-          remediation=op.prep_msg(
-              op.FAILURE_REMEDIATION,
-              instance_name=vm.name,
-              property_path=property_path,
-              expected_value=expected_value,
-              operator=operator,
-          ),
+        vm,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          instance_name=vm.name,
+          property_path=property_path,
+          expected_value=expected_value,
+          operator=operator,
+          actual_value=actual_value,
+        ),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION,
+          instance_name=vm.name,
+          property_path=property_path,
+          expected_value=expected_value,
+          operator=operator,
+        ),
       )
 
 
@@ -1414,11 +1453,9 @@ class GceLogCheck(runbook.Step):
     template = op.get('template') or 'logging::gce_log'
 
     if not project_id:
-      raise runbook_exceptions.MissingParameterError(
-          "'project_id' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'project_id' is required for this step.")
     if not filter_str:
-      raise runbook_exceptions.MissingParameterError(
-          "'filter_str' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'filter_str' is required for this step.")
 
     # Resolve filter_str if it is a reference
     if filter_str.startswith('ref:'):
@@ -1426,20 +1463,22 @@ class GceLogCheck(runbook.Step):
       resolved_filter = getattr(constants, const_name, None)
       if resolved_filter is None:
         raise runbook_exceptions.InvalidParameterError(
-            f"Could not resolve constant reference: '{filter_str}'. "
-            f"Ensure '{const_name}' is defined in gce/constants.py.")
+          f"Could not resolve constant reference: '{filter_str}'. "
+          f"Ensure '{const_name}' is defined in gce/constants.py."
+        )
       filter_str = resolved_filter
 
     issue_patterns = []
     if issue_pattern_str:
-      issue_patterns = runbook_util.resolve_patterns(issue_pattern_str,
-                                                     constants)
+      issue_patterns = runbook_util.resolve_patterns(issue_pattern_str, constants)
 
-    log_check_step = logs_gs.CheckIssueLogEntry(project_id=project_id,
-                                                filter_str=filter_str,
-                                                issue_pattern=issue_patterns,
-                                                template=template,
-                                                resource_name=resource_name)
+    log_check_step = logs_gs.CheckIssueLogEntry(
+      project_id=project_id,
+      filter_str=filter_str,
+      issue_pattern=issue_patterns,
+      template=template,
+      resource_name=resource_name,
+    )
     self.add_child(log_check_step)
 
 
@@ -1468,18 +1507,16 @@ class GceIamPolicyCheck(runbook.Step):
     principal = op.get(iam_flags.PRINCIPAL)
     roles_str = op.get('roles')
     permissions_str = op.get('permissions')
-    require_all = op.BOOL_VALUES.get(
-        str(op.get('require_all', False)).lower(), False)
+    require_all = op.BOOL_VALUES.get(str(op.get('require_all', False)).lower(), False)
 
     if not project_id:
-      raise runbook_exceptions.MissingParameterError(
-          "'project_id' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'project_id' is required for this step.")
     if not principal:
-      raise runbook_exceptions.MissingParameterError(
-          "'principal' is required for this step.")
+      raise runbook_exceptions.MissingParameterError("'principal' is required for this step.")
     if not roles_str and not permissions_str:
       raise runbook_exceptions.MissingParameterError(
-          "Either 'roles' or 'permissions' must be provided.")
+        "Either 'roles' or 'permissions' must be provided."
+      )
 
     roles_set = None
     if roles_str:
@@ -1487,12 +1524,13 @@ class GceIamPolicyCheck(runbook.Step):
 
     permissions_set = None
     if permissions_str:
-      permissions_set = set(
-          runbook_util.resolve_patterns(permissions_str, constants))
+      permissions_set = set(runbook_util.resolve_patterns(permissions_str, constants))
 
-    iam_check_step = iam_gs.IamPolicyCheck(project=project_id,
-                                           principal=principal,
-                                           roles=roles_set,
-                                           permissions=permissions_set,
-                                           require_all=require_all)
+    iam_check_step = iam_gs.IamPolicyCheck(
+      project=project_id,
+      principal=principal,
+      roles=roles_set,
+      permissions=permissions_set,
+      require_all=require_all,
+    )
     self.add_child(iam_check_step)

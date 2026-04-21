@@ -39,15 +39,17 @@ def _run_rule_cluster(report: lint.LintReportRuleInterface, c: gke.Cluster):
   for masters_net in c.masters_cidr_list:
     for p in [443, 10250]:
       result = network.firewall.check_connectivity_ingress(
-          src_ip=masters_net,
-          ip_protocol='tcp',
-          port=p,
-          target_service_account=np.service_account,
-          target_tags=tags)
+        src_ip=masters_net,
+        ip_protocol='tcp',
+        port=p,
+        target_service_account=np.service_account,
+        target_tags=tags,
+      )
       if result.action == 'deny':
         report.add_failed(
-            c, 'connections from %s to port %s blocked by %s' %
-            (masters_net, p, result.matched_by_str))
+          c,
+          f'connections from {masters_net} to port {p} blocked by {result.matched_by_str}',
+        )
         return
   report.add_ok(c)
 

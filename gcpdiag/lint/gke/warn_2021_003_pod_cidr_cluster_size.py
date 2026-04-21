@@ -22,26 +22,26 @@ CIDR can be shared across clusters.
 Enable the network management API to see GKE IP address utilization insights
 in Network Analyzer.
 """
+
 from typing import Dict, List, Tuple
 
 from gcpdiag import lint, models
 from gcpdiag.queries import gke
 
-#Test fails if pod cidr usage is above FAIL_THRESHOLD (.8 similar to GKE IP utilization insights)
-FAIL_THRESHOLD_RATIO = .8
+# Test fails if pod cidr usage is above FAIL_THRESHOLD (.8 similar to GKE IP utilization insights)
+FAIL_THRESHOLD_RATIO = 0.8
 MAX_NODEPOOLS_TO_REPORT = 10
 
 
 def nodepool_calc(cluster) -> Tuple[dict, dict]:
   """Calculates the number of used ips per pod cidr range
-   and the number of nodes in each node pool"""
+  and the number of nodes in each node pool"""
 
   cidr_used_ips: Dict[str, int] = {}
   nodepools_by_range: Dict[str, List[str]] = {}
   nodepool_nodes: Dict[str, int] = {}
 
   for np in cluster.nodepools:
-
     pod_range = np.pod_ipv4_cidr_block
 
     migs = np.instance_groups
@@ -54,13 +54,13 @@ def nodepool_calc(cluster) -> Tuple[dict, dict]:
     nodepool_nodes[np.name] = total_nodes
 
     if pod_range not in cidr_used_ips:
-
       cidr_used_ips[pod_range] = 0
       nodepools_by_range[pod_range] = []
 
-    #sum up used IPs per pod range - running nodes*pod ip addresses allocated per node
+    # sum up used IPs per pod range - running nodes*pod ip addresses allocated per node
     cidr_used_ips[pod_range] = cidr_used_ips[pod_range] + (
-        total_nodes * (2**(32 - np.pod_ipv4_cidr_size)))
+      total_nodes * (2 ** (32 - np.pod_ipv4_cidr_size))
+    )
 
     nodepools_by_range[pod_range].append(np.name)
 
@@ -72,7 +72,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, cluster in sorted(clusters.items()):
-
     if cluster.is_vpc_native:
       cidr_used_ips, nodepools_by_range = nodepool_calc(cluster)
 
@@ -80,7 +79,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       summary = ''
 
       for pod_range, ips in cidr_used_ips.items():
-
         used_ips = ips
         total_ip_addresses = pod_range.num_addresses
 
@@ -95,8 +93,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
             summary += '\n'
 
           summary += (
-              f'{pod_range}({round(used_ips/total_ip_addresses*100)}% IPs used): '
-              f"{','.join(nodepools[:MAX_NODEPOOLS_TO_REPORT])}")
+            f'{pod_range}({round(used_ips / total_ip_addresses * 100)}% IPs used): '
+            f'{",".join(nodepools[:MAX_NODEPOOLS_TO_REPORT])}'
+          )
 
           if len(nodepools) > MAX_NODEPOOLS_TO_REPORT:
             summary += f' ({len(nodepools) - MAX_NODEPOOLS_TO_REPORT} more node pool(s))'
@@ -107,22 +106,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         report.add_ok(cluster)
 
     else:
-      #route-based: https://cloud.google.com/kubernetes-engine/docs/how-to/routes-based-cluster
+      # route-based: https://cloud.google.com/kubernetes-engine/docs/how-to/routes-based-cluster
 
       size = cluster.current_node_count
       pod_range = cluster.pod_ipv4_cidr
-      #4096 IPs reserved for services range
+      # 4096 IPs reserved for services range
       total_ip_addresses = pod_range.num_addresses - 4096
 
-      #256 because each node is assigned /24 from the pod CIDR range
+      # 256 because each node is assigned /24 from the pod CIDR range
       used_ips = size * 256
 
       threshold_ips_used = (total_ip_addresses) * FAIL_THRESHOLD_RATIO
 
       if used_ips > threshold_ips_used:
         report.add_failed(
-            cluster,
-            f'{pod_range}({round(used_ips/total_ip_addresses*100)}% IPs used): all node pools'
+          cluster,
+          f'{pod_range}({round(used_ips / total_ip_addresses * 100)}% IPs used): all node pools',
         )
       else:
         report.add_ok(cluster)

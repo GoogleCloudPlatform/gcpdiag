@@ -32,7 +32,6 @@ from gcpdiag.queries import apis, crm, gce, network, web
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L342
-# pylint: disable=invalid-name
 IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
 
 DEFAULT_MAX_PODS_PER_NODE = 110
@@ -63,7 +62,7 @@ class NodeConfig:
 
   @property
   def has_serial_port_logging_enabled(self) -> bool:
-    """ Check if serial port logging is enabled in the node config.
+    """Check if serial port logging is enabled in the node config.
 
     Returns:
       bool: True if serial port logging is enabled or not explicitly disabled.
@@ -92,10 +91,11 @@ class NodePool(models.Resource):
   def full_path(self) -> str:
     # https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/
     #   locations/europe-west1/clusters/gke2/nodePools/default-pool
-    m = re.match(r'https://container.googleapis.com/v1/(.*)',
-                 self._resource_data.get('selfLink', ''))
+    m = re.match(
+      r'https://container.googleapis.com/v1/(.*)', self._resource_data.get('selfLink', '')
+    )
     if not m:
-      raise RuntimeError('can\'t parse selfLink of nodepool resource')
+      raise RuntimeError("can't parse selfLink of nodepool resource")
     return m.group(1)
 
   @property
@@ -125,22 +125,18 @@ class NodePool(models.Resource):
     return sa == 'default'
 
   def has_image_streaming_enabled(self) -> bool:
-    return get_path(self._resource_data, ('config', 'gcfsConfig', 'enabled'),
-                    default=False)
+    return get_path(self._resource_data, ('config', 'gcfsConfig', 'enabled'), default=False)
 
   def has_md_concealment_enabled(self) -> bool:
     # Empty ({}) workloadMetadataConfig means that 'Metadata concealment'
     # (predecessor of Workload Identity) is enabled.
     # https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#concealment
-    return get_path(self._resource_data, ('config', 'workloadMetadataConfig'),
-                    default=None) == {}
+    return get_path(self._resource_data, ('config', 'workloadMetadataConfig'), default=None) == {}
 
   def has_workload_identity_enabled(self) -> bool:
     # 'Metadata concealment' (workloadMetadataConfig == {}) doesn't protect the
     # default SA's token
-    return bool(
-        get_path(self._resource_data, ('config', 'workloadMetadataConfig'),
-                 default=None))
+    return bool(get_path(self._resource_data, ('config', 'workloadMetadataConfig'), default=None))
 
   @property
   def service_account(self) -> str:
@@ -158,9 +154,7 @@ class NodePool(models.Resource):
   @property
   def pod_ipv4_cidr_block(self) -> Optional[IPv4NetOrIPv6Net]:
     # Get the pod cidr range in use by the nodepool
-    pod_cidr = get_path(self._resource_data,
-                        ('networkConfig', 'podIpv4CidrBlock'),
-                        default=None)
+    pod_cidr = get_path(self._resource_data, ('networkConfig', 'podIpv4CidrBlock'), default=None)
 
     if pod_cidr:
       return ipaddress.ip_network(pod_cidr)
@@ -170,8 +164,12 @@ class NodePool(models.Resource):
   @property
   def max_pod_per_node(self) -> int:
     return int(
-        get_path(self._resource_data, ('maxPodsConstraint', 'maxPodsPerNode'),
-                 default=DEFAULT_MAX_PODS_PER_NODE))
+      get_path(
+        self._resource_data,
+        ('maxPodsConstraint', 'maxPodsPerNode'),
+        default=DEFAULT_MAX_PODS_PER_NODE,
+      )
+    )
 
   @property
   def cluster(self) -> 'Cluster':
@@ -181,8 +179,7 @@ class NodePool(models.Resource):
   def instance_groups(self) -> List[gce.ManagedInstanceGroup]:
     if self._migs is None:
       project_migs_by_selflink = {}
-      for m in gce.get_managed_instance_groups(
-          models.Context(project_id=self.project_id)).values():
+      for m in gce.get_managed_instance_groups(models.Context(project_id=self.project_id)).values():
         project_migs_by_selflink[m.self_link] = m
 
       self._migs = []
@@ -213,6 +210,7 @@ class UndefinedClusterPropertyError(Exception):
   """Thrown when a property of a cluster can't be determined for
   some reason. For example, the cluster_hash can't be determined
   because there are no nodepools defined."""
+
   pass
 
 
@@ -221,6 +219,7 @@ class Cluster(models.Resource):
 
   https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters#Cluster
   """
+
   _resource_data: dict
   master_version: Version
   _context: models.Context
@@ -236,11 +235,9 @@ class Cluster(models.Resource):
   @property
   def full_path(self) -> str:
     if utils.is_region(self._resource_data['location']):
-      return (f'projects/{self.project_id}/'
-              f'locations/{self.location}/clusters/{self.name}')
+      return f'projects/{self.project_id}/locations/{self.location}/clusters/{self.name}'
     else:
-      return (f'projects/{self.project_id}/'
-              f'zones/{self.location}/clusters/{self.name}')
+      return f'projects/{self.project_id}/zones/{self.location}/clusters/{self.name}'
 
   @property
   def short_path(self) -> str:
@@ -277,11 +274,11 @@ class Cluster(models.Resource):
 
   @property
   def nap_node_image_type(self) -> Optional[str]:
-
     return get_path(
-        self._resource_data,
-        ('autoscaling', 'autoprovisioningNodePoolDefaults', 'imageType'),
-        default=None)
+      self._resource_data,
+      ('autoscaling', 'autoprovisioningNodePoolDefaults', 'imageType'),
+      default=None,
+    )
 
   @property
   def app_layer_sec_key(self) -> str:
@@ -297,22 +294,21 @@ class Cluster(models.Resource):
 
   def has_app_layer_enc_enabled(self) -> bool:
     # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
-    return get_path(self._resource_data, ('databaseEncryption', 'state'),
-                    default=None) == 'ENCRYPTED'
+    return (
+      get_path(self._resource_data, ('databaseEncryption', 'state'), default=None) == 'ENCRYPTED'
+    )
 
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
 
   def enabled_logging_components(self) -> List[str]:
-    return self._resource_data['loggingConfig']['componentConfig'][
-        'enableComponents']
+    return self._resource_data['loggingConfig']['componentConfig']['enableComponents']
 
   def has_monitoring_enabled(self) -> bool:
     return self._resource_data['monitoringService'] != 'none'
 
   def enabled_monitoring_components(self) -> List[str]:
-    return self._resource_data['monitoringConfig']['componentConfig'][
-        'enableComponents']
+    return self._resource_data['monitoringConfig']['componentConfig']['enableComponents']
 
   def has_authenticator_group_enabled(self) -> bool:
     return len(self._resource_data.get('authenticatorGroupsConfig', {})) > 0
@@ -322,24 +318,32 @@ class Cluster(models.Resource):
 
   def has_http_load_balancing_enabled(self) -> bool:
     # HTTP load balancing needs to be enabled to use GKE ingress
-    return not (get_path(self._resource_data,
-                         ('addonsConfig', 'httpLoadBalancing', 'disabled'),
-                         default=None) is True)
+    return (
+      get_path(self._resource_data, ('addonsConfig', 'httpLoadBalancing', 'disabled'), default=None)
+      is not True
+    )
 
   def has_network_policy_enabled(self) -> bool:
     # Network policy enforcement
-    return get_path(self._resource_data,
-                    ('addonsConfig', 'networkPolicyConfig', 'disabled'),
-                    default=False) is not True
+    return (
+      get_path(
+        self._resource_data, ('addonsConfig', 'networkPolicyConfig', 'disabled'), default=False
+      )
+      is not True
+    )
 
   def has_dpv2_enabled(self) -> bool:
     # Checks whether dataplane V2 is enabled in clusters
-    return (get_path(self._resource_data, ('networkConfig', 'datapathProvider'),
-                     default=None) == 'ADVANCED_DATAPATH')
+    return (
+      get_path(self._resource_data, ('networkConfig', 'datapathProvider'), default=None)
+      == 'ADVANCED_DATAPATH'
+    )
 
   def has_intra_node_visibility_enabled(self) -> bool:
-    if ('networkConfig' in self._resource_data and
-        'enableIntraNodeVisibility' in self._resource_data['networkConfig']):
+    if (
+      'networkConfig' in self._resource_data
+      and 'enableIntraNodeVisibility' in self._resource_data['networkConfig']
+    ):
       return self._resource_data['networkConfig']['enableIntraNodeVisibility']
     return False
 
@@ -347,8 +351,7 @@ class Cluster(models.Resource):
     # 'e3b0c442' is a hexadecimal string that represents the value of an empty
     # string ('') in cryptography. If the maintenance windows are defined, the
     # value of 'resourceVersion' is not empty ('e3b0c442').
-    return self._resource_data['maintenancePolicy'][
-        'resourceVersion'] != 'e3b0c442'
+    return self._resource_data['maintenancePolicy']['resourceVersion'] != 'e3b0c442'
 
   def has_image_streaming_enabled(self) -> bool:
     """
@@ -356,9 +359,10 @@ class Cluster(models.Resource):
     enabled
     """
     global_gcsfs = get_path(
-        self._resource_data,
-        ('nodePoolDefaults', 'nodeConfigDefaults', 'gcfsConfig', 'enabled'),
-        default=False)
+      self._resource_data,
+      ('nodePoolDefaults', 'nodeConfigDefaults', 'gcfsConfig', 'enabled'),
+      default=False,
+    )
     # Check nodePoolDefaults settings
     if global_gcsfs:
       return True
@@ -392,8 +396,7 @@ class Cluster(models.Resource):
       return None
 
     subnetwork_string = self._resource_data['networkConfig']['subnetwork']
-    m = re.match(r'projects/([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$',
-                 subnetwork_string)
+    m = re.match(r'projects/([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$', subnetwork_string)
     if not m:
       raise RuntimeError("can't parse network string: %s" % subnetwork_string)
     return network.get_subnetwork(m.group(1), m.group(2), m.group(3))
@@ -420,17 +423,14 @@ class Cluster(models.Resource):
 
   @property
   def is_private(self) -> bool:
-    if not 'privateClusterConfig' in self._resource_data:
+    if 'privateClusterConfig' not in self._resource_data:
       return False
 
-    return self._resource_data['privateClusterConfig'].get(
-        'enablePrivateNodes', False)
+    return self._resource_data['privateClusterConfig'].get('enablePrivateNodes', False)
 
   @property
   def is_vpc_native(self) -> bool:
-    return (get_path(self._resource_data,
-                     ('ipAllocationPolicy', 'useIpAliases'),
-                     default=False))
+    return get_path(self._resource_data, ('ipAllocationPolicy', 'useIpAliases'), default=False)
 
   @property
   def is_regional(self) -> bool:
@@ -448,24 +448,20 @@ class Cluster(models.Resource):
 
   @property
   def is_autopilot(self) -> bool:
-    if not 'autopilot' in self._resource_data:
+    if 'autopilot' not in self._resource_data:
       return False
     return self._resource_data['autopilot'].get('enabled', False)
 
   @property
   def masters_cidr_list(self) -> Iterable[IPv4NetOrIPv6Net]:
-    if get_path(self._resource_data,
-                ('privateClusterConfig', 'masterIpv4CidrBlock'),
-                default=None):
+    if get_path(self._resource_data, ('privateClusterConfig', 'masterIpv4CidrBlock'), default=None):
       return [
-          ipaddress.ip_network(self._resource_data['privateClusterConfig']
-                               ['masterIpv4CidrBlock'])
+        ipaddress.ip_network(self._resource_data['privateClusterConfig']['masterIpv4CidrBlock'])
       ]
     else:
-      #only older clusters still have ssh firewall rules
+      # only older clusters still have ssh firewall rules
       if self.current_node_count and not self.cluster_hash:
-        logging.warning("couldn't retrieve cluster hash for cluster %s.",
-                        self.name)
+        logging.warning("couldn't retrieve cluster hash for cluster %s.", self.name)
         return []
       fw_rule_name = f'gke-{self.name}-{self.cluster_hash}-ssh'
       rule = self.network.firewall.get_vpc_ingress_rules(name=fw_rule_name)
@@ -498,10 +494,13 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   if not apis.is_enabled(context.project_id, 'container'):
     return clusters
   container_api = apis.get_api('container', 'v1', context.project_id)
-  logging.debug('fetching list of GKE clusters in project %s',
-                context.project_id)
-  query = container_api.projects().locations().clusters().list(
-      parent=f'projects/{context.project_id}/locations/-')
+  logging.debug('fetching list of GKE clusters in project %s', context.project_id)
+  query = (
+    container_api.projects()
+    .locations()
+    .clusters()
+    .list(parent=f'projects/{context.project_id}/locations/-')
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'clusters' not in resp:
@@ -509,16 +508,14 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
     for resp_c in resp['clusters']:
       # verify that we some minimal data that we expect
       if 'name' not in resp_c or 'location' not in resp_c:
-        raise RuntimeError(
-            'missing data in projects.locations.clusters.list response')
-      if not context.match_project_resource(location=resp_c.get('location', ''),
-                                            labels=resp_c.get(
-                                                'resourceLabels', {}),
-                                            resource=resp_c.get('name', '')):
+        raise RuntimeError('missing data in projects.locations.clusters.list response')
+      if not context.match_project_resource(
+        location=resp_c.get('location', ''),
+        labels=resp_c.get('resourceLabels', {}),
+        resource=resp_c.get('name', ''),
+      ):
         continue
-      c = Cluster(project_id=context.project_id,
-                  resource_data=resp_c,
-                  context=context)
+      c = Cluster(project_id=context.project_id, resource_data=resp_c, context=context)
       clusters[c.full_path] = c
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
@@ -527,28 +524,30 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
 
 @caching.cached_api_call
 def get_cluster(
-    project_id,
-    cluster_id,
-    location,
+  project_id,
+  cluster_id,
+  location,
 ) -> Union[Cluster, None]:
   """Get a Cluster from project_id of a context."""
   if not apis.is_enabled(project_id, 'container'):
     return None
   container_api = apis.get_api('container', 'v1', project_id)
-  logging.debug('fetching the GKE cluster %s in project %s', cluster_id,
-                project_id)
-  query = container_api.projects().locations().clusters().get(
-      name=f'projects/{project_id}/locations/{location}/clusters/{cluster_id}')
+  logging.debug('fetching the GKE cluster %s in project %s', cluster_id, project_id)
+  query = (
+    container_api.projects()
+    .locations()
+    .clusters()
+    .get(name=f'projects/{project_id}/locations/{location}/clusters/{cluster_id}')
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if cluster_id not in str(resp):
-      raise RuntimeError(
-          'missing data in projects.locations.clusters.list response')
+      raise RuntimeError('missing data in projects.locations.clusters.list response')
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
-  return Cluster(project_id=project_id,
-                 resource_data=resp,
-                 context=models.Context(project_id=project_id))
+  return Cluster(
+    project_id=project_id, resource_data=resp, context=models.Context(project_id=project_id)
+  )
 
 
 @caching.cached_api_call
@@ -598,7 +597,7 @@ class Node(models.Resource):
   """Represents a GKE node.
 
   This class useful for example to determine the GKE cluster when you only have
-  an GCE instance id (like from a metrics label). """
+  an GCE instance id (like from a metrics label)."""
 
   instance: gce.Instance
   nodepool: NodePool
@@ -617,7 +616,7 @@ class Node(models.Resource):
 
   @property
   def short_path(self) -> str:
-    #return self.nodepool.cluster.short_path + '/' + self.instance.name
+    # return self.nodepool.cluster.short_path + '/' + self.instance.name
     return self.instance.short_path
 
 
@@ -646,8 +645,7 @@ def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
             return Node(instance=instance, nodepool=np, mig=mig)
 
     # if we didn't find a nodepool that owns this instance, raise a KeyError
-    raise KeyError('can\'t determine GKE cluster for instance %s' %
-                   (instance_id))
+    raise KeyError("can't determine GKE cluster for instance %s" % (instance_id))
 
   except AttributeError as err:
     raise KeyError from err
@@ -666,9 +664,7 @@ def get_release_schedule() -> Dict:
   # estimate first month of the quarter
   quarter_dates = {'Q1': '1', 'Q2': '4', 'Q3': '7', 'Q4': '10'}
   try:
-    table = web.fetch_and_extract_table(page_url,
-                                        tag='table',
-                                        class_name='gke-release-schedule')
+    table = web.fetch_and_extract_table(page_url, tag='table', class_name='gke-release-schedule')
 
     # Function to parse a date string or return None for 'N/A'
     def parse_date(date_str) -> Optional[datetime.date]:
@@ -680,10 +676,9 @@ def get_release_schedule() -> Dict:
       # Handle quarter year (for example, 2025-Q3) approximations that are updated when known.
       # https://cloud.google.com/kubernetes-engine/docs/release-schedule.md#fn6
       if match and match.group('quarter') and not match.group('day'):
-        date_str = f"{match.group('year')}-{quarter_dates[match.group('quarter')]}-01"
+        date_str = f'{match.group("year")}-{quarter_dates[match.group("quarter")]}-01'
         return datetime.date.fromisoformat(date_str)
-      if match and match.group('year') and match.group('month') and match.group(
-          'day'):
+      if match and match.group('year') and match.group('month') and match.group('day'):
         return datetime.date.fromisoformat(date_str)
       # anything less like N/A return None
       return None
@@ -715,19 +710,19 @@ def get_release_schedule() -> Dict:
 
       # Add the extracted data into the dictionary in the desired format
       release_data[minor_version] = {
-          'rapid_avail': rapid_avail,
-          'regular_avail': regular_avail,
-          'stable_avail': stable_avail,
-          'extended_avail': extended_avail,
-          'eol': end_of_standard_support,
+        'rapid_avail': rapid_avail,
+        'regular_avail': regular_avail,
+        'stable_avail': stable_avail,
+        'extended_avail': extended_avail,
+        'eol': end_of_standard_support,
       }
     return release_data
   except (
-      requests.exceptions.RequestException,
-      AttributeError,
-      TypeError,
-      ValueError,
-      IndexError,
+    requests.exceptions.RequestException,
+    AttributeError,
+    TypeError,
+    ValueError,
+    IndexError,
   ) as e:
     logging.error('Error in extracting gke release schedule: %s', e)
     return release_data

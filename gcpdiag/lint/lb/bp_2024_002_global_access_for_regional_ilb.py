@@ -30,8 +30,7 @@ forwarding_rules_list = {}
 
 
 def prefetch_rule(context: models.Context):
-  forwarding_rules_list[context.project_id] = lb.get_forwarding_rules(
-      context.project_id)
+  forwarding_rules_list[context.project_id] = lb.get_forwarding_rules(context.project_id)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -45,12 +44,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for forwarding_rule in forwarding_rules:
     forwarding_rule_regional = re.match(
-        r'projects/([^/]+)/regions/([^/]+)/forwardingRules/([^/]+)',
-        forwarding_rule.full_path,
+      r'projects/([^/]+)/regions/([^/]+)/forwardingRules/([^/]+)',
+      forwarding_rule.full_path,
     )
     if forwarding_rule_regional and forwarding_rule.load_balancing_scheme in [
-        INTERNAL,
-        INTERNAL_MANAGED,
+      INTERNAL,
+      INTERNAL_MANAGED,
     ]:
       if not forwarding_rule.global_access_allowed:
         report.add_failed(forwarding_rule)

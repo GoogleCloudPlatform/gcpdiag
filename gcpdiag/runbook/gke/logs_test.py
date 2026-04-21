@@ -38,12 +38,14 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   project_id = 'gcpdiag-gke-cluster-autoscaler-rrrr'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
       'name': 'gcp-cluster',
       'gke_cluster_name': 'gcp-cluster',
-      'location': 'europe-west10'
-  }]
+      'location': 'europe-west10',
+    }
+  ]
 
 
 class TestGkeLogsSteps(unittest.TestCase):
@@ -51,41 +53,31 @@ class TestGkeLogsSteps(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_get_user_email = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_user_email'))
-    self.mock_is_enabled = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.is_enabled'))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_get_user_email = self.enterContext(mock.patch('gcpdiag.queries.apis.get_user_email'))
+    self.mock_is_enabled = self.enterContext(mock.patch('gcpdiag.queries.apis.is_enabled'))
     self.mock_is_enabled.return_value = True
     self.mock_get_user_email.return_value = 'test@example.com'
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
     self.mock_op_get = self.enterContext(mock.patch('gcpdiag.runbook.op.get'))
-    self.mock_op_add_ok = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_ok'))
-    self.mock_op_add_failed = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_failed'))
-    self.mock_op_add_skipped = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_skipped'))
-    self.mock_crm_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project'))
-    self.mock_gke_get_clusters = self.enterContext(
-        mock.patch('gcpdiag.queries.gke.get_clusters'))
+    self.mock_op_add_ok = self.enterContext(mock.patch('gcpdiag.runbook.op.add_ok'))
+    self.mock_op_add_failed = self.enterContext(mock.patch('gcpdiag.runbook.op.add_failed'))
+    self.mock_op_add_skipped = self.enterContext(mock.patch('gcpdiag.runbook.op.add_skipped'))
+    self.mock_crm_get_project = self.enterContext(mock.patch('gcpdiag.queries.crm.get_project'))
+    self.mock_gke_get_clusters = self.enterContext(mock.patch('gcpdiag.queries.gke.get_clusters'))
 
     self.project_id = 'test-project'
     self.params = {
-        flags.PROJECT_ID: self.project_id,
-        flags.GKE_CLUSTER_NAME: 'test-cluster',
-        flags.LOCATION: 'us-central1'
+      flags.PROJECT_ID: self.project_id,
+      flags.GKE_CLUSTER_NAME: 'test-cluster',
+      flags.LOCATION: 'us-central1',
     }
-    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(
-        key, default)
+    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(key, default)
     self.mock_interface = mock.MagicMock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.set_parameters(self.params)
@@ -104,8 +96,7 @@ class TestGkeLogsSteps(unittest.TestCase):
   def test_logs_start_skips_when_cluster_not_found(self):
     """Given cluster name doesn't match, when LogsStart executes, then it skips."""
     cluster = mock.Mock()
-    cluster.__str__ = mock.Mock(
-        return_value='projects/p/locations/zone/clusters/other-cluster')
+    cluster.__str__ = mock.Mock(return_value='projects/p/locations/zone/clusters/other-cluster')
     self.mock_gke_get_clusters.return_value = {'other': cluster}
     step = logs.LogsStart()
     with op.operator_context(self.operator):
@@ -155,9 +146,9 @@ class TestGkeLogsSteps(unittest.TestCase):
   @mock.patch('gcpdiag.queries.iam.get_project_policy')
   @mock.patch('gcpdiag.queries.iam.is_service_account_enabled')
   @mock.patch('gcpdiag.lint.gke.util.get_cluster_object')
-  def test_sa_permission_fails_when_missing_role(self, mock_get_obj,
-                                                 mock_sa_enabled,
-                                                 mock_get_policy):
+  def test_sa_permission_fails_when_missing_role(
+    self, mock_get_obj, mock_sa_enabled, mock_get_policy
+  ):
     """Given SA exists but missing LogWriter role, then step fails."""
     nodepool = mock.Mock()
     nodepool.service_account = 'test-sa@test.iam.gserviceaccount.com'
@@ -183,11 +174,7 @@ class TestGkeLogsSteps(unittest.TestCase):
     self.params[flags.END_TIME] = mock.Mock()
 
     mock_query.return_value = {
-        'ts1': {
-            'labels': {
-                'metric.limit_name': 'WriteRequestsPerMinutePerProject'
-            }
-        }
+      'ts1': {'labels': {'metric.limit_name': 'WriteRequestsPerMinutePerProject'}}
     }
 
     step = logs.LoggingWriteApiQuotaExceeded()
@@ -218,11 +205,11 @@ class TestGkeLogsCoverage(unittest.TestCase):
     self.mock_interface = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.params = {
-        flags.PROJECT_ID: 'test-project',
-        flags.GKE_CLUSTER_NAME: 'test-cluster',
-        flags.LOCATION: 'us-central1',
-        flags.START_TIME: datetime.datetime.now(),
-        flags.END_TIME: datetime.datetime.now()
+      flags.PROJECT_ID: 'test-project',
+      flags.GKE_CLUSTER_NAME: 'test-cluster',
+      flags.LOCATION: 'us-central1',
+      flags.START_TIME: datetime.datetime.now(),
+      flags.END_TIME: datetime.datetime.now(),
     }
     self.operator.set_parameters(self.params)
     self.operator.set_step(mock.MagicMock())
@@ -232,27 +219,21 @@ class TestGkeLogsCoverage(unittest.TestCase):
     self.operator.messages = MockMessage()
     # Setup standard mocks for gcpdiag operations
     self.mock_op_get = self.enterContext(mock.patch('gcpdiag.runbook.op.get'))
-    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(
-        key, default)
-    self.mock_op_add_ok = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_ok'))
-    self.mock_op_add_failed = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_failed'))
-    self.mock_op_add_skipped = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_skipped'))
-    self.mock_gke_get_clusters = self.enterContext(
-        mock.patch('gcpdiag.queries.gke.get_clusters'))
+    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(key, default)
+    self.mock_op_add_ok = self.enterContext(mock.patch('gcpdiag.runbook.op.add_ok'))
+    self.mock_op_add_failed = self.enterContext(mock.patch('gcpdiag.runbook.op.add_failed'))
+    self.mock_op_add_skipped = self.enterContext(mock.patch('gcpdiag.runbook.op.add_skipped'))
+    self.mock_gke_get_clusters = self.enterContext(mock.patch('gcpdiag.queries.gke.get_clusters'))
     self.enterContext(mock.patch('gcpdiag.queries.crm.get_project'))
-    self.mock_is_enabled = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.is_enabled'))
+    self.mock_is_enabled = self.enterContext(mock.patch('gcpdiag.queries.apis.is_enabled'))
     self.mock_iam_get_project_policy = self.enterContext(
-        mock.patch('gcpdiag.queries.iam.get_project_policy'))
+      mock.patch('gcpdiag.queries.iam.get_project_policy')
+    )
     self.mock_iam_is_service_account_enabled = self.enterContext(
-        mock.patch('gcpdiag.queries.iam.is_service_account_enabled'))
-    self.mock_monitoring_query = self.enterContext(
-        mock.patch('gcpdiag.queries.monitoring.query'))
-    self.mock_op_prompt = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.prompt'))
+      mock.patch('gcpdiag.queries.iam.is_service_account_enabled')
+    )
+    self.mock_monitoring_query = self.enterContext(mock.patch('gcpdiag.queries.monitoring.query'))
+    self.mock_op_prompt = self.enterContext(mock.patch('gcpdiag.runbook.op.prompt'))
 
   # Covers LogsStart (Lines 83-84, 89-105)
   def test_logs_start_branch_coverage(self):
@@ -265,8 +246,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
 
     # Line 89-105: Specific cluster mismatch
     cluster = mock.Mock()
-    cluster.__str__ = mock.Mock(
-        return_value='projects/p/locations/other/clusters/other')
+    cluster.__str__ = mock.Mock(return_value='projects/p/locations/other/clusters/other')
     self.mock_gke_get_clusters.return_value = {'other': cluster}
     with op.operator_context(self.operator):
       step.execute()
@@ -286,8 +266,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
     cluster_obj = mock.Mock()
     cluster_obj.is_autopilot = False
     cluster_obj.has_logging_enabled.return_value = True
-    cluster_obj.enabled_logging_components.return_value = ['SYSTEM'
-                                                          ]  # WORKLOADS missing
+    cluster_obj.enabled_logging_components.return_value = ['SYSTEM']  # WORKLOADS missing
     cluster_obj.__str__ = mock.Mock(return_value='test-cluster')
     mock_get_obj.return_value = cluster_obj
 
@@ -300,9 +279,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
   @mock.patch('gcpdiag.lint.gke.util.get_cluster_object')
   def test_nodepool_scope_coverage(self, mock_get_obj):
     np_ok = mock.Mock()
-    np_ok.config.oauth_scopes = [
-        'https://www.googleapis.com/auth/logging.write'
-    ]
+    np_ok.config.oauth_scopes = ['https://www.googleapis.com/auth/logging.write']
     np_fail = mock.Mock()
     np_fail.config.oauth_scopes = []
     cluster_obj = mock.Mock()
@@ -313,9 +290,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
     with op.operator_context(self.operator):
       step.execute()
     self.mock_op_add_ok.assert_called_with(np_ok, reason=mock.ANY)
-    self.mock_op_add_failed.assert_called_with(np_fail,
-                                               reason=mock.ANY,
-                                               remediation=mock.ANY)
+    self.mock_op_add_failed.assert_called_with(np_fail, reason=mock.ANY, remediation=mock.ANY)
 
   # Covers ServiceAccountLoggingPermission (Lines 260, 301, 314)
   @mock.patch('gcpdiag.lint.gke.util.get_cluster_object')
@@ -335,20 +310,14 @@ class TestGkeLogsCoverage(unittest.TestCase):
     step = logs.ServiceAccountLoggingPermission()
     with op.operator_context(self.operator):
       step.execute()
-    self.mock_op_add_failed.assert_called_with(np_disabled,
-                                               reason=mock.ANY,
-                                               remediation=mock.ANY)
+    self.mock_op_add_failed.assert_called_with(np_disabled, reason=mock.ANY, remediation=mock.ANY)
     self.mock_op_add_ok.assert_called_with(np_ok, reason=mock.ANY)
 
   # Covers LoggingWriteApiQuotaExceeded (Lines 351, 362-365)
   def test_quota_query_error_handling(self):
     # Triggers line 351 (monitoring.query) and 362-365 (KeyError handling)
     self.mock_monitoring_query.return_value = {
-        'bad_series': {
-            'labels': {
-                'metric.limit_name': 'some-limit'
-            }
-        }
+      'bad_series': {'labels': {'metric.limit_name': 'some-limit'}}
     }  # Missing metric.limit_name
     step = logs.LoggingWriteApiQuotaExceeded()
     with op.operator_context(self.operator):
@@ -359,8 +328,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
     """Lines 108-111 (Logic): Skips if no clusters are found at the specified location."""
     # Mock a cluster at a different location than 'us-central1'
     cluster = mock.Mock()
-    cluster.__str__ = mock.Mock(
-        return_value='projects/p/locations/europe-west1/clusters/c')
+    cluster.__str__ = mock.Mock(return_value='projects/p/locations/europe-west1/clusters/c')
     self.mock_gke_get_clusters.return_value = {'cluster': cluster}
 
     step = logs.LogsStart()
@@ -386,9 +354,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
   def test_node_pool_missing_scope_fails(self, mock_get_obj):
     """Line 214: Fails when a node pool is missing required logging scopes."""
     np = mock.Mock()
-    np.config.oauth_scopes = [
-        'https://www.googleapis.com/auth/compute.readonly'
-    ]
+    np.config.oauth_scopes = ['https://www.googleapis.com/auth/compute.readonly']
     cluster = mock.Mock(nodepools=[np])
     mock_get_obj.return_value = cluster
     step = logs.NodePoolCloudLoggingAccessScope()
@@ -402,8 +368,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
     np.config.oauth_scopes = ['https://www.googleapis.com/auth/logging.write']
     cluster = mock.Mock(nodepools=[np])
 
-    with mock.patch('gcpdiag.lint.gke.util.get_cluster_object',
-                    return_value=cluster):
+    with mock.patch('gcpdiag.lint.gke.util.get_cluster_object', return_value=cluster):
       step = logs.NodePoolCloudLoggingAccessScope()
       with op.operator_context(self.operator):
         step.execute()
@@ -441,11 +406,7 @@ class TestGkeLogsCoverage(unittest.TestCase):
   def test_quota_exceeded_found_fails(self):
     """Line 314: Fails when WriteRequestsPerMinutePerProject quota is exceeded."""
     self.mock_monitoring_query.return_value = {
-        'ts1': {
-            'labels': {
-                'metric.limit_name': 'WriteRequestsPerMinutePerProject'
-            }
-        }
+      'ts1': {'labels': {'metric.limit_name': 'WriteRequestsPerMinutePerProject'}}
     }
     step = logs.LoggingWriteApiQuotaExceeded()
     with op.operator_context(self.operator):

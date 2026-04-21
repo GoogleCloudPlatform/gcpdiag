@@ -62,14 +62,11 @@ def get_network_from_url(url):
 # get the routes for the nic sorted in descending order of destRange prefix length
 def get_selected_route_for_dest_ip(project, net, dest_ip):
   routes = network.get_routes(project)
-  nic_routes = [
-      route for route in routes if get_network_from_url(route.network) == net
-  ]
+  nic_routes = [route for route in routes if get_network_from_url(route.network) == net]
 
   # routes with destRange that matches the dest_ip
   matching_routes = [
-      route for route in nic_routes
-      if dest_ip in ipaddress.IPv4Network(route.dest_range)
+    route for route in nic_routes if dest_ip in ipaddress.IPv4Network(route.dest_range)
   ]
 
   # return None if there are no matching routes.
@@ -78,8 +75,7 @@ def get_selected_route_for_dest_ip(project, net, dest_ip):
   # sort the matching routes based on the longest prefix, the longest prefix wins
   # based on GCP VPC selection https://cloud.google.com/vpc/docs/routes#routeselection
   sorted_routes = sorted(
-      matching_routes,
-      key=lambda r: ipaddress.IPv4Network(r.dest_range).prefixlen,
-      reverse=True)
+    matching_routes, key=lambda r: ipaddress.IPv4Network(r.dest_range).prefixlen, reverse=True
+  )
 
   return sorted_routes[0]

@@ -27,19 +27,18 @@ network_bridge_migs = {}
 
 # Fetch the MIGs that are communicating with the ApigeeX instances
 def prefetch_rule(context: models.Context):
-  network_bridge_migs[context.project_id] = (
-      apigee.get_network_bridge_instance_groups(context.project_id))
+  network_bridge_migs[context.project_id] = apigee.get_network_bridge_instance_groups(
+    context.project_id
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   apigee_org = apigee.get_org(context)
   if not apigee_org:
     report.add_skipped(None, 'no Apigee organization found')
     return
   if not network_bridge_migs[context.project_id]:
-    report.add_skipped(
-        None, 'no Apigee network bridge Managed Instance Group (MIGs) found')
+    report.add_skipped(None, 'no Apigee network bridge Managed Instance Group (MIGs) found')
     return
 
   if apigee_org.runtime_type == 'HYBRID':
@@ -47,7 +46,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for mig in network_bridge_migs[context.project_id]:
-
     networks = apigee_org.network
     # Identify tags used by the MIG instances
     tags = mig.template.tags
@@ -57,16 +55,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     for ip in ip_ranges:
       result = networks.firewall.check_connectivity_ingress(
-          src_ip=ipaddress.ip_network(ip),
-          ip_protocol='tcp',
-          port=443,
-          target_tags=tags,
+        src_ip=ipaddress.ip_network(ip),
+        ip_protocol='tcp',
+        port=443,
+        target_tags=tags,
       )
 
       if result.action == 'deny':
         report.add_failed(
-            mig, f'Network connection from {ip} blocked to MIG'
-            f'{mig.short_path} on port 443')
+          mig, f'Network connection from {ip} blocked to MIG{mig.short_path} on port 443'
+        )
         break
 
     else:

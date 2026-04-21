@@ -35,11 +35,13 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'dataflow/failed-streaming-pipeline'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': DUMMY_PROJECT_ID,
       'dataflow_job_id': DUMMY_JOB_ID,
       'job_region': DUMMY_REGION,
-  }]
+    }
+  ]
 
 
 class MockMessage:
@@ -51,13 +53,12 @@ class MockMessage:
 
 
 class FailedStreamingPipelineTest(unittest.TestCase):
-
   def test_legacy_parameter_handler(self):
     runbook = failed_streaming_pipeline.FailedStreamingPipeline()
     parameters = {
-        'job_id': 'test-job-id',
-        'project_id': 'test-project',
-        'job_region': 'us-central1',
+      'job_id': 'test-job-id',
+      'project_id': 'test-project',
+      'job_region': 'us-central1',
     }
     runbook.legacy_parameter_handler(parameters)
     self.assertNotIn('job_id', parameters)
@@ -66,44 +67,33 @@ class FailedStreamingPipelineTest(unittest.TestCase):
 
 
 class FailedStreamingPipelineBuildTreeTest(unittest.TestCase):
-
+  @mock.patch('gcpdiag.runbook.dataflow.failed_streaming_pipeline.FailedStreamingPipeline.add_step')
   @mock.patch(
-      'gcpdiag.runbook.dataflow.failed_streaming_pipeline.FailedStreamingPipeline.add_step'
+    'gcpdiag.runbook.dataflow.failed_streaming_pipeline.FailedStreamingPipeline.add_start'
   )
-  @mock.patch(
-      'gcpdiag.runbook.dataflow.failed_streaming_pipeline.FailedStreamingPipeline.add_start'
-  )
-  @mock.patch(
-      'gcpdiag.runbook.dataflow.failed_streaming_pipeline.FailedStreamingPipeline.add_end'
-  )
+  @mock.patch('gcpdiag.runbook.dataflow.failed_streaming_pipeline.FailedStreamingPipeline.add_end')
   @mock.patch('gcpdiag.runbook.op.get')
-  def test_build_tree(self, mock_op_get, mock_add_end, mock_add_start,
-                      mock_add_step):
+  def test_build_tree(self, mock_op_get, mock_add_end, mock_add_start, mock_add_step):
     mock_op_get.return_value = 'test_value'
     runbook = failed_streaming_pipeline.FailedStreamingPipeline()
     runbook.build_tree()
     mock_add_start.assert_called_once()
     self.assertIsInstance(
-        mock_add_start.call_args[0][0],
-        failed_streaming_pipeline.FailedStreamingPipelineStart,
+      mock_add_start.call_args[0][0],
+      failed_streaming_pipeline.FailedStreamingPipelineStart,
     )
     steps_added = [call[1]['child'] for call in mock_add_step.call_args_list]
     self.assertTrue(
-        any(
-            isinstance(s, failed_streaming_pipeline.JobIsStreaming)
-            for s in steps_added))
+      any(isinstance(s, failed_streaming_pipeline.JobIsStreaming) for s in steps_added)
+    )
+    self.assertTrue(any(isinstance(s, dataflow_rb.generalized_steps.ValidSdk) for s in steps_added))
     self.assertTrue(
-        any(
-            isinstance(s, dataflow_rb.generalized_steps.ValidSdk)
-            for s in steps_added))
-    self.assertTrue(
-        any(
-            isinstance(s, failed_streaming_pipeline.JobGraphIsConstructed)
-            for s in steps_added))
+      any(isinstance(s, failed_streaming_pipeline.JobGraphIsConstructed) for s in steps_added)
+    )
     mock_add_end.assert_called_once()
     self.assertIsInstance(
-        mock_add_end.call_args[0][0],
-        failed_streaming_pipeline.FailedStreamingPipelineEnd,
+      mock_add_end.call_args[0][0],
+      failed_streaming_pipeline.FailedStreamingPipelineEnd,
     )
 
 
@@ -113,11 +103,9 @@ class FailedStreamingPipelineStepTestBase(unittest.TestCase):
   def setUp(self):
     super().setUp()
     # 1. Patch get_api with the stub.
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
     # 2. Create a mock interface to capture outputs
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     # 3. Instantiate a real Operator
     self.operator = op.Operator(self.mock_interface)
@@ -125,20 +113,14 @@ class FailedStreamingPipelineStepTestBase(unittest.TestCase):
     self.operator.messages = MockMessage()
     # 4. Define standard parameters.
     self.params = {
-        flags.PROJECT_ID:
-            DUMMY_PROJECT_ID,
-        flags.DATAFLOW_JOB_ID:
-            DUMMY_JOB_ID,
-        flags.JOB_REGION:
-            DUMMY_REGION,
-        'start_time':
-            datetime.datetime(2025, 1, 1, tzinfo=datetime.timezone.utc),
-        'end_time':
-            datetime.datetime(2025, 1, 2, tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: DUMMY_PROJECT_ID,
+      flags.DATAFLOW_JOB_ID: DUMMY_JOB_ID,
+      flags.JOB_REGION: DUMMY_REGION,
+      'start_time': datetime.datetime(2025, 1, 1, tzinfo=datetime.timezone.utc),
+      'end_time': datetime.datetime(2025, 1, 2, tzinfo=datetime.timezone.utc),
     }
     self.operator.parameters = self.params
-    self.mock_op_prompt = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.prompt'))
+    self.mock_op_prompt = self.enterContext(mock.patch('gcpdiag.runbook.op.prompt'))
 
 
 class FailedStreamingPipelineStartTest(FailedStreamingPipelineStepTestBase):
@@ -223,14 +205,12 @@ class JobStateTest(FailedStreamingPipelineStepTestBase, parameterized.TestCase):
 
   @mock.patch('gcpdiag.queries.logs.query')
   @mock.patch('gcpdiag.queries.dataflow.get_job')
-  def test_job_state_failed_with_error_logs(self, mock_get_job,
-                                            mock_logs_query):
+  def test_job_state_failed_with_error_logs(self, mock_get_job, mock_logs_query):
     mock_job = mock.Mock(spec=dataflow.Job, state='JOB_STATE_FAILED')
     mock_get_job.return_value = mock_job
-    mock_logs_query.return_value = mock.Mock(entries=[{
-        'severity': 'ERROR',
-        'message': 'error log'
-    }])
+    mock_logs_query.return_value = mock.Mock(
+      entries=[{'severity': 'ERROR', 'message': 'error log'}]
+    )
     step = failed_streaming_pipeline.JobState()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -268,9 +248,10 @@ class JobGraphIsConstructedTest(FailedStreamingPipelineStepTestBase):
   def setUp(self):
     super().setUp()
     self.add_child_patch = self.enterContext(
-        mock.patch(
-            'gcpdiag.runbook.dataflow.failed_streaming_pipeline.JobGraphIsConstructed.add_child'
-        ))
+      mock.patch(
+        'gcpdiag.runbook.dataflow.failed_streaming_pipeline.JobGraphIsConstructed.add_child'
+      )
+    )
 
   @mock.patch('gcpdiag.queries.dataflow.get_job')
   def test_graph_construction_error_yes(self, mock_get_job):
@@ -286,8 +267,8 @@ class JobGraphIsConstructedTest(FailedStreamingPipelineStepTestBase):
     self.mock_interface.add_failed.assert_called_once()
     self.add_child_patch.assert_called_once()
     self.assertIsInstance(
-        self.add_child_patch.call_args[1]['child'],
-        failed_streaming_pipeline.FailedStreamingPipelineEnd,
+      self.add_child_patch.call_args[1]['child'],
+      failed_streaming_pipeline.FailedStreamingPipelineEnd,
     )
 
   @mock.patch('gcpdiag.queries.dataflow.get_job')
@@ -304,8 +285,8 @@ class JobGraphIsConstructedTest(FailedStreamingPipelineStepTestBase):
     self.mock_interface.add_failed.assert_not_called()
     self.add_child_patch.assert_called_once()
     self.assertIsInstance(
-        self.add_child_patch.call_args[1]['child'],
-        failed_streaming_pipeline.JobLogsVisible,
+      self.add_child_patch.call_args[1]['child'],
+      failed_streaming_pipeline.JobLogsVisible,
     )
 
   @mock.patch('gcpdiag.queries.dataflow.get_job')
@@ -323,8 +304,8 @@ class JobGraphIsConstructedTest(FailedStreamingPipelineStepTestBase):
     self.mock_interface.add_failed.assert_not_called()
     self.add_child_patch.assert_called_once()
     self.assertIsInstance(
-        self.add_child_patch.call_args[1]['child'],
-        failed_streaming_pipeline.JobLogsVisible,
+      self.add_child_patch.call_args[1]['child'],
+      failed_streaming_pipeline.JobLogsVisible,
     )
 
   @mock.patch('gcpdiag.queries.dataflow.get_job')
@@ -342,8 +323,8 @@ class JobGraphIsConstructedTest(FailedStreamingPipelineStepTestBase):
     self.mock_interface.add_failed.assert_not_called()
     self.add_child_patch.assert_called_once()
     self.assertIsInstance(
-        self.add_child_patch.call_args[1]['child'],
-        failed_streaming_pipeline.JobLogsVisible,
+      self.add_child_patch.call_args[1]['child'],
+      failed_streaming_pipeline.JobLogsVisible,
     )
 
 
@@ -368,12 +349,10 @@ class JobLogsVisibleTest(FailedStreamingPipelineStepTestBase):
       step.execute()
     mock_logs_excluded.assert_called_once_with(DUMMY_PROJECT_ID)
     self.mock_interface.add_ok.assert_not_called()
-    self.assertEqual(self.mock_interface.add_failed.call_args[1]['resource'],
-                     None)
+    self.assertEqual(self.mock_interface.add_failed.call_args[1]['resource'], None)
     self.mock_interface.add_failed.assert_called_once()
 
-  @mock.patch('gcpdiag.queries.dataflow.logs_excluded',
-              side_effect=[True, None])
+  @mock.patch('gcpdiag.queries.dataflow.logs_excluded', side_effect=[True, None])
   def test_logs_excluded_is_none_on_second_call(self, mock_logs_excluded):
     step = failed_streaming_pipeline.JobLogsVisible()
     with op.operator_context(self.operator):

@@ -31,6 +31,7 @@ class Project(models.Resource):
   See also the API documentation:
   https://cloud.google.com/resource-manager/reference/rest/v3/projects/get
   """
+
   _id: str
   _resource_data: dict
   _number: int
@@ -41,7 +42,7 @@ class Project(models.Resource):
     self._resource_data = resource_data
     match = re.match(r'projects/(\d+)$', resource_data['name'])
     if not match:
-      raise ValueError(f'can\'t determine project id ({resource_data})')
+      raise ValueError(f"can't determine project id ({resource_data})")
     self._number = int(match.group(1))
 
   @property
@@ -76,33 +77,33 @@ class Project(models.Resource):
 
 @caching.cached_api_call
 def get_project(project_id: str) -> Project:
-  '''Attempts to retrieve project details for the supplied project id or number.
-    If the project is found/accessible, it returns a Project object with the resource data.
-    If the project cannot be retrieved, the application raises one of the exceptions below.
+  """Attempts to retrieve project details for the supplied project id or number.
+  If the project is found/accessible, it returns a Project object with the resource data.
+  If the project cannot be retrieved, the application raises one of the exceptions below.
 
-    Args:
-        project_id (str): The project id or number of
-        the project (e.g., "123456789", "example-project").
+  Args:
+      project_id (str): The project id or number of
+      the project (e.g., "123456789", "example-project").
 
-    Returns:
-        Project: An object representing the project's full details.
+  Returns:
+      Project: An object representing the project's full details.
 
-    Raises:
-        utils.GcpApiError: If there is an issue calling the GCP/HTTP Error API.
+  Raises:
+      utils.GcpApiError: If there is an issue calling the GCP/HTTP Error API.
 
-    Usage:
-        When using project identifier from gcpdiag.models.Context
+  Usage:
+      When using project identifier from gcpdiag.models.Context
 
-        project = crm.get_project(context.project_id)
+      project = crm.get_project(context.project_id)
 
-        An unknown project identifier
-        try:
-          project = crm.get_project("123456789")
-        except:
-          # Handle exception
-        else:
-          # use project data
-  '''
+      An unknown project identifier
+      try:
+        project = crm.get_project("123456789")
+      except:
+        # Handle exception
+      else:
+        # use project data
+  """
   try:
     logging.debug('retrieving project %s ', project_id)
     crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
@@ -112,16 +113,14 @@ def get_project(project_id: str) -> Project:
     error = utils.GcpApiError(response=e)
     if 'IAM_PERMISSION_DENIED' == error.reason:
       print(
-          f'[ERROR]:Authenticated account doesn\'t have access to project details of {project_id}.'
-          f'\nExecute:\ngcloud projects add-iam-policy-binding {project_id} --role=roles/viewer'
-          '--member="user|group|serviceAccount:EMAIL_ACCOUNT"',
-          file=sys.stderr)
+        f"[ERROR]:Authenticated account doesn't have access to project details of {project_id}."
+        f'\nExecute:\ngcloud projects add-iam-policy-binding {project_id} --role=roles/viewer'
+        '--member="user|group|serviceAccount:EMAIL_ACCOUNT"',
+        file=sys.stderr,
+      )
     else:
-      print(f'[ERROR]:can\'t access project {project_id}: {error.message}.',
-            file=sys.stderr)
-    print(
-        f'[DEBUG]: An Http Error occurred whiles accessing projects.get \n\n{e}',
-        file=sys.stderr)
+      print(f"[ERROR]:can't access project {project_id}: {error.message}.", file=sys.stderr)
+    print(f'[DEBUG]: An Http Error occurred whiles accessing projects.get \n\n{e}', file=sys.stderr)
     raise error from e
   else:
     return Project(resource_data=response)
@@ -135,33 +134,38 @@ def get_all_projects_in_parent(project_id: str) -> List[ProjectBillingInfo]:
   if (not project_id) or (not apis.is_enabled(project_id, 'cloudbilling')):
     return projects
   project = get_project(project_id)
-  p_filter = ('parent.type:' + project.parent.split('/')[0][:-1] +
-              ' parent.id:' +
-              project.parent.split('/')[1] if project.parent else '')
+  p_filter = (
+    'parent.type:'
+    + project.parent.split('/')[0][:-1]
+    + ' parent.id:'
+    + project.parent.split('/')[1]
+    if project.parent
+    else ''
+  )
 
   api = apis.get_api('cloudresourcemanager', 'v3')
-  for p in apis_utils.list_all(request=api.projects().search(query=p_filter),
-                               next_function=api.projects().search_next,
-                               response_keyword='projects'):
+  for p in apis_utils.list_all(
+    request=api.projects().search(query=p_filter),
+    next_function=api.projects().search_next,
+    response_keyword='projects',
+  ):
     try:
       crm_api = apis.get_api('cloudresourcemanager', 'v3', p['projectId'])
-      p_name = 'projects/' + p['projectId'] if 'projects/' not in p[
-          'projectId'] else p['projectId']
+      p_name = 'projects/' + p['projectId'] if 'projects/' not in p['projectId'] else p['projectId']
       request = crm_api.projects().get(name=p_name)
       response = request.execute(num_retries=config.API_RETRIES)
       projects.append(get_billing_info(response['projectId']))
     except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
       if isinstance(error, googleapiclient.errors.HttpError):
         error = utils.GcpApiError(error)
-      if error.reason in [
-          'IAM_PERMISSION_DENIED', 'USER_PROJECT_DENIED', 'SERVICE_DISABLED'
-      ]:
+      if error.reason in ['IAM_PERMISSION_DENIED', 'USER_PROJECT_DENIED', 'SERVICE_DISABLED']:
         # skip projects that user does not have permissions on
         continue
       else:
         print(
-            f'[ERROR]: An Http Error occurred whiles accessing projects.get \n\n{error}',
-            file=sys.stderr)
+          f'[ERROR]: An Http Error occurred whiles accessing projects.get \n\n{error}',
+          file=sys.stderr,
+        )
       raise error from error
   return projects
 
@@ -172,6 +176,7 @@ class Organization(models.Resource):
   See also the API documentation:
   https://cloud.google.com/resource-manager/reference/rest/v1/organizations/get
   """
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -195,12 +200,11 @@ class Organization(models.Resource):
 
   @property
   def short_path(self) -> str:
-    return f"organizations/{self.id}"
+    return f'organizations/{self.id}'
 
 
 @caching.cached_api_call
-def get_organization(project_id: str,
-                     skip_error_print: bool = True) -> Organization | None:
+def get_organization(project_id: str, skip_error_print: bool = True) -> Organization | None:
   """Retrieves the parent Organization for a given project.
 
   This function first finds the project's ancestry to identify the
@@ -242,9 +246,11 @@ def get_organization(project_id: str,
     error = utils.GcpApiError(response=e)
     if not skip_error_print:
       print(
-          f'[ERROR]: can\'t access organization for project {project_id}: {error.message}.',
-          file=sys.stderr)
+        f"[ERROR]: can't access organization for project {project_id}: {error.message}.",
+        file=sys.stderr,
+      )
       print(
-          f'[DEBUG]: An Http Error occurred while accessing organization details \n\n{e}',
-          file=sys.stderr)
+        f'[DEBUG]: An Http Error occurred while accessing organization details \n\n{e}',
+        file=sys.stderr,
+      )
     raise error from e

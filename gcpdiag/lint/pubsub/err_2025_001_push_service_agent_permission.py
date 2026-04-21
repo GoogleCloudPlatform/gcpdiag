@@ -19,6 +19,7 @@ on the service account configured for a push subscription with authentication
 enabled. This allows Pub/Sub to generate tokens for authenticating to the
 push endpoint.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import crm, iam, pubsub
 
@@ -42,7 +43,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   project_number = crm.get_project(context.project_id).number
   pubsub_service_agent = (
-      f'serviceAccount:service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com'
+    f'serviceAccount:service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com'
   )
   project_iam_policy = iam.get_project_policy(context)
 
@@ -53,19 +54,21 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     service_account_email = sub.push_config['oidcToken']['serviceAccountEmail']
     sa_iam_policy = iam.get_service_account_iam_policy(
-        context=context, service_account=service_account_email)
+      context=context, service_account=service_account_email
+    )
 
     has_permission = sa_iam_policy.has_role_permissions(
-        pubsub_service_agent,
-        TOKEN_CREATOR_ROLE) or project_iam_policy.has_role_permissions(
-            pubsub_service_agent, TOKEN_CREATOR_ROLE)
+      pubsub_service_agent, TOKEN_CREATOR_ROLE
+    ) or project_iam_policy.has_role_permissions(pubsub_service_agent, TOKEN_CREATOR_ROLE)
 
     if not has_permission:
       report.add_failed(
-          sub,
-          (f'The Pub/Sub service agent ({pubsub_service_agent}) is missing the'
-           f' {TOKEN_CREATOR_ROLE} role on the service account'
-           f' {service_account_email} or on the project.'),
+        sub,
+        (
+          f'The Pub/Sub service agent ({pubsub_service_agent}) is missing the'
+          f' {TOKEN_CREATOR_ROLE} role on the service account'
+          f' {service_account_email} or on the project.'
+        ),
       )
     else:
       report.add_ok(sub)

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" GCE Shielded VM secure boot validations
+"""GCE Shielded VM secure boot validations
 
 Identifies if Shielded VMs are facing boot issues due to Secure boot
 configurations or if there are Secure boot related fail events in
@@ -34,17 +34,17 @@ def prepare_rule(context: models.Context):
   filter_log = ['severity=ERROR']
   logid = ['compute.googleapis.com%2Fshielded_vm_integrity']
   global shutdown_logs
-  shutdown_logs = utils.QueryCloudLogs(context.project_id, resource_type,
-                                       filter_log, logid)
+  shutdown_logs = utils.QueryCloudLogs(context.project_id, resource_type, filter_log, logid)
 
   boot_fail_str = [
-      'Failed to start image', 'Failed to load image',
-      'Verification failed: (0x1A) Security Violation', 'Binary is blacklisted'
+    'Failed to start image',
+    'Failed to load image',
+    'Verification failed: (0x1A) Security Violation',
+    'Binary is blacklisted',
   ]
 
   global boot_fail_event
-  boot_fail_event = utils.SerialOutputSearch(context,
-                                             search_strings=boot_fail_str)
+  boot_fail_event = utils.SerialOutputSearch(context, search_strings=boot_fail_str)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -64,24 +64,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           earlybootreportevent: str = ''
           latebootreportevent: str = ''
           earlybootreportevent = get_path(
-              log_entry,
-              ('jsonPayload', 'earlyBootReportEvent', 'policyEvaluationPassed'),
-              default='')
+            log_entry, ('jsonPayload', 'earlyBootReportEvent', 'policyEvaluationPassed'), default=''
+          )
           latebootreportevent = get_path(
-              log_entry,
-              ('jsonPayload', 'lateBootReportEvent', 'policyEvaluationPassed'),
-              default='')
+            log_entry, ('jsonPayload', 'lateBootReportEvent', 'policyEvaluationPassed'), default=''
+          )
 
           if earlybootreportevent is False or latebootreportevent is False:
-            if (i.startrestricted is True) or (boot_fail_event.get_last_match(
-                i.id)):
+            if (i.startrestricted is True) or (boot_fail_event.get_last_match(i.id)):
               report.add_failed(
-                  i,
-                  'Instance has been restricted to boot due to Shielded VM policy violations'
+                i, 'Instance has been restricted to boot due to Shielded VM policy violations'
               )
             else:
-              report.add_failed(
-                  i, 'Instance is Shielded VM, has Secure boot failures events')
+              report.add_failed(i, 'Instance is Shielded VM, has Secure boot failures events')
       else:
         report.add_ok(i)
     else:

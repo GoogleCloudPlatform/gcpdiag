@@ -20,6 +20,7 @@ the monitoring dashboard is marked as Green, which means healthy. Otherwise the
 status is unhealthy. Note that if your environment has more than one scheduler,
 then the status is healthy as long as at least one of schedulers is responding.
 """
+
 from typing import Dict
 
 from boltons.iterutils import get_path
@@ -36,10 +37,9 @@ def prefetch_rule(context: models.Context):
   if not envs_by_project[context.project_id]:
     return
 
-  _query_results_per_project_id[context.project_id] = \
-    monitoring.query(
-      context.project_id,
-      """
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id,
+    """
       fetch cloud_composer_environment
       | metric 'composer.googleapis.com/environment/scheduler_heartbeat_count'
       | group_by 1m,
@@ -48,7 +48,8 @@ def prefetch_rule(context: models.Context):
       | every 1m
       | within 1h
       | filter val() == 0
-      """)
+      """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -66,8 +67,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for ts in _query_results_per_project_id[context.project_id].values():
     try:
-      unhealthy_schedulers_envs.add(
-          get_path(ts, ('labels', 'resource.environment_name')))
+      unhealthy_schedulers_envs.add(get_path(ts, ('labels', 'resource.environment_name')))
     except KeyError:
       continue
 

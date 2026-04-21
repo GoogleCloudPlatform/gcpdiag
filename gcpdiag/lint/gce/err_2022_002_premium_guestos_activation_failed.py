@@ -32,9 +32,9 @@ from gcpdiag.queries import gce
 from gcpdiag.queries.logs import LogEntryShort
 
 GUEST_OS_ACTIVATION_ERR_MESSAGES = [
-    'needs to be activated by a KMS Server',  # Windows
-    'Could not contact activation server. Will retry activation later',
-    'Exiting without registration'  # SLES
+  'needs to be activated by a KMS Server',  # Windows
+  'Could not contact activation server. Will retry activation later',
+  'Exiting without registration',  # SLES
 ]
 
 logs_by_project = {}
@@ -42,7 +42,8 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = utils.SerialOutputSearch(
-      context, search_strings=GUEST_OS_ACTIVATION_ERR_MESSAGES)
+    context, search_strings=GUEST_OS_ACTIVATION_ERR_MESSAGES
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -61,12 +62,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if instance.is_gke_node():
       continue
 
-    match: Optional[LogEntryShort] = search.get_last_match(
-        instance_id=instance.id)
+    match: Optional[LogEntryShort] = search.get_last_match(instance_id=instance.id)
     if match:
       report.add_failed(
-          instance,
-          f'There are messages indicating that {instance.name} can\'t be activated: '
-          f'{match.text}')
+        instance,
+        f"There are messages indicating that {instance.name} can't be activated: {match.text}",
+      )
     else:
       report.add_ok(instance)

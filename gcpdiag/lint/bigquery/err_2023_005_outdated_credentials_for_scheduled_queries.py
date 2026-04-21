@@ -18,6 +18,7 @@ If scheduled queries are failing with an INVALID_USER error, you might need to
 update the user credentials on the query. Credentials are automatically up to
 date for new scheduled queries.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -26,19 +27,20 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'Error code 5 : Authentication failure: User Id not found. Error code: INVALID_USERID'
 
 OUTDATED_CREDENTIAL_SCOPE = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(OUTDATED_CREDENTIAL_SCOPE))
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(OUTDATED_CREDENTIAL_SCOPE),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -50,19 +52,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'bigquery api is disabled')
     return
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     project_ok_flag = True
     for log_entry in logs_by_project[context.project_id].entries:
-      if MATCH_STR not in get_path(log_entry,
-                                   ('protoPayload', 'status', 'message'),
-                                   default=''):
+      if MATCH_STR not in get_path(log_entry, ('protoPayload', 'status', 'message'), default=''):
         continue
       else:
         report.add_failed(
-            project,
-            'has outdated credentials for scheduled query. Please update the '
-            'user credentials for the scheduled query')
+          project,
+          'has outdated credentials for scheduled query. Please update the '
+          'user credentials for the scheduled query',
+        )
         project_ok_flag = False
         break
     if project_ok_flag:

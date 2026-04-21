@@ -22,14 +22,17 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'vpn/vpn_tunnel_check'
   project_id = 'gcpdiag-vpn1-aaaa'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-vpn1-aaaa',
       'region': 'europe-west4-a',
       'name': 'vpn-tunnel-1',
-      'custom_flag': 'vpn'
-  }, {
+      'custom_flag': 'vpn',
+    },
+    {
       'project_id': 'gcpdiag-vpn1-aaaa',
       'region': 'europe-west4-a',
       'name': 'vpn-tunnel-down',
-      'custom_flag': 'vpn'
-  }]
+      'custom_flag': 'vpn',
+    },
+  ]

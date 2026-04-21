@@ -41,20 +41,18 @@ class SshStepTestBase(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
     self.params = {
-        flags.PROJECT_ID: 'gcpdiag-gce-faultyssh-runbook',
-        flags.ZONE: 'us-central1-a',
-        flags.INSTANCE_NAME: 'test-instance',
-        flags.START_TIME: parser.parse('2025-01-23 23:30:39.144959+00:00'),
-        flags.END_TIME: parser.parse('2025-01-23 13:30:39.144959+00:00')
+      flags.PROJECT_ID: 'gcpdiag-gce-faultyssh-runbook',
+      flags.ZONE: 'us-central1-a',
+      flags.INSTANCE_NAME: 'test-instance',
+      flags.START_TIME: parser.parse('2025-01-23 23:30:39.144959+00:00'),
+      flags.END_TIME: parser.parse('2025-01-23 13:30:39.144959+00:00'),
     }
     self.operator.parameters = self.params
     self.mock_instance = mock.Mock(spec=gce.Instance)
@@ -62,15 +60,16 @@ class SshStepTestBase(unittest.TestCase):
     self.mock_instance.is_windows_machine.return_value = False
     self.mock_instance.get_metadata.return_value = ''
     self.mock_gce_get_instance = self.enterContext(
-        mock.patch('gcpdiag.queries.gce.get_instance',
-                   return_value=self.mock_instance))
+      mock.patch('gcpdiag.queries.gce.get_instance', return_value=self.mock_instance)
+    )
     self.mock_ensure_instance_resolved = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved'))
+      mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved')
+    )
     self.mock_project = mock.Mock(spec=crm.Project)
     self.mock_project.id = self.params[flags.PROJECT_ID]
     self.mock_crm_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project',
-                   return_value=self.mock_project))
+      mock.patch('gcpdiag.queries.crm.get_project', return_value=self.mock_project)
+    )
 
 
 class SshTreeTest(SshStepTestBase):
@@ -79,13 +78,13 @@ class SshTreeTest(SshStepTestBase):
   def test_legacy_parameter_handler(self):
     """Verify deprecated parameter mapping."""
     params = {
-        flags.NAME: 'legacy-name',
-        flags.ID: 12345,
-        flags.LOCAL_USER: 'legacy-user',
-        flags.TUNNEL_THROUGH_IAP: True,
-        flags.CHECK_OS_LOGIN: True,
-        ssh.CHECK_SSH_IN_BROWSER: True,
-        flags.PROTOCOL_TYPE: 'tcp'
+      flags.NAME: 'legacy-name',
+      flags.ID: 12345,
+      flags.LOCAL_USER: 'legacy-user',
+      flags.TUNNEL_THROUGH_IAP: True,
+      flags.CHECK_OS_LOGIN: True,
+      ssh.CHECK_SSH_IN_BROWSER: True,
+      flags.PROTOCOL_TYPE: 'tcp',
     }
     tree = ssh.Ssh()
     tree.legacy_parameter_handler(params)
@@ -121,7 +120,8 @@ class SshStartTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_iam_get_project_policy = self.enterContext(
-        mock.patch('gcpdiag.queries.iam.get_project_policy'))
+      mock.patch('gcpdiag.queries.iam.get_project_policy')
+    )
 
   def test_ssh_start_runs(self):
     step = ssh.SshStart()
@@ -142,12 +142,11 @@ class SshStartTest(SshStepTestBase):
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
-    self.assertEqual(self.operator.parameters[flags.PRINCIPAL],
-                     'user:test@example.com')
+    self.assertEqual(self.operator.parameters[flags.PRINCIPAL], 'user:test@example.com')
     self.mock_interface.info.assert_any_call(
-        'GCP permissions related to SSH will be verified for:'
-        ' user:test@example.com',
-        step_type='INFO')
+      'GCP permissions related to SSH will be verified for: user:test@example.com',
+      step_type='INFO',
+    )
 
   def test_ssh_start_iap_proxy(self):
     self.operator.parameters[flags.PROXY] = ssh.IAP
@@ -155,16 +154,15 @@ class SshStartTest(SshStepTestBase):
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
-    self.assertEqual(self.operator.parameters[flags.SRC_IP],
-                     gce_runbook.constants.IAP_FW_VIP)
+    self.assertEqual(self.operator.parameters[flags.SRC_IP], gce_runbook.constants.IAP_FW_VIP)
     self.mock_interface.info.assert_any_call(
-        'Source IP to be used for SSH connectivity test: '
-        '35.235.240.0/20',
-        step_type='INFO')
+      'Source IP to be used for SSH connectivity test: 35.235.240.0/20', step_type='INFO'
+    )
 
   def test_ssh_start_instance_not_found(self):
-    self.mock_ensure_instance_resolved.side_effect = (
-        runbook_exceptions.FailedStepError('instance not found'))
+    self.mock_ensure_instance_resolved.side_effect = runbook_exceptions.FailedStepError(
+      'instance not found'
+    )
     step = ssh.SshStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -178,12 +176,12 @@ class SshStartTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.assertEqual(
-        self.operator.parameters[flags.SRC_IP],
-        gce_runbook.constants.UNSPECIFIED_ADDRESS,
+      self.operator.parameters[flags.SRC_IP],
+      gce_runbook.constants.UNSPECIFIED_ADDRESS,
     )
     self.mock_interface.info.assert_any_call(
-        'No proxy specified. Setting source IP range to: 0.0.0.0/0',
-        step_type='INFO',
+      'No proxy specified. Setting source IP range to: 0.0.0.0/0',
+      step_type='INFO',
     )
 
   def test_ssh_start_jumphost_proxy(self):
@@ -194,8 +192,8 @@ class SshStartTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        'Source IP to be used for SSH connectivity test: 10.0.0.1',
-        step_type='INFO',
+      'Source IP to be used for SSH connectivity test: 10.0.0.1',
+      step_type='INFO',
     )
 
   def test_ssh_start_oslogin_message(self):
@@ -205,9 +203,9 @@ class SshStartTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        'Access method to investigate: OS login'
-        ' https://cloud.google.com/compute/docs/oslogin',
-        step_type='INFO')
+      'Access method to investigate: OS login https://cloud.google.com/compute/docs/oslogin',
+      step_type='INFO',
+    )
 
   def test_ssh_start_ssh_key_in_metadata_message(self):
     self.operator.parameters[ssh.ACCESS_METHOD] = ssh.SSH_KEY_IN_METADATA
@@ -216,9 +214,10 @@ class SshStartTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        'Access method to investigate: SSH keys in metadata '
-        'https://cloud.google.com/compute/docs/instances/access-overview#ssh-access',
-        step_type='INFO')
+      'Access method to investigate: SSH keys in metadata '
+      'https://cloud.google.com/compute/docs/instances/access-overview#ssh-access',
+      step_type='INFO',
+    )
 
   def test_ssh_start_gcloud_client_message(self):
     self.operator.parameters[ssh.CLIENT] = ssh.GCLOUD
@@ -227,8 +226,8 @@ class SshStartTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        'Investigating components required to use gcloud compute ssh',
-        step_type='INFO',
+      'Investigating components required to use gcloud compute ssh',
+      step_type='INFO',
     )
 
   def test_ssh_start_oslogin_2fa_message(self):
@@ -238,9 +237,9 @@ class SshStartTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.info.assert_any_call(
-        'Multifactor authentication to investigate: OS Login 2FA '
-        'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#byb',
-        step_type='INFO',
+      'Multifactor authentication to investigate: OS Login 2FA '
+      'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#byb',
+      step_type='INFO',
     )
 
 
@@ -250,12 +249,12 @@ class VmGuestOsTypeTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_linux_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.ssh.LinuxGuestOsChecks', autospec=True))
+      mock.patch('gcpdiag.runbook.gce.ssh.LinuxGuestOsChecks', autospec=True)
+    )
     self.mock_windows_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.ssh.WindowsGuestOsChecks',
-                   autospec=True))
-    self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.VmGuestOsType, 'add_child'))
+      mock.patch('gcpdiag.runbook.gce.ssh.WindowsGuestOsChecks', autospec=True)
+    )
+    self.mock_add_child = self.enterContext(mock.patch.object(ssh.VmGuestOsType, 'add_child'))
 
   def test_linux_os(self):
     self.mock_instance.is_windows_machine.return_value = False
@@ -265,8 +264,8 @@ class VmGuestOsTypeTest(SshStepTestBase):
       step.execute()
     self.mock_add_child.assert_called_once()
     self.assertEqual(
-        self.mock_add_child.call_args[0][0].__class__.__name__,
-        'LinuxGuestOsChecks',
+      self.mock_add_child.call_args[0][0].__class__.__name__,
+      'LinuxGuestOsChecks',
     )
 
   def test_windows_os(self):
@@ -277,13 +276,14 @@ class VmGuestOsTypeTest(SshStepTestBase):
       step.execute()
     self.mock_add_child.assert_called_once()
     self.assertEqual(
-        self.mock_add_child.call_args[0][0].__class__.__name__,
-        'WindowsGuestOsChecks',
+      self.mock_add_child.call_args[0][0].__class__.__name__,
+      'WindowsGuestOsChecks',
     )
 
   def test_instance_not_found(self):
-    self.mock_ensure_instance_resolved.side_effect = (
-        runbook_exceptions.FailedStepError('instance not found'))
+    self.mock_ensure_instance_resolved.side_effect = runbook_exceptions.FailedStepError(
+      'instance not found'
+    )
     step = ssh.VmGuestOsType()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -297,10 +297,8 @@ class SshEndTest(SshStepTestBase):
 
   def setUp(self):
     super().setUp()
-    self.mock_op_prompt = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.prompt'))
-    self.enterContext(mock.patch('gcpdiag.config.get',
-                                 return_value=True))  # INTERACTIVE_MODE
+    self.mock_op_prompt = self.enterContext(mock.patch('gcpdiag.runbook.op.prompt'))
+    self.enterContext(mock.patch('gcpdiag.config.get', return_value=True))  # INTERACTIVE_MODE
 
   def test_ssh_end_no_interactive(self):
     self.enterContext(mock.patch('gcpdiag.config.get', return_value=False))
@@ -310,8 +308,7 @@ class SshEndTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_op_prompt.assert_called_once()
-    self.mock_interface.info.assert_called_once_with(message=op.END_MESSAGE,
-                                                     step_type='INFO')
+    self.mock_interface.info.assert_called_once_with(message=op.END_MESSAGE, step_type='INFO')
 
   def test_ssh_end_yes_interactive(self):
     self.mock_op_prompt.return_value = op.YES
@@ -328,10 +325,9 @@ class SshInBrowserCheckTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_org_policy_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.crm.generalized_steps.OrgPolicyCheck',
-                   autospec=True))
-    self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.SshInBrowserCheck, 'add_child'))
+      mock.patch('gcpdiag.runbook.crm.generalized_steps.OrgPolicyCheck', autospec=True)
+    )
+    self.mock_add_child = self.enterContext(mock.patch.object(ssh.SshInBrowserCheck, 'add_child'))
 
   def test_ssh_in_browser_check(self):
     step = ssh.SshInBrowserCheck()
@@ -339,10 +335,10 @@ class SshInBrowserCheckTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_add_child.assert_called_once()
-    self.assertEqual(self.mock_add_child.call_args[0][0].__class__.__name__,
-                     'OrgPolicyCheck')
-    self.assertEqual(self.mock_add_child.call_args[0][0].constraint,
-                     'constraints/compute.disableSshInBrowser')
+    self.assertEqual(self.mock_add_child.call_args[0][0].__class__.__name__, 'OrgPolicyCheck')
+    self.assertEqual(
+      self.mock_add_child.call_args[0][0].constraint, 'constraints/compute.disableSshInBrowser'
+    )
 
 
 class GcpSshPermissionsTest(SshStepTestBase):
@@ -351,23 +347,26 @@ class GcpSshPermissionsTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_iam_policy_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.iam.generalized_steps.IamPolicyCheck'))
+      mock.patch('gcpdiag.runbook.iam.generalized_steps.IamPolicyCheck')
+    )
     self.mock_iam_policy_check.side_effect = mock.MagicMock
     self.mock_os_login_status_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.ssh.OsLoginStatusCheck', autospec=True))
-    self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.GcpSshPermissions, 'add_child'))
+      mock.patch('gcpdiag.runbook.gce.ssh.OsLoginStatusCheck', autospec=True)
+    )
+    self.mock_add_child = self.enterContext(mock.patch.object(ssh.GcpSshPermissions, 'add_child'))
 
   def test_base_permissions_checked(self):
     step = ssh.GcpSshPermissions()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
-    self.assertEqual(self.mock_add_child.call_args_list[0][0][0].template,
-                     'gcpdiag.runbook.gce::permissions::instances_get')
     self.assertEqual(
-        self.mock_add_child.call_args_list[1][0][0].__class__.__name__,
-        'OsLoginStatusCheck')
+      self.mock_add_child.call_args_list[0][0][0].template,
+      'gcpdiag.runbook.gce::permissions::instances_get',
+    )
+    self.assertEqual(
+      self.mock_add_child.call_args_list[1][0][0].__class__.__name__, 'OsLoginStatusCheck'
+    )
 
   def test_iap_permissions_checked(self):
     self.operator.parameters[flags.PROXY] = ssh.IAP
@@ -375,8 +374,10 @@ class GcpSshPermissionsTest(SshStepTestBase):
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
-    self.assertEqual(self.mock_add_child.call_args_list[-1][0][0].template,
-                     'gcpdiag.runbook.gce::permissions::iap_role')
+    self.assertEqual(
+      self.mock_add_child.call_args_list[-1][0][0].template,
+      'gcpdiag.runbook.gce::permissions::iap_role',
+    )
 
   def test_permissions_ssh_in_browser(self):
     """Cover line 353: Console view permission for browser client."""
@@ -386,8 +387,9 @@ class GcpSshPermissionsTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.assertEqual(
-        self.mock_add_child.call_args_list[0][0][0].template,
-        'gcpdiag.runbook.gce::permissions::console_view_permission')
+      self.mock_add_child.call_args_list[0][0][0].template,
+      'gcpdiag.runbook.gce::permissions::console_view_permission',
+    )
 
 
 class OsLoginStatusCheckTest(SshStepTestBase):
@@ -396,21 +398,22 @@ class OsLoginStatusCheckTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_vm_metadata_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.generalized_steps.VmMetadataCheck'))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.VmMetadataCheck')
+    )
     self.mock_vm_metadata_check.side_effect = mock.MagicMock
 
     self.mock_iam_policy_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.iam.generalized_steps.IamPolicyCheck'))
+      mock.patch('gcpdiag.runbook.iam.generalized_steps.IamPolicyCheck')
+    )
     self.mock_iam_policy_check.side_effect = mock.MagicMock
 
     self.mock_posix_user_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.ssh.PosixUserHasValidSshKeyCheck',
-                   autospec=True))
+      mock.patch('gcpdiag.runbook.gce.ssh.PosixUserHasValidSshKeyCheck', autospec=True)
+    )
     self.mock_duplicate_keys_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.ssh.VmDuplicateSshKeysCheck',
-                   autospec=True))
-    self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.OsLoginStatusCheck, 'add_child'))
+      mock.patch('gcpdiag.runbook.gce.ssh.VmDuplicateSshKeysCheck', autospec=True)
+    )
+    self.mock_add_child = self.enterContext(mock.patch.object(ssh.OsLoginStatusCheck, 'add_child'))
 
   def test_os_login_path(self):
     self.operator.parameters[ssh.ACCESS_METHOD] = ssh.OSLOGIN
@@ -420,10 +423,7 @@ class OsLoginStatusCheckTest(SshStepTestBase):
       step.execute()
 
     self.assertEqual(self.mock_add_child.call_count, 3)
-    templates = [
-        getattr(call[0][0], 'template', '')
-        for call in self.mock_add_child.call_args_list
-    ]
+    templates = [getattr(call[0][0], 'template', '') for call in self.mock_add_child.call_args_list]
     self.assertIn('vm_metadata::os_login_enabled', templates)
     self.assertIn('gcpdiag.runbook.gce::permissions::has_os_login', templates)
     self.assertIn('gcpdiag.runbook.gce::permissions::sa_user_role', templates)
@@ -436,16 +436,19 @@ class OsLoginStatusCheckTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.assertEqual(self.mock_add_child.call_count, 4)
-    self.assertEqual(self.mock_add_child.call_args_list[0][0][0].template,
-                     'gcpdiag.runbook.gce::permissions::can_set_metadata')
-    self.assertEqual(self.mock_add_child.call_args_list[1][0][0].template,
-                     'vm_metadata::no_os_login')
     self.assertEqual(
-        self.mock_add_child.call_args_list[2][0][0].__class__.__name__,
-        'PosixUserHasValidSshKeyCheck')
+      self.mock_add_child.call_args_list[0][0][0].template,
+      'gcpdiag.runbook.gce::permissions::can_set_metadata',
+    )
     self.assertEqual(
-        self.mock_add_child.call_args_list[3][0][0].__class__.__name__,
-        'VmDuplicateSshKeysCheck')
+      self.mock_add_child.call_args_list[1][0][0].template, 'vm_metadata::no_os_login'
+    )
+    self.assertEqual(
+      self.mock_add_child.call_args_list[2][0][0].__class__.__name__, 'PosixUserHasValidSshKeyCheck'
+    )
+    self.assertEqual(
+      self.mock_add_child.call_args_list[3][0][0].__class__.__name__, 'VmDuplicateSshKeysCheck'
+    )
 
 
 class PosixUserHasValidSshKeyCheckTest(SshStepTestBase):
@@ -454,12 +457,12 @@ class PosixUserHasValidSshKeyCheckTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_user_has_valid_ssh_key = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.util.user_has_valid_ssh_key'))
+      mock.patch('gcpdiag.runbook.gce.util.user_has_valid_ssh_key')
+    )
     self.operator.parameters[flags.POSIX_USER] = 'testuser'
 
   def test_valid_key_present(self):
-    self.mock_instance.get_metadata.return_value = (
-        'testuser:ssh-rsa AAA... testuser@host')
+    self.mock_instance.get_metadata.return_value = 'testuser:ssh-rsa AAA... testuser@host'
     self.mock_user_has_valid_ssh_key.return_value = True
     step = ssh.PosixUserHasValidSshKeyCheck()
     with op.operator_context(self.operator):
@@ -468,8 +471,7 @@ class PosixUserHasValidSshKeyCheckTest(SshStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_no_valid_key(self):
-    self.mock_instance.get_metadata.return_value = (
-        'otheruser:ssh-rsa BBB... otheruser@host')
+    self.mock_instance.get_metadata.return_value = 'otheruser:ssh-rsa BBB... otheruser@host'
     self.mock_user_has_valid_ssh_key.return_value = False
     step = ssh.PosixUserHasValidSshKeyCheck()
     with op.operator_context(self.operator):
@@ -490,9 +492,11 @@ class VmDuplicateSshKeysCheckTest(SshStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_duplicate_keys(self):
-    ssh_keys = ('user1:ssh-rsa SAMEKEY... user1@host\n'
-                'user2:ssh-rsa BBB... user2@host\n'
-                'user3:ssh-rsa SAMEKEY... user3@host')
+    ssh_keys = (
+      'user1:ssh-rsa SAMEKEY... user1@host\n'
+      'user2:ssh-rsa BBB... user2@host\n'
+      'user3:ssh-rsa SAMEKEY... user3@host'
+    )
     self.mock_instance.get_metadata.return_value = ssh_keys
     step = ssh.VmDuplicateSshKeysCheck()
     with op.operator_context(self.operator):
@@ -501,9 +505,11 @@ class VmDuplicateSshKeysCheckTest(SshStepTestBase):
     self.mock_interface.add_failed.assert_called_once()
 
   def test_no_duplicate_keys(self):
-    ssh_keys = ('user1:ssh-rsa KEY1... user1@host\n'
-                'ssh-rsa KEY2... user2@host\n\n'
-                'user3:ssh-rsa KEY3... user3@host')
+    ssh_keys = (
+      'user1:ssh-rsa KEY1... user1@host\n'
+      'ssh-rsa KEY2... user2@host\n\n'
+      'user3:ssh-rsa KEY3... user3@host'
+    )
     self.mock_instance.get_metadata.return_value = ssh_keys
     step = ssh.VmDuplicateSshKeysCheck()
     with op.operator_context(self.operator):
@@ -514,10 +520,10 @@ class VmDuplicateSshKeysCheckTest(SshStepTestBase):
   def test_duplicate_keys_detection(self):
     """Cover duplicate blobs even with different prefixes/spacing."""
     ssh_keys = (
-        'user1:ssh-rsa AAA... user1@host\n'
-        'ssh-rsa AAA... user2@host\n'  # Duplicate blob
-        '  \n'  # Empty line
-        'user3: ssh-rsa BBB... user3@host\n'  # Space after colon
+      'user1:ssh-rsa AAA... user1@host\n'
+      'ssh-rsa AAA... user2@host\n'  # Duplicate blob
+      '  \n'  # Empty line
+      'user3: ssh-rsa BBB... user3@host\n'  # Space after colon
     )
     self.mock_instance.get_metadata.return_value = ssh_keys
     with op.operator_context(self.operator):
@@ -525,8 +531,7 @@ class VmDuplicateSshKeysCheckTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_interface.add_failed.assert_called_once()
-    self.assertIn('AAA...',
-                  self.mock_interface.add_failed.call_args[1]['reason'])
+    self.assertIn('AAA...', self.mock_interface.add_failed.call_args[1]['reason'])
 
 
 class GceFirewallAllowsSshTest(SshStepTestBase):
@@ -535,11 +540,11 @@ class GceFirewallAllowsSshTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_vpc_connectivity_check = self.enterContext(
-        mock.patch(
-            'gcpdiag.runbook.gce.generalized_steps.GceVpcConnectivityCheck',
-            autospec=True))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.GceVpcConnectivityCheck', autospec=True)
+    )
     self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.GceFirewallAllowsSsh, 'add_child'))
+      mock.patch.object(ssh.GceFirewallAllowsSsh, 'add_child')
+    )
 
   def test_iap_firewall_check(self):
     self.operator.parameters[flags.PROXY] = ssh.IAP
@@ -550,22 +555,21 @@ class GceFirewallAllowsSshTest(SshStepTestBase):
       step.execute()
     self.mock_add_child.assert_called_once()
     self.assertEqual(
-        self.mock_add_child.call_args[0][0].template,
-        'vpc_connectivity::tti_ingress',
+      self.mock_add_child.call_args[0][0].template,
+      'vpc_connectivity::tti_ingress',
     )
 
   def test_public_vm_firewall_check(self):
     self.mock_instance.is_public_machine.return_value = True
-    self.operator.parameters[flags.SRC_IP] = (
-        gce_runbook.constants.UNSPECIFIED_ADDRESS)
+    self.operator.parameters[flags.SRC_IP] = gce_runbook.constants.UNSPECIFIED_ADDRESS
     step = ssh.GceFirewallAllowsSsh()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.mock_add_child.assert_called_once()
     self.assertEqual(
-        self.mock_add_child.call_args[0][0].template,
-        'vpc_connectivity::default_ingress',
+      self.mock_add_child.call_args[0][0].template,
+      'vpc_connectivity::default_ingress',
     )
 
   def test_custom_ip_firewall_check(self):
@@ -577,8 +581,9 @@ class GceFirewallAllowsSshTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_add_child.assert_called_once()
-    self.assertEqual(self.mock_add_child.call_args[0][0].template,
-                     'vpc_connectivity::default_ingress')
+    self.assertEqual(
+      self.mock_add_child.call_args[0][0].template, 'vpc_connectivity::default_ingress'
+    )
 
 
 class VmPerformanceChecksTest(SshStepTestBase):
@@ -587,16 +592,15 @@ class VmPerformanceChecksTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_hum = self.enterContext(
-        mock.patch(
-            'gcpdiag.runbook.gce.generalized_steps.HighVmMemoryUtilization'))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.HighVmMemoryUtilization')
+    )
     self.mock_hud = self.enterContext(
-        mock.patch(
-            'gcpdiag.runbook.gce.generalized_steps.HighVmDiskUtilization'))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.HighVmDiskUtilization')
+    )
     self.mock_huc = self.enterContext(
-        mock.patch(
-            'gcpdiag.runbook.gce.generalized_steps.HighVmCpuUtilization'))
-    self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.VmPerformanceChecks, 'add_child'))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.HighVmCpuUtilization')
+    )
+    self.mock_add_child = self.enterContext(mock.patch.object(ssh.VmPerformanceChecks, 'add_child'))
 
   def test_performance_checks_added(self):
     mem = self.mock_hum.return_value
@@ -607,9 +611,8 @@ class VmPerformanceChecksTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_add_child.assert_has_calls(
-        [mock.call(child=mem),
-         mock.call(child=disk),
-         mock.call(child=cpu)])
+      [mock.call(child=mem), mock.call(child=disk), mock.call(child=cpu)]
+    )
 
 
 class LinuxGuestOsChecksTest(SshStepTestBase):
@@ -618,27 +621,29 @@ class LinuxGuestOsChecksTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_vm_serial_logs_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.generalized_steps.VmSerialLogsCheck'))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.VmSerialLogsCheck')
+    )
     self.mock_vm_serial_logs_check.side_effect = mock.MagicMock
-    self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.LinuxGuestOsChecks, 'add_child'))
+    self.mock_add_child = self.enterContext(mock.patch.object(ssh.LinuxGuestOsChecks, 'add_child'))
 
   def test_linux_checks_added(self):
     self.mock_vm_serial_logs_check.side_effect = [
-        mock.MagicMock(), mock.MagicMock(),
-        mock.MagicMock()
+      mock.MagicMock(),
+      mock.MagicMock(),
+      mock.MagicMock(),
     ]
     step = ssh.LinuxGuestOsChecks()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.assertEqual(self.mock_add_child.call_count, 3)
-    self.assertEqual(self.mock_add_child.call_args_list[0].args[0].template,
-                     'vm_serial_log::kernel_panic')
-    self.assertEqual(self.mock_add_child.call_args_list[1].args[0].template,
-                     'vm_serial_log::sshd')
-    self.assertEqual(self.mock_add_child.call_args_list[2].args[0].template,
-                     'vm_serial_log::sshguard')
+    self.assertEqual(
+      self.mock_add_child.call_args_list[0].args[0].template, 'vm_serial_log::kernel_panic'
+    )
+    self.assertEqual(self.mock_add_child.call_args_list[1].args[0].template, 'vm_serial_log::sshd')
+    self.assertEqual(
+      self.mock_add_child.call_args_list[2].args[0].template, 'vm_serial_log::sshguard'
+    )
 
 
 class WindowsGuestOsChecksTest(SshStepTestBase):
@@ -647,16 +652,17 @@ class WindowsGuestOsChecksTest(SshStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_vm_metadata_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.generalized_steps.VmMetadataCheck',
-                   autospec=True))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.VmMetadataCheck', autospec=True)
+    )
     self.mock_vm_serial_logs_check = self.enterContext(
-        mock.patch('gcpdiag.runbook.gce.generalized_steps.VmSerialLogsCheck',
-                   autospec=True))
+      mock.patch('gcpdiag.runbook.gce.generalized_steps.VmSerialLogsCheck', autospec=True)
+    )
     self.mock_human_task = self.enterContext(
-        mock.patch('gcpdiag.runbook.gcp.generalized_steps.HumanTask',
-                   autospec=True))
+      mock.patch('gcpdiag.runbook.gcp.generalized_steps.HumanTask', autospec=True)
+    )
     self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.WindowsGuestOsChecks, 'add_child'))
+      mock.patch.object(ssh.WindowsGuestOsChecks, 'add_child')
+    )
 
   def test_windows_checks_added(self):
     step = ssh.WindowsGuestOsChecks()
@@ -664,24 +670,23 @@ class WindowsGuestOsChecksTest(SshStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.assertEqual(self.mock_add_child.call_count, 3)
-    self.assertEqual(self.mock_add_child.call_args_list[0].args[0].template,
-                     'vm_metadata::windows_ssh_md')
-    self.assertEqual(self.mock_add_child.call_args_list[1].args[0].template,
-                     'vm_serial_log::windows_bootup')
     self.assertEqual(
-        self.mock_add_child.call_args_list[2].args[0].__class__.__name__,
-        'HumanTask')
+      self.mock_add_child.call_args_list[0].args[0].template, 'vm_metadata::windows_ssh_md'
+    )
+    self.assertEqual(
+      self.mock_add_child.call_args_list[1].args[0].template, 'vm_serial_log::windows_bootup'
+    )
+    self.assertEqual(self.mock_add_child.call_args_list[2].args[0].__class__.__name__, 'HumanTask')
 
   def test_windows_human_task_added(self):
     self.mock_add_child = self.enterContext(
-        mock.patch.object(ssh.WindowsGuestOsChecks, 'add_child'))
+      mock.patch.object(ssh.WindowsGuestOsChecks, 'add_child')
+    )
     with op.operator_context(self.operator):
       step = ssh.WindowsGuestOsChecks()
       self.operator.set_step(step)
       step.execute()
-    self.assertEqual(
-        self.mock_add_child.call_args_list[2].args[0].__class__.__name__,
-        'HumanTask')
+    self.assertEqual(self.mock_add_child.call_args_list[2].args[0].__class__.__name__, 'HumanTask')
 
 
 class Test(snapshot_test_base.RulesSnapshotTestBase):
@@ -689,7 +694,8 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'gce/ssh'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-gce-faultyssh-runbook',
       'instance_name': 'faulty-linux-ssh',
       'zone': 'europe-west2-a',
@@ -697,25 +703,19 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       'proxy': 'iap',
       'access_method': 'oslogin',
       'start_time': '2025-01-23 23:30:39.144959+00:00',
-      'end_time': '2025-01-23 13:30:39.144959+00:00'
-  }, {
-      'project_id':
-          'gcpdiag-gce-faultyssh-runbook',
-      'instance_name':
-          'valid-linux-ssh',
-      'zone':
-          'europe-west2-a',
-      'principal':
-          'serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com',
-      'proxy':
-          'iap',
-      'access_method':
-          'oslogin',
-      'start_time':
-          '2025-01-23 23:30:39.144959+00:00',
-      'end_time':
-          '2025-01-23 13:30:39.144959+00:00'
-  }, {
+      'end_time': '2025-01-23 13:30:39.144959+00:00',
+    },
+    {
+      'project_id': 'gcpdiag-gce-faultyssh-runbook',
+      'instance_name': 'valid-linux-ssh',
+      'zone': 'europe-west2-a',
+      'principal': 'serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com',
+      'proxy': 'iap',
+      'access_method': 'oslogin',
+      'start_time': '2025-01-23 23:30:39.144959+00:00',
+      'end_time': '2025-01-23 13:30:39.144959+00:00',
+    },
+    {
       'project_id': 'gcpdiag-gce-faultyssh-runbook',
       'instance_name': 'faulty-windows-ssh',
       'zone': 'europe-west2-a',
@@ -725,5 +725,6 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       'access_method': 'oslogin',
       'posix_user': 'no_user',
       'start_time': '2025-01-23 23:30:39.144959+00:00',
-      'end_time': '2025-01-23 13:30:39.144959+00:00'
-  }]
+      'end_time': '2025-01-23 13:30:39.144959+00:00',
+    },
+  ]

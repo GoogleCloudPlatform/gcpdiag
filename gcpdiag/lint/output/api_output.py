@@ -11,7 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""API class for api output implementations """
+"""API class for api output implementations"""
+
 import logging
 import sys
 
@@ -26,8 +27,7 @@ class APIOutput(base_output.BaseOutput):
   def result_handler(self) -> 'lint.LintResultsHandler':
     return self
 
-  def process_rule_report(self,
-                          rule_report: lint.LintReportRuleInterface) -> None:
+  def process_rule_report(self, rule_report: lint.LintReportRuleInterface) -> None:
     pass
 
   def get_logging_handler(self) -> logging.Handler:

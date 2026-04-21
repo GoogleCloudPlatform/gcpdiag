@@ -28,8 +28,8 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'Not found: Table'
 
 TABLE_EXIST_CHECK_FILTER = [
-    'severity=ERROR',
-    f'protoPayload.status.message:"{MATCH_STR}"',
+  'severity=ERROR',
+  f'protoPayload.status.message:"{MATCH_STR}"',
 ]
 
 logs_by_project = {}
@@ -37,10 +37,11 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='pubsub_subscription',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=' AND '.join(TABLE_EXIST_CHECK_FILTER))
+    project_id=context.project_id,
+    resource_type='pubsub_subscription',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=' AND '.join(TABLE_EXIST_CHECK_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -55,19 +56,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'bigquery api is disabled')
     return
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), default=''):
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         continue
       report.add_failed(
-          project,
-          'The BigQuery "' +
-          log_entry['protoPayload']['request']['bigqueryConfig']['table'] +
-          '" table does not already exist, which is required for '
-          'setting up a BigQuery subscription.',
+        project,
+        'The BigQuery "'
+        + log_entry['protoPayload']['request']['bigqueryConfig']['table']
+        + '" table does not already exist, which is required for '
+        'setting up a BigQuery subscription.',
       )
       return
 

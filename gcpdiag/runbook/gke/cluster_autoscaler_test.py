@@ -28,19 +28,21 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'gke/cluster-autoscaler'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
       'gke_cluster_name': 'gcp-cluster',
-      'location': 'europe-west10'
-  }]
+      'location': 'europe-west10',
+    }
+  ]
 
 
 RUNBOOK_PARAMS = {
-    'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
-    'gke_cluster_name': 'gcp-cluster',
-    'location': 'europe-west10',
-    'start_time': '2024-01-01T00:00:00Z',
-    'end_time': '2024-01-01T01:00:00Z',
+  'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
+  'gke_cluster_name': 'gcp-cluster',
+  'location': 'europe-west10',
+  'start_time': '2024-01-01T00:00:00Z',
+  'end_time': '2024-01-01T01:00:00Z',
 }
 
 
@@ -55,49 +57,37 @@ class MockMessage:
 
 
 class RunbookTest(unittest.TestCase):
-
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_get_user_email = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_user_email'))
-    self.mock_is_enabled = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.is_enabled'))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_get_user_email = self.enterContext(mock.patch('gcpdiag.queries.apis.get_user_email'))
+    self.mock_is_enabled = self.enterContext(mock.patch('gcpdiag.queries.apis.is_enabled'))
     self.mock_is_enabled.return_value = True
     self.mock_get_user_email.return_value = 'test@example.com'
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
-    self.enterContext(
-        mock.patch.object(config,
-                          'get',
-                          side_effect=lambda k: RUNBOOK_PARAMS[k]))
+    self.enterContext(mock.patch.object(config, 'get', side_effect=lambda k: RUNBOOK_PARAMS[k]))
     self.mock_op_get = self.enterContext(
-        mock.patch.object(op,
-                          'get',
-                          side_effect=lambda k, v=None: RUNBOOK_PARAMS[k]))
+      mock.patch.object(op, 'get', side_effect=lambda k, v=None: RUNBOOK_PARAMS[k])
+    )
     self.mock_add_ok = self.enterContext(mock.patch.object(op, 'add_ok'))
-    self.mock_add_failed = self.enterContext(mock.patch.object(
-        op, 'add_failed'))
-    self.mock_add_skipped = self.enterContext(
-        mock.patch.object(op, 'add_skipped'))
-    self.mock_crm_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project'))
-    self.mock_gke_get_cluster = self.enterContext(
-        mock.patch('gcpdiag.queries.gke.get_cluster'))
-    self.mock_apis_is_enabled = self.enterContext(
-        mock.patch('gcpdiag.queries.apis.is_enabled'))
+    self.mock_add_failed = self.enterContext(mock.patch.object(op, 'add_failed'))
+    self.mock_add_skipped = self.enterContext(mock.patch.object(op, 'add_skipped'))
+    self.mock_crm_get_project = self.enterContext(mock.patch('gcpdiag.queries.crm.get_project'))
+    self.mock_gke_get_cluster = self.enterContext(mock.patch('gcpdiag.queries.gke.get_cluster'))
+    self.mock_apis_is_enabled = self.enterContext(mock.patch('gcpdiag.queries.apis.is_enabled'))
     self.mock_logs_realtime_query = self.enterContext(
-        mock.patch('gcpdiag.queries.logs.realtime_query'))
+      mock.patch('gcpdiag.queries.logs.realtime_query')
+    )
     self.mock_op_prompt = self.enterContext(mock.patch.object(op, 'prompt'))
     self.mock_op_info = self.enterContext(mock.patch.object(op, 'info'))
     self.mock_op_prep_msg = self.enterContext(
-        mock.patch.object(op, 'prep_msg', side_effect=lambda x, **y: x))
+      mock.patch.object(op, 'prep_msg', side_effect=lambda x, **y: x)
+    )
     self.project = mock.MagicMock()
     self.project.id = RUNBOOK_PARAMS['project_id']
     self.mock_crm_get_project.return_value = self.project
@@ -348,37 +338,30 @@ class TestClusterAutoscaler(unittest.TestCase):
     """Ensures the diagnostic tree is built correctly."""
     self.runbook.build_tree()
 
-    self.assertIsInstance(self.runbook.start,
-                          cluster_autoscaler.ClusterAutoscalerStart)
+    self.assertIsInstance(self.runbook.start, cluster_autoscaler.ClusterAutoscalerStart)
 
     start_steps = self.runbook.start.steps
     self.assertGreater(len(start_steps), 0)
     self.assertIsInstance(start_steps[0], cluster_autoscaler.CaOutOfResources)
 
     out_of_resources_steps = start_steps[0].steps
-    self.assertIsInstance(out_of_resources_steps[0],
-                          cluster_autoscaler.CaQuotaExceeded)
+    self.assertIsInstance(out_of_resources_steps[0], cluster_autoscaler.CaQuotaExceeded)
 
-    self.assertIsInstance(self.runbook.start.steps[-1],
-                          cluster_autoscaler.ClusterAutoscalerEnd)
+    self.assertIsInstance(self.runbook.start.steps[-1], cluster_autoscaler.ClusterAutoscalerEnd)
 
   @mock.patch('gcpdiag.queries.apis.is_enabled')
   @mock.patch('gcpdiag.queries.crm.get_project')
   @mock.patch('gcpdiag.queries.gke.get_cluster')
   @mock.patch('gcpdiag.runbook.op.add_skipped')
   @mock.patch('gcpdiag.runbook.op.get')
-  def test_start_step_cluster_not_found_mock(self, mock_get, mock_add_skipped,
-                                             mock_gke, mock_crm, mock_apis):
+  def test_start_step_cluster_not_found_mock(
+    self, mock_get, mock_add_skipped, mock_gke, mock_crm, mock_apis
+  ):
     """GcpApiError branch in ClusterAutoscalerStart.execute."""
     del mock_crm
-    mock_get.side_effect = (lambda k: 'test-project'
-                            if 'project' in k else 'test-cluster')
+    mock_get.side_effect = lambda k: 'test-project' if 'project' in k else 'test-cluster'
     mock_apis.return_value = True
-    mock_gke.side_effect = GcpApiError(
-        response={'error': {
-            'message': 'Not Found',
-            'code': 404
-        }})
+    mock_gke.side_effect = GcpApiError(response={'error': {'message': 'Not Found', 'code': 404}})
 
     step = cluster_autoscaler.ClusterAutoscalerStart()
     step.execute()
@@ -390,13 +373,12 @@ class TestClusterAutoscaler(unittest.TestCase):
   @mock.patch('gcpdiag.runbook.op.add_failed')
   @mock.patch('gcpdiag.runbook.op.get')
   @mock.patch('gcpdiag.queries.crm.get_project')
-  def test_out_of_resources_with_logs(self, mock_crm, mock_get, mock_add_failed,
-                                      mock_log_search, mock_prep_msg):
+  def test_out_of_resources_with_logs(
+    self, mock_crm, mock_get, mock_add_failed, mock_log_search, mock_prep_msg
+  ):
     """'if log_entries' branch in CaOutOfResources.execute."""
     del mock_crm
-    mock_log_search.return_value = [{
-        'textPayload': 'resource exhaustion error'
-    }]
+    mock_log_search.return_value = [{'textPayload': 'resource exhaustion error'}]
     mock_prep_msg.side_effect = lambda x, **y: x
     mock_get.side_effect = lambda k, v=None: RUNBOOK_PARAMS.get(k, v)
     step = cluster_autoscaler.CaOutOfResources()

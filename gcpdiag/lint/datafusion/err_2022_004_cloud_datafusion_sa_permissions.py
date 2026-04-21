@@ -36,14 +36,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(project_id)
   datafusion_sa = f'service-{project.number}@gcp-sa-datafusion.iam.gserviceaccount.com'
   if not apis.is_enabled(project_id, 'datafusion'):
-    report.add_skipped(None,
-                       f'Cloud Data Fusion API is not enabled in {project}')
+    report.add_skipped(None, f'Cloud Data Fusion API is not enabled in {project}')
     return
   if not policies_by_project[project_id].has_role_permissions(
-      f'serviceAccount:{datafusion_sa}', DATAFUSION_ROLE):
+    f'serviceAccount:{datafusion_sa}', DATAFUSION_ROLE
+  ):
     report.add_failed(
-        project,
-        f'The Cloud Data Fusion Service Account is missing {DATAFUSION_ROLE} or does not exist'
+      project,
+      f'The Cloud Data Fusion Service Account is missing {DATAFUSION_ROLE} or does not exist',
     )
   else:
     report.add_ok(project, f'\n{datafusion_sa} has {DATAFUSION_ROLE}')

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Check if logging is enabled : Stackdriver Logging enabled
+"""Check if logging is enabled : Stackdriver Logging enabled
 
 Enabling stackdriver logging for your Dataproc cluster impacts the ability
 to troubleshoot any issues that you might have.
@@ -28,8 +28,7 @@ def prefetch_rule(context: models.Context):
   clusters_by_project[context.project_id] = dataproc.get_clusters(context)
 
 
-def run_rule(context: models.Context,
-             report: lint.LintReportRuleInterface) -> None:
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   # clusters = dataproc.get_clusters(context)
   clusters = clusters_by_project[context.project_id]
   if not clusters:

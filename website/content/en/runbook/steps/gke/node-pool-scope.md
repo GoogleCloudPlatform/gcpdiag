@@ -13,9 +13,9 @@ description: >
 ### Description
 
 Attributes:
-      required_scopes (list): a list of OAuth scope URLs to check.
-      template (str): the runbook template path for this check.
-      service_name (str) the service whose role need to be check.
+    required_scopes (list): a list of OAuth scope URLs to check.
+    template (str): the runbook template path for this check.
+    service_name (str) the service whose role need to be check.
 
 
 

@@ -22,11 +22,7 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
-NO_FEATURESTORE_NAME_ERROR = \
-  'Not able to call {} without setting featurestore name for API.'
+NO_FEATURESTORE_NAME_ERROR = 'Not able to call {} without setting featurestore name for API.'
 
 
 class VertexApiStub:

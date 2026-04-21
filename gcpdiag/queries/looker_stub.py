@@ -36,7 +36,6 @@ class LookerApiStub(apis_stub.ApiStub):
     self._resource_type = None
 
   class _HttpRequest:
-
     def __init__(self, stub, resource_type, method, kwargs):
       self._stub = stub
       self._resource_type = resource_type
@@ -44,8 +43,9 @@ class LookerApiStub(apis_stub.ApiStub):
       self._kwargs = kwargs
 
     def execute(self, num_retries=0):
-      return self._stub.execute_request(self._resource_type, self._method,
-                                        self._kwargs, num_retries)
+      return self._stub.execute_request(
+        self._resource_type, self._method, self._kwargs, num_retries
+      )
 
   def projects(self):
     return self
@@ -70,8 +70,7 @@ class LookerApiStub(apis_stub.ApiStub):
   def get(self, **kwargs):
     if self._resource_type == 'instances':
       name = kwargs.get('name')
-      m = re.match(r'projects/([^/]+)/locations/([^/]+)/instances/([^/]+)',
-                   name)
+      m = re.match(r'projects/([^/]+)/locations/([^/]+)/instances/([^/]+)', name)
       if not m:
         raise KeyError('Invalid instance name format')
       return apis_stub.RestCallStub(self.project_id, f'instance-{m.group(3)}')
@@ -79,9 +78,6 @@ class LookerApiStub(apis_stub.ApiStub):
 
   def get_operations(self, **kwargs):
     return self._HttpRequest(self, 'operations', 'get', kwargs)
-
-
-# pylint: disable=useless-return
 
   def list_next(self, previous_request, previous_response=None):
     _, _ = previous_request, previous_response
@@ -93,13 +89,10 @@ class LookerApiStub(apis_stub.ApiStub):
     if resource_type == 'locations' and method == 'list':
       parent_path = kwargs.get('name') or f'projects/{self.project_id}'
       return {
-          'locations': [{
-              'name': f'{parent_path}/locations/{DUMMY_OP_LOCATION}',
-              'locationId': DUMMY_OP_LOCATION
-          }, {
-              'name': f'{parent_path}/locations/europe-west1',
-              'locationId': 'europe-west1'
-          }]
+        'locations': [
+          {'name': f'{parent_path}/locations/{DUMMY_OP_LOCATION}', 'locationId': DUMMY_OP_LOCATION},
+          {'name': f'{parent_path}/locations/europe-west1', 'locationId': 'europe-west1'},
+        ]
       }
 
     if resource_type == 'operations' and method == 'list':
@@ -107,44 +100,46 @@ class LookerApiStub(apis_stub.ApiStub):
       parent_path = kwargs.get('name')
       if parent_path and DUMMY_OP_LOCATION in parent_path:
         project_id = parent_path.split('/')[1]
-        ops.append({
-            'name': (f'projects/{project_id}/locations/{DUMMY_OP_LOCATION}/'
-                     f'operations/{DUMMY_OP_ID}'),
-            'metadata': {
-                'verb': 'update'
-            },
-            'done': False
-        })
+        ops.append(
+          {
+            'name': (
+              f'projects/{project_id}/locations/{DUMMY_OP_LOCATION}/operations/{DUMMY_OP_ID}'
+            ),
+            'metadata': {'verb': 'update'},
+            'done': False,
+          }
+        )
       return {'operations': ops}
 
     if resource_type == 'operations' and method == 'get':
       request_path = kwargs.get('name') or ''
       if DUMMY_OP_ID in request_path and DUMMY_OP_LOCATION in request_path:
         project_id = request_path.split('/')[1]
-        op_path = (
-            f'projects/{project_id}/locations/{DUMMY_OP_LOCATION}/operations/{DUMMY_OP_ID}'
+        op_path = f'projects/{project_id}/locations/{DUMMY_OP_LOCATION}/operations/{DUMMY_OP_ID}'
+        target_path = (
+          f'projects/{project_id}/locations/'
+          f'{DUMMY_OP_LOCATION}/instances/'
+          f'gcpdiag-test-01/databases/'
+          f'my-db'
         )
-        target_path = (f'projects/{project_id}/locations/'
-                       f'{DUMMY_OP_LOCATION}/instances/'
-                       f'gcpdiag-test-01/databases/'
-                       f'my-db')
         return {
-            'name': op_path,
-            'metadata': {
-                'createTime': datetime.now(timezone.utc).isoformat(),
-                'target': target_path,
-                'verb': 'update'
-            },
-            'done': True,
-            'response': {}
+          'name': op_path,
+          'metadata': {
+            'createTime': datetime.now(timezone.utc).isoformat(),
+            'target': target_path,
+            'verb': 'update',
+          },
+          'done': True,
+          'response': {},
         }
       raise googleapiclient.errors.HttpError(
-          httplib2.Response({'status': 404}),
-          b'Operation not found by GET stub')
+        httplib2.Response({'status': 404}), b'Operation not found by GET stub'
+      )
 
     raise NotImplementedError(
-        f'API call not stubbed in LookerApiStub.execute_request: '
-        f'resource_type={resource_type}, method={method}')
+      f'API call not stubbed in LookerApiStub.execute_request: '
+      f'resource_type={resource_type}, method={method}'
+    )
 
 
 class LookerInstanceRestCallStub(apis_stub.RestCallStub):
@@ -154,9 +149,9 @@ class LookerInstanceRestCallStub(apis_stub.RestCallStub):
     _ = num_retries
     json_dir = apis_stub.get_json_dir(self.project_id)
     try:
-      with open(json_dir / 'looker-instances.json',
-                encoding='utf-8') as json_file:
+      with open(json_dir / 'looker-instances.json', encoding='utf-8') as json_file:
         return json.load(json_file)
     except FileNotFoundError as exc:
-      raise googleapiclient.errors.HttpError(httplib2.Response({'status': 404}),
-                                             b'File not found') from exc
+      raise googleapiclient.errors.HttpError(
+        httplib2.Response({'status': 404}), b'File not found'
+      ) from exc

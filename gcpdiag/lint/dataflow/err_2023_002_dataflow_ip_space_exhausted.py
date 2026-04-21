@@ -33,10 +33,11 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='dataflow_step',
-      log_name='log_id("dataflow.googleapis.com/job-message")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='dataflow_step',
+    log_name='log_id("dataflow.googleapis.com/job-message")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -51,27 +52,28 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'dataflow api is disabled')
     return
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     failed_jobs = set()
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'ERROR' or \
-        MATCH_STR not in get_path(log_entry,
-                     ('textPayload'), default=''):
+      if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
+        log_entry, ('textPayload'), default=''
+      ):
         continue
 
       job_id = get_path(
-          log_entry,
-          ('resource', 'labels', 'job_id'),
+        log_entry,
+        ('resource', 'labels', 'job_id'),
       )
 
       failed_jobs.add(job_id)
 
     if failed_jobs:
       report.add_failed(
-          project, 'Some Dataflow jobs failed due to exhaustion of IP Space: ' +
-          ', '.join(itertools.islice(failed_jobs, 20)))
+        project,
+        'Some Dataflow jobs failed due to exhaustion of IP Space: '
+        + ', '.join(itertools.islice(failed_jobs, 20)),
+      )
     else:
       report.add_ok(project)
   else:

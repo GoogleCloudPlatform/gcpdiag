@@ -17,12 +17,10 @@
 
 Instead of doing real API calls, we return test JSON data.
 """
+
 import re
 
 from gcpdiag.queries import apis_stub
-
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
 
 
 class NetworkManagementApiStub:
@@ -65,7 +63,6 @@ class NetworkManagementApiStub:
     del name
     return OperationsStub()
 
-  # pylint: disable=redefined-builtin
   def list(self, project, url):
     pattern = r'projects/([^/]+)/locations/global/connectivityTests/([^/]+)'
     match = re.search(pattern, url)
@@ -83,8 +80,8 @@ class NetworkManagementApiStub:
 class OperationsStub:
   """Mock object to simulate networkmanagement operation calls.
 
-    This object is not used directly in test scripts.
-    """
+  This object is not used directly in test scripts.
+  """
 
   def __init__(self):
     pass

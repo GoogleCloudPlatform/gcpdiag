@@ -31,11 +31,12 @@ ip_masq_container_errors = {}
 
 def prepare_rule(context: models.Context):
   ip_masq_container_errors[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='k8s_container',
-      log_name='log_id("stderr")',
-      filter_str='severity=ERROR AND '+\
-      f'resource.labels.container_name="{IP_MASQ_AGENT_CONTAINER_NAME}"')
+    project_id=context.project_id,
+    resource_type='k8s_container',
+    log_name='log_id("stderr")',
+    filter_str='severity=ERROR AND '
+    + f'resource.labels.container_name="{IP_MASQ_AGENT_CONTAINER_NAME}"',
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -51,16 +52,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   def filter_f(log_entry):
     try:
       container_name = log_entry['resource']['labels']['container_name']
-      if (log_entry['severity'] == 'ERROR' and
-          container_name == IP_MASQ_AGENT_CONTAINER_NAME):
+      if log_entry['severity'] == 'ERROR' and container_name == IP_MASQ_AGENT_CONTAINER_NAME:
         return True
     except KeyError:
       return False
 
   clusters_with_errors = util.gke_logs_find_bad_clusters(
-      context=context,
-      logs_by_project=ip_masq_container_errors,
-      filter_f=filter_f)
+    context=context, logs_by_project=ip_masq_container_errors, filter_f=filter_f
+  )
 
   # Generate report
   for c in clusters.values():

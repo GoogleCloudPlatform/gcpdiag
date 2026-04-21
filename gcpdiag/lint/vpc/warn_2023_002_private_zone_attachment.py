@@ -26,7 +26,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no zones found')
     return
   for c in zones:
-    if (not c.is_public and not c.vpc_attached):
+    if not c.is_public and not c.vpc_attached:
       report.add_failed(c, None, ' Private zone that is not attached to a VPC')
     else:
       report.add_ok(c)

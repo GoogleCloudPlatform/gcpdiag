@@ -25,13 +25,12 @@ network_bridge_migs = {}
 
 
 def prefetch_rule(context: models.Context):
-  network_bridge_migs[
-      context.project_id] = apigee.get_network_bridge_instance_groups(
-          context.project_id)
+  network_bridge_migs[context.project_id] = apigee.get_network_bridge_instance_groups(
+    context.project_id
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not network_bridge_migs[context.project_id]:
     report.add_skipped(None, 'no Apigee network bridge MIGs found')
     return
@@ -55,8 +54,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
         if not is_private_ip_google_access:
           report.add_failed(
-              mig, (f'Private Google Access is not enabled on '
-                    f'subnetwork {subnet.short_path} with region {mig.region} '
-                    f'in network {network.short_path}'))
+            mig,
+            (
+              f'Private Google Access is not enabled on '
+              f'subnetwork {subnet.short_path} with region {mig.region} '
+              f'in network {network.short_path}'
+            ),
+          )
         else:
           report.add_ok(mig)

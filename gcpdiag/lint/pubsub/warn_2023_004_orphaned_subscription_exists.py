@@ -31,10 +31,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   subscriptions = pubsub.get_subscriptions(context)
   orphaned_subscription_exists = False
   if not subscriptions:
-    report.add_skipped(None, "no subscriptions found")
+    report.add_skipped(None, 'no subscriptions found')
 
   for _, subscription in subscriptions.items():
-    if subscription.topic == "_deleted_topic_":
+    if subscription.topic == '_deleted_topic_':
       report.add_failed(subscription)
       orphaned_subscription_exists = True
 

@@ -28,21 +28,22 @@ delete_sa_logs, failed_deploy_logs = {}, {}
 def prepare_rule(context: models.Context):
   log_id = 'log_id("cloudaudit.googleapis.com/activity")'
   status_message = 'The AppEngine default service account might have been manually deleted'
-  email = f"{context.project_id}@appspot.gserviceaccount.com"
+  email = f'{context.project_id}@appspot.gserviceaccount.com'
 
   failed_deploy_logs[context.project_id] = logs.query(
-      project_id=context.project_id,
-      log_name=log_id,
-      resource_type='gae_app',
-      filter_str=
-      f'severity="ERROR" AND protoPayload.status.message:"{status_message}"')
+    project_id=context.project_id,
+    log_name=log_id,
+    resource_type='gae_app',
+    filter_str=f'severity="ERROR" AND protoPayload.status.message:"{status_message}"',
+  )
 
   delete_sa_logs[context.project_id] = logs.query(
-      project_id=context.project_id,
-      log_name=log_id,
-      resource_type='service_account',
-      filter_str=f'resource.labels.email_id="{email}" \
-      AND protoPayload.methodName="google.iam.admin.v1.DeleteServiceAccount"')
+    project_id=context.project_id,
+    log_name=log_id,
+    resource_type='service_account',
+    filter_str=f'resource.labels.email_id="{email}" \
+      AND protoPayload.methodName="google.iam.admin.v1.DeleteServiceAccount"',
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -53,20 +54,21 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   # If the customer recently deleted their GAE default SA
-  if delete_sa_logs.get(context.project_id) and \
-      delete_sa_logs[context.project_id].entries:
+  if delete_sa_logs.get(context.project_id) and delete_sa_logs[context.project_id].entries:
     report.add_failed(
-        project, 'The App Engine default service account was recently deleted. \
+      project,
+      'The App Engine default service account was recently deleted. \
     Please follow the steps at \
     https://cloud.google.com/iam/docs/service-accounts-delete-undelete#undeleting \
-    to recover it.')
+    to recover it.',
+    )
 
   # If the customer tried to deploy and failed due to the default service account
-  if failed_deploy_logs.get(context.project_id) and \
-    failed_deploy_logs[context.project_id].entries:
+  if failed_deploy_logs.get(context.project_id) and failed_deploy_logs[context.project_id].entries:
     report.add_failed(
-        project,
-        'Failure deploying to App Engine: The App Engine default service account is deleted. \
-    Please use a user-managed service account instead.')
+      project,
+      'Failure deploying to App Engine: The App Engine default service account is deleted. \
+    Please use a user-managed service account instead.',
+    )
   else:
     report.add_ok(project)

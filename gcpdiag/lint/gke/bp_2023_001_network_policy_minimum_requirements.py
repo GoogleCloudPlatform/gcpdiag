@@ -42,8 +42,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       continue
 
     if not c.has_network_policy_enabled():
-      report.add_skipped(
-          c, 'network policy enforcement is disabled in the cluster')
+      report.add_skipped(c, 'network policy enforcement is disabled in the cluster')
       continue
 
     # check for number of nodes in the cluster
@@ -56,7 +55,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for n in c.nodepools:
       machine_type = n.get_machine_type()
       if machine_type in ('f1-micro', 'g1-small'):
-        report.add_failed(n, 'node\'s machine type is: ' + machine_type)
+        report.add_failed(n, "node's machine type is: " + machine_type)
         node_failure = True
 
     if not node_failure:

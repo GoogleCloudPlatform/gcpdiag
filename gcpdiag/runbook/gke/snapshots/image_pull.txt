@@ -11,7 +11,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
   - GKE cluster
 
   - Stackdriver logs
-    
+  
 [START]: Starting the image pull error diagnostics
 [AUTOMATED STEP]: Check for "Failed to pull image.*not found" log entries.
 

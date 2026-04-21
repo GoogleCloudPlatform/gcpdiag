@@ -21,14 +21,15 @@ DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
 RES_NAME_VALUE = r'[a-z0-9][-a-z0-9_?]*'
 REL_RES_NAME_MATCH = r'({key}/{value}/)*{key}/{value}'.format(
-    key=RES_NAME_KEY, value=RES_NAME_VALUE)
+  key=RES_NAME_KEY, value=RES_NAME_VALUE
+)
 REGION_NAME_MATCH = r'^\w+-\w+$'
 ZONE_NAME_MATCH = r'^(\w+-\w+)-\w+$'
 FULL_RES_NAME_MATCH = DOMAIN_RES_NAME_MATCH + REL_RES_NAME_MATCH
 
 
 class VersionComponentsParser:
-  """ Simple helper class to parse version string to components """
+  """Simple helper class to parse version string to components"""
 
   version_str: str
 
@@ -49,7 +50,7 @@ class VersionComponentsParser:
 
 
 class Version:
-  """ Represents Version """
+  """Represents Version"""
 
   version_str: str
   major: int
@@ -59,8 +60,7 @@ class Version:
   def __init__(self, version_str: str):
     # example: 1.19.13-gke.701
     self.version_str = version_str
-    self.major, self.minor, self.patch = \
-      VersionComponentsParser(version_str).get_components()
+    self.major, self.minor, self.patch = VersionComponentsParser(version_str).get_components()
 
   def same_major(self, other_version: 'Version') -> bool:
     return self.major == other_version.major
@@ -86,8 +86,7 @@ class Version:
       return other == self.version_str
     if isinstance(other, Version):
       return self.version_str == other.version_str
-    raise AttributeError('Can not compare Version object with {}'.format(
-        type(other)))
+    raise AttributeError(f'Can not compare Version object with {type(other)}')
 
   def __lt__(self, other):
     return self.major < other.major or self.minor < other.minor or self.patch < other.patch
@@ -109,20 +108,16 @@ class GcpApiError(Exception):
     except (KeyError, AttributeError):
       return None
 
-  def __init__(self,
-               response='An error occurred during the GCP API call',
-               reason=None,
-               service=None):
+  def __init__(
+    self, response='An error occurred during the GCP API call', reason=None, service=None
+  ):
     self.response = response
     self.reason = reason
     self.service = service
     # see also: https://github.com/googleapis/google-api-python-client/issues/662
     try:
-      content = json.loads(response.content) if hasattr(response,
-                                                        'content') else response
-      if isinstance(
-          content,
-          dict) and 'error' in content and 'message' in content['error']:
+      content = json.loads(response.content) if hasattr(response, 'content') else response
+      if isinstance(content, dict) and 'error' in content and 'message' in content['error']:
         self.message = content['error']['message']
         try:
           for c in content['error']['details']:
@@ -188,7 +183,7 @@ def zone_region(zone: str) -> str:
   """Get region name of a zone."""
   m = re.match(ZONE_NAME_MATCH, zone)
   if not m:
-    raise ValueError('can\'t parse zone name: <%s>' % zone)
+    raise ValueError("can't parse zone name: <%s>" % zone)
   return m.group(1)
 
 
@@ -208,7 +203,7 @@ def iter_dictlist(dictlist: Dict[Any, List[Any]]):
   """Given a dictionary of lists, iterate over the list elements returning
   tuples (dict_key, item), (dict_key, item), ..."""
 
-  for (k, v) in dictlist.items():
+  for k, v in dictlist.items():
     for i in v:
       yield (k, i)
 

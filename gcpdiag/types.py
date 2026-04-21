@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Custom datatype."""
+
 import re
 
 
@@ -25,6 +26,7 @@ class Email:
   Attributes:
       EMAIL_REGEX (Pattern): A compiled regular expression for email validation.
   """
+
   EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
   def __init__(self, email: str):

@@ -22,8 +22,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-#pylint: disable=unused-argument
-
 
 class CloudFunctionsApiStub:
   """Mock object to simulate function api calls."""

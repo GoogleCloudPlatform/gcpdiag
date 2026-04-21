@@ -18,6 +18,7 @@
 Builds that upload logs to bucket with retention policy must do that once build is finished instead
 of streaming them.
 """
+
 import dataclasses
 import re
 from typing import Iterable
@@ -37,9 +38,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_ok(project)
   for status in found:
     report.add_failed(
-        status.build,
-        reason=f'Build can not stream logs to bucket'
-        f' {status.bucket} because it has retention policy set.',
+      status.build,
+      reason=f'Build can not stream logs to bucket'
+      f' {status.bucket} because it has retention policy set.',
     )
 
 
@@ -50,8 +51,8 @@ class FailedBuildStatus:
 
 
 def find_builds_failing_to_upload_logs(
-    context: models.Context,
-    builds: Iterable[gcb.Build]) -> Iterable[FailedBuildStatus]:
+  context: models.Context, builds: Iterable[gcb.Build]
+) -> Iterable[FailedBuildStatus]:
   for build in builds:
     if build.failure_info.failure_type != 'LOGGING_FAILURE':
       continue

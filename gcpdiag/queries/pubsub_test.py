@@ -44,7 +44,8 @@ class TestPubsub:
   def test_get_subscription(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     subscription = pubsub.get_subscription(
-        project_id=context.project_id, subscription_name=DUMMY_SUB_SHORT_NAME)
+      project_id=context.project_id, subscription_name=DUMMY_SUB_SHORT_NAME
+    )
     assert subscription.full_path == DUMMY_SUB_NAME
 
   def test_get_topic_iam_policy(self):

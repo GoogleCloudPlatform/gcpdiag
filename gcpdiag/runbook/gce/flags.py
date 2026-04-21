@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Parameters applicable to GCE runbooks."""
-# pylint: disable=wildcard-import, unused-wildcard-import
+
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *
 

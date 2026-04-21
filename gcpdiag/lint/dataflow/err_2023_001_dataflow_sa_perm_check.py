@@ -28,7 +28,6 @@ def prefetch_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   role = 'roles/dataflow.serviceAgent'
 
   project = crm.get_project(context.project_id)
@@ -38,9 +37,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for member in sorted(iam_policy.get_members()):
     if member.startswith(
-        'serviceAccount:service-' + str(project_nr) +
-        '@dataflow-service-producer-prod.iam.gserviceaccount.com'):
-
+      'serviceAccount:service-'
+      + str(project_nr)
+      + '@dataflow-service-producer-prod.iam.gserviceaccount.com'
+    ):
       if iam_policy.has_role_permissions(member, role):
         report.add_ok(project)
         break

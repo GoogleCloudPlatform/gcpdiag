@@ -16,6 +16,7 @@
 Private GKE clusters must have Private Google Access enabled on the subnet where
 cluster is deployed.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import gke, network
 
@@ -33,18 +34,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       # shared vpc
       p = c.network.project_id
     if c.is_private and not c.subnetwork.is_private_ip_google_access():
-
-      router = network.get_router(project_id=p,
-                                  region=c.subnetwork.region,
-                                  network=c.network)
+      router = network.get_router(project_id=p, region=c.subnetwork.region, network=c.network)
 
       if router.subnet_has_nat(c.subnetwork):
         # Cloud NAT configured for subnet
         report.add_ok(c)
       else:
         # no Cloud NAT configured for subnet
-        report.add_failed(c, (f' subnet {c.subnetwork.name} has'
-                              ' Private Google Access disabled and Cloud NAT'
-                              ' is not available'))
+        report.add_failed(
+          c,
+          (
+            f' subnet {c.subnetwork.name} has'
+            ' Private Google Access disabled and Cloud NAT'
+            ' is not available'
+          ),
+        )
     else:
       report.add_ok(c)

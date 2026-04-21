@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Common constants available at gcp platform level"""
+
 from enum import Enum
 
-# pylint:disable=wildcard-import,unused-wildcard-import
 from gcpdiag.runbook.constants import *
 
 
@@ -31,6 +31,7 @@ class APIState(Enum):
               explicitly disabled or has never been enabled.
     ENABLED: Indicates that the service has been explicitly enabled for use by the consumer.
   """
+
   STATE_UNSPECIFIED = 'STATE_UNSPECIFIED'
   DISABLED = 'DISABLED'
   ENABLED = 'ENABLED'

@@ -2,7 +2,7 @@ VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
 DIST_NAME=gcpdiag-$(VERSION)
 SHELL=/bin/bash
 
-.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code spelling
+.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code
 
 # Comprehensive environment check.
 check-environment:
@@ -37,9 +37,6 @@ test-mocked:
 	  EXIT_CODE=$$?; \
 	  if [ $$EXIT_CODE != 2 ]; then echo "incorrect exit code $$EXIT_CODE" >&2; exit 1; fi; \
 	  exit 0
-
-spelling:
-	 pip install -U PyEnchant; pylint --disable all --enable spelling --spelling-dict en_US gcpdiag
 
 snapshots:
 	pytest --snapshot-update --forked -v -v

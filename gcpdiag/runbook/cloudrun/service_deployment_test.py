@@ -30,21 +30,21 @@ class TestInvalidContainer(snapshot_test_base.RulesSnapshotTestBase):
   config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [
-      {
-          'project_id': 'gcpdiag-cloudrun2-aaaa',
-          'cloudrun_service_name': 'invalid-container',
-          'region': 'us-central1',
-      },
-      {
-          'project_id': 'gcpdiag-cloudrun2-aaaa',
-          'cloudrun_service_name': 'image-does-not-exist',
-          'region': 'us-central1',
-      },
-      {
-          'project_id': 'gcpdiag-cloudrun2-aaaa',
-          'cloudrun_service_name': 'no-image-permission',
-          'region': 'us-central1',
-      },
+    {
+      'project_id': 'gcpdiag-cloudrun2-aaaa',
+      'cloudrun_service_name': 'invalid-container',
+      'region': 'us-central1',
+    },
+    {
+      'project_id': 'gcpdiag-cloudrun2-aaaa',
+      'cloudrun_service_name': 'image-does-not-exist',
+      'region': 'us-central1',
+    },
+    {
+      'project_id': 'gcpdiag-cloudrun2-aaaa',
+      'cloudrun_service_name': 'no-image-permission',
+      'region': 'us-central1',
+    },
   ]
 
 
@@ -57,7 +57,6 @@ class MockMessage:
 
 
 class ServiceDeploymentTest(unittest.TestCase):
-
   def test_legacy_parameter_handler(self):
     params = {flags.SERVICE_NAME: 'test-service'}
     sd = service_deployment.ServiceDeployment()
@@ -69,8 +68,7 @@ class ServiceDeploymentTest(unittest.TestCase):
     sd.build_tree()
     self.assertIsInstance(sd.start, service_deployment.ServiceDeploymentStart)
     self.assertEqual(len(sd.start.steps), 1)
-    self.assertIsInstance(sd.start.steps[0],
-                          service_deployment.ServiceDeploymentCodeStep)
+    self.assertIsInstance(sd.start.steps[0], service_deployment.ServiceDeploymentCodeStep)
 
 
 class StepTestBase(unittest.TestCase):
@@ -78,19 +76,17 @@ class StepTestBase(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
 
     self.params = {
-        flags.PROJECT_ID: 'gcpdiag-cloudrun2-aaaa',
-        flags.REGION: 'us-central1',
-        flags.CLOUDRUN_SERVICE_NAME: 'invalid-container',
-        'start_time': datetime.datetime.now(),
-        'end_time': datetime.datetime.now(),
+      flags.PROJECT_ID: 'gcpdiag-cloudrun2-aaaa',
+      flags.REGION: 'us-central1',
+      flags.CLOUDRUN_SERVICE_NAME: 'invalid-container',
+      'start_time': datetime.datetime.now(),
+      'end_time': datetime.datetime.now(),
     }
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
@@ -99,7 +95,6 @@ class StepTestBase(unittest.TestCase):
 
 
 class ServiceDeploymentStartTest(StepTestBase):
-
   def test_execute_success(self):
     self.params[flags.CLOUDRUN_SERVICE_NAME] = 'invalid-container'
     step = service_deployment.ServiceDeploymentStart()
@@ -118,23 +113,18 @@ class ServiceDeploymentStartTest(StepTestBase):
 
 
 class ServiceDeploymentCodeStepTest(StepTestBase):
-
   def test_execute(self):
     step = service_deployment.ServiceDeploymentCodeStep()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
       step.execute()
     self.assertEqual(len(step.steps), 3)
-    self.assertIsInstance(step.steps[0],
-                          service_deployment.ContainerFailedToStartStep)
-    self.assertIsInstance(step.steps[1],
-                          service_deployment.ImageWasNotFoundStep)
-    self.assertIsInstance(step.steps[2],
-                          service_deployment.NoPermissionForImageStep)
+    self.assertIsInstance(step.steps[0], service_deployment.ContainerFailedToStartStep)
+    self.assertIsInstance(step.steps[1], service_deployment.ImageWasNotFoundStep)
+    self.assertIsInstance(step.steps[2], service_deployment.NoPermissionForImageStep)
 
 
 class ContainerFailedToStartStepTest(StepTestBase):
-
   def test_container_failed_to_start(self):
     self.params[flags.CLOUDRUN_SERVICE_NAME] = 'invalid-container'
     step = service_deployment.ContainerFailedToStartStep()
@@ -153,7 +143,6 @@ class ContainerFailedToStartStepTest(StepTestBase):
 
 
 class ImageWasNotFoundStepTest(StepTestBase):
-
   def test_image_not_found(self):
     self.params[flags.CLOUDRUN_SERVICE_NAME] = 'image-does-not-exist'
     step = service_deployment.ImageWasNotFoundStep()
@@ -172,7 +161,6 @@ class ImageWasNotFoundStepTest(StepTestBase):
 
 
 class NoPermissionForImageStepTest(StepTestBase):
-
   def test_no_permission(self):
     self.params[flags.CLOUDRUN_SERVICE_NAME] = 'no-image-permission'
     step = service_deployment.NoPermissionForImageStep()

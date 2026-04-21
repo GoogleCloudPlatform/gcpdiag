@@ -27,12 +27,11 @@ def lint_name_generator(file_path):
   parts = file_path.split('/')
   if len(parts) >= 4:
     group3 = parts[3]
-    prefix = ''.join(c for c in group3 if c.isalpha() or c == '_').split(
-        '__', maxsplit=1)[0]
-    numbers = ''.join(
-        c for c in group3 if c.isdigit() or c == '_').strip('_').split(
-            '__', maxsplit=1)[0]
-    return f"{parts[2]}/{prefix}/{numbers.rstrip('_')}"
+    prefix = ''.join(c for c in group3 if c.isalpha() or c == '_').split('__', maxsplit=1)[0]
+    numbers = (
+      ''.join(c for c in group3 if c.isdigit() or c == '_').strip('_').split('__', maxsplit=1)[0]
+    )
+    return f'{parts[2]}/{prefix}/{numbers.rstrip("_")}'
 
 
 def find_queries(file, commit):
@@ -41,9 +40,11 @@ def find_queries(file, commit):
     with open(file, encoding='utf-8') as f:
       tree = ast.parse(f.read())
     f.close()
-    content_changed = subprocess.check_output(
-        ['git', 'show', '-p', f'{commit}',
-         f'{file}']).decode('utf-8').split('\n')
+    content_changed = (
+      subprocess.check_output(['git', 'show', '-p', f'{commit}', f'{file}'])
+      .decode('utf-8')
+      .split('\n')
+    )
     i = 0
     for item in content_changed:
       i = i + 1
@@ -70,10 +71,13 @@ def find_queries(file, commit):
 def generate_release_notes(old_commit, new_commit, current_version):
   """Generates release notes for version change"""
 
-  commits = subprocess.check_output([
-      'git', 'log', '--pretty=format:"%h %s"', '--no-merges',
-      f'{old_commit}..{new_commit}'
-  ]).decode('utf-8').split('\n')
+  commits = (
+    subprocess.check_output(
+      ['git', 'log', '--pretty=format:"%h %s"', '--no-merges', f'{old_commit}..{new_commit}']
+    )
+    .decode('utf-8')
+    .split('\n')
+  )
 
   commits_dict = {}
   for commit in commits:
@@ -94,9 +98,13 @@ def generate_release_notes(old_commit, new_commit, current_version):
     else:
       try:
         # Get the files changed in this commit
-        files_changed = subprocess.check_output(
-            ['git', 'show', '--name-status', '--pretty=format:""',
-             f'{commit}']).decode('utf-8').split('\n')
+        files_changed = (
+          subprocess.check_output(
+            ['git', 'show', '--name-status', '--pretty=format:""', f'{commit}']
+          )
+          .decode('utf-8')
+          .split('\n')
+        )
         if len(files_changed) > 2:
           files_changed_dict = {}
           for file_info in files_changed:
@@ -116,36 +124,49 @@ def generate_release_notes(old_commit, new_commit, current_version):
               all_new_files.append(file[0])
 
           ignored_files = [
-              'utils.py', 'generalized_steps.py', '__init__.py', 'constants.py',
-              'flags.py', 'utils_test.py'
+            'utils.py',
+            'generalized_steps.py',
+            '__init__.py',
+            'constants.py',
+            'flags.py',
+            'utils_test.py',
           ]
 
           if all_files_existed and not all_new_files:
             fixes.append(commit_msg)
           else:
-            new_runbooks.extend([
-                (re.sub(r'gcpdiag/runbook/|_|\.py', '-', f).strip('-') + ': ' +
-                 commit_msg)
+            new_runbooks.extend(
+              [
+                (re.sub(r'gcpdiag/runbook/|_|\.py', '-', f).strip('-') + ': ' + commit_msg)
                 for f in all_new_files
-                if f.startswith('gcpdiag/runbook/') and f.endswith('.py') and
-                f.split('/')[-1] not in ignored_files and
-                not f.endswith('_test.py')
-            ])
-            new_lints.extend([
+                if f.startswith('gcpdiag/runbook/')
+                and f.endswith('.py')
+                and f.split('/')[-1] not in ignored_files
+                and not f.endswith('_test.py')
+              ]
+            )
+            new_lints.extend(
+              [
                 (lint_name_generator(f) + ': ' + commit_msg)
                 for f in all_new_files
-                if f.startswith('gcpdiag/lint/') and f.endswith('.py') and
-                f.split('/')[-1] not in ignored_files and
-                not f.endswith('_test.py')
-            ])
+                if f.startswith('gcpdiag/lint/')
+                and f.endswith('.py')
+                and f.split('/')[-1] not in ignored_files
+                and not f.endswith('_test.py')
+              ]
+            )
           all_files = all_files_existed + all_new_files
-          new_queries.extend([
+          new_queries.extend(
+            [
               find_queries(f, commit)
               for f in all_files
-              if f.startswith('gcpdiag/queries/') and f.endswith('.py') and
-              f.split('/')[-1] not in ignored_files and
-              not f.endswith('_test.py') and not f.endswith('_stub.py')
-          ])
+              if f.startswith('gcpdiag/queries/')
+              and f.endswith('.py')
+              and f.split('/')[-1] not in ignored_files
+              and not f.endswith('_test.py')
+              and not f.endswith('_stub.py')
+            ]
+          )
 
       except subprocess.CalledProcessError:
         pass
@@ -173,7 +194,6 @@ def generate_release_notes(old_commit, new_commit, current_version):
 
 
 if __name__ == '__main__':
-
   with open('gcpdiag/config.py', encoding='utf-8') as fcg:
     for line in fcg:
       if line.startswith('VERSION ='):
@@ -183,8 +203,7 @@ if __name__ == '__main__':
           previous_version = f'v{float(current_ver) - 0.01}'
         else:
           print('Current version information is missing from gcpdiag/config.py')
-          current_ver = input(
-              'Please enter the current version e.g 0.77 or 0.76: ')
+          current_ver = input('Please enter the current version e.g 0.77 or 0.76: ')
           if current_ver and re.match(r'^\d+\.\d{2}$', current_ver):
             previous_version = f'v{float(current_ver) - 0.01}'
             break
@@ -193,10 +212,9 @@ if __name__ == '__main__':
             sys.exit(1)
 
   fcg.close()
-  #old_commit_id = "0fc34e64"
-  #old_commit_id = 'v0.73'
+  # old_commit_id = "0fc34e64"
+  # old_commit_id = 'v0.73'
   old_commit_id = previous_version
   new_commit_id = 'HEAD'
-  release_notes_final = generate_release_notes(old_commit_id, new_commit_id,
-                                               current_ver)
+  release_notes_final = generate_release_notes(old_commit_id, new_commit_id, current_ver)
   print(release_notes_final)

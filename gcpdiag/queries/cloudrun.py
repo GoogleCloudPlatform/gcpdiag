@@ -27,6 +27,7 @@ from gcpdiag.queries import apis
 
 class Service(models.Resource):
   """Represents Cloud Run service."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -37,8 +38,7 @@ class Service(models.Resource):
   def name(self) -> str:
     m = re.search(r'/services/([^/]+)$', self._resource_data['name'])
     if not m:
-      raise RuntimeError('can\'t determine name of service %s' %
-                         (self._resource_data['name']))
+      raise RuntimeError("can't determine name of service %s" % (self._resource_data['name']))
     return m.group(1)
 
   @property
@@ -52,8 +52,8 @@ class Service(models.Resource):
   @property
   def conditions(self) -> Dict[str, 'ServiceCondition']:
     return {
-        condition['type']: ServiceCondition(condition)
-        for condition in self._resource_data['conditions']
+      condition['type']: ServiceCondition(condition)
+      for condition in self._resource_data['conditions']
     }
 
   @property
@@ -64,6 +64,7 @@ class Service(models.Resource):
 
 class ServiceCondition:
   """Represents Cloud Run service status condition."""
+
   _resource_data: dict
 
   def __init__(self, resource_data):
@@ -88,17 +89,12 @@ def get_all_locations(project_id: str) -> Iterable[str]:
   """
   try:
     cloudrun_api = apis.get_api('run', 'v1', project_id)
-    request = cloudrun_api.projects().locations().list(
-        name=f'projects/{project_id}')
+    request = cloudrun_api.projects().locations().list(name=f'projects/{project_id}')
     response = request.execute(num_retries=config.API_RETRIES)
     if not response or 'locations' not in response:
       return set()
 
-    return {
-        location['name']
-        for location in response['locations']
-        if 'name' in location
-    }
+    return {location['name'] for location in response['locations'] if 'name' in location}
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
 
@@ -121,31 +117,33 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
     region = m.group(1)
     cloudrun_api = apis.get_api('run', 'v2', context.project_id)
     logging.debug(
-        'fetching list of cloud run services in the project %s for the region %s',
-        context.project_id, region)
-    query = cloudrun_api.projects().locations().services().list(
-        parent=f'projects/{context.project_id}/locations/{region}')
+      'fetching list of cloud run services in the project %s for the region %s',
+      context.project_id,
+      region,
+    )
+    query = (
+      cloudrun_api.projects()
+      .locations()
+      .services()
+      .list(parent=f'projects/{context.project_id}/locations/{region}')
+    )
     try:
       resp = query.execute(num_retries=config.API_RETRIES)
       if 'services' not in resp:
         continue
       for s in resp['services']:
         # projects/{project}/locations/{location}/services/{serviceId}.
-        result = re.match(r'projects/[^/]+/locations/([^/]+)/services/([^/]+)',
-                          s['name'])
+        result = re.match(r'projects/[^/]+/locations/([^/]+)/services/([^/]+)', s['name'])
         if not result:
           logging.error('invalid cloudrun name: %s', s['name'])
-          raise RuntimeError(
-              'missing data in projects.locations.services.list response')
+          raise RuntimeError('missing data in projects.locations.services.list response')
         location = result.group(1)
         labels = s.get('labels', {})
         name = result.group(2)
-        if not context.match_project_resource(
-            location=location, labels=labels, resource=name):
+        if not context.match_project_resource(location=location, labels=labels, resource=name):
           continue
 
-        services[s['uid']] = Service(project_id=context.project_id,
-                                     resource_data=s)
+        services[s['uid']] = Service(project_id=context.project_id, resource_data=s)
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
   return services
@@ -153,7 +151,11 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
 
 def get_service(project_id: str, region: str, service_name: str) -> Service:
   cloudrun_api = apis.get_api('run', 'v2', project_id)
-  request = cloudrun_api.projects().locations().services().get(
-      name=f'projects/{project_id}/locations/{region}/services/{service_name}')
+  request = (
+    cloudrun_api.projects()
+    .locations()
+    .services()
+    .get(name=f'projects/{project_id}/locations/{region}/services/{service_name}')
+  )
   response = request.execute(num_retries=config.API_RETRIES)
   return Service(project_id, response)

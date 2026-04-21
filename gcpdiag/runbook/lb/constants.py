@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Constants specific to LB"""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.iam.constants import *

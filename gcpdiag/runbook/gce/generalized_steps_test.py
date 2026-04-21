@@ -60,13 +60,10 @@ class GceStepTestBase(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.mock_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project'))
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_get_project = self.enterContext(mock.patch('gcpdiag.queries.crm.get_project'))
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
 
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
 
     self.operator = op.Operator(self.mock_interface)
@@ -74,18 +71,12 @@ class GceStepTestBase(unittest.TestCase):
     self.operator.messages = MockMessage()
 
     self.params = {
-        flags.PROJECT_ID:
-            DUMMY_PROJECT_ID,
-        flags.ZONE:
-            'us-central1-a',
-        flags.INSTANCE_NAME:
-            'test-instance',
-        flags.INSTANCE_ID:
-            '12345',
-        flags.START_TIME:
-            datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
-        flags.END_TIME:
-            datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: DUMMY_PROJECT_ID,
+      flags.ZONE: 'us-central1-a',
+      flags.INSTANCE_NAME: 'test-instance',
+      flags.INSTANCE_ID: '12345',
+      flags.START_TIME: datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
+      flags.END_TIME: datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
     }
     self.operator.parameters = self.params
 
@@ -95,13 +86,13 @@ class GceStepTestBase(unittest.TestCase):
     self.mock_instance.name = 'test-instance'
     self.mock_instance.id = '12345'
     self.mock_instance.full_path = (
-        f'projects/{DUMMY_PROJECT_ID}/zones/us-central1-a/'
-        'instances/test-instance')
+      f'projects/{DUMMY_PROJECT_ID}/zones/us-central1-a/instances/test-instance'
+    )
     self.mock_instance.machine_type = mock.Mock(return_value='n1-standard-1')
 
     self.mock_gce_get_instance = self.enterContext(
-        mock.patch('gcpdiag.queries.gce.get_instance',
-                   return_value=self.mock_instance))
+      mock.patch('gcpdiag.queries.gce.get_instance', return_value=self.mock_instance)
+    )
 
 
 class GeneralizedStepsUtilsTest(unittest.TestCase):
@@ -109,25 +100,20 @@ class GeneralizedStepsUtilsTest(unittest.TestCase):
 
   def test_get_operator_fn_error(self):
     with self.assertRaises(ValueError):
-      # pylint: disable=protected-access
       generalized_steps._get_operator_fn('invalid')
 
   def test_resolve_expected_value_ref_fail(self):
     with self.assertRaises(ValueError):
-      # pylint: disable=protected-access
       generalized_steps._resolve_expected_value('ref:MISSING_CONST')
 
   def test_check_condition_contains_non_collection(self):
-    # pylint: disable=protected-access
     assert not generalized_steps._check_condition(123, '1', 'contains')
 
   def test_check_condition_matches_invalid_regex(self):
     with self.assertRaises(ValueError):
-      # pylint: disable=protected-access
       generalized_steps._check_condition('text', '[', 'matches')
 
   def test_check_condition_type_mismatch(self):
-    # pylint: disable=protected-access
     assert not generalized_steps._check_condition({}, 1, 'lt')
 
 
@@ -137,9 +123,8 @@ class HighVmMemoryUtilizationTest(GceStepTestBase):
   def test_init_with_vm_object(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=True),
-          mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True),
+        mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
       ):
         step = generalized_steps.HighVmMemoryUtilization()
         step.vm = self.mock_instance
@@ -150,42 +135,39 @@ class HighVmMemoryUtilizationTest(GceStepTestBase):
   def test_ops_agent_installed_memory_usage_found(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=True),
-          mock.patch(
-              'gcpdiag.queries.monitoring.query',
-              return_value=[{
-                  'metric': 'data'
-              }],
-          ),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True),
+        mock.patch(
+          'gcpdiag.queries.monitoring.query',
+          return_value=[{'metric': 'data'}],
+        ),
       ):
         step = generalized_steps.HighVmMemoryUtilization()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_failed.assert_called_once_with(
-        run_id='test-run',
-        resource=self.mock_instance,
-        reason='failure_reason',
-        remediation='failure_remediation',
-        step_execution_id=mock.ANY,
+      run_id='test-run',
+      resource=self.mock_instance,
+      reason='failure_reason',
+      remediation='failure_remediation',
+      step_execution_id=mock.ANY,
     )
 
   def test_ops_agent_not_installed_not_e2_skipped(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                      return_value=False):
+      with mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=False):
         step = generalized_steps.HighVmMemoryUtilization()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.info.assert_called_with(
-        message=RegexMatcher('.*not export memory metrics.*'), step_type='INFO')
+      message=RegexMatcher('.*not export memory metrics.*'), step_type='INFO'
+    )
     self.mock_interface.add_skipped.assert_called_once()
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
       with mock.patch(
-          'gcpdiag.runbook.gce.util.ensure_instance_resolved',
-          side_effect=runbook_exceptions.FailedStepError('err'),
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
       ):
         step = generalized_steps.HighVmMemoryUtilization()
         self.operator.set_step(step)
@@ -203,9 +185,8 @@ class HighVmMemoryUtilizationTest(GceStepTestBase):
   def test_cpu_usage_not_found(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=False),
-          mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=False),
+        mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
       ):
         step = generalized_steps.HighVmCpuUtilization()
         self.operator.set_step(step)
@@ -216,14 +197,11 @@ class HighVmMemoryUtilizationTest(GceStepTestBase):
     self.mock_instance.machine_type.return_value = 'e2-medium'
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=False),
-          mock.patch(
-              'gcpdiag.queries.monitoring.query',
-              return_value=[{
-                  'metric': 'data'
-              }],
-          ),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=False),
+        mock.patch(
+          'gcpdiag.queries.monitoring.query',
+          return_value=[{'metric': 'data'}],
+        ),
       ):
         step = generalized_steps.HighVmMemoryUtilization()
         self.operator.set_step(step)
@@ -236,8 +214,10 @@ class HighVmDiskUtilizationTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.HighVmDiskUtilization()
         self.operator.set_step(step)
         step.execute()
@@ -254,9 +234,8 @@ class HighVmDiskUtilizationTest(GceStepTestBase):
   def test_init_with_vm_object(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=True),
-          mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True),
+        mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
       ):
         step = generalized_steps.HighVmDiskUtilization()
         step.vm = self.mock_instance
@@ -267,57 +246,51 @@ class HighVmDiskUtilizationTest(GceStepTestBase):
   def test_ops_agent_installed_disk_usage_not_found(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=True),
-          mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True),
+        mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
       ):
         step = generalized_steps.HighVmDiskUtilization()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_ok.assert_called_once_with(
-        run_id='test-run',
-        resource=self.mock_instance,
-        reason='success_reason',
-        step_execution_id=mock.ANY,
+      run_id='test-run',
+      resource=self.mock_instance,
+      reason='success_reason',
+      step_execution_id=mock.ANY,
     )
 
   def test_ops_agent_installed_disk_usage_found(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=True),
-          mock.patch(
-              'gcpdiag.queries.monitoring.query',
-              return_value=[{
-                  'metric': 'data'
-              }],
-          ),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True),
+        mock.patch(
+          'gcpdiag.queries.monitoring.query',
+          return_value=[{'metric': 'data'}],
+        ),
       ):
         step = generalized_steps.HighVmDiskUtilization()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_failed.assert_called_once_with(
-        run_id='test-run',
-        resource=self.mock_instance,
-        reason='failure_reason',
-        remediation='failure_remediation',
-        step_execution_id=mock.ANY,
+      run_id='test-run',
+      resource=self.mock_instance,
+      reason='failure_reason',
+      remediation='failure_remediation',
+      step_execution_id=mock.ANY,
     )
 
   def test_no_ops_agent_skipped_with_child_step(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=False),
-          mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=False),
+        mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
       ):
         step = generalized_steps.HighVmDiskUtilization()
         step.vm = self.mock_instance
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_skipped.assert_called_once()
-    assert any(
-        isinstance(c, generalized_steps.VmSerialLogsCheck) for c in step.steps)
+    assert any(isinstance(c, generalized_steps.VmSerialLogsCheck) for c in step.steps)
 
 
 class HighVmCpuUtilizationTest(GceStepTestBase):
@@ -325,8 +298,10 @@ class HighVmCpuUtilizationTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.HighVmCpuUtilization()
         self.operator.set_step(step)
         step.execute()
@@ -334,8 +309,10 @@ class HighVmCpuUtilizationTest(GceStepTestBase):
 
   def test_init_with_vm_object(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True), \
-           mock.patch('gcpdiag.queries.monitoring.query', return_value=[]):
+      with (
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True),
+        mock.patch('gcpdiag.queries.monitoring.query', return_value=[]),
+      ):
         step = generalized_steps.HighVmCpuUtilization()
         step.vm = self.mock_instance
         self.operator.set_step(step)
@@ -345,14 +322,11 @@ class HighVmCpuUtilizationTest(GceStepTestBase):
   def test_cpu_usage_found(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=False),
-          mock.patch(
-              'gcpdiag.queries.monitoring.query',
-              return_value=[{
-                  'metric': 'data'
-              }],
-          ),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=False),
+        mock.patch(
+          'gcpdiag.queries.monitoring.query',
+          return_value=[{'metric': 'data'}],
+        ),
       ):
         step = generalized_steps.HighVmCpuUtilization()
         self.operator.set_step(step)
@@ -362,14 +336,11 @@ class HighVmCpuUtilizationTest(GceStepTestBase):
   def test_ops_agent_installed_cpu_usage_found(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed',
-                     return_value=True),
-          mock.patch(
-              'gcpdiag.queries.monitoring.query',
-              return_value=[{
-                  'metric': 'data'
-              }],
-          ),
+        mock.patch('gcpdiag.runbook.gce.util.ops_agent_installed', return_value=True),
+        mock.patch(
+          'gcpdiag.queries.monitoring.query',
+          return_value=[{'metric': 'data'}],
+        ),
       ):
         step = generalized_steps.HighVmCpuUtilization()
         self.operator.set_step(step)
@@ -390,8 +361,10 @@ class GceVpcConnectivityCheckTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.GceVpcConnectivityCheck()
         self.operator.set_step(step)
         step.execute()
@@ -407,7 +380,8 @@ class GceVpcConnectivityCheckTest(GceStepTestBase):
 
   def test_init_with_vm_object(self):
     self.mock_instance.network.firewall.check_connectivity_ingress.return_value = mock.Mock(
-        action='allow', matched_by_str='firewall-rule-1')
+      action='allow', matched_by_str='firewall-rule-1'
+    )
     with op.operator_context(self.operator):
       step = generalized_steps.GceVpcConnectivityCheck()
       step.vm = self.mock_instance
@@ -421,7 +395,8 @@ class GceVpcConnectivityCheckTest(GceStepTestBase):
 
   def test_ingress_deny(self):
     self.mock_instance.network.firewall.check_connectivity_ingress.return_value = mock.Mock(
-        action='deny', matched_by_str='firewall-rule-2')
+      action='deny', matched_by_str='firewall-rule-2'
+    )
     with op.operator_context(self.operator):
       step = generalized_steps.GceVpcConnectivityCheck()
       step.traffic = 'ingress'
@@ -435,7 +410,8 @@ class GceVpcConnectivityCheckTest(GceStepTestBase):
   def test_egress_allow(self):
     self.mock_instance.network_ips = ['10.0.0.1']
     self.mock_instance.network.firewall.check_connectivity_egress.return_value = mock.Mock(
-        action='allow', matched_by_str='firewall-rule-1')
+      action='allow', matched_by_str='firewall-rule-1'
+    )
     with op.operator_context(self.operator):
       step = generalized_steps.GceVpcConnectivityCheck()
       step.traffic = 'egress'
@@ -472,8 +448,10 @@ class VmScopeTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.VmScope()
         self.operator.set_step(step)
         step.execute()
@@ -536,8 +514,7 @@ class GceLogCheckTest(GceStepTestBase):
       step = generalized_steps.GceLogCheck()
       self.operator.set_step(step)
       step.execute()
-    child = next(
-        c for c in step.steps if isinstance(c, logs_gs.CheckIssueLogEntry))
+    child = next(c for c in step.steps if isinstance(c, logs_gs.CheckIssueLogEntry))
     self.assertEqual(child.filter_str, 'filter-from-ref')
     del constants.TEST_FILTER
 
@@ -565,8 +542,7 @@ class GceLogCheckTest(GceStepTestBase):
       step = generalized_steps.GceLogCheck()
       self.operator.set_step(step)
       step.execute()
-    child = next(
-        c for c in step.steps if isinstance(c, logs_gs.CheckIssueLogEntry))
+    child = next(c for c in step.steps if isinstance(c, logs_gs.CheckIssueLogEntry))
     self.assertEqual(child.issue_pattern, ['pattern1', 'pattern2'])
     del constants.TEST_PATTERN
 
@@ -577,8 +553,7 @@ class GceLogCheckTest(GceStepTestBase):
       step = generalized_steps.GceLogCheck()
       self.operator.set_step(step)
       step.execute()
-    child = next(
-        c for c in step.steps if isinstance(c, logs_gs.CheckIssueLogEntry))
+    child = next(c for c in step.steps if isinstance(c, logs_gs.CheckIssueLogEntry))
     self.assertEqual(child.issue_pattern, [])
 
 
@@ -587,8 +562,10 @@ class VmHasOpsAgentTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.VmHasOpsAgent()
         self.operator.set_step(step)
         step.execute()
@@ -597,22 +574,13 @@ class VmHasOpsAgentTest(GceStepTestBase):
   def test_subagent_check_with_metrics(self):
     step = generalized_steps.VmHasOpsAgent()
     metric_data = {
-        'a': {
-            'labels': {
-                'metric.version': 'google-cloud-ops-agent-metrics-1'
-            }
-        },
-        'b': {
-            'labels': {
-                'metric.version': 'google-cloud-ops-agent-logging-1'
-            }
-        }
+      'a': {'labels': {'metric.version': 'google-cloud-ops-agent-metrics-1'}},
+      'b': {'labels': {'metric.version': 'google-cloud-ops-agent-logging-1'}},
     }
-    # pylint: disable=protected-access
-    self.assertEqual(step._has_ops_agent_subagent(metric_data), {
-        'metrics_subagent_installed': True,
-        'logging_subagent_installed': True
-    })
+    self.assertEqual(
+      step._has_ops_agent_subagent(metric_data),
+      {'metrics_subagent_installed': True, 'logging_subagent_installed': True},
+    )
 
   def test_logging_agent_fail(self):
     with op.operator_context(self.operator):
@@ -634,18 +602,14 @@ class VmHasOpsAgentTest(GceStepTestBase):
 
   def test_subagent_check_no_metrics(self):
     step = generalized_steps.VmHasOpsAgent()
-    # pylint: disable=protected-access
-    self.assertEqual(step._has_ops_agent_subagent(None), {
-        'metrics_subagent_installed': False,
-        'logging_subagent_installed': False
-    })
+    self.assertEqual(
+      step._has_ops_agent_subagent(None),
+      {'metrics_subagent_installed': False, 'logging_subagent_installed': False},
+    )
 
   def test_init_with_vm_object(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.logs.realtime_query',
-                      return_value=[{
-                          'log': 'data'
-                      }]):
+      with mock.patch('gcpdiag.queries.logs.realtime_query', return_value=[{'log': 'data'}]):
         step = generalized_steps.VmHasOpsAgent()
         step.vm = self.mock_instance
         step.check_metrics = False
@@ -655,10 +619,7 @@ class VmHasOpsAgentTest(GceStepTestBase):
 
   def test_logging_agent_ok(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.logs.realtime_query',
-                      return_value=[{
-                          'log': 'data'
-                      }]):
+      with mock.patch('gcpdiag.queries.logs.realtime_query', return_value=[{'log': 'data'}]):
         step = generalized_steps.VmHasOpsAgent()
         step.check_metrics = False
         self.operator.set_step(step)
@@ -671,8 +632,10 @@ class VmLifecycleStateTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.VmLifecycleState()
         self.operator.set_step(step)
         step.execute()
@@ -730,10 +693,7 @@ class GceIamPolicyCheckTest(GceStepTestBase):
   def test_iam_role_ref_resolution(self):
     # Coverage for ref: in IAM roles
     constants.TEST_ROLE = 'roles/owner'
-    self.params.update({
-        iam_flags.PRINCIPAL: 'u@g.com',
-        'roles': 'ref:TEST_ROLE'
-    })
+    self.params.update({iam_flags.PRINCIPAL: 'u@g.com', 'roles': 'ref:TEST_ROLE'})
     with op.operator_context(self.operator):
       step = generalized_steps.GceIamPolicyCheck()
       self.operator.set_step(step)
@@ -744,10 +704,7 @@ class GceIamPolicyCheckTest(GceStepTestBase):
 
   def test_iam_permission_ref_resolution(self):
     constants.TEST_PERMS = ['p1', 'p2']
-    self.params.update({
-        iam_flags.PRINCIPAL: 'u@g.com',
-        'permissions': 'ref:TEST_PERMS'
-    })
+    self.params.update({iam_flags.PRINCIPAL: 'u@g.com', 'permissions': 'ref:TEST_PERMS'})
     with op.operator_context(self.operator):
       step = generalized_steps.GceIamPolicyCheck()
       self.operator.set_step(step)
@@ -837,10 +794,12 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     self.mock_interface.add_skipped.assert_called_once()
 
   def test_check_autoscaler_policy_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'autoscalingPolicy.mode',
         'expected_value': 'ON',
-    })
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.name = 'test-mig'
     mock_mig.zone = 'us-central1-a'
@@ -849,20 +808,20 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     mock_autoscaler = mock.Mock()
     mock_autoscaler.get.return_value = 'ON'
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.gce.get_autoscaler',
-                      return_value=mock_autoscaler):
+      with mock.patch('gcpdiag.queries.gce.get_autoscaler', return_value=mock_autoscaler):
         step = generalized_steps.MigAutoscalingPolicyCheck()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_ok.assert_called_once()
-    mock_autoscaler.get.assert_called_with('autoscalingPolicy.mode',
-                                           default=None)
+    mock_autoscaler.get.assert_called_with('autoscalingPolicy.mode', default=None)
 
   def test_check_autoscaler_policy_404_fail(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'autoscalingPolicy.mode',
         'expected_value': 'ON',
-    })
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.name = 'test-mig'
     mock_mig.zone = 'us-central1-a'
@@ -877,10 +836,12 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     self.mock_interface.add_failed.assert_called_once()
 
   def test_check_policy_by_instance_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'some_property',
         'expected_value': 'some_value',
-    })
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.name = 'test-mig'
     mock_mig.get.return_value = 'some_value'
@@ -893,10 +854,12 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_check_policy_by_instance_fail(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'some_property',
         'expected_value': 'other_value',
-    })
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.name = 'test-mig'
     mock_mig.get.return_value = 'some_value'
@@ -917,36 +880,41 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     self.mock_interface.add_skipped.assert_called()
 
   def test_regional_mig_policy_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         flags.INSTANCE_NAME: None,
         flags.ZONE: None,
         'mig_name': 'm',
         'location': 'us-central1',
         'property_path': 'p',
-        'expected_value': 'v'
-    })
+        'expected_value': 'v',
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.region = 'us-central1'
     mock_mig.zone = None
     mock_mig.name = 'm'
     mock_mig.get.return_value = 'v'
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.gce.get_region_instance_group_manager',
-                      return_value=mock_mig):
+      with mock.patch(
+        'gcpdiag.queries.gce.get_region_instance_group_manager', return_value=mock_mig
+      ):
         step = generalized_steps.MigAutoscalingPolicyCheck()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_ok.assert_called_once()
 
   def test_check_regional_autoscaler_policy_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         flags.INSTANCE_NAME: None,
         flags.ZONE: None,
         'mig_name': 'regional-mig',
         'location': 'us-central1',
         'property_path': 'autoscalingPolicy.mode',
         'expected_value': 'ON',
-    })
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.name = 'regional-mig'
     mock_mig.region = 'us-central1'
@@ -955,14 +923,14 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     mock_autoscaler.get.return_value = 'ON'
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_region_instance_group_manager',
-              return_value=mock_mig,
-          ),
-          mock.patch(
-              'gcpdiag.queries.gce.get_region_autoscaler',
-              return_value=mock_autoscaler,
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_region_instance_group_manager',
+          return_value=mock_mig,
+        ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_region_autoscaler',
+          return_value=mock_autoscaler,
+        ),
       ):
         step = generalized_steps.MigAutoscalingPolicyCheck()
         self.operator.set_step(step)
@@ -970,31 +938,34 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_check_zonal_autoscaler_policy_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         flags.INSTANCE_NAME: None,
         flags.ZONE: None,
         'mig_name': 'zonal-mig',
         'location': 'us-central1-a',
         'property_path': 'p',
-        'expected_value': 'v'
-    })
+        'expected_value': 'v',
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.name = 'zonal-mig'
     mock_mig.zone = 'us-central1-a'
     mock_mig.get.return_value = 'v'
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.gce.get_instance_group_manager',
-                      return_value=mock_mig):
+      with mock.patch('gcpdiag.queries.gce.get_instance_group_manager', return_value=mock_mig):
         step = generalized_steps.MigAutoscalingPolicyCheck()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_ok.assert_called_once()
 
   def test_mig_location_missing_skipped(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'some_property',
         'expected_value': 'some_value',
-    })
+      }
+    )
     mock_mig = mock.Mock()
     mock_mig.name = 'test-mig'
     mock_mig.zone = None
@@ -1009,14 +980,16 @@ class MigAutoscalingPolicyCheckTest(GceStepTestBase):
     self.mock_interface.add_skipped.assert_called_once()
 
   def test_mig_invalid_location_raises_error(self):
-    self.params.update({
+    self.params.update(
+      {
         flags.INSTANCE_NAME: None,
         flags.ZONE: None,
         'mig_name': 'm',
         'location': 'invalid-location-format',
         'property_path': 'p',
-        'expected_value': 'v'
-    })
+        'expected_value': 'v',
+      }
+    )
     with op.operator_context(self.operator):
       step = generalized_steps.MigAutoscalingPolicyCheck()
       self.operator.set_step(step)
@@ -1029,8 +1002,10 @@ class VmSerialLogsCheckTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.VmSerialLogsCheck()
         self.operator.set_step(step)
         step.execute()
@@ -1049,10 +1024,15 @@ class VmSerialLogsCheckTest(GceStepTestBase):
     self.params['positive_patterns'] = 'p1'
     self.params['negative_patterns'] = 'n1'
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.gce.get_instance_serial_port_output',
-                      return_value=mock.Mock(contents='n1 line')), \
-          mock.patch('gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-                     side_effect=[False, True]):
+      with (
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='n1 line'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs', side_effect=[False, True]
+        ),
+      ):
         step = generalized_steps.VmSerialLogsCheck()
         self.operator.set_step(step)
         step.execute()
@@ -1067,10 +1047,15 @@ class VmSerialLogsCheckTest(GceStepTestBase):
     self.params['positive_patterns'] = 'ref:TEST_P_PATTERNS'
     self.params['negative_patterns'] = 'ref:TEST_N_PATTERNS'
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.gce.get_instance_serial_port_output',
-                      return_value=mock.Mock(contents='n1 line')), \
-          mock.patch('gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-                     side_effect=[False, True]):
+      with (
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='n1 line'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs', side_effect=[False, True]
+        ),
+      ):
         step = generalized_steps.VmSerialLogsCheck()
         self.operator.set_step(step)
         step.execute()
@@ -1083,14 +1068,14 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_init_with_vm_object(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_instance_serial_port_output',
-              return_value=mock.Mock(contents='some serial log'),
-          ),
-          mock.patch(
-              'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-              return_value=True,
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='some serial log'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=True,
+        ),
       ):
         step = generalized_steps.VmSerialLogsCheck()
         step.vm = self.mock_instance
@@ -1102,14 +1087,14 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_positive_pattern_ok(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_instance_serial_port_output',
-              return_value=mock.Mock(contents='some serial log'),
-          ),
-          mock.patch(
-              'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-              return_value=True,
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='some serial log'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=True,
+        ),
       ):
         step = generalized_steps.VmSerialLogsCheck()
         step.positive_pattern = ['success']
@@ -1120,14 +1105,14 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_negative_pattern_fail(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_instance_serial_port_output',
-              return_value=mock.Mock(contents='error log'),
-          ),
-          mock.patch(
-              'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-              side_effect=[False, True],
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='error log'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          side_effect=[False, True],
+        ),
       ):
         step = generalized_steps.VmSerialLogsCheck()
         step.positive_pattern = ['success']
@@ -1139,14 +1124,14 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_no_pattern_uncertain(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_instance_serial_port_output',
-              return_value=mock.Mock(contents='some log'),
-          ),
-          mock.patch(
-              'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-              return_value=False,
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='some log'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=False,
+        ),
       ):
         step = generalized_steps.VmSerialLogsCheck()
         step.positive_pattern = ['success']
@@ -1158,14 +1143,14 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_positive_only_no_match_uncertain(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_instance_serial_port_output',
-              return_value=mock.Mock(contents='some log'),
-          ),
-          mock.patch(
-              'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-              return_value=False,
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='some log'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=False,
+        ),
       ):
         step = generalized_steps.VmSerialLogsCheck()
         step.positive_pattern = ['success']
@@ -1176,14 +1161,14 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_negative_only_no_match_uncertain(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_instance_serial_port_output',
-              return_value=mock.Mock(contents='some log'),
-          ),
-          mock.patch(
-              'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-              return_value=False,
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='some log'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=False,
+        ),
       ):
         step = generalized_steps.VmSerialLogsCheck()
         step.negative_pattern = ['error']
@@ -1193,8 +1178,7 @@ class VmSerialLogsCheckTest(GceStepTestBase):
 
   def test_no_logs_skipped(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.gce.get_instance_serial_port_output',
-                      return_value=None):
+      with mock.patch('gcpdiag.queries.gce.get_instance_serial_port_output', return_value=None):
         step = generalized_steps.VmSerialLogsCheck()
         self.operator.set_step(step)
         step.execute()
@@ -1207,8 +1191,8 @@ class VmSerialLogsCheckTest(GceStepTestBase):
       f.flush()
       with op.operator_context(self.operator):
         with mock.patch(
-            'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-            return_value=True,
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=True,
         ):
           step = generalized_steps.VmSerialLogsCheck()
           step.positive_pattern = ['success']
@@ -1218,17 +1202,18 @@ class VmSerialLogsCheckTest(GceStepTestBase):
       self.mock_interface.add_ok.assert_called_once()
 
   def test_serial_console_multiple_files(self):
-    with tempfile.NamedTemporaryFile(
-        mode='w', encoding='utf-8') as f1, tempfile.NamedTemporaryFile(
-            mode='w', encoding='utf-8') as f2:
+    with (
+      tempfile.NamedTemporaryFile(mode='w', encoding='utf-8') as f1,
+      tempfile.NamedTemporaryFile(mode='w', encoding='utf-8') as f2,
+    ):
       f1.write('success line 1')
       f1.flush()
       f2.write('success line 2')
       f2.flush()
       with op.operator_context(self.operator):
         with mock.patch(
-            'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-            return_value=True,
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=True,
         ):
           step = generalized_steps.VmSerialLogsCheck()
           step.positive_pattern = ['success']
@@ -1240,14 +1225,14 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_positive_pattern_and_operator_ok(self):
     with op.operator_context(self.operator):
       with (
-          mock.patch(
-              'gcpdiag.queries.gce.get_instance_serial_port_output',
-              return_value=mock.Mock(contents='success1 success2'),
-          ),
-          mock.patch(
-              'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-              return_value=True,
-          ),
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='success1 success2'),
+        ),
+        mock.patch(
+          'gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
+          return_value=True,
+        ),
       ):
         step = generalized_steps.VmSerialLogsCheck()
         step.positive_pattern = ['success1', 'success2']
@@ -1259,10 +1244,13 @@ class VmSerialLogsCheckTest(GceStepTestBase):
   def test_parameter_overrides_only_template(self):
     self.params['template'] = 't'
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.queries.gce.get_instance_serial_port_output',
-                      return_value=mock.Mock(contents='some log')), \
-          mock.patch('gcpdiag.runbook.gce.util.search_pattern_in_serial_logs',
-                     return_value=False):
+      with (
+        mock.patch(
+          'gcpdiag.queries.gce.get_instance_serial_port_output',
+          return_value=mock.Mock(contents='some log'),
+        ),
+        mock.patch('gcpdiag.runbook.gce.util.search_pattern_in_serial_logs', return_value=False),
+      ):
         step = generalized_steps.VmSerialLogsCheck()
         self.operator.set_step(step)
         step.execute()
@@ -1273,23 +1261,29 @@ class VmMetadataCheckTest(GceStepTestBase):
   """Test VmMetadataCheck step."""
 
   def test_instance_resolution_failure(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'k',
         'expected_value': 'v',
-    })
+      }
+    )
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.VmMetadataCheck()
         self.operator.set_step(step)
         step.execute()
     self.mock_interface.add_skipped.assert_called_once()
 
   def test_expected_value_ref_resolution_fail(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'k',
         'expected_value': 'ref:MISSING_VALUE',
-    })
+      }
+    )
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
       self.operator.set_step(step)
@@ -1297,10 +1291,12 @@ class VmMetadataCheckTest(GceStepTestBase):
         step.execute()
 
   def test_init_with_vm_object(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'enable-oslogin',
         'expected_value': 'true',
-    })
+      }
+    )
     self.mock_instance.get_metadata.return_value = 'true'
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
@@ -1310,10 +1306,12 @@ class VmMetadataCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_metadata_bool_true_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'enable-oslogin',
         'expected_value': 'true',
-    })
+      }
+    )
     self.mock_instance.get_metadata.return_value = 'true'
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
@@ -1322,10 +1320,12 @@ class VmMetadataCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_metadata_bool_fail(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'enable-oslogin',
         'expected_value': 'true',
-    })
+      }
+    )
     self.mock_instance.get_metadata.return_value = 'false'
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
@@ -1334,10 +1334,12 @@ class VmMetadataCheckTest(GceStepTestBase):
     self.mock_interface.add_failed.assert_called_once()
 
   def test_bool_expected_false_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'enable-oslogin',
         'expected_value': 'false',
-    })
+      }
+    )
     self.mock_instance.get_metadata.return_value = 'false'
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
@@ -1346,10 +1348,12 @@ class VmMetadataCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_metadata_string_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'startup-script',
         'expected_value': 'echo hello',
-    })
+      }
+    )
     self.mock_instance.get_metadata.return_value = 'echo hello'
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
@@ -1380,10 +1384,12 @@ class VmMetadataCheckTest(GceStepTestBase):
 
   def test_metadata_key_ref_resolution(self):
     constants.TEST_KEY = 'startup-script'
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'ref:TEST_KEY',
         'expected_value': 'echo hello',
-    })
+      }
+    )
     self.mock_instance.get_metadata.return_value = 'echo hello'
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
@@ -1394,10 +1400,12 @@ class VmMetadataCheckTest(GceStepTestBase):
     del constants.TEST_KEY
 
   def test_metadata_key_ref_resolution_fail(self):
-    self.params.update({
+    self.params.update(
+      {
         'metadata_key': 'ref:MISSING_KEY',
         'expected_value': 'echo hello',
-    })
+      }
+    )
     self.mock_instance.get_metadata.return_value = 'echo hello'
     with op.operator_context(self.operator):
       step = generalized_steps.VmMetadataCheck()
@@ -1436,10 +1444,12 @@ class InstancePropertyCheckTest(GceStepTestBase):
   """Test InstancePropertyCheck step."""
 
   def test_invalid_property_path(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'invalid_property',
         'expected_value': 'RUNNING',
-    })
+      }
+    )
     self.mock_instance.status = 'RUNNING'
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()
@@ -1449,8 +1459,10 @@ class InstancePropertyCheckTest(GceStepTestBase):
 
   def test_instance_resolution_failure(self):
     with op.operator_context(self.operator):
-      with mock.patch('gcpdiag.runbook.gce.util.ensure_instance_resolved',
-                      side_effect=runbook_exceptions.FailedStepError('err')):
+      with mock.patch(
+        'gcpdiag.runbook.gce.util.ensure_instance_resolved',
+        side_effect=runbook_exceptions.FailedStepError('err'),
+      ):
         step = generalized_steps.InstancePropertyCheck()
         self.operator.set_step(step)
         step.execute()
@@ -1470,10 +1482,12 @@ class InstancePropertyCheckTest(GceStepTestBase):
     self.params.pop('expected_value', None)
 
   def test_init_with_vm_object(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'status',
         'expected_value': 'RUNNING',
-    })
+      }
+    )
     self.mock_instance.status = 'RUNNING'
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()
@@ -1483,10 +1497,12 @@ class InstancePropertyCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_property_eq_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'status',
         'expected_value': 'RUNNING',
-    })
+      }
+    )
     self.mock_instance.status = 'RUNNING'
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()
@@ -1495,11 +1511,9 @@ class InstancePropertyCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_property_ne_fail(self):
-    self.params.update({
-        'property_path': 'status',
-        'expected_value': 'TERMINATED',
-        'operator': 'ne'
-    })
+    self.params.update(
+      {'property_path': 'status', 'expected_value': 'TERMINATED', 'operator': 'ne'}
+    )
     self.mock_instance.status = 'TERMINATED'
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()
@@ -1509,10 +1523,12 @@ class InstancePropertyCheckTest(GceStepTestBase):
 
   def test_property_path_ref_resolution(self):
     constants.STATUS_PROP = 'status'
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'ref:STATUS_PROP',
         'expected_value': 'RUNNING',
-    })
+      }
+    )
     self.mock_instance.status = 'RUNNING'
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()
@@ -1522,11 +1538,13 @@ class InstancePropertyCheckTest(GceStepTestBase):
     del constants.STATUS_PROP
 
   def test_property_matches_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'name',
         'expected_value': r'test-.+',
         'operator': 'matches',
-    })
+      }
+    )
     self.mock_instance.name = 'test-instance'
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()
@@ -1535,11 +1553,13 @@ class InstancePropertyCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_property_matches_list_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'boot_disk_licenses',
         'expected_value': r'rhel-8',
         'operator': 'matches',
-    })
+      }
+    )
     self.mock_instance.boot_disk_licenses = ['rhel-8-sap', 'other-license']
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()
@@ -1548,11 +1568,13 @@ class InstancePropertyCheckTest(GceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
 
   def test_property_contains_list_ok(self):
-    self.params.update({
+    self.params.update(
+      {
         'property_path': 'boot_disk_licenses',
         'expected_value': 'rhel-8-sap',
         'operator': 'contains',
-    })
+      }
+    )
     self.mock_instance.boot_disk_licenses = ['rhel-8-sap', 'other-license']
     with op.operator_context(self.operator):
       step = generalized_steps.InstancePropertyCheck()

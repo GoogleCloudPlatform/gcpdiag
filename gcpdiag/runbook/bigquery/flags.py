@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Flags for BigQuery runbooks."""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *
 

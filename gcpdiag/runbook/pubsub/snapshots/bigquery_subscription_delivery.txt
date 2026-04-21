@@ -3,8 +3,8 @@ pubsub1subscription2-9pm6hng1,table_id=test_dataset.test_table
 
 pubsub/bigquery-subscription-delivery: Troubleshoot BigQuery Subscription Errors
 
-A diagnostic guide to help you resolve common issues
-causing message delivery failures from Pub/Sub to BigQuery.
+  A diagnostic guide to help you resolve common issues
+  causing message delivery failures from Pub/Sub to BigQuery.
   
 [START]: Check that the project exists and Pub/Sub API is enabled.
 

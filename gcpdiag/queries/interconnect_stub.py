@@ -20,9 +20,6 @@ Instead of doing real API calls, we return test JSON data.
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 DUMMY_INTERCONNECTS = 'compute-interconnects'
 DUMMY_ATTACHMENTS = 'interconnect-attachments'
 
@@ -35,7 +32,6 @@ class InterconnectApiStub(apis_stub.ApiStub):
   def __init__(self, mock_state):
     self.mock_state = mock_state
 
-  # pylint: disable=redefined-builtin
   def get(self, project, interconnect):
     if self.mock_state == 'interconnects':
       interconnect_data = _find_test_data(interconnect)
@@ -43,7 +39,6 @@ class InterconnectApiStub(apis_stub.ApiStub):
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
-  # pylint: disable=redefined-builtin
   def list(self, project):
     if self.mock_state == 'interconnects':
       return apis_stub.RestCallStub(project, DUMMY_INTERCONNECTS)
@@ -65,14 +60,12 @@ class VlanAttachmentApiStub(apis_stub.ApiStub):
   def __init__(self, mock_state):
     self.mock_state = mock_state
 
-  # pylint: disable=redefined-builtin
   def get(self, project, region, interconnectAttachment):
     if self.mock_state == 'vlan_attachment':
       return apis_stub.RestCallStub(project, interconnectAttachment)
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
-  # pylint: disable=redefined-builtin
   def aggregatedList(self, project):
     if self.mock_state == 'vlan_attachment':
       return apis_stub.RestCallStub(project, DUMMY_ATTACHMENTS)

@@ -27,7 +27,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
   - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
     the organization policies permits SSH in Browser.
-    
+  
 [START]: Starting SSH diagnostics
 [INFO]: Source IP to be used for SSH connectivity test: 35.235.240.0/20
 [INFO]: Port 22 and ip 35.235.240.0/20 as the source IP
@@ -309,7 +309,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
   - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
     the organization policies permits SSH in Browser.
-    
+  
 [START]: Starting SSH diagnostics
 [INFO]: Source IP to be used for SSH connectivity test: 35.235.240.0/20
 [INFO]: Port 22 and ip 35.235.240.0/20 as the source IP
@@ -545,7 +545,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
   - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
     the organization policies permits SSH in Browser.
-    
+  
 [START]: Starting SSH diagnostics
 [INFO]: Source IP to be used for SSH connectivity test: 35.235.240.0/20
 [INFO]: Port 22 and ip 35.235.240.0/20 as the source IP

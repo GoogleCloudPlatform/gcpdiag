@@ -36,21 +36,22 @@ class TestTerminalReportManager(unittest.TestCase):
     r.run_id = 'test'
     self.trm.reports[r.run_id] = r
     self.resource = gce.Instance(
-        'project_id', {
-            'id': '123',
-            'name': 'test',
-            'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
-        })
+      'project_id',
+      {
+        'id': '123',
+        'name': 'test',
+        'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id',
+      },
+    )
 
-    ok_step_eval = report.ResourceEvaluation(resource=self.resource,
-                                             status='ok',
-                                             reason='TestReason',
-                                             remediation='TestRemediation')
+    ok_step_eval = report.ResourceEvaluation(
+      resource=self.resource, status='ok', reason='TestReason', remediation='TestRemediation'
+    )
     test_step = report.StepResult(step=Step(uuid='ok.step'))
 
     test_step.results.append(ok_step_eval)
     self.trm.reports['test'].results = {
-        test_step.execution_id: test_step,
+      test_step.execution_id: test_step,
     }
 
   def test_initialization(self):
@@ -59,22 +60,20 @@ class TestTerminalReportManager(unittest.TestCase):
   def test_add_step_result(self):
     step_result = StepResult(Step(uuid='friendly.name'))
     self.trm.add_step_result(run_id='test', result=step_result)
-    self.assertIn('gcpdiag.runbook.Step.friendly.name',
-                  self.trm.reports['test'].results)
+    self.assertIn('gcpdiag.runbook.Step.friendly.name', self.trm.reports['test'].results)
     self.assertEqual(
-        self.trm.reports['test'].results['gcpdiag.runbook.Step.friendly.name'],
-        step_result)
+      self.trm.reports['test'].results['gcpdiag.runbook.Step.friendly.name'], step_result
+    )
 
   def test_any_failed(self):
     step_result_failed = StepResult(Step(uuid='failed'))
-    failed_eval = report.ResourceEvaluation(resource=self.resource,
-                                            status='failed',
-                                            reason='TestReason',
-                                            remediation='TestRemediation')
+    failed_eval = report.ResourceEvaluation(
+      resource=self.resource, status='failed', reason='TestReason', remediation='TestRemediation'
+    )
     self.trm.add_step_result(run_id='test', result=step_result_failed)
-    self.trm.add_step_eval(run_id='test',
-                           execution_id=step_result_failed.execution_id,
-                           evaluation=failed_eval)
+    self.trm.add_step_eval(
+      run_id='test', execution_id=step_result_failed.execution_id, evaluation=failed_eval
+    )
     self.assertTrue(self.trm.reports['test'].any_failed)
 
   def test_get_rule_statuses(self):
@@ -92,40 +91,34 @@ class TestTerminalReportManager(unittest.TestCase):
     self.trm.add_step_result(run_id='test', result=step_result)
     prompt_response = 'continue'
     self.trm.add_step_prompt_response(
-        run_id='test',
-        execution_id=step_result.execution_id,
-        prompt_response=prompt_response,
+      run_id='test',
+      execution_id=step_result.execution_id,
+      prompt_response=prompt_response,
     )
     self.assertEqual(
-        self.trm.reports['test'].results[
-            step_result.execution_id].prompt_response,
-        prompt_response,
+      self.trm.reports['test'].results[step_result.execution_id].prompt_response,
+      prompt_response,
     )
 
   def test_report_any_failed_uncertain(self):
-    self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step'].results[
-        0].status = 'ok'
+    self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step'].results[0].status = 'ok'
     self.assertFalse(self.trm.reports['test'].any_failed)
     step_result_uncertain = StepResult(Step(uuid='uncertain'))
-    uncertain_eval = report.ResourceEvaluation(resource=self.resource,
-                                               status='uncertain',
-                                               reason='TestReason',
-                                               remediation='TestRemediation')
+    uncertain_eval = report.ResourceEvaluation(
+      resource=self.resource, status='uncertain', reason='TestReason', remediation='TestRemediation'
+    )
     self.trm.add_step_result(run_id='test', result=step_result_uncertain)
-    self.trm.add_step_eval(run_id='test',
-                           execution_id=step_result_uncertain.execution_id,
-                           evaluation=uncertain_eval)
+    self.trm.add_step_eval(
+      run_id='test', execution_id=step_result_uncertain.execution_id, evaluation=uncertain_eval
+    )
     self.assertTrue(self.trm.reports['test'].any_failed)
 
-  #pylint:disable=protected-access
   @patch('builtins.open', new_callable=mock_open)
   @patch('logging.error')
   @patch('sys.stderr', new_callable=io.StringIO)
-  def test_report_to_terminal_success(self, mock_stderr, mock_logging_error,
-                                      m_open):
+  def test_report_to_terminal_success(self, mock_stderr, mock_logging_error, m_open):
     report_path = self.trm.get_report_path('test')
-    self.trm._write_report_to_terminal(out_path=report_path,
-                                       json_report=json_report)
+    self.trm._write_report_to_terminal(out_path=report_path, json_report=json_report)
     m_open.assert_called_once_with(report_path, 'w', encoding='utf-8')
     handle = m_open.return_value.__enter__.return_value
     handle.write.assert_called_once_with(json_report)
@@ -135,11 +128,9 @@ class TestTerminalReportManager(unittest.TestCase):
   @patch('builtins.open', side_effect=PermissionError)
   @patch('logging.error')
   @patch('sys.stderr', new_callable=io.StringIO)
-  def test_save_report_permission_error(self, mock_stderr, mock_logging_error,
-                                        m_open):
+  def test_save_report_permission_error(self, mock_stderr, mock_logging_error, m_open):
     report_path = self.trm.get_report_path('test')
-    self.trm._write_report_to_terminal(out_path=report_path,
-                                       json_report=json_report)
+    self.trm._write_report_to_terminal(out_path=report_path, json_report=json_report)
     m_open.assert_called_once_with(report_path, 'w', encoding='utf-8')
     handle = m_open.return_value.__enter__.return_value
     handle.write.assert_not_called()
@@ -152,18 +143,14 @@ class TestTerminalReportManager(unittest.TestCase):
   @patch('builtins.open', side_effect=OSError)
   @patch('logging.error')
   @patch('sys.stderr', new_callable=io.StringIO)
-  def test_write_report_to_terminal_os_error(self, mock_stderr,
-                                             mock_logging_error, m_open):
-
+  def test_write_report_to_terminal_os_error(self, mock_stderr, mock_logging_error, m_open):
     report_path = self.trm.get_report_path('test')
-    self.trm._write_report_to_terminal(out_path=report_path,
-                                       json_report=json_report)
+    self.trm._write_report_to_terminal(out_path=report_path, json_report=json_report)
     m_open.assert_called_once_with(report_path, 'w', encoding='utf-8')
     handle = m_open.return_value.__enter__.return_value
     handle.write.assert_not_called()
     mock_logging_error.assert_called_once()
-    assert 'Failed to save generated report to file' in mock_logging_error.call_args[
-        0][0]
+    assert 'Failed to save generated report to file' in mock_logging_error.call_args[0][0]
     # report is displayed on the terminal
     self.assertIn(json_report, mock_stderr.getvalue())
     self.assertNotIn('Runbook report located in', mock_stderr.getvalue())
@@ -171,86 +158,73 @@ class TestTerminalReportManager(unittest.TestCase):
   def test_add_step_metadata(self):
     step_result = StepResult(Step(uuid='metadata.step'))
     self.trm.add_step_result(run_id='test', result=step_result)
-    self.trm.add_step_metadata(run_id='test',
-                               key='foo',
-                               value='bar',
-                               step_execution_id=step_result.execution_id)
+    self.trm.add_step_metadata(
+      run_id='test', key='foo', value='bar', step_execution_id=step_result.execution_id
+    )
     self.assertEqual(
-        self.trm.reports['test'].results[
-            step_result.execution_id].metadata['foo'], 'bar')
+      self.trm.reports['test'].results[step_result.execution_id].metadata['foo'], 'bar'
+    )
     self.assertEqual(
-        self.trm.get_step_metadata(run_id='test',
-                                   key='foo',
-                                   step_execution_id=step_result.execution_id),
-        'bar')
+      self.trm.get_step_metadata(
+        run_id='test', key='foo', step_execution_id=step_result.execution_id
+      ),
+      'bar',
+    )
     self.assertEqual(
-        self.trm.get_all_step_metadata(
-            run_id='test', step_execution_id=step_result.execution_id),
-        {'foo': 'bar'})
+      self.trm.get_all_step_metadata(run_id='test', step_execution_id=step_result.execution_id),
+      {'foo': 'bar'},
+    )
 
   def test_get_all_step_metadata_no_id(self):
-    self.assertEqual(
-        self.trm.get_all_step_metadata(run_id='test', step_execution_id=None),
-        {})
+    self.assertEqual(self.trm.get_all_step_metadata(run_id='test', step_execution_id=None), {})
 
   def test_add_step_info_metadata(self):
     step_result = StepResult(Step(uuid='info.metadata.step'))
     self.trm.add_step_result(run_id='test', result=step_result)
-    self.trm.add_step_info_metadata(run_id='test',
-                                    value='info_message',
-                                    step_execution_id=step_result.execution_id)
-    self.assertIn(
-        'info_message',
-        self.trm.reports['test'].results[step_result.execution_id].info)
+    self.trm.add_step_info_metadata(
+      run_id='test', value='info_message', step_execution_id=step_result.execution_id
+    )
+    self.assertIn('info_message', self.trm.reports['test'].results[step_result.execution_id].info)
 
   def test_add_step_metadata_no_id(self):
-    self.trm.add_step_metadata(run_id='test',
-                               key='foo',
-                               value='bar',
-                               step_execution_id=None)
+    self.trm.add_step_metadata(run_id='test', key='foo', value='bar', step_execution_id=None)
     # in this case nothing is done, so no assertion needed
     # besides verifying no crash
 
   def test_get_step_metadata_no_id(self):
-    self.assertIsNone(
-        self.trm.get_step_metadata(run_id='test',
-                                   key='foo',
-                                   step_execution_id=None))
+    self.assertIsNone(self.trm.get_step_metadata(run_id='test', key='foo', step_execution_id=None))
 
   def test_report_any_failed(self):
-    self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step'].results[
-        0].status = 'ok'
+    self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step'].results[0].status = 'ok'
     self.assertFalse(self.trm.reports['test'].any_failed)
     step_result_failed = StepResult(Step(uuid='failed'))
-    failed_eval = report.ResourceEvaluation(resource=self.resource,
-                                            status='failed',
-                                            reason='TestReason',
-                                            remediation='TestRemediation')
+    failed_eval = report.ResourceEvaluation(
+      resource=self.resource, status='failed', reason='TestReason', remediation='TestRemediation'
+    )
     self.trm.add_step_result(run_id='test', result=step_result_failed)
-    self.trm.add_step_eval(run_id='test',
-                           execution_id=step_result_failed.execution_id,
-                           evaluation=failed_eval)
+    self.trm.add_step_eval(
+      run_id='test', execution_id=step_result_failed.execution_id, evaluation=failed_eval
+    )
     self.assertTrue(self.trm.reports['test'].any_failed)
 
-  @patch(
-      'gcpdiag.runbook.report.TerminalReportManager._write_report_to_terminal')
+  @patch('gcpdiag.runbook.report.TerminalReportManager._write_report_to_terminal')
   def test_trm_generate_reports(self, mock_write_report):
     self.trm.reports['test'].run_start_time = '2023-01-01T00:00:00Z'
     self.trm.reports['test'].run_end_time = '2023-01-01T00:00:01Z'
     self.trm.reports['test'].results[
-        'gcpdiag.runbook.Step.ok.step'].start_time = '2023-01-01T00:00:00Z'
+      'gcpdiag.runbook.Step.ok.step'
+    ].start_time = '2023-01-01T00:00:00Z'
     self.trm.reports['test'].results[
-        'gcpdiag.runbook.Step.ok.step'].end_time = '2023-01-01T00:00:01Z'
-    self.trm.reports['test'].results[
-        'gcpdiag.runbook.Step.ok.step'].step.name = ' step name '
+      'gcpdiag.runbook.Step.ok.step'
+    ].end_time = '2023-01-01T00:00:01Z'
+    self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step'].step.name = ' step name '
     result = self.trm.generate_reports()
     mock_write_report.assert_called_once()
     self.assertIsInstance(result, dict)
     self.assertEqual(result['run_id'], 'test')
 
   def test_generate_report_metrics_no_runbook_name(self):
-    step_result = self.trm.reports['test'].results[
-        'gcpdiag.runbook.Step.ok.step']
+    step_result = self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step']
     step_result.step = Mock()
     step_result.step.id = 'ok.step'
     self.trm.reports['test'].run_start_time = '2023-01-01T00:00:00Z'
@@ -271,8 +245,7 @@ class TestTerminalReportManager(unittest.TestCase):
     self.assertEqual(totals['ok'], 1)
 
   def test_generate_report_metrics(self):
-    step_result = self.trm.reports['test'].results[
-        'gcpdiag.runbook.Step.ok.step']
+    step_result = self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step']
     step_result.step = Mock()
     step_result.step.id = 'ok.step'
     self.trm.reports['test'].run_start_time = '2023-01-01T00:00:00Z'
@@ -296,8 +269,7 @@ class TestTerminalReportManager(unittest.TestCase):
   def test_serialize_report_with_formatting(self):
     self.trm.reports['test'].run_start_time = '2023-01-01T00:00:00Z'
     self.trm.reports['test'].run_end_time = '2023-01-01T00:00:01Z'
-    step_result = self.trm.reports['test'].results[
-        'gcpdiag.runbook.Step.ok.step']
+    step_result = self.trm.reports['test'].results['gcpdiag.runbook.Step.ok.step']
     step_result.start_time = '2023-01-01T00:00:00Z'
     step_result.end_time = '2023-01-01T00:00:01Z'
     step_result.step.name = ' step name '
@@ -316,15 +288,16 @@ class TestReportResults(unittest.TestCase):
 
   def test_step_result_any_failed(self):
     resource = gce.Instance(
-        'project_id', {
-            'id': '123',
-            'name': 'test',
-            'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
-        })
-    failed_eval = report.ResourceEvaluation(resource=resource,
-                                            status='failed',
-                                            reason='TestReason',
-                                            remediation='TestRemediation')
+      'project_id',
+      {
+        'id': '123',
+        'name': 'test',
+        'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id',
+      },
+    )
+    failed_eval = report.ResourceEvaluation(
+      resource=resource, status='failed', reason='TestReason', remediation='TestRemediation'
+    )
     step_result = report.StepResult(step=Step(uuid='failed.step'))
     step_result.results.append(failed_eval)
     self.assertTrue(step_result.any_failed)
@@ -354,15 +327,16 @@ class TestReportResults(unittest.TestCase):
 
   def test_any_uncertain(self):
     resource = gce.Instance(
-        'project_id', {
-            'id': '123',
-            'name': 'test',
-            'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
-        })
-    uncertain_eval = report.ResourceEvaluation(resource=resource,
-                                               status='uncertain',
-                                               reason='TestReason',
-                                               remediation='TestRemediation')
+      'project_id',
+      {
+        'id': '123',
+        'name': 'test',
+        'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id',
+      },
+    )
+    uncertain_eval = report.ResourceEvaluation(
+      resource=resource, status='uncertain', reason='TestReason', remediation='TestRemediation'
+    )
     step_result = report.StepResult(step=Step(uuid='uncertain.step'))
     step_result.results.append(uncertain_eval)
     self.assertTrue(step_result.any_uncertain)
@@ -370,15 +344,16 @@ class TestReportResults(unittest.TestCase):
 
   def test_any_failed(self):
     resource = gce.Instance(
-        'project_id', {
-            'id': '123',
-            'name': 'test',
-            'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
-        })
-    failed_eval = report.ResourceEvaluation(resource=resource,
-                                            status='failed',
-                                            reason='TestReason',
-                                            remediation='TestRemediation')
+      'project_id',
+      {
+        'id': '123',
+        'name': 'test',
+        'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id',
+      },
+    )
+    failed_eval = report.ResourceEvaluation(
+      resource=resource, status='failed', reason='TestReason', remediation='TestRemediation'
+    )
     step_result = report.StepResult(step=Step(uuid='failed.step'))
     step_result.results.append(failed_eval)
     self.assertTrue(step_result.any_failed)
@@ -396,23 +371,24 @@ class TestApiReportManager(unittest.TestCase):
     r.run_end_time = '2023-01-01T00:00:01Z'
     self.arm.reports[r.run_id] = r
     self.resource = gce.Instance(
-        'project_id', {
-            'id': '123',
-            'name': 'test',
-            'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
-        })
+      'project_id',
+      {
+        'id': '123',
+        'name': 'test',
+        'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id',
+      },
+    )
 
-    ok_step_eval = report.ResourceEvaluation(resource=self.resource,
-                                             status='ok',
-                                             reason='TestReason',
-                                             remediation='TestRemediation')
+    ok_step_eval = report.ResourceEvaluation(
+      resource=self.resource, status='ok', reason='TestReason', remediation='TestRemediation'
+    )
     test_step = report.StepResult(step=Step(uuid='ok.step'))
     test_step.start_time = '2023-01-01T00:00:00Z'
     test_step.end_time = '2023-01-01T00:00:01Z'
 
     test_step.results.append(ok_step_eval)
     self.arm.reports['test'].results = {
-        test_step.execution_id: test_step,
+      test_step.execution_id: test_step,
     }
 
   @patch('gcpdiag.runbook.Step.name', new_callable=PropertyMock)
@@ -432,11 +408,13 @@ class TestInteractionInterface(unittest.TestCase):
     self.cli_interface = report.InteractionInterface(kind='cli')
     self.api_interface = report.InteractionInterface(kind='api')
     self.resource = gce.Instance(
-        'project_id', {
-            'id': '123',
-            'name': 'test',
-            'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
-        })
+      'project_id',
+      {
+        'id': '123',
+        'name': 'test',
+        'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id',
+      },
+    )
 
   def test_invalid_interface(self):
     with self.assertRaises(AttributeError):
@@ -454,12 +432,11 @@ class TestInteractionInterface(unittest.TestCase):
     step = Step(uuid='skipped.step')
     step_result = report.StepResult(step)
     self.cli_interface.rm.add_step_result(run_id, step_result)
-    self.cli_interface.add_skipped(run_id, self.resource, 'reason',
-                                   step.execution_id)
+    self.cli_interface.add_skipped(run_id, self.resource, 'reason', step.execution_id)
     mock_print_skipped.assert_called_once()
     self.assertEqual(
-        self.cli_interface.rm.reports[run_id].results[
-            step.execution_id].results[0].status, 'skipped')
+      self.cli_interface.rm.reports[run_id].results[step.execution_id].results[0].status, 'skipped'
+    )
 
   @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.print_ok')
   def test_add_ok(self, mock_print_ok):
@@ -468,12 +445,11 @@ class TestInteractionInterface(unittest.TestCase):
     step = Step(uuid='ok.step')
     step_result = report.StepResult(step)
     self.cli_interface.rm.add_step_result(run_id, step_result)
-    self.cli_interface.add_ok(run_id, self.resource, step.execution_id,
-                              'reason')
+    self.cli_interface.add_ok(run_id, self.resource, step.execution_id, 'reason')
     mock_print_ok.assert_called_once()
     self.assertEqual(
-        self.cli_interface.rm.reports[run_id].results[
-            step.execution_id].results[0].status, 'ok')
+      self.cli_interface.rm.reports[run_id].results[step.execution_id].results[0].status, 'ok'
+    )
 
   @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.prompt')
   @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.print_failed')
@@ -484,16 +460,14 @@ class TestInteractionInterface(unittest.TestCase):
     step_result = report.StepResult(step)
     self.cli_interface.rm.add_step_result(run_id, step_result)
     mock_prompt.return_value = report.constants.CONTINUE
-    self.cli_interface.add_failed(run_id, self.resource, 'reason',
-                                  'remediation', step.execution_id)
+    self.cli_interface.add_failed(run_id, self.resource, 'reason', 'remediation', step.execution_id)
     mock_print_failed.assert_called_once()
     self.assertEqual(
-        self.cli_interface.rm.reports[run_id].results[
-            step.execution_id].results[0].status, 'failed')
+      self.cli_interface.rm.reports[run_id].results[step.execution_id].results[0].status, 'failed'
+    )
 
   @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.prompt')
-  @patch(
-      'gcpdiag.runbook.output.terminal_output.TerminalOutput.print_uncertain')
+  @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.print_uncertain')
   def test_add_uncertain(self, mock_print_uncertain, mock_prompt):
     run_id = 'test_run'
     self.cli_interface.rm.reports[run_id] = report.Report(run_id, {})
@@ -501,12 +475,14 @@ class TestInteractionInterface(unittest.TestCase):
     step_result = report.StepResult(step)
     self.cli_interface.rm.add_step_result(run_id, step_result)
     mock_prompt.return_value = report.constants.CONTINUE
-    self.cli_interface.add_uncertain(run_id, step.execution_id, self.resource,
-                                     'reason', 'remediation')
+    self.cli_interface.add_uncertain(
+      run_id, step.execution_id, self.resource, 'reason', 'remediation'
+    )
     mock_print_uncertain.assert_called_once()
     self.assertEqual(
-        self.cli_interface.rm.reports[run_id].results[
-            step.execution_id].results[0].status, 'uncertain')
+      self.cli_interface.rm.reports[run_id].results[step.execution_id].results[0].status,
+      'uncertain',
+    )
 
   @patch('gcpdiag.runbook.util.render_template')
   @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.info')
@@ -517,27 +493,25 @@ class TestInteractionInterface(unittest.TestCase):
     step_result = report.StepResult(step)
     self.cli_interface.rm.add_step_result(run_id, step_result)
     mock_render_template.return_value = 'rca message'
-    self.cli_interface.prepare_rca(run_id, self.resource, 'template::prefix',
-                                   'suffix', step, {})
+    self.cli_interface.prepare_rca(run_id, self.resource, 'template::prefix', 'suffix', step, {})
     mock_info.assert_called_with(message='rca message')
     self.assertEqual(
-        self.cli_interface.rm.reports[run_id].results[
-            step.execution_id].results[0].status, 'rca')
+      self.cli_interface.rm.reports[run_id].results[step.execution_id].results[0].status, 'rca'
+    )
 
   @patch('importlib.import_module', side_effect=ImportError)
   @patch('logging.error')
   @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.info')
   @patch('gcpdiag.runbook.util.render_template')
-  def test_prepare_rca_import_error(self, mock_render_template, mock_info,
-                                    mock_logging_error,
-                                    unused_mock_import_module):
+  def test_prepare_rca_import_error(
+    self, mock_render_template, mock_info, mock_logging_error, unused_mock_import_module
+  ):
     run_id = 'test_run'
     self.cli_interface.rm.reports[run_id] = report.Report(run_id, {})
     step = Step(uuid='rca.step')
     step_result = report.StepResult(step)
     self.cli_interface.rm.add_step_result(run_id, step_result)
-    self.cli_interface.prepare_rca(run_id, self.resource, 'template::prefix',
-                                   'suffix', step, {})
+    self.cli_interface.prepare_rca(run_id, self.resource, 'template::prefix', 'suffix', step, {})
     # Check that logging.error was called with the exception
     mock_logging_error.assert_called_once()
     mock_info.assert_not_called()
@@ -547,8 +521,9 @@ class TestInteractionInterface(unittest.TestCase):
   @patch('logging.error')
   @patch('gcpdiag.runbook.output.terminal_output.TerminalOutput.info')
   @patch('gcpdiag.runbook.util.render_template')
-  def test_prepare_rca_attribute_error(self, mock_render_template, mock_info,
-                                       mock_logging_error, mock_import_module):
+  def test_prepare_rca_attribute_error(
+    self, mock_render_template, mock_info, mock_logging_error, mock_import_module
+  ):
     # Mock import_module to return a mock that raises AttributeError on __file__
     mock_import_module.return_value = Mock(spec_set=['some_attribute'])
     run_id = 'test_run'
@@ -556,11 +531,9 @@ class TestInteractionInterface(unittest.TestCase):
     step = Step(uuid='rca.step')
     step_result = report.StepResult(step)
     self.cli_interface.rm.add_step_result(run_id, step_result)
-    self.cli_interface.prepare_rca(run_id, self.resource, 'template::prefix',
-                                   'suffix', step, {})
+    self.cli_interface.prepare_rca(run_id, self.resource, 'template::prefix', 'suffix', step, {})
     # Verify the error was logged
     mock_logging_error.assert_called_once()
-    self.assertEqual('failed to locate steps module %s',
-                     mock_logging_error.call_args[0][0])
+    self.assertEqual('failed to locate steps module %s', mock_logging_error.call_args[0][0])
     mock_info.assert_not_called()
     mock_render_template.assert_not_called()

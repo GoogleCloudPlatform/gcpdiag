@@ -35,8 +35,7 @@ class TestInstance:
 
   def test_get_instances_by_project(self):
     """get_instances returns the number of instances in the given project."""
-    context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             locations=DUMMY_OP_LOCATION)
+    context = models.Context(project_id=DUMMY_PROJECT_NAME, locations=DUMMY_OP_LOCATION)
     instances = looker.get_instances(context)
     assert DUMMY_I_NAME in instances
     assert len(instances) >= 1
@@ -48,28 +47,28 @@ class TestOperation:
 
   def test_get_operations_by_project(self):
     """Test that get_operations retrieves and structures data correctly."""
-    context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             locations=DUMMY_OP_LOCATION,
-                             parameters={'now': FAKE_NOW})
+    context = models.Context(
+      project_id=DUMMY_PROJECT_NAME, locations=DUMMY_OP_LOCATION, parameters={'now': FAKE_NOW}
+    )
     operations_by_location = looker.get_operations(context)
     expected_instance_name = 'gcpdiag-test-01'
     location_str = DUMMY_OP_LOCATION[0]
     assert operations_by_location, 'The returned operations dictionary is empty.'
     assert location_str in operations_by_location, (
-        f"Location '{location_str}' not found as a key. "
-        f'Keys: {list(operations_by_location.keys())}')
+      f"Location '{location_str}' not found as a key. Keys: {list(operations_by_location.keys())}"
+    )
     operations_at_location = operations_by_location[location_str]
-    assert operations_at_location, \
-        f"No operations found for location '{location_str}'."
+    assert operations_at_location, f"No operations found for location '{location_str}'."
     assert expected_instance_name in operations_at_location, (
-        f"Instance '{expected_instance_name}' not found for location "
-        f"'{location_str}'. Instance keys: {list(operations_at_location.keys())}"
+      f"Instance '{expected_instance_name}' not found for location "
+      f"'{location_str}'. Instance keys: {list(operations_at_location.keys())}"
     )
     op_list = operations_at_location[expected_instance_name]
     assert op_list and len(op_list) >= 1, (
-        f"Expected at least one operation for instance '{expected_instance_name}'."
+      f"Expected at least one operation for instance '{expected_instance_name}'."
     )
     found_operation_1 = any(op.name == DUMMY_OP_ID for op in op_list)
     assert found_operation_1, (
-        f"Operation with ID '{DUMMY_OP_ID}' not found in the list for instance "
-        f"'{expected_instance_name}' in location '{location_str}'.")
+      f"Operation with ID '{DUMMY_OP_ID}' not found in the list for instance "
+      f"'{expected_instance_name}' in location '{location_str}'."
+    )

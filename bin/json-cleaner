@@ -8,67 +8,44 @@ import re
 import sys
 
 clean_maps = {
-    'apigee': {
-        '.caCertificate': 'REDACTED',
-        '.apigeeProjectId': 'REDACTED',
-    },
-    'cloudrun': {
-        '.services.[].creator': 'REDACTED',
-        '.services.[].binaryAuthorization': 'REDACTED'
-    },
-    'cloudfunctions': {
-        '.cloudfunctions.[].sourceToken': 'REDACTED'
-    },
-    'appengine_versions': {
-        '.versions.[].createdBy': 'REDACTED'
-    },
-    'clusters': {
-        '.clusters.[].endpoint': '192.168.1.1',
-        '.clusters.[].masterAuth.clusterCaCertificate': 'REDACTED',
-    },
-    'instances': {
-        # not really sensitive, but we don't care about it...
-        '.items.[].disks.[].shieldedInstanceInitialState.dbs.[].content':
-            'REDACTED',
-        '.items.[].disks.[].shieldedInstanceInitialState.dbxs.[].content':
-            'REDACTED',
-        '.items.[].disks.[].shieldedInstanceInitialState.keks.[].content':
-            'REDACTED',
-        '.items.[].disks.[].shieldedInstanceInitialState.pk.content':
-            'REDACTED',
-        '.items.[].fingerprint':
-            'REDACTED',
-        '.items.[].metadata.fingerprint':
-            'REDACTED',
-        '.items.[].metadata.items.configure-sh':
-            'REDACTED',
-        '.items.[].metadata.items.kube-env':
-            'REDACTED',
-        '.items.[].metadata.items.user-data':
-            'REDACTED',
-        '.items.[].networkInterfaces.[].fingerprint':
-            'REDACTED',
-        '.items.[].tags.fingerprint':
-            'REDACTED',
-    },
-    'compute-templates': {
-        '.items.[].properties.metadata.fingerprint': 'REDACTED',
-        '.items.[].properties.metadata.items.configure-sh': 'REDACTED',
-        '.items.[].properties.metadata.items.kube-env': 'REDACTED',
-        '.items.[].properties.metadata.items.user-data': 'REDACTED',
-    },
-    'compute-project': {
-        '.commonInstanceMetadata.items.sshKeys': 'REDACTED'
-    },
-    'compute-network': {
-        '.peerings.[].network':
-            'https://www.googleapis.com/compute/v1/projects/'
-            'REDACTED/global/networks/servicenetworking'
-    },
-    'service-accounts': {
-        '.accounts.[].oauth2ClientId': 'REDACTED'
-    },
-    'other': {}
+  'apigee': {
+    '.caCertificate': 'REDACTED',
+    '.apigeeProjectId': 'REDACTED',
+  },
+  'cloudrun': {'.services.[].creator': 'REDACTED', '.services.[].binaryAuthorization': 'REDACTED'},
+  'cloudfunctions': {'.cloudfunctions.[].sourceToken': 'REDACTED'},
+  'appengine_versions': {'.versions.[].createdBy': 'REDACTED'},
+  'clusters': {
+    '.clusters.[].endpoint': '192.168.1.1',
+    '.clusters.[].masterAuth.clusterCaCertificate': 'REDACTED',
+  },
+  'instances': {
+    # not really sensitive, but we don't care about it...
+    '.items.[].disks.[].shieldedInstanceInitialState.dbs.[].content': 'REDACTED',
+    '.items.[].disks.[].shieldedInstanceInitialState.dbxs.[].content': 'REDACTED',
+    '.items.[].disks.[].shieldedInstanceInitialState.keks.[].content': 'REDACTED',
+    '.items.[].disks.[].shieldedInstanceInitialState.pk.content': 'REDACTED',
+    '.items.[].fingerprint': 'REDACTED',
+    '.items.[].metadata.fingerprint': 'REDACTED',
+    '.items.[].metadata.items.configure-sh': 'REDACTED',
+    '.items.[].metadata.items.kube-env': 'REDACTED',
+    '.items.[].metadata.items.user-data': 'REDACTED',
+    '.items.[].networkInterfaces.[].fingerprint': 'REDACTED',
+    '.items.[].tags.fingerprint': 'REDACTED',
+  },
+  'compute-templates': {
+    '.items.[].properties.metadata.fingerprint': 'REDACTED',
+    '.items.[].properties.metadata.items.configure-sh': 'REDACTED',
+    '.items.[].properties.metadata.items.kube-env': 'REDACTED',
+    '.items.[].properties.metadata.items.user-data': 'REDACTED',
+  },
+  'compute-project': {'.commonInstanceMetadata.items.sshKeys': 'REDACTED'},
+  'compute-network': {
+    '.peerings.[].network': 'https://www.googleapis.com/compute/v1/projects/'
+    'REDACTED/global/networks/servicenetworking'
+  },
+  'service-accounts': {'.accounts.[].oauth2ClientId': 'REDACTED'},
+  'other': {},
 }
 
 
@@ -81,7 +58,6 @@ def traverse_and_clean(path: str, data, clean_map: dict):
       key_path = path + '.' + key
       data[key] = traverse_and_clean(key_path, data[key], clean_map)
   elif isinstance(data, list):
-
     for i in range(len(data)):
       # special case: "key", "value" list -> lookup as dict
       if isinstance(data[i], dict) and 'key' in data[i] and 'value' in data[i]:
@@ -105,9 +81,7 @@ def main():
 
   resource_type = sys.argv[1]
   if resource_type not in clean_maps:
-    print('first argument must be one of: ' +
-          ', '.join(sorted(clean_maps.keys())),
-          file=sys.stderr)
+    print('first argument must be one of: ' + ', '.join(sorted(clean_maps.keys())), file=sys.stderr)
     sys.exit(1)
 
   # transform using clean_maps

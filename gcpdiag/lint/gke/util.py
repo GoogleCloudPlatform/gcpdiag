@@ -30,14 +30,12 @@ class _CantMapLogEntry(BaseException):
 # We also use context as index just to be sure, in case one day we have
 # situations where this code is running multiple times with different context
 # objects.
-_clusters_by_name: Dict[models.Context, Dict[Tuple[str, str, str],
-                                             gke.Cluster]] = {}
-_clusters_by_instance_id: Dict[models.Context, Dict[str, Tuple[gke.Cluster,
-                                                               str]]] = {}
+_clusters_by_name: Dict[models.Context, Dict[Tuple[str, str, str], gke.Cluster]] = {}
+_clusters_by_instance_id: Dict[models.Context, Dict[str, Tuple[gke.Cluster, str]]] = {}
 
 
 def _initialize_clusters_by_name(context: models.Context):
-  if not context in _clusters_by_name:
+  if context not in _clusters_by_name:
     _clusters_by_name[context] = {}
     clusters = gke.get_clusters(context)
     for c in clusters.values():
@@ -48,15 +46,17 @@ def _initialize_clusters_by_instance_id(context: models.Context):
   # Don't assume that _initialize_clusters_by_name is called first,
   # so make sure here, even though actually it was already called.
   _initialize_clusters_by_name(context)
-  if not context in _clusters_by_instance_id:
+  if context not in _clusters_by_instance_id:
     _clusters_by_instance_id[context] = {}
     for instance_id, instance in gce.get_instances(context).items():
       try:
-        c = _clusters_by_name[context][(
+        c = _clusters_by_name[context][
+          (
             instance.project_id,
             instance.get_metadata('cluster-location'),
             instance.get_metadata('cluster-name'),
-        )]
+          )
+        ]
         # Also store the instance name because that's not available in the
         # logs sometimes.
         _clusters_by_instance_id[context][instance_id] = (c, instance.name)
@@ -76,8 +76,7 @@ def _gke_node_of_log_entry(context, log_entry):
   if 'node_name' in labels:
     # GKE node log
     try:
-      c = _clusters_by_name[context][(project_id, labels['location'],
-                                      labels['cluster_name'])]
+      c = _clusters_by_name[context][(project_id, labels['location'], labels['cluster_name'])]
       return (c, labels['node_name'])
     except KeyError as err:
       # log entry for a node that wasn't selected by context
@@ -119,15 +118,13 @@ def _gke_pod_of_log_entry(context, log_entry):
     raise _CantMapLogEntry() from KeyError
 
   try:
-    c = _clusters_by_name[context][(project_id, labels['location'],
-                                    labels['cluster_name'])]
+    c = _clusters_by_name[context][(project_id, labels['location'], labels['cluster_name'])]
     return (c, pod_name)
   except KeyError as err:
     raise _CantMapLogEntry() from err
 
 
 def _gke_cluster_of_log_entry(context, log_entry):
-
   try:
     labels = log_entry['resource']['labels']
     project_id = labels['project_id']
@@ -136,16 +133,15 @@ def _gke_cluster_of_log_entry(context, log_entry):
     raise _CantMapLogEntry() from KeyError
 
   try:
-    c = _clusters_by_name[context][(project_id, labels['location'],
-                                    labels['cluster_name'])]
+    c = _clusters_by_name[context][(project_id, labels['location'], labels['cluster_name'])]
     return c
   except KeyError as err:
     raise _CantMapLogEntry() from err
 
 
-def gke_logs_find_bad_nodes(context: models.Context,
-                            logs_by_project: Dict[str, logs.LogsQuery],
-                            filter_f: Callable) -> Dict[gke.Cluster, Set[str]]:
+def gke_logs_find_bad_nodes(
+  context: models.Context, logs_by_project: Dict[str, logs.LogsQuery], filter_f: Callable
+) -> Dict[gke.Cluster, Set[str]]:
   """Go through logs and find GKE node-level issues.
 
   Returns dict with clusters as key and node list of "bad nodes" as
@@ -171,9 +167,9 @@ def gke_logs_find_bad_nodes(context: models.Context,
   return bad_nodes_by_cluster
 
 
-def gke_logs_find_bad_clusters(context: models.Context,
-                               logs_by_project: Dict[str, logs.LogsQuery],
-                               filter_f: Callable) -> Dict[gke.Cluster, Any]:
+def gke_logs_find_bad_clusters(
+  context: models.Context, logs_by_project: Dict[str, logs.LogsQuery], filter_f: Callable
+) -> Dict[gke.Cluster, Any]:
   """Go through logs and find GKE cluster-level issues.
 
   Returns dict with clusters as key and first matched log entry as
@@ -222,9 +218,9 @@ def get_cluster_object(cluster_dict, partial_path):
 
 
 def gke_logs_find_bad_pods(
-    context: models.Context,
-    logs_by_project: Dict[str, logs.LogsQuery],
-    filter_f: Callable,
+  context: models.Context,
+  logs_by_project: Dict[str, logs.LogsQuery],
+  filter_f: Callable,
 ) -> Dict[gke.Cluster, Any]:
   """Go through logs and find GKE pod-level issues.
 

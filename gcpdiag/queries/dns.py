@@ -30,26 +30,26 @@ def find_dns_records(domain: str) -> Set:
     answer = dns.resolver.resolve_name(domain)
     return set(answer.addresses())
   except dns.resolver.NoAnswer:
-    logging.info("Error: No records found for domain: %s", domain)
+    logging.info('Error: No records found for domain: %s', domain)
     return set()
   except dns.resolver.NXDOMAIN:
-    logging.info("Error: Invalid domain: %s", domain)
+    logging.info('Error: Invalid domain: %s', domain)
     return set()
   except dns.resolver.Timeout:
-    logging.info("Error: DNS resolution timed out for domain: %s", domain)
+    logging.info('Error: DNS resolution timed out for domain: %s', domain)
     return set()
   except dns.name.EmptyLabel:
-    logging.info("Error: Empty A/AAAA record for domain: %s", domain)
+    logging.info('Error: Empty A/AAAA record for domain: %s', domain)
     return set()
   except dns.name.LabelTooLong:
-    logging.info("Error: Invalid record label too long for domain: %s", domain)
+    logging.info('Error: Invalid record label too long for domain: %s', domain)
     return set()
   except dns.name.NameTooLong:
-    logging.info("Error: DNS name too long for domain: %s", domain)
+    logging.info('Error: DNS name too long for domain: %s', domain)
     return set()
   except dns.resolver.NoNameservers:
-    logging.info("Error: No nameservers found for domain: %s", domain)
+    logging.info('Error: No nameservers found for domain: %s', domain)
     return set()
   except dns.exception.DNSException as e:  # Catch any other DNS exception
-    logging.info("Error: An unexpected DNS error occurred: %s", str(e))
+    logging.info('Error: An unexpected DNS error occurred: %s', str(e))
     return set()

@@ -20,6 +20,7 @@ prevent a representative test VM from booting and if it is appropriate
 for your workload. Compute Engine does not enable Secure Boot by default
 because unsigned drivers and other low-level software might not be compatible.
 """
+
 import operator as op
 
 from gcpdiag import lint, models
@@ -29,8 +30,7 @@ from gcpdiag.queries import gce
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context)
   instances_count = 0
-  for i in sorted(instances.values(),
-                  key=op.attrgetter('project_id', 'full_path')):
+  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'full_path')):
     # GKE nodes are not checked by this rule
     if i.is_gke_node():
       continue

@@ -29,16 +29,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context).values()
 
   if not clusters:
-    report.add_skipped(None, "No GKE clusters found")
+    report.add_skipped(None, 'No GKE clusters found')
 
   for cluster in clusters:
     for nodepool in cluster.nodepools:
-
       if nodepool.max_pod_per_node > TOO_FEW_PODS_PER_NODE_THRESHOLD:
         report.add_ok(nodepool)
       else:
         report.add_failed(
-            nodepool,
-            reason=
-            f"the nodepool has too low `maxPodsPerNode` number: {nodepool.max_pod_per_node}"
+          nodepool,
+          reason=f'the nodepool has too low `maxPodsPerNode` number: {nodepool.max_pod_per_node}',
         )

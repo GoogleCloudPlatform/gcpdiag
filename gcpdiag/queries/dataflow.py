@@ -11,11 +11,27 @@ from gcpdiag.executor import get_executor
 from gcpdiag.queries import apis, apis_utils, logs
 
 DATAFLOW_REGIONS = [
-    'asia-northeast2', 'us-central1', 'northamerica-northeast1', 'us-west3',
-    'southamerica-east1', 'us-east1', 'asia-northeast1', 'europe-west1',
-    'europe-west2', 'asia-northeast3', 'us-west4', 'asia-east2',
-    'europe-central2', 'europe-west6', 'us-west2', 'australia-southeast1',
-    'europe-west3', 'asia-south1', 'us-west1', 'us-east4', 'asia-southeast1'
+  'asia-northeast2',
+  'us-central1',
+  'northamerica-northeast1',
+  'us-west3',
+  'southamerica-east1',
+  'us-east1',
+  'asia-northeast1',
+  'europe-west1',
+  'europe-west2',
+  'asia-northeast3',
+  'us-west4',
+  'asia-east2',
+  'europe-central2',
+  'europe-west6',
+  'us-west2',
+  'australia-southeast1',
+  'europe-west3',
+  'asia-south1',
+  'us-west1',
+  'us-east4',
+  'asia-southeast1',
 ]
 
 
@@ -33,6 +49,7 @@ class Job(models.Resource):
   'location': 'europe-west2',
   'startTime': '2024-03-28T12:29:55.284524Z'}
   """
+
   _resource_data: dict
   project_id: str
 
@@ -66,24 +83,21 @@ class Job(models.Resource):
 
   @property
   def sdk_language(self) -> str:
-    return self._resource_data['jobMetadata']['sdkVersion'][
-        'versionDisplayName']
+    return self._resource_data['jobMetadata']['sdkVersion']['versionDisplayName']
 
   @property
   def minutes_in_current_state(self) -> int:
-    timestamp = datetime.strptime(self._resource_data['currentStateTime'],
-                                  '%Y-%m-%dT%H:%M:%S.%fZ')
+    timestamp = datetime.strptime(self._resource_data['currentStateTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
     delta = datetime.now() - timestamp
     return int(delta.total_seconds() // 60)
 
 
-def get_region_dataflow_jobs(api, context: models.Context,
-                             region: str) -> List[Job]:
+def get_region_dataflow_jobs(api, context: models.Context, region: str) -> List[Job]:
   response = apis_utils.list_all(
-      request=api.projects().locations().jobs().list(
-          projectId=context.project_id, location=region),
-      next_function=api.projects().locations().jobs().list_next,
-      response_keyword='jobs')
+    request=api.projects().locations().jobs().list(projectId=context.project_id, location=region),
+    next_function=api.projects().locations().jobs().list_next,
+    response_keyword='jobs',
+  )
   jobs = []
   for job in response:
     location = job.get('location', '')
@@ -96,8 +110,7 @@ def get_region_dataflow_jobs(api, context: models.Context,
     # we could get the specific job but correctly matching the location will take too
     # much effort. Hence get all the jobs and filter afterwards
     # https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list#query-parameters
-    if not context.match_project_resource(
-        location=location, labels=labels, resource=name):
+    if not context.match_project_resource(location=location, labels=labels, resource=name):
       continue
     jobs.append(Job(context.project_id, job))
   return jobs
@@ -112,8 +125,7 @@ def get_all_dataflow_jobs(context: models.Context) -> List[Job]:
 
   result: List[Job] = []
   executor = get_executor(context)
-  for jobs in executor.map(lambda r: get_region_dataflow_jobs(api, context, r),
-                           DATAFLOW_REGIONS):
+  for jobs in executor.map(lambda r: get_region_dataflow_jobs(api, context, r), DATAFLOW_REGIONS):
     result += jobs
 
   print(f'\n\nFound {len(result)} Dataflow jobs\n')
@@ -133,9 +145,7 @@ def get_job(project_id: str, job: str, region: str) -> Union[Job, None]:
   if not apis.is_enabled(project_id, 'dataflow'):
     return None
 
-  query = (api.projects().locations().jobs().get(projectId=project_id,
-                                                 location=region,
-                                                 jobId=job))
+  query = api.projects().locations().jobs().get(projectId=project_id, location=region, jobId=job)
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     return Job(project_id, resp)
@@ -145,8 +155,8 @@ def get_job(project_id: str, job: str, region: str) -> Union[Job, None]:
 
 @caching.cached_api_call
 def get_all_dataflow_jobs_for_project(
-    project_id: str,
-    filter_str: Optional[str] = None,
+  project_id: str,
+  filter_str: Optional[str] = None,
 ) -> Union[List[Job], None]:
   """Fetch all Dataflow jobs for a project."""
   api = apis.get_api('dataflow', 'v1b3', project_id)
@@ -156,16 +166,16 @@ def get_all_dataflow_jobs_for_project(
 
   jobs: List[Job] = []
 
-  request = (api.projects().jobs().aggregated(projectId=project_id,
-                                              filter=filter_str))
+  request = api.projects().jobs().aggregated(projectId=project_id, filter=filter_str)
   logging.debug('listing dataflow jobs of project %s', project_id)
 
   while request:  # Continue as long as there are pages
     response = request.execute(num_retries=config.API_RETRIES)
     if 'jobs' in response:
       jobs.extend([Job(project_id, job) for job in response['jobs']])
-    request = (api.projects().jobs().aggregated_next(
-        previous_request=request, previous_response=response))
+    request = (
+      api.projects().jobs().aggregated_next(previous_request=request, previous_response=response)
+    )
   return jobs
 
 

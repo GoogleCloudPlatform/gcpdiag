@@ -20,6 +20,7 @@ health status is False. Note that the environment health could be intermittently
 unhealthy due to events like scheduled maintenance. However, overall it should
 be healthy.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -35,13 +36,15 @@ def prefetch_rule(context: models.Context):
     return
 
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id, """
+    context.project_id,
+    """
       fetch cloud_composer_environment
       | metric 'composer.googleapis.com/environment/healthy'
       | align fraction_true_aligner(30m)
       | within 6h
       | filter val() == 0
-      """)
+      """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

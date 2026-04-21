@@ -23,8 +23,9 @@ envs_by_project = {}
 
 
 def _check_kerberos_overrides(config) -> bool:
-  return config.get('core-security', '') == 'kerberos' or \
-     any(key.startswith('kerberos-') for key in config.keys())
+  return config.get('core-security', '') == 'kerberos' or any(
+    key.startswith('kerberos-') for key in config.keys()
+  )
 
 
 def prefetch_rule(context: models.Context):
@@ -44,8 +45,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for env in envs:
     if _check_kerberos_overrides(env.airflow_config_overrides):
-      report.add_failed(
-          env,
-          'has Airflow kerberos configurations, which is not supported yet.')
+      report.add_failed(env, 'has Airflow kerberos configurations, which is not supported yet.')
     else:
       report.add_ok(env)

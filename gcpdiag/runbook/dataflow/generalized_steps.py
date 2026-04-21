@@ -29,9 +29,9 @@ class ValidSdk(runbook.Step):
   def execute(self):
     """Checks SDK is not in the list that might trigger known SDK issues."""
     job = dataflow.get_job(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.DATAFLOW_JOB_ID),
-        op.get(flags.JOB_REGION),
+      op.get(flags.PROJECT_ID),
+      op.get(flags.DATAFLOW_JOB_ID),
+      op.get(flags.JOB_REGION),
     )
     if job is None:
       op.add_skipped(resource=None, reason='Job not found.')
@@ -39,10 +39,9 @@ class ValidSdk(runbook.Step):
 
     if job.sdk_support_status != 'SUPPORTED':
       op.add_failed(
-          resource=None,
-          reason=('Dataflow job Beam SDK is not supported. The pipeline may be'
-                  ' rejected.'),
-          remediation='Please use a supported Beam SDK version',
+        resource=None,
+        reason=('Dataflow job Beam SDK is not supported. The pipeline may be rejected.'),
+        remediation='Please use a supported Beam SDK version',
       )
     else:
       op.add_ok(resource=job, reason='Dataflow job Beam SDK is supported.')

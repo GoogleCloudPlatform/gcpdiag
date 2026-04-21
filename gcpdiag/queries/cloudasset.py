@@ -27,6 +27,7 @@ from gcpdiag.queries import apis
 
 class AssetResource(models.Resource):
   """Represents Resource Retrieved from the Cloud Asset Inventory."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -37,8 +38,7 @@ class AssetResource(models.Resource):
   def name(self) -> str:
     m = re.search(r'//(.+)', self._resource_data['name'])
     if not m:
-      raise RuntimeError('can\'t determine name of service %s' %
-                         (self._resource_data['name']))
+      raise RuntimeError("can't determine name of service %s" % (self._resource_data['name']))
     return m.group(1)
 
   @property
@@ -52,9 +52,9 @@ class AssetResource(models.Resource):
 
 @caching.cached_api_call
 def search_all_resources(
-    project_id: str,
-    asset_type: Optional[str] = None,
-    query: Optional[str] = None,
+  project_id: str,
+  asset_type: Optional[str] = None,
+  query: Optional[str] = None,
 ) -> Mapping[str, AssetResource]:
   """Searches all resources in the project."""
   resources: Dict[str, AssetResource] = {}
@@ -64,7 +64,8 @@ def search_all_resources(
   cloudasset_api = apis.get_api('cloudasset', 'v1', project_id)
   logging.debug('fetching list of resources in the project %s', project_id)
   request = cloudasset_api.v1().searchAllResources(
-      scope=f'projects/{project_id}', assetTypes=asset_type, query=query)
+    scope=f'projects/{project_id}', assetTypes=asset_type, query=query
+  )
   response = request.execute(num_retries=config.API_RETRIES)
   try:
     if 'results' in response:

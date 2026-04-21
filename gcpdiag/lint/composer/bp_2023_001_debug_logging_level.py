@@ -29,8 +29,10 @@ envs_by_project = {}
 
 def _check_info_logging_level(config) -> bool:
   # logging section in airflow2, core section in airflow1
-  return config.get('logging-logging_level', 'INFO') == 'INFO' or \
-         config.get('core-logging_level', 'INFO') == 'INFO'
+  return (
+    config.get('logging-logging_level', 'INFO') == 'INFO'
+    or config.get('core-logging_level', 'INFO') == 'INFO'
+  )
 
 
 def prefetch_rule(context: models.Context):

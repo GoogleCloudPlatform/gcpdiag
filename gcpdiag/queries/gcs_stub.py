@@ -22,9 +22,6 @@ from typing import Optional
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 NO_PROJECT_ID_ERROR = 'Not able to call {} without setting project_id for API.'
 
 

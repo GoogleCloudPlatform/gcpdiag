@@ -19,6 +19,7 @@ try creating the cluster in another zone or region. \n If the specified
 Region/Zone is a must, please reach out to GCP support team with the \n previous
 details provided.
 """
+
 import re
 
 from boltons.iterutils import get_path
@@ -28,10 +29,10 @@ from gcpdiag.queries import apis, crm, dataproc, logs
 
 # For pattern matching regex in logs
 err_messages = [
-    'ZONE_RESOURCE_POOL_EXHAUSTED',
-    'does not have enough resources available to fulfill the request',
-    'resource pool exhausted',
-    'does not exist in zone',
+  'ZONE_RESOURCE_POOL_EXHAUSTED',
+  'does not have enough resources available to fulfill the request',
+  'resource pool exhausted',
+  'does not exist in zone',
 ]
 
 logs_by_project = {}
@@ -41,10 +42,10 @@ logging_filter = '"' + '" OR "'.join(err_messages) + '"'
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_dataproc_cluster',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=logging_filter,
+    project_id=context.project_id,
+    resource_type='cloud_dataproc_cluster',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=logging_filter,
   )
 
 
@@ -62,8 +63,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     entries = logs_by_project[context.project_id].entries
     stockout = False
     for log_entry in entries:
-      msg = get_path(log_entry, ('protoPayload', 'status', 'message'),
-                     default='')
+      msg = get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
 
       is_pattern_found = log_search_pattern.search(msg)
 
@@ -72,21 +72,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         continue
       stockout = True
       cluster_name = get_path(
-          log_entry,
-          ('resource', 'labels', 'cluster_name'),
-          default='Unknown Cluster',
+        log_entry,
+        ('resource', 'labels', 'cluster_name'),
+        default='Unknown Cluster',
       )
-      uuid = get_path(log_entry, ('resource', 'labels', 'cluster_uuid'),
-                      default='')
+      uuid = get_path(log_entry, ('resource', 'labels', 'cluster_uuid'), default='')
       region = get_path(log_entry, ('resource', 'labels', 'region'), default='')
       insert_id = get_path(log_entry, 'insertId', default='')
       message = (
-          'The cluster "{}" with UUID "{}" failed \n while getting created due'
-          ' to not having enough resources in designated region "{}" \n '
-          ' Kindly check cloud logging insertId "{}" for more details')
+        'The cluster "{}" with UUID "{}" failed \n while getting created due'
+        ' to not having enough resources in designated region "{}" \n '
+        ' Kindly check cloud logging insertId "{}" for more details'
+      )
 
-      report.add_failed(project,
-                        message.format(cluster_name, uuid, region, insert_id))
+      report.add_failed(project, message.format(cluster_name, uuid, region, insert_id))
 
     # There wasn't a stockout messages in logs, project should
     # only be ok if there isn't any stockout detected

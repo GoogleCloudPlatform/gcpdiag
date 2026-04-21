@@ -37,6 +37,7 @@ import googleapiclient.errors
 
 from gcpdiag import config, models, utils
 from gcpdiag.executor import get_executor
+
 # to avoid confusion with gcpdiag.lint.gce
 from gcpdiag.queries import gce as gce_mod
 from gcpdiag.queries import logs
@@ -44,6 +45,7 @@ from gcpdiag.queries import logs
 
 class LintRuleClass(enum.Enum):
   """Identifies rule class."""
+
   ERR = 'ERR'
   BP = 'BP'
   SEC = 'SEC'
@@ -61,6 +63,7 @@ class LintRuleClass(enum.Enum):
 @dataclasses.dataclass
 class LintRule:
   """Identifies a lint rule."""
+
   product: str
   rule_class: LintRuleClass
   rule_id: str
@@ -94,6 +97,7 @@ class LintRuleResult:
 
 class LintReportRuleInterface:
   """LintRule objects use this interface to report their results."""
+
   rule: LintRule
   results: List[LintRuleResult]
   _lint_result: 'LintResults'
@@ -115,32 +119,24 @@ class LintReportRuleInterface:
   def _any_result_with_status(self, status: str) -> bool:
     return any(r.status == status for r in self.results)
 
-  def add_skipped(self,
-                  resource: Optional[models.Resource],
-                  reason: str,
-                  short_info: str = None) -> None:
+  def add_skipped(
+    self, resource: Optional[models.Resource], reason: str, short_info: str = None
+  ) -> None:
     self.results.append(
-        LintRuleResult(status='skipped',
-                       resource=resource,
-                       reason=reason,
-                       short_info=short_info))
+      LintRuleResult(status='skipped', resource=resource, reason=reason, short_info=short_info)
+    )
 
   def add_ok(self, resource: models.Resource, short_info: str = '') -> None:
     self.results.append(
-        LintRuleResult(status='ok',
-                       resource=resource,
-                       reason=None,
-                       short_info=short_info))
+      LintRuleResult(status='ok', resource=resource, reason=None, short_info=short_info)
+    )
 
-  def add_failed(self,
-                 resource: models.Resource,
-                 reason: str = None,
-                 short_info: str = None) -> None:
+  def add_failed(
+    self, resource: models.Resource, reason: str = None, short_info: str = None
+  ) -> None:
     self.results.append(
-        LintRuleResult(status='failed',
-                       resource=resource,
-                       reason=reason,
-                       short_info=short_info))
+      LintRuleResult(status='failed', resource=resource, reason=reason, short_info=short_info)
+    )
 
   def finish(self) -> None:
     self._lint_result.register_finished_rule_report(self)
@@ -161,7 +157,8 @@ class LintResultsHandler(Protocol):
 
 
 class LintResults:
-  """ Class representing results of lint """
+  """Class representing results of lint"""
+
   _result_handlers: List[LintResultsHandler]
   _rule_reports: List[LintReportRuleInterface]
 
@@ -185,13 +182,11 @@ class LintResults:
   def create_rule_report(self, rule: LintRule) -> LintReportRuleInterface:
     return LintReportRuleInterface(rule=rule, lint_result=self)
 
-  def register_finished_rule_report(
-      self, rule_report: LintReportRuleInterface) -> None:
+  def register_finished_rule_report(self, rule_report: LintReportRuleInterface) -> None:
     self._rule_reports.append(rule_report)
     self._notify_result_handlers(rule_report)
 
-  def _notify_result_handlers(self,
-                              rule_report: LintReportRuleInterface) -> None:
+  def _notify_result_handlers(self, rule_report: LintReportRuleInterface) -> None:
     for handler in self._result_handlers:
       handler.process_rule_report(rule_report)
 
@@ -199,8 +194,7 @@ class LintResults:
     totals: Dict[str, int]
     totals = {}
     for rule_report in self._rule_reports:
-      totals[rule_report.overall_status] = totals.get(
-          rule_report.overall_status, 0) + 1
+      totals[rule_report.overall_status] = totals.get(rule_report.overall_status, 0) + 1
     return totals
 
   def get_rule_statuses(self) -> Dict[str, str]:
@@ -258,13 +252,10 @@ class LintRulesPattern:
         # convert wildcard match to regex pattern
         self.rule_id = re.compile(re.sub(r'\*', '.*', pattern_elems[2]))
     else:
-      raise ValueError(
-          f"rule pattern doesn't look like a pattern: {pattern_str}")
+      raise ValueError(f"rule pattern doesn't look like a pattern: {pattern_str}")
 
   def __str__(self):
-    # pylint: disable=consider-using-f-string
-    return '{}/{}/{}'.format(self.product or '*', self.rule_class or '*',
-                             self.rule_id or '*')
+    return '{}/{}/{}'.format(self.product or '*', self.rule_class or '*', self.rule_id or '*')
 
   def match_rule(self, rule: LintRule) -> bool:
     if self.product:
@@ -279,30 +270,27 @@ class LintRulesPattern:
     return True
 
 
-class NotLintRule(Exception):
+class NotLintRuleError(Exception):
   pass
 
 
-# pylint: disable=unsubscriptable-object
 def is_function_named(name: str) -> Callable[[Any], bool]:
   return lambda obj: inspect.isfunction(obj) and obj.__name__ == name
 
 
-def get_module_function_or_none(module: types.ModuleType,
-                                name: str) -> Optional[Callable]:
+def get_module_function_or_none(module: types.ModuleType, name: str) -> Optional[Callable]:
   members = inspect.getmembers(module, is_function_named(name))
   assert 0 <= len(members) <= 1
   return None if len(members) < 1 else members[0][1]
 
 
 class ExecutionStrategy(Protocol):
-
-  def run_rules(self, context: models.Context, result: LintResults,
-                rules: Iterable[LintRule]) -> None:
+  def run_rules(
+    self, context: models.Context, result: LintResults, rules: Iterable[LintRule]
+  ) -> None:
     pass
 
-  def filter_runnable_rules(self,
-                            rules: Iterable[LintRule]) -> Iterable[LintRule]:
+  def filter_runnable_rules(self, rules: Iterable[LintRule]) -> Iterable[LintRule]:
     pass
 
 
@@ -311,6 +299,7 @@ class SequentialExecutionStrategy:
   Execution strategy that groups multiple execution strategies
   and runs them sequentially one after another.
   """
+
   strategies: List[ExecutionStrategy]
 
   def __init__(self, strategies: List[ExecutionStrategy]) -> None:
@@ -320,18 +309,19 @@ class SequentialExecutionStrategy:
     runnable_rules: Set[LintRule]
     runnable_rules = set()
     for strategy in self.strategies:
-      runnable_rules = runnable_rules.union(
-          strategy.filter_runnable_rules(rules))
+      runnable_rules = runnable_rules.union(strategy.filter_runnable_rules(rules))
     return list(runnable_rules)
 
-  def run_rules(self, context: models.Context, result: LintResults,
-                rules: Iterable[LintRule]) -> None:
+  def run_rules(
+    self, context: models.Context, result: LintResults, rules: Iterable[LintRule]
+  ) -> None:
     for strategy in self.strategies:
       strategy.run_rules(context, result, rules)
 
 
 class RuleModule:
-  """ Encapsulate actions related to a specific python rule module """
+  """Encapsulate actions related to a specific python rule module"""
+
   _module: types.ModuleType
 
   def __init__(self, python_module: types.ModuleType) -> None:
@@ -351,7 +341,7 @@ class RuleModule:
 
 
 class DefaultPythonModulesGateway:
-  """ Encapsulate actions related to python rule modules """
+  """Encapsulate actions related to python rule modules"""
 
   def list_pkg_modules(self, pkg: Any) -> List[str]:
     prefix = pkg.__name__ + '.'
@@ -363,7 +353,6 @@ class DefaultPythonModulesGateway:
 
 
 class PythonModulesGateway(Protocol):
-
   def list_pkg_modules(self, pkg: Any) -> Iterable[str]:
     pass
 
@@ -374,32 +363,34 @@ class PythonModulesGateway(Protocol):
 def pick_default_execution_strategy(run_async: bool) -> ExecutionStrategy:
   if run_async:
     return SequentialExecutionStrategy(
-        strategies=[SyncExecutionStrategy(),
-                    AsyncExecutionStrategy()])
+      strategies=[SyncExecutionStrategy(), AsyncExecutionStrategy()]
+    )
   else:
     return SyncExecutionStrategy()
 
 
 class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
+
   rules: List[LintRule]
   execution_strategy: ExecutionStrategy
   modules_gateway: PythonModulesGateway
   _loaded_rules: List[LintRule]
 
-  def __init__(self,
-               load_extended: bool = False,
-               run_async: bool = False,
-               execution_strategy: ExecutionStrategy = None,
-               modules_gateway: Optional[PythonModulesGateway] = None,
-               include: Iterable[LintRulesPattern] = None,
-               exclude: Iterable[LintRulesPattern] = None) -> None:
+  def __init__(
+    self,
+    load_extended: bool = False,
+    run_async: bool = False,
+    execution_strategy: ExecutionStrategy = None,
+    modules_gateway: Optional[PythonModulesGateway] = None,
+    include: Iterable[LintRulesPattern] = None,
+    exclude: Iterable[LintRulesPattern] = None,
+  ) -> None:
     self._exclude = exclude
     self._include = include
     self._loaded_rules = []
     self.load_extended = load_extended
-    self.execution_strategy = execution_strategy or pick_default_execution_strategy(
-        run_async)
+    self.execution_strategy = execution_strategy or pick_default_execution_strategy(run_async)
     self.modules_gateway = modules_gateway or DefaultPythonModulesGateway()
     self.result = LintResults()
 
@@ -423,21 +414,24 @@ class LintRuleRepository:
   def get_rule_by_module_name(self, name: str) -> LintRule:
     # Skip code tests
     if name.endswith('_test'):
-      raise NotLintRule()
+      raise NotLintRuleError()
 
     # Determine Lint Rule parameters based on the module name.
     m = re.search(
-        r"""
+      r"""
          \.
          (?P<product>[^\.]+)                 # product path, e.g.: .gke.
          \.
          (?P<class_prefix>[a-z]+(?:_ext)?)   # class prefix, e.g.: 'err_' or 'err_ext'
          _
          (?P<rule_id>\d+_\d+)                # id: 2020_001
-      """, name, re.VERBOSE)
+      """,
+      name,
+      re.VERBOSE,
+    )
     if not m:
       # Assume this is not a rule (e.g. could be a "utility" module)
-      raise NotLintRule()
+      raise NotLintRuleError()
 
     product, rule_class, rule_id = m.group('product', 'class_prefix', 'rule_id')
 
@@ -450,9 +444,7 @@ class LintRuleRepository:
     async_run_rule_f = module.get_method('async_run_rule')
 
     if not (run_rule_f or async_run_rule_f):
-      raise RuntimeError(
-          f'module {module} doesn\'t have a run_rule or an async_run_rule function'
-      )
+      raise RuntimeError(f"module {module} doesn't have a run_rule or an async_run_rule function")
 
     # Get a reference to the prepare_rule() function.
     prepare_rule_f = module.get_method('prepare_rule')
@@ -466,29 +458,29 @@ class LintRuleRepository:
     # Get module docstring.
     doc = module.get_module_doc()
     if not doc:
-      raise RuntimeError(f'module {module} doesn\'t provide a module docstring')
+      raise RuntimeError(f"module {module} doesn't provide a module docstring")
     # The first line is the short "good state description"
     doc_lines = doc.splitlines()
     short_desc = doc_lines[0]
     long_desc = ''
     if len(doc_lines) >= 3:
       if doc_lines[1]:
-        raise RuntimeError(
-            f'module {module} has a non-empty second line in the module docstring'
-        )
+        raise RuntimeError(f'module {module} has a non-empty second line in the module docstring')
       long_desc = '\n'.join(doc_lines[2:])
 
     # Instantiate the LintRule object and register it
-    rule = LintRule(product=product,
-                    rule_class=LintRuleClass(rule_class.upper()),
-                    rule_id=rule_id,
-                    run_rule_f=run_rule_f,
-                    async_run_rule_f=async_run_rule_f,
-                    prepare_rule_f=prepare_rule_f,
-                    prefetch_rule_f=prefetch_rule_f,
-                    short_desc=short_desc,
-                    long_desc=long_desc,
-                    keywords=keywords)
+    rule = LintRule(
+      product=product,
+      rule_class=LintRuleClass(rule_class.upper()),
+      rule_id=rule_id,
+      run_rule_f=run_rule_f,
+      async_run_rule_f=async_run_rule_f,
+      prepare_rule_f=prepare_rule_f,
+      prefetch_rule_f=prefetch_rule_f,
+      short_desc=short_desc,
+      long_desc=long_desc,
+      keywords=keywords,
+    )
     return rule
 
   def load_rules(self, pkg: types.ModuleType) -> None:
@@ -497,7 +489,7 @@ class LintRuleRepository:
         if '_ext_' in name and not self.load_extended:
           continue
         rule = self.get_rule_by_module_name(name)
-      except NotLintRule:
+      except NotLintRuleError:
         continue
 
       self._register_rule(rule)
@@ -513,10 +505,9 @@ class LintRuleRepository:
 
 
 class AsyncRunner:
-  """ Helper class to represent single execution operation """
+  """Helper class to represent single execution operation"""
 
-  def __init__(self, context: models.Context, result: LintResults,
-               rules: Iterable[LintRule]):
+  def __init__(self, context: models.Context, result: LintResults, rules: Iterable[LintRule]):
     self._context = context
     self._result = result
     self._rules = rules
@@ -536,10 +527,11 @@ class AsyncRunner:
 
 
 class AsyncExecutionStrategy:
-  """ Execute async rules """
+  """Execute async rules"""
 
-  def run_rules(self, context: models.Context, result: LintResults,
-                rules: Iterable[LintRule]) -> None:
+  def run_rules(
+    self, context: models.Context, result: LintResults, rules: Iterable[LintRule]
+  ) -> None:
     rules = self.filter_runnable_rules(rules)
     AsyncRunner(context, result, rules).run()
 
@@ -555,14 +547,14 @@ def wrap_prefetch_rule_f(rule_name, prefetch_rule_f, context):
 
 
 class SyncExecutionStrategy:
-  """ Execute rules using thread pool """
+  """Execute rules using thread pool"""
 
   def filter_runnable_rules(self, rules: Iterable[LintRule]) -> List[LintRule]:
     return [r for r in rules if r.run_rule_f]
 
-  def run_rules(self, context: models.Context, result: LintResults,
-                rules: Iterable[LintRule]) -> None:
-
+  def run_rules(
+    self, context: models.Context, result: LintResults, rules: Iterable[LintRule]
+  ) -> None:
     rules_to_run = self.filter_runnable_rules(rules)
 
     # Run the "prepare_rule" functions first, in a single thread.
@@ -586,10 +578,9 @@ class SyncExecutionStrategy:
     # execution of the "run_rule" executions later.
     for rule in rules_to_run:
       if rule.prefetch_rule_f:
-        rule.prefetch_rule_future = executor.submit(wrap_prefetch_rule_f,
-                                                    str(rule),
-                                                    rule.prefetch_rule_f,
-                                                    context)
+        rule.prefetch_rule_future = executor.submit(
+          wrap_prefetch_rule_f, str(rule), rule.prefetch_rule_f, context
+        )
 
     # While the prefetch_rule functions are still being executed in multiple
     # threads, start executing the rules, but block and wait in case the
@@ -612,9 +603,7 @@ class SyncExecutionStrategy:
             if config.get('verbose') >= 2:
               now = time.time()
               if now - last_threads_dump > 10:
-                logging.debug(
-                    'THREADS: %s',
-                    ', '.join([t.name for t in threading.enumerate()]))
+                logging.debug('THREADS: %s', ', '.join([t.name for t in threading.enumerate()]))
                 last_threads_dump = now
         # run the rule
         assert rule.run_rule_f is not None
@@ -622,11 +611,9 @@ class SyncExecutionStrategy:
       except (utils.GcpApiError, googleapiclient.errors.HttpError) as err:
         if isinstance(err, googleapiclient.errors.HttpError):
           err = utils.GcpApiError(err)
-        logging.warning('%s: %s while processing rule: %s',
-                        type(err).__name__, err, rule)
+        logging.warning('%s: %s while processing rule: %s', type(err).__name__, err, rule)
         rule_report.add_skipped(None, f'API error: {err}', None)
       except (RuntimeError, ValueError, KeyError, TypeError) as err:
-        logging.warning('%s: %s while processing rule: %s',
-                        type(err).__name__, err, rule)
+        logging.warning('%s: %s while processing rule: %s', type(err).__name__, err, rule)
         rule_report.add_skipped(None, f'Error: {err}', None)
       rule_report.finish()

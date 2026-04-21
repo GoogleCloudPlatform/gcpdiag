@@ -23,9 +23,13 @@ from gcpdiag.queries import apis_stub
 from gcpdiag.queries import lb as queries_lb
 from gcpdiag.runbook import lb, op, snapshot_test_base
 from gcpdiag.runbook.lb import flags
-from gcpdiag.runbook.lb.latency import (LatencyEnd, LbBackendLatencyCheck,
-                                        LbErrorRateCheck, LbLatencyStart,
-                                        LbRequestCountCheck)
+from gcpdiag.runbook.lb.latency import (
+  LatencyEnd,
+  LbBackendLatencyCheck,
+  LbErrorRateCheck,
+  LbLatencyStart,
+  LbRequestCountCheck,
+)
 
 
 class Test(snapshot_test_base.RulesSnapshotTestBase):
@@ -34,22 +38,26 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   project_id = ''
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-lb3-aaaa',
       'forwarding_rule_name': 'https-content-rule',
-      'region': 'global'
-  }, {
+      'region': 'global',
+    },
+    {
       'project_id': 'gcpdiag-lb3-aaaa',
       'forwarding_rule_name': 'https-content-rule-working',
-      'region': 'global'
-  }, {
+      'region': 'global',
+    },
+    {
       'project_id': 'gcpdiag-lb3-aaaa',
       'forwarding_rule_name': 'https-content-rule',
       'region': 'global',
       'backend_latency_threshold': '700000',
       'request_count_threshold': '700000',
-      'error_rate_threshold': '50'
-  }]
+      'error_rate_threshold': '50',
+    },
+  ]
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -60,18 +68,17 @@ class TestLatencyLogic(unittest.TestCase):
     super().setUp()
     self.mock_fr = mock.MagicMock()
     self.mock_fr.name = 'test-fr'
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB
     self.operator = op.Operator(mock.MagicMock())
     self.operator.parameters = {
-        flags.PROJECT_ID: 'gcpdiag-lb3-aaaa',
-        flags.FORWARDING_RULE_NAME: 'test-fr',
-        flags.REGION: 'global',
-        'start_time': '2024-01-01T00:00:00Z',
-        'end_time': '2024-01-01T01:00:00Z',
-        flags.BACKEND_LATENCY_THRESHOLD: 200,
-        flags.REQUEST_COUNT_THRESHOLD: 150,
-        flags.ERROR_RATE_THRESHOLD: 1,
+      flags.PROJECT_ID: 'gcpdiag-lb3-aaaa',
+      flags.FORWARDING_RULE_NAME: 'test-fr',
+      flags.REGION: 'global',
+      'start_time': '2024-01-01T00:00:00Z',
+      'end_time': '2024-01-01T01:00:00Z',
+      flags.BACKEND_LATENCY_THRESHOLD: 200,
+      flags.REQUEST_COUNT_THRESHOLD: 150,
+      flags.ERROR_RATE_THRESHOLD: 1,
     }
     self.operator.set_run_id('test')
     self.operator.set_step(mock.Mock(execution_id='test-step'))
@@ -81,8 +88,7 @@ class TestLatencyLogic(unittest.TestCase):
   @mock.patch('gcpdiag.runbook.op.add_skipped')
   def test_start_step_unspecified_type(self, mock_skip, mock_get_fr):
     """Covers LbLatencyStart with unspecified LB type."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.LOAD_BALANCER_TYPE_UNSPECIFIED)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.LOAD_BALANCER_TYPE_UNSPECIFIED
     mock_get_fr.return_value = self.mock_fr
     step = LbLatencyStart()
 
@@ -95,8 +101,7 @@ class TestLatencyLogic(unittest.TestCase):
   @mock.patch('gcpdiag.runbook.op.add_skipped')
   def test_start_step_unsupported_type(self, mock_skip, mock_get_fr):
     """Covers LbLatencyStart with unsupported LB type."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.EXTERNAL_PASSTHROUGH_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.EXTERNAL_PASSTHROUGH_LB
     mock_get_fr.return_value = self.mock_fr
     step = LbLatencyStart()
 
@@ -136,8 +141,7 @@ class TestLatencyLogic(unittest.TestCase):
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')
   def test_backend_latency_regional_external(self, mock_get_fr, mock_query):
     """Covers Regional External LB branch in LbBackendLatencyCheck."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB
     mock_get_fr.return_value = self.mock_fr
     mock_query.return_value = {'key': {'values': [[100]]}}
     step = LbBackendLatencyCheck()
@@ -147,18 +151,14 @@ class TestLatencyLogic(unittest.TestCase):
 
     query_str = mock_query.call_args[0][1]
     self.assertIn('http_external_regional_lb_rule', query_str)
-    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'",
-                  query_str)
-    self.assertIn(
-        f"resource.region == '{self.operator.parameters[flags.REGION]}'",
-        query_str)
+    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'", query_str)
+    self.assertIn(f"resource.region == '{self.operator.parameters[flags.REGION]}'", query_str)
 
   @mock.patch('gcpdiag.queries.monitoring.query')
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')
   def test_backend_latency_regional_internal(self, mock_get_fr, mock_query):
     """Covers  Regional Internal LB branch in LbBackendLatencyCheck."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB
     mock_get_fr.return_value = self.mock_fr
     mock_query.return_value = {'key': {'values': [[100]]}}
     step = LbBackendLatencyCheck()
@@ -168,18 +168,14 @@ class TestLatencyLogic(unittest.TestCase):
 
     query_str = mock_query.call_args[0][1]
     self.assertIn('internal_http_lb_rule', query_str)
-    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'",
-                  query_str)
-    self.assertIn(
-        f"resource.region == '{self.operator.parameters[flags.REGION]}'",
-        query_str)
+    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'", query_str)
+    self.assertIn(f"resource.region == '{self.operator.parameters[flags.REGION]}'", query_str)
 
   @mock.patch('gcpdiag.queries.monitoring.query')
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')
   def test_request_count_regional_external(self, mock_get_fr, mock_query):
     """Covers Regional External LB branch in LbRequestCountCheck."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB
     mock_get_fr.return_value = self.mock_fr
     mock_query.return_value = {'key': {'values': [[10]]}}
     step = LbRequestCountCheck()
@@ -189,18 +185,14 @@ class TestLatencyLogic(unittest.TestCase):
 
     query_str = mock_query.call_args[0][1]
     self.assertIn('http_external_regional_lb_rule', query_str)
-    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'",
-                  query_str)
-    self.assertIn(
-        f"resource.region == '{self.operator.parameters[flags.REGION]}'",
-        query_str)
+    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'", query_str)
+    self.assertIn(f"resource.region == '{self.operator.parameters[flags.REGION]}'", query_str)
 
   @mock.patch('gcpdiag.queries.monitoring.query')
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')
   def test_request_count_regional_internal(self, mock_get_fr, mock_query):
     """Covers Regional Internal LB branch in LbRequestCountCheck."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB
     mock_get_fr.return_value = self.mock_fr
     mock_query.return_value = {'key': {'values': [[10]]}}
     step = LbRequestCountCheck()
@@ -210,19 +202,14 @@ class TestLatencyLogic(unittest.TestCase):
 
     query_str = mock_query.call_args[0][1]
     self.assertIn('internal_http_lb_rule', query_str)
-    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'",
-                  query_str)
-    self.assertIn(
-        f"resource.region == '{self.operator.parameters[flags.REGION]}'",
-        query_str)
+    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'", query_str)
+    self.assertIn(f"resource.region == '{self.operator.parameters[flags.REGION]}'", query_str)
 
   @mock.patch('gcpdiag.queries.monitoring.query')
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')
-  def test_error_rate_calculation_and_regional_internal(self, mock_get_fr,
-                                                        mock_query):
+  def test_error_rate_calculation_and_regional_internal(self, mock_get_fr, mock_query):
     """Covers Error rate calculation for Regional Internal."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB
     mock_get_fr.return_value = self.mock_fr
     mock_query.return_value = {'key': {'values': [[5]]}}
     step = LbErrorRateCheck(average_request_count=100)
@@ -232,17 +219,13 @@ class TestLatencyLogic(unittest.TestCase):
 
     query_str = mock_query.call_args[0][1]
     self.assertIn('internal_http_lb_rule', query_str)
-    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'",
-                  query_str)
-    self.assertIn(
-        f"resource.region == '{self.operator.parameters[flags.REGION]}'",
-        query_str)
+    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'", query_str)
+    self.assertIn(f"resource.region == '{self.operator.parameters[flags.REGION]}'", query_str)
 
   @mock.patch('gcpdiag.config.get', return_value=False)
   @mock.patch('gcpdiag.runbook.op.prompt', return_value=op.YES)
   @mock.patch('gcpdiag.runbook.op.info')
-  def test_latency_end_yes(self, mock_info, unused_mock_prompt,
-                           unused_mock_config):
+  def test_latency_end_yes(self, mock_info, unused_mock_prompt, unused_mock_config):
     """Covers LatencyEnd step logic."""
     step = LatencyEnd()
 
@@ -258,15 +241,13 @@ class TestLatencyLogic(unittest.TestCase):
     step = LbLatencyStart()
     with op.operator_context(self.operator):
       step.execute()
-    mock_skip.assert_called_once_with(mock.ANY,
-                                      reason='Compute API is not enabled')
+    mock_skip.assert_called_once_with(mock.ANY, reason='Compute API is not enabled')
 
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')
   @mock.patch('gcpdiag.runbook.op.add_skipped')
   def test_start_step_http_error(self, mock_skip, mock_get_fr):
     """Covers HttpError when fetching forwarding rule."""
-    mock_get_fr.side_effect = apiclient.errors.HttpError(
-        mock.Mock(status=404), b'Not Found')
+    mock_get_fr.side_effect = apiclient.errors.HttpError(mock.Mock(status=404), b'Not Found')
     step = LbLatencyStart()
     with op.operator_context(self.operator):
       step.execute()
@@ -294,8 +275,7 @@ class TestLatencyLogic(unittest.TestCase):
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')
   def test_error_rate_regional_external(self, mock_get_fr, mock_query):
     """Covers  Regional External LB branch in LbErrorRateCheck."""
-    self.mock_fr.load_balancer_type = (
-        queries_lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB)
+    self.mock_fr.load_balancer_type = queries_lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB
     mock_get_fr.return_value = self.mock_fr
     mock_query.return_value = {'key': {'values': [[5]]}}
     step = LbErrorRateCheck(average_request_count=100)
@@ -303,11 +283,8 @@ class TestLatencyLogic(unittest.TestCase):
       step.execute()
     query_str = mock_query.call_args[0][1]
     self.assertIn('http_external_regional_lb_rule', query_str)
-    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'",
-                  query_str)
-    self.assertIn(
-        f"resource.region == '{self.operator.parameters[flags.REGION]}'",
-        query_str)
+    self.assertIn(f"resource.forwarding_rule_name == '{self.mock_fr.name}'", query_str)
+    self.assertIn(f"resource.region == '{self.operator.parameters[flags.REGION]}'", query_str)
 
   @mock.patch('gcpdiag.queries.monitoring.query')
   @mock.patch('gcpdiag.queries.lb.get_forwarding_rule')

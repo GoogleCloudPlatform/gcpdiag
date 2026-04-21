@@ -36,21 +36,20 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   min_cpu_platform = 'Intel Ice Lake'
 
   rule_parameters = [
-      {
-          'project_id': 'gcpdiag-gce-vm-performance',
-          'instance_name': 'faulty-linux-ssh',
-          'zone': 'europe-west2-a',
-      },
-      {
-          'project_id': 'gcpdiag-gce-vm-performance',
-          'instance_name': 'faulty-windows-ssh',
-          'zone': 'europe-west2-a',
-      },
+    {
+      'project_id': 'gcpdiag-gce-vm-performance',
+      'instance_name': 'faulty-linux-ssh',
+      'zone': 'europe-west2-a',
+    },
+    {
+      'project_id': 'gcpdiag-gce-vm-performance',
+      'instance_name': 'faulty-windows-ssh',
+      'zone': 'europe-west2-a',
+    },
   ]
 
 
 class VmPerformanceTest(unittest.TestCase):
-
   def test_legacy_parameter_handler(self):
     runbook = vm_performance.VmPerformance()
     parameters = {'name': 'test-instance', 'project_id': 'test-project'}
@@ -74,39 +73,31 @@ class VmPerformanceStepTestBase(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    self.enterContext(
-        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
-    self.mock_interface = mock.create_autospec(op.InteractionInterface,
-                                               instance=True)
+    self.enterContext(mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_interface = mock.create_autospec(op.InteractionInterface, instance=True)
     self.mock_interface.rm = mock.Mock()
     self.operator = op.Operator(self.mock_interface)
     self.operator.run_id = 'test-run'
     self.operator.messages = MockMessage()
 
     self.params = {
-        flags.PROJECT_ID:
-            'test-project',
-        flags.ZONE:
-            'us-central1-a',
-        flags.INSTANCE_NAME:
-            'test-instance',
-        flags.START_TIME:
-            datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
-        flags.END_TIME:
-            datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
+      flags.PROJECT_ID: 'test-project',
+      flags.ZONE: 'us-central1-a',
+      flags.INSTANCE_NAME: 'test-instance',
+      flags.START_TIME: datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
+      flags.END_TIME: datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
     }
     self.operator.parameters = self.params
 
-    self.mock_gce_get_instance = self.enterContext(
-        mock.patch('gcpdiag.queries.gce.get_instance'))
-    self.mock_crm_get_project = self.enterContext(
-        mock.patch('gcpdiag.queries.crm.get_project'))
-    self.mock_monitoring_query = self.enterContext(
-        mock.patch('gcpdiag.queries.monitoring.query'))
+    self.mock_gce_get_instance = self.enterContext(mock.patch('gcpdiag.queries.gce.get_instance'))
+    self.mock_crm_get_project = self.enterContext(mock.patch('gcpdiag.queries.crm.get_project'))
+    self.mock_monitoring_query = self.enterContext(mock.patch('gcpdiag.queries.monitoring.query'))
     self.mock_logs_realtime_query = self.enterContext(
-        mock.patch('gcpdiag.queries.logs.realtime_query'))
+      mock.patch('gcpdiag.queries.logs.realtime_query')
+    )
     self.mock_gce_get_all_disks_of_instance = self.enterContext(
-        mock.patch('gcpdiag.queries.gce.get_all_disks_of_instance'))
+      mock.patch('gcpdiag.queries.gce.get_all_disks_of_instance')
+    )
 
     self.mock_instance = mock.Mock(spec=gce.Instance)
     self.mock_instance.project_id = 'test-project'
@@ -116,8 +107,7 @@ class VmPerformanceStepTestBase(unittest.TestCase):
     self.mock_instance.is_running = True
     self.mock_instance.disks = [{'deviceName': 'disk-1'}]
     self.mock_instance.machine_type.return_value = 'n1-standard-1'
-    self.mock_instance.laststarttimestamp.return_value = (
-        '2025-10-27T10:00:00.000000+00:00')
+    self.mock_instance.laststarttimestamp.return_value = '2025-10-27T10:00:00.000000+00:00'
     self.mock_instance.laststoptimestamp.return_value = None
     self.mock_gce_get_instance.return_value = self.mock_instance
     self.mock_disk = mock.Mock(spec=gce.Disk)
@@ -136,9 +126,9 @@ class VmPerformanceStartTest(VmPerformanceStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_gce_get_instance.assert_called_once_with(
-        project_id='test-project',
-        zone='us-central1-a',
-        instance_name='test-instance',
+      project_id='test-project',
+      zone='us-central1-a',
+      instance_name='test-instance',
     )
     self.assertEqual(self.operator.parameters[flags.ID], '12345')
     self.mock_interface.add_failed.assert_not_called()
@@ -155,7 +145,8 @@ class VmPerformanceStartTest(VmPerformanceStepTestBase):
 
   def test_instance_not_found(self):
     self.mock_gce_get_instance.side_effect = googleapiclient.errors.HttpError(
-        mock.Mock(status=404), b'not found')
+      mock.Mock(status=404), b'not found'
+    )
     step = vm_performance.VmPerformanceStart()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -170,9 +161,9 @@ class VmPerformanceStartTest(VmPerformanceStepTestBase):
       self.operator.set_step(step)
       step.execute()
     self.mock_gce_get_instance.assert_called_once_with(
-        project_id='test-project', zone='us-central1-a', instance_name=None)
-    self.assertEqual(self.operator.parameters[flags.INSTANCE_NAME],
-                     'test-instance')
+      project_id='test-project', zone='us-central1-a', instance_name=None
+    )
+    self.assertEqual(self.operator.parameters[flags.INSTANCE_NAME], 'test-instance')
 
 
 class DiskHealthCheckTest(VmPerformanceStepTestBase):
@@ -210,14 +201,10 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
 
   def test_e2_cpu_not_overcommitted(self):
     self.mock_monitoring_query.side_effect = [
-        # cpu_count_query result
-        {
-            'some_id': {
-                'values': [[2]]
-            }
-        },
-        # cpu_overcomit_metrics result
-        [],
+      # cpu_count_query result
+      {'some_id': {'values': [[2]]}},
+      # cpu_overcomit_metrics result
+      [],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
     with op.operator_context(self.operator):
@@ -229,16 +216,10 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
 
   def test_e2_cpu_overcommitted(self):
     self.mock_monitoring_query.side_effect = [
-        # cpu_count_query result
-        {
-            'some_id': {
-                'values': [[2]]
-            }
-        },
-        # cpu_overcomit_metrics result
-        [{
-            'metric': 'data'
-        }],
+      # cpu_count_query result
+      {'some_id': {'values': [[2]]}},
+      # cpu_overcomit_metrics result
+      [{'metric': 'data'}],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
     with op.operator_context(self.operator):
@@ -252,12 +233,8 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
     self.mock_instance.is_sole_tenant_vm = True
     self.mock_instance.machine_type.return_value = 'n1-standard-1'
     self.mock_monitoring_query.side_effect = [
-        {
-            'some_id': {
-                'values': [[1]]
-            }
-        },
-        [],
+      {'some_id': {'values': [[1]]}},
+      [],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
     with op.operator_context(self.operator):
@@ -290,27 +267,16 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
   @mock.patch('gcpdiag.runbook.gce.vm_performance.datetime')
   def test_instance_just_started_within_window(self, mock_datetime):
     # Mock current time to be close to laststarttimestamp
-    mock_now = datetime.datetime(2025,
-                                 10,
-                                 27,
-                                 10,
-                                 2,
-                                 0,
-                                 tzinfo=datetime.timezone.utc)
+    mock_now = datetime.datetime(2025, 10, 27, 10, 2, 0, tzinfo=datetime.timezone.utc)
     mock_datetime.now.return_value = mock_now
     mock_datetime.strptime.side_effect = datetime.datetime.strptime
     mock_datetime.timedelta = datetime.timedelta
 
     self.mock_instance.is_running = False
-    self.mock_instance.laststoptimestamp.return_value = (
-        '2025-10-27T09:55:00.000000+00:00')
+    self.mock_instance.laststoptimestamp.return_value = '2025-10-27T09:55:00.000000+00:00'
     self.mock_monitoring_query.side_effect = [
-        {
-            'some_id': {
-                'values': [[2]]
-            }
-        },
-        [],
+      {'some_id': {'values': [[2]]}},
+      [],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
     with op.operator_context(self.operator):
@@ -329,9 +295,7 @@ class DiskAvgIOLatencyCheckTest(VmPerformanceStepTestBase):
     self.mock_disk = mock.Mock(spec=gce.Disk)
     self.mock_disk.name = 'disk-1'
     self.mock_disk.type = 'pd-balanced'
-    self.mock_gce_get_all_disks_of_instance.return_value = {
-        'disk-1': self.mock_disk
-    }
+    self.mock_gce_get_all_disks_of_instance.return_value = {'disk-1': self.mock_disk}
 
   def test_latency_ok(self):
     self.mock_monitoring_query.return_value = []
@@ -369,8 +333,8 @@ class CheckLiveMigrationsTest(VmPerformanceStepTestBase):
   def setUp(self):
     super().setUp()
     self.add_child_patch = self.enterContext(
-        mock.patch(
-            'gcpdiag.runbook.gce.vm_performance.CheckLiveMigrations.add_child'))
+      mock.patch('gcpdiag.runbook.gce.vm_performance.CheckLiveMigrations.add_child')
+    )
 
   def test_no_live_migrations(self):
     self.mock_logs_realtime_query.return_value = []
@@ -382,14 +346,12 @@ class CheckLiveMigrationsTest(VmPerformanceStepTestBase):
     self.mock_interface.add_ok.assert_called_once()
     self.add_child_patch.assert_called_once()
     self.assertIsInstance(
-        self.add_child_patch.call_args[0][0],
-        vm_performance.DiskIopsThroughputUtilisationChecks,
+      self.add_child_patch.call_args[0][0],
+      vm_performance.DiskIopsThroughputUtilisationChecks,
     )
 
   def test_live_migrations_found(self):
-    self.mock_logs_realtime_query.return_value = [{
-        'timestamp': '2025-10-27T11:00:00.000000Z'
-    }]
+    self.mock_logs_realtime_query.return_value = [{'timestamp': '2025-10-27T11:00:00.000000Z'}]
     step = vm_performance.CheckLiveMigrations()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -398,12 +360,12 @@ class CheckLiveMigrationsTest(VmPerformanceStepTestBase):
     self.mock_interface.add_ok.assert_not_called()
     self.assertEqual(self.add_child_patch.call_count, 2)
     self.assertIsInstance(
-        self.add_child_patch.call_args_list[0][0][0],
-        vm_performance.DiskIopsThroughputUtilisationChecks,
+      self.add_child_patch.call_args_list[0][0][0],
+      vm_performance.DiskIopsThroughputUtilisationChecks,
     )
     self.assertIsInstance(
-        self.add_child_patch.call_args_list[1][0][0],
-        vm_performance.DiskIopsThroughputUtilisationChecks,
+      self.add_child_patch.call_args_list[1][0][0],
+      vm_performance.DiskIopsThroughputUtilisationChecks,
     )
 
 
@@ -502,32 +464,26 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     self.mock_disk.type = 'pd-balanced'
     self.mock_disk.size = 100
     self.mock_disk.provisionediops = 0
-    self.mock_gce_get_all_disks_of_instance.return_value = {
-        'disk-1': self.mock_disk
-    }
+    self.mock_gce_get_all_disks_of_instance.return_value = {'disk-1': self.mock_disk}
     self.mock_monitoring_query.side_effect = [
-        # cpu_count_query
-        {
-            '1': {
-                'values': [[1]]
-            }
-        },
-        # actual_usage_comparison query 1
-        [],
-        # actual_usage_comparison query 2
-        [],
-        # actual_usage_comparison query 3
-        [],
-        # actual_usage_comparison query 4
-        [],
+      # cpu_count_query
+      {'1': {'values': [[1]]}},
+      # actual_usage_comparison query 1
+      [],
+      # actual_usage_comparison query 2
+      [],
+      # actual_usage_comparison query 3
+      [],
+      # actual_usage_comparison query 4
+      [],
     ]
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
   def test_n1_pd_balanced_ok(self, mock_json_load):
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -541,18 +497,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   @mock.patch('json.load')
   def test_c2_pd_ssd_ok(self, mock_json_load):
     self.mock_instance.machine_type.return_value = 'c2-standard-4'
-    self.mock_monitoring_query.side_effect = [{
-        '1': {
-            'values': [[4]]
-        }
-    }, [], [], [], []]
+    self.mock_monitoring_query.side_effect = [{'1': {'values': [[4]]}}, [], [], [], []]
     self.mock_disk.type = 'pd-ssd'
-    self.mock_gce_get_all_disks_of_instance.return_value = {
-        'disk-1': self.mock_disk
-    }
+    self.mock_gce_get_all_disks_of_instance.return_value = {'disk-1': self.mock_disk}
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(c_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(c_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -566,28 +516,16 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   @mock.patch('json.load')
   def test_n1_pd_balanced_high_usage(self, mock_json_load):
     self.mock_monitoring_query.side_effect = [
-        # cpu_count_query
-        {
-            '1': {
-                'values': [[1]]
-            }
-        },
-        {
-            'some_id': {
-                'values': [['val1'], ['val2'], ['val3']]
-            }
-        },
-        {},
-        {
-            'some_id': {
-                'values': [['val1'], ['val2'], ['val3']]
-            }
-        },
-        {},
+      # cpu_count_query
+      {'1': {'values': [[1]]}},
+      {'some_id': {'values': [['val1'], ['val2'], ['val3']]}},
+      {},
+      {'some_id': {'values': [['val1'], ['val2'], ['val3']]}},
+      {},
     ]
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -603,20 +541,16 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   def test_t2d_pd_standard_ok(self, mock_json_load):
     self.mock_instance.machine_type.return_value = 't2d-standard-4'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[4]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[4]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-standard'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(t_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(t_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -631,20 +565,16 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   def test_e2_pd_balanced_ok(self, mock_json_load):
     self.mock_instance.machine_type.return_value = 'e2-standard-4'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[4]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[4]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-balanced'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(e_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(e_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -661,21 +591,17 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     self.mock_disk.type = 'pd-extreme'
     self.mock_disk.provisionediops = 50000
     self.mock_monitoring_query.side_effect = [
-        # cpu_count_query
-        {
-            '1': {
-                'values': [[80]]
-            }
-        },
-        # actual_usage_comparison queries
-        {},
-        {},
-        {},
-        {},
+      # cpu_count_query
+      {'1': {'values': [[80]]}},
+      # actual_usage_comparison queries
+      {},
+      {},
+      {},
+      {},
     ]
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -691,8 +617,8 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     self.mock_instance.machine_type.return_value = 'x1-standard-1'
     self.mock_monitoring_query.side_effect = [{'1': {'values': [[1]]}}]
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -705,15 +631,11 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   @mock.patch('json.load')
   def test_custom_machine_type(self, mock_json_load):
     self.mock_instance.machine_type.return_value = 'custom-2-4096'
-    self.mock_monitoring_query.side_effect = [{
-        '1': {
-            'values': [[2]]
-        }
-    }, [], [], [], []]
+    self.mock_monitoring_query.side_effect = [{'1': {'values': [[2]]}}, [], [], [], []]
     self.mock_disk.type = 'pd-balanced'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -727,8 +649,8 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     self.mock_instance.machine_type.return_value = 'g1-small'
     self.mock_disk.type = 'pd-extreme'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(a_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -740,23 +662,21 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   @mock.patch('json.load')
   def test_e2_medium_machine_type(self, mock_json_load):
     self.mock_instance.machine_type.return_value = 'e2-medium'
-    self.mock_monitoring_query.side_effect = [{
-        '1': {
-            'values': [[2]]
-        }
-    }, [], [], [], []]
+    self.mock_monitoring_query.side_effect = [{'1': {'values': [[2]]}}, [], [], [], []]
     self.mock_disk.type = 'pd-balanced'
     e_family_data_medium = json.loads(e_family_data)
-    e_family_data_medium['E2 VMs']['pd-balanced'] = [{
+    e_family_data_medium['E2 VMs']['pd-balanced'] = [
+      {
         'VM vCPU count': 'e2-medium*',
         'Maximum read IOPS': 15000,
         'Maximum write IOPS': 15000,
         'Maximum read throughput (MiBps)': 240,
-        'Maximum write throughput (MiBps)': 240
-    }]
+        'Maximum write throughput (MiBps)': 240,
+      }
+    ]
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        e_family_data_medium,
+      json.loads(limits_per_gb_data),
+      e_family_data_medium,
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -769,23 +689,16 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   @mock.patch('json.load')
   def test_instance_just_stopped_window(self, mock_json_load, mock_datetime):
     # Mock current time to be close to laststarttimestamp
-    mock_now = datetime.datetime(2025,
-                                 10,
-                                 27,
-                                 10,
-                                 2,
-                                 0,
-                                 tzinfo=datetime.timezone.utc)
+    mock_now = datetime.datetime(2025, 10, 27, 10, 2, 0, tzinfo=datetime.timezone.utc)
     mock_datetime.now.return_value = mock_now
     mock_datetime.strptime.side_effect = datetime.datetime.strptime
     mock_datetime.timedelta = datetime.timedelta
 
     self.mock_instance.is_running = False
-    self.mock_instance.laststoptimestamp.return_value = (
-        '2025-10-27T09:55:00.000000+00:00')
+    self.mock_instance.laststoptimestamp.return_value = '2025-10-27T09:55:00.000000+00:00'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -799,24 +712,17 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   @mock.patch('json.load')
   def test_actual_usage_comparision_http_error(self, mock_json_load):
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[1]]
-            }
-        },  # CPU count
-        googleapiclient.errors.HttpError(
-            mock.Mock(status=500),
-            b'internal error'),  # actual_usage_comparision
-        googleapiclient.errors.HttpError(mock.Mock(status=500),
-                                         b'internal error'),
-        googleapiclient.errors.HttpError(mock.Mock(status=500),
-                                         b'internal error'),
-        googleapiclient.errors.HttpError(mock.Mock(status=500),
-                                         b'internal error'),
+      {'1': {'values': [[1]]}},  # CPU count
+      googleapiclient.errors.HttpError(
+        mock.Mock(status=500), b'internal error'
+      ),  # actual_usage_comparision
+      googleapiclient.errors.HttpError(mock.Mock(status=500), b'internal error'),
+      googleapiclient.errors.HttpError(mock.Mock(status=500), b'internal error'),
+      googleapiclient.errors.HttpError(mock.Mock(status=500), b'internal error'),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -830,20 +736,16 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     """Targets logic for T2A machine types."""
     self.mock_instance.machine_type.return_value = 't2a-standard-4'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[4]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[4]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-standard'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(t_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(t_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -859,20 +761,16 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     """Targets logic for M family machine types."""
     self.mock_instance.machine_type.return_value = 'm1-ultramem-40'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[40]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[40]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-ssd'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(a_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -887,16 +785,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
   def test_c3_machine_types_pd_extreme(self, mock_json_load):
     """Targets logic for C3 machine types with pd-extreme."""
     self.mock_instance.machine_type.return_value = 'c3-standard-4'
-    self.mock_monitoring_query.side_effect = [{
-        '1': {
-            'values': [[4]]
-        }
-    }, [], [], [], []]
+    self.mock_monitoring_query.side_effect = [{'1': {'values': [[4]]}}, [], [], [], []]
     self.mock_disk.type = 'pd-extreme'
     self.mock_disk.provisionediops = 10000
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(c_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(c_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -912,20 +806,16 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     """Targets logic for N2D machine types with pd-standard."""
     self.mock_instance.machine_type.return_value = 'n2d-standard-2'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[2]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[2]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-standard'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -941,21 +831,17 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     """Targets logic for E2 machine types with pd-extreme."""
     self.mock_instance.machine_type.return_value = 'e2-standard-4'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[4]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[4]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-extreme'
     self.mock_disk.provisionediops = 12000
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(e_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(e_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -972,20 +858,20 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
     self.mock_instance.machine_type.return_value = 'n1-standard-1'
     self.mock_disk.type = 'pd-balanced'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     limits_data_loaded = json.loads(limits_per_gb_data)
     mach_fam_json_data_loaded = json.loads(n_family_data)
     results = step.limit_calculator(
-        limits_data_loaded,
-        mach_fam_json_data_loaded,
-        'pd-balanced',
-        100,
-        'N1 VMs',
-        'VM vCPU count',
-        '1',
+      limits_data_loaded,
+      mach_fam_json_data_loaded,
+      'pd-balanced',
+      100,
+      'N1 VMs',
+      'VM vCPU count',
+      '1',
     )
     self.assertEqual(results[5], 15000)  # max_write_iops
     self.assertEqual(results[4], 600)  # vm_baseline_performance_w_iops
@@ -996,8 +882,7 @@ class VmPerformanceEndTest(VmPerformanceStepTestBase):
 
   def setUp(self):
     super().setUp()
-    self.mock_op_prompt = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.prompt'))
+    self.mock_op_prompt = self.enterContext(mock.patch('gcpdiag.runbook.op.prompt'))
     self.mock_config_get = self.enterContext(mock.patch('gcpdiag.config.get'))
 
   def test_end_step_no_interactive_mode_no_answer(self):
@@ -1030,58 +915,46 @@ class VmPerformanceEndTest(VmPerformanceStepTestBase):
 
 
 class VmPerformanceBuildTreeTest(unittest.TestCase):
-
   @mock.patch('gcpdiag.runbook.gce.vm_performance.VmPerformance.add_step')
   @mock.patch('gcpdiag.runbook.gce.vm_performance.VmPerformance.add_start')
   @mock.patch('gcpdiag.runbook.gce.vm_performance.VmPerformance.add_end')
   @mock.patch('gcpdiag.runbook.op.get')
-  def test_build_tree(self, mock_op_get, mock_add_end, mock_add_start,
-                      mock_add_step):
+  def test_build_tree(self, mock_op_get, mock_add_end, mock_add_start, mock_add_step):
     mock_op_get.return_value = 'test_value'
     runbook = vm_performance.VmPerformance()
     runbook.build_tree()
 
     mock_add_start.assert_called_once()
-    self.assertIsInstance(mock_add_start.call_args[1]['step'],
-                          vm_performance.VmPerformanceStart)
+    self.assertIsInstance(mock_add_start.call_args[1]['step'], vm_performance.VmPerformanceStart)
 
     step_instances = [call[1]['child'] for call in mock_add_step.call_args_list]
     self.assertTrue(
-        any(
-            isinstance(s, gce_runbook.generalized_steps.HighVmCpuUtilization)
-            for s in step_instances))
+      any(isinstance(s, gce_runbook.generalized_steps.HighVmCpuUtilization) for s in step_instances)
+    )
     self.assertTrue(
-        any(
-            isinstance(s, gce_runbook.generalized_steps.HighVmMemoryUtilization)
-            for s in step_instances))
+      any(
+        isinstance(s, gce_runbook.generalized_steps.HighVmMemoryUtilization) for s in step_instances
+      )
+    )
     self.assertTrue(
-        any(
-            isinstance(s, gce_runbook.generalized_steps.HighVmDiskUtilization)
-            for s in step_instances))
+      any(
+        isinstance(s, gce_runbook.generalized_steps.HighVmDiskUtilization) for s in step_instances
+      )
+    )
     self.assertTrue(
-        any(
-            isinstance(s, vm_performance.CpuOvercommitmentCheck)
-            for s in step_instances))
+      any(isinstance(s, vm_performance.CpuOvercommitmentCheck) for s in step_instances)
+    )
+    self.assertTrue(any(isinstance(s, vm_performance.DiskHealthCheck) for s in step_instances))
     self.assertTrue(
-        any(
-            isinstance(s, vm_performance.DiskHealthCheck)
-            for s in step_instances))
+      any(isinstance(s, vm_performance.DiskAvgIOLatencyCheck) for s in step_instances)
+    )
     self.assertTrue(
-        any(
-            isinstance(s, vm_performance.DiskAvgIOLatencyCheck)
-            for s in step_instances))
-    self.assertTrue(
-        any(
-            isinstance(s, gce_runbook.generalized_steps.VmSerialLogsCheck)
-            for s in step_instances))
-    self.assertTrue(
-        any(
-            isinstance(s, vm_performance.CheckLiveMigrations)
-            for s in step_instances))
+      any(isinstance(s, gce_runbook.generalized_steps.VmSerialLogsCheck) for s in step_instances)
+    )
+    self.assertTrue(any(isinstance(s, vm_performance.CheckLiveMigrations) for s in step_instances))
 
     mock_add_end.assert_called_once()
-    self.assertIsInstance(mock_add_end.call_args[1]['step'],
-                          vm_performance.VmPerformanceEnd)
+    self.assertIsInstance(mock_add_end.call_args[1]['step'], vm_performance.VmPerformanceEnd)
 
 
 class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
@@ -1090,17 +963,13 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
   def setUp(self):
     super().setUp()
     self.mock_monitoring_query.return_value = {
-        '1': {
-            'values': [[4]]
-        }  # 4 vCPUs default
+      '1': {'values': [[4]]}  # 4 vCPUs default
     }
     self.mock_disk = mock.Mock(spec=gce.Disk)
     self.mock_disk.name = 'disk-1'
     self.mock_disk.size = 200
     self.mock_disk.provisionediops = 0
-    self.mock_gce_get_all_disks_of_instance.return_value = {
-        'disk-1': self.mock_disk
-    }
+    self.mock_gce_get_all_disks_of_instance.return_value = {'disk-1': self.mock_disk}
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -1110,25 +979,14 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     self.mock_disk.size = 50  # < 100GB trigger
     self.mock_instance.machine_type.return_value = 'n1-standard-4'
 
-    mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data)
-    ]
+    mock_json_load.side_effect = [json.loads(limits_per_gb_data), json.loads(n_family_data)]
 
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[4]]
-            }
-        },
-        {
-            'some_id': {
-                'values': [['9999'], ['9999'], ['9999']]
-            }
-        },
-        {},
-        {},
-        {},
+      {'1': {'values': [[4]]}},
+      {'some_id': {'values': [['9999'], ['9999'], ['9999']]}},
+      {},
+      {},
+      {},
     ]
 
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
@@ -1148,20 +1006,16 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     self.mock_instance.machine_type.return_value = 'n2-standard-80'
 
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
 
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[80]]
-            }
-        },
-        {},
-        {},
-        {},
-        {},
+      {'1': {'values': [[80]]}},
+      {},
+      {},
+      {},
+      {},
     ]
 
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
@@ -1178,8 +1032,8 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     self.mock_monitoring_query.return_value = {'1': {'values': [[1]]}}
 
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(n_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(n_family_data),
     ]
 
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
@@ -1194,20 +1048,16 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     """Targets logic for A2 machine types."""
     self.mock_instance.machine_type.return_value = 'a2-highgpu-1g'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[8]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[8]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-balanced'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(a_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -1223,20 +1073,16 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     """Targets logic for A2 UltraGPU machine types."""
     self.mock_instance.machine_type.return_value = 'a2-ultragpu-1g'
     self.mock_monitoring_query.side_effect = [
-        {
-            '1': {
-                'values': [[12]]
-            }
-        },
-        [],
-        [],
-        [],
-        [],
+      {'1': {'values': [[12]]}},
+      [],
+      [],
+      [],
+      [],
     ]
     self.mock_disk.type = 'pd-balanced'
     mock_json_load.side_effect = [
-        json.loads(limits_per_gb_data),
-        json.loads(a_family_data),
+      json.loads(limits_per_gb_data),
+      json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):
@@ -1248,22 +1094,15 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
 
   def test_disk_iops_utilisation_unbound_local(self):
     """Reproduces UnboundLocalError when monitoring.query raises HttpError."""
-    self.params[flags.START_TIME] = datetime.datetime(2024,
-                                                      1,
-                                                      1,
-                                                      tzinfo=timezone.utc)
-    self.params[flags.END_TIME] = datetime.datetime(2024,
-                                                    1,
-                                                    1,
-                                                    1,
-                                                    tzinfo=timezone.utc)
+    self.params[flags.START_TIME] = datetime.datetime(2024, 1, 1, tzinfo=timezone.utc)
+    self.params[flags.END_TIME] = datetime.datetime(2024, 1, 1, 1, tzinfo=timezone.utc)
 
-    self.mock_instance.laststarttimestamp.return_value = (
-        '2024-01-01T00:00:00.000000+00:00')
+    self.mock_instance.laststarttimestamp.return_value = '2024-01-01T00:00:00.000000+00:00'
     self.mock_instance.is_running = True
 
     self.mock_monitoring_query.side_effect = apiclient.errors.HttpError(
-        resp=mock.Mock(status=403), content=b'Forbidden')
+      resp=mock.Mock(status=403), content=b'Forbidden'
+    )
 
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
     with op.operator_context(self.operator):

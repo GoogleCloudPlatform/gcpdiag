@@ -24,7 +24,6 @@ MAX_BACKENDSERVICES_TO_REPORT = 10
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   bs_list = lb.get_backend_services(context.project_id)
 
   # return if there are no BackendServices found in the project

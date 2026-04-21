@@ -18,6 +18,7 @@ BigQuery jobs are failing because the authentication token is missing the Google
 Drive access scope or the user/service account is not granted at least the Viewer
 role on the Drive file.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -26,19 +27,20 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'Permission denied while getting Drive credentials'
 
 MISSING_DRIVE_SCOPE = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(MISSING_DRIVE_SCOPE))
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(MISSING_DRIVE_SCOPE),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -50,19 +52,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'bigquery api is disabled')
     return
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       project_ok_flag = True
-      if MATCH_STR not in get_path(log_entry,
-                                   ('protoPayload', 'status', 'message'),
-                                   default=''):
+      if MATCH_STR not in get_path(log_entry, ('protoPayload', 'status', 'message'), default=''):
         continue
       else:
         report.add_failed(
-            project,
-            'has BigQuery jobs failing due to issues while accessing a file in Drive '
-            'due to missing permissions on the file or missing Drive access scope'
+          project,
+          'has BigQuery jobs failing due to issues while accessing a file in Drive '
+          'due to missing permissions on the file or missing Drive access scope',
         )
         project_ok_flag = False
         break

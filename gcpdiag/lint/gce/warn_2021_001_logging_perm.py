@@ -31,9 +31,9 @@ from gcpdiag.queries import apis, crm, gce, iam
 
 ROLE = 'roles/logging.logWriter'
 LOGGING_SCOPES = [
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/logging.admin',
-    'https://www.googleapis.com/auth/logging.write',
+  'https://www.googleapis.com/auth/cloud-platform',
+  'https://www.googleapis.com/auth/logging.admin',
+  'https://www.googleapis.com/auth/logging.write',
 ]
 ENABLE_LOGGING_API_PROMOT = """Please \
 enable Cloud Logging API on the project with the command: \n\
@@ -65,47 +65,43 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'logging'):
     report.add_failed(
-        crm.get_project(context.project_id),
-        ENABLE_LOGGING_API_PROMOT % (context.project_id),
-        'Cloud Logging API Not Enabled on project %s' % (context.project_id),
+      crm.get_project(context.project_id),
+      ENABLE_LOGGING_API_PROMOT % (context.project_id),
+      'Cloud Logging API Not Enabled on project %s' % (context.project_id),
     )
     return
 
   instances = gce.get_instances(context)
   if not instances:
-    report.add_skipped(
-        None, '', f'No VM instances found in project: {context.project_id}.')
+    report.add_skipped(None, '', f'No VM instances found in project: {context.project_id}.')
     return
 
-  for i in sorted(instances.values(),
-                  key=op.attrgetter('project_id', 'full_path')):
+  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'full_path')):
     # GKE nodes are checked by another test.
     if i.is_gke_node():
       continue
 
     sa = i.service_account
     if not sa:
-      report.add_failed(i, VM_NO_SA % (i.name),
-                        'VM does not have a Service Account attached')
+      report.add_failed(i, VM_NO_SA % (i.name), 'VM does not have a Service Account attached')
       continue
 
     has_scope = set(LOGGING_SCOPES) & set(i.access_scopes)
     if not has_scope:
       report.add_failed(
-          i,
-          VM_NO_LOGGING_SCOPE,
-          'VM does not have logging.write Access Scope',
+        i,
+        VM_NO_LOGGING_SCOPE,
+        'VM does not have logging.write Access Scope',
       )
       continue
 
-    iam_policy = iam.get_project_policy(
-        context.copy_with(project_id=i.project_id))
+    iam_policy = iam.get_project_policy(context.copy_with(project_id=i.project_id))
     if not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
       report.add_failed(
-          i,
-          SA_NO_LOGS_WRITER % (sa),
-          'The attached Service Account of the VM does not have the required'
-          ' IAM role: roles/logging.logWriter',
+        i,
+        SA_NO_LOGS_WRITER % (sa),
+        'The attached Service Account of the VM does not have the required'
+        ' IAM role: roles/logging.logWriter',
       )
       continue
     report.add_ok(i)

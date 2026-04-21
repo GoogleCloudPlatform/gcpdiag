@@ -13,15 +13,15 @@ description: >
 ### Description
 
 This runbook performs several checks on a specified Cloud VPN tunnel:
--   **VPN Tunnel Status Check**: Verifies if the VPN tunnel is in an
-    'ESTABLISHED' state.
--   **Tunnel Down Status Reason**: If the tunnel is not established, it queries
-    Cloud Logging for specific error messages and provide remediations .
--   **Tunnel Packet Drop Check**: If the tunnel is established, it examines
-    monitoring metrics for various types of packet drops (e.g., due to MTU,
-    invalid SA, throttling) and provides remediation based on the drop reason.
--   **Tunnel Packet Utilization Check**: Analyzes packet rates to identify if
-    the tunnel is hitting max packet per second limits.
+  -   **VPN Tunnel Status Check**: Verifies if the VPN tunnel is in an
+      'ESTABLISHED' state.
+  -   **Tunnel Down Status Reason**: If the tunnel is not established, it queries
+      Cloud Logging for specific error messages and provide remediations .
+  -   **Tunnel Packet Drop Check**: If the tunnel is established, it examines
+      monitoring metrics for various types of packet drops (e.g., due to MTU,
+      invalid SA, throttling) and provides remediation based on the drop reason.
+  -   **Tunnel Packet Utilization Check**: Analyzes packet rates to identify if
+      the tunnel is hitting max packet per second limits.
 
 ### Executing this runbook
 

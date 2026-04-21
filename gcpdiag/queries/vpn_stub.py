@@ -3,12 +3,8 @@
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=invalid-name
-# pylint: disable=unused-argument
-
 
 class VpnApiStub:
-
   def vpnTunnels(self):
     return self
 
