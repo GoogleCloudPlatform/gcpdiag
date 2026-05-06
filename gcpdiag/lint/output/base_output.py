@@ -2,6 +2,7 @@
 import logging
 import sys
 import threading
+import time
 from typing import TextIO
 
 # pylint: disable=unused-import (lint is used in type annotations)
@@ -15,6 +16,7 @@ class BaseOutput:
   show_skipped: bool
   log_info_for_progress_only: bool
   lock: threading.Lock
+  start_time: float
 
   def __init__(self,
                file: TextIO = sys.stdout,
@@ -26,6 +28,7 @@ class BaseOutput:
     self.show_skipped = show_skipped
     self.log_info_for_progress_only = log_info_for_progress_only
     self.lock = threading.Lock()
+    self.start_time = time.time()
 
   def display_banner(self) -> None:
     print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
@@ -39,7 +42,10 @@ class BaseOutput:
         f'{totals.get(state, 0)} {state}'
         for state in ['skipped', 'ok', 'failed']
     ]
-    print(f"Rules summary: {', '.join(state_strs)}", file=sys.stderr)
+    duration = time.time() - self.start_time
+    print(
+        f"Rules summary: {', '.join(state_strs)} (time elapsed: {duration:.2f}s)",
+        file=sys.stderr)
 
   def get_logging_handler(self) -> logging.Handler:
     return _LoggingHandler(self)
