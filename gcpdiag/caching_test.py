@@ -92,6 +92,30 @@ class CacheBypassTests(unittest.TestCase):
     self.assertEqual(len(results), 4, 'All threads should get different result')
 
 
+class MakeKeyTests(unittest.TestCase):
+  """Testing _make_key function."""
+
+  def test_make_key_structure(self):
+    def sample_func(x, y):
+      pass
+
+    args = (1, 2)
+    kwargs = {'z': 3}
+
+    key = caching._make_key(sample_func, args, kwargs)
+
+    # Check type
+    self.assertIsInstance(key, bytes)
+
+    # Check prefix
+    expected_prefix = (sample_func.__module__ + '.' + sample_func.__name__ +
+                       ':').encode('utf-8')
+    self.assertTrue(key.startswith(expected_prefix))
+
+    # Check length (prefix + 32 bytes of sha256)
+    self.assertEqual(len(key), len(expected_prefix) + 32)
+
+
 class UseCacheTests(unittest.TestCase):
   """Testing configuring cache use"""
 
