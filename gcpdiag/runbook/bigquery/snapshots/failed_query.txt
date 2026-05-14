@@ -20,7 +20,7 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
      Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
 
 [INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
-	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+        To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
 
    - gcpdiag-cloudsql1-aaaa                                               [OK]
      [REASON]
@@ -84,7 +84,7 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
      Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
 
 [INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
-	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+        To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
 
    - gcpdiag-cloudsql1-aaaa                                               [OK]
      [REASON]
@@ -148,7 +148,7 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
      Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
 
 [INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
-	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+        To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
 
    - gcpdiag-cloudsql1-aaaa                                               [OK]
      [REASON]
@@ -202,7 +202,7 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
      Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
 
 [INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
-	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+        To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
 
    - gcpdiag-cloudsql1-aaaa                                               [OK]
      [REASON]
@@ -251,7 +251,7 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
      Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
 
 [INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
-	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+        To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
 
    - gcpdiag-cloudsql1-aaaa                                               [OK]
      [REASON]

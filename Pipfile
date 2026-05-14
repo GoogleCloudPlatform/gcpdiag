@@ -10,7 +10,7 @@ python_version = "3.12"
 aiohttp = "*"
 platformdirs = "*"
 boltons = "*"
-blessings = "*"
+rich = "*"
 diskcache = "*"
 dnspython = "*"
 google-api-python-client = "*"
@@ -20,7 +20,6 @@ python-dateutil = "*"
 pyyaml = "*"
 ratelimit = "*"
 beautifulsoup4 = "*"
-
 
 [dev-packages]
 absl-py = "*"

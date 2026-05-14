@@ -33,11 +33,11 @@ class RulesSnapshotTestBase:
   """Run snapshot test"""
 
   def test_all_rules(self, snapshot):
+    output_stream = io.StringIO()
+    sys.stdout = _Tee(output_stream, sys.stdout)
     self.de = runbook.DiagnosticEngine()
     tree = self.de.load_tree(self.runbook_name)
     snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__), 'snapshots')
-    output_stream = io.StringIO()
-    sys.stdout = _Tee(output_stream, sys.stdout)
     for parameter in self.rule_parameters:
       parameters = self._mk_parameters(parameter=parameter)
       print(textwrap.fill(str(parameters), 100), file=sys.stdout, end='\n\n')

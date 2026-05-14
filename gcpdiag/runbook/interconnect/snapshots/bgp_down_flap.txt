@@ -73,7 +73,7 @@ interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events f
    - gcpdiag-interconnect1-aaaa                                           [FAIL]
      [REASON]
          Some interconnects have BGP down status. See details 
-     	 Attachments with BGP down status:
+         Attachments with BGP down status:
          Attachment:dummy-attachment4, Interconnect:dummy-interconnect2, Cloud_Router_Name:dummy-router2
 
 
@@ -85,13 +85,13 @@ interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events f
    - gcpdiag-interconnect1-aaaa                                           [FAIL]
      [REASON]
          There are interconnects with BGP down status have no planned maintenance. See details 
-     	 BGP down details:
+         BGP down details:
          The interconnect `dummy-interconnect2` with BGP down status has no planned maintenance.
 
 
      [REMEDIATION]
          Interconnect BGP down can be caused by various reasons. Suggested remediation:  
-     	 Suggested Remediations:
+         Suggested Remediations:
                     *   Check on-prem PF interface status towards on-prem router
                     *   Check RX/TX light level
                     *   Check cloud console interconnect details or cloud logging
@@ -103,8 +103,8 @@ interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events f
      [REASON]
          BGP flaps lasting longer than `120` seconds detected in project `gcpdiag-interconnect1-aaaa`. See details 
          Abnormal long BGP flaps:  crId:6988249776642123456, ip:169.254.2.1, peerIp:169.254.2.2, crName:dummy-router1, vlan:dummy-attachment2, proj:gcpdiag-interconnect1-aaaa, details:
-     		BGP flap details:
-     		went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:34:39.923120483Z,140.53,Error
+                BGP flap details:
+                went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:34:39.923120483Z,140.53,Error
 
 
 
@@ -154,7 +154,7 @@ interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events f
    - gcpdiag-interconnect1-aaaa                                           [FAIL]
      [REASON]
          Some interconnects have BGP down status. See details 
-     	 Attachments with BGP down status:
+         Attachments with BGP down status:
          Attachment:dummy-attachment5, Interconnect:dummy-interconnect3, Cloud_Router_Name:dummy-router3
 
 
@@ -173,8 +173,8 @@ interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events f
      [REASON]
          BGP flaps lasting less than `120` seconds detected. They are normal if there are cloud router maintenance events. See details 
          Short duration BGP flaps: crId:666666875024123457, ip:169.254.6.1, peerIp:169.254.6.2, crName:dummy-router3, vlan:dummy-attachment6, proj:gcpdiag-interconnect1-aaaa, details:
-     		BGP flap details:
-     		went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:33:39.923120483Z,80.53,Uncertain
+                BGP flap details:
+                went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:33:39.923120483Z,80.53,Uncertain
 
 
 
@@ -187,8 +187,8 @@ interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events f
      [REASON]
          There are BGP flaps less than 120 seconds without Cloud Router maintenance events. See details 
          Error BGP : crId:666666875024123457, ip:169.254.6.1, peerIp:169.254.6.2, crName:dummy-router3, vlan:dummy-attachment6, proj:gcpdiag-interconnect1-aaaa, details:
-     		BGP flap details:
-     		went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:33:39.923120483Z,80.53,Uncertain
+                BGP flap details:
+                went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:33:39.923120483Z,80.53,Uncertain
 
 
 

@@ -3,7 +3,7 @@
 import logging
 import sys
 import threading
-from typing import TextIO
+from typing import Optional, TextIO
 
 from gcpdiag import config, lint, models
 
@@ -19,12 +19,12 @@ class BaseOutput:
 
   def __init__(
     self,
-    file: TextIO = sys.stdout,
+    file: Optional[TextIO] = None,
     log_info_for_progress_only: bool = True,
     show_ok: bool = True,
     show_skipped: bool = False,
   ) -> None:
-    self.file = file
+    self.file = file or sys.stdout
     self.show_ok = show_ok
     self.show_skipped = show_skipped
     self.log_info_for_progress_only = log_info_for_progress_only

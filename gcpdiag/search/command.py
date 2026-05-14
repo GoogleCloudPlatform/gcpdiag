@@ -19,7 +19,7 @@ import json
 import logging
 from typing import Any, Dict, Iterable, List, Tuple
 
-from blessings import Terminal
+from rich.console import Console
 
 from gcpdiag import config, lint, runbook
 from gcpdiag.lint import LintRule
@@ -209,10 +209,10 @@ def _search_rules(args) -> None:
 
 
 def _print(all_rules: dict) -> None:
-  """Print the rules in a formatted table using native Python API and blessings for styling."""
-  term = Terminal()
+  """Print the rules in a formatted table using native Python API and rich for styling."""
+  console = Console()
   # Print headings
-  print(term.bold + 'Filtered Rules' + term.normal)
+  console.print('Filtered Rules', style='bold')
   print('=' * 14)
 
   # Print rules

@@ -20,7 +20,8 @@ import textwrap
 import threading
 from typing import Any, Optional, TextIO
 
-import blessings
+from rich.console import Console
+from rich.markup import escape
 
 from gcpdiag import config, models, runbook
 from gcpdiag.runbook import constants
@@ -51,41 +52,38 @@ class TerminalOutput(BaseOutput):
   log_info_for_progress_only: bool
   lock: threading.Lock
   line_unfinished: bool
-  term: blessings.Terminal
+  console: Console
 
   def __init__(
     self,
-    file: TextIO = sys.stdout,
+    file: Optional[TextIO] = None,
     log_info_for_progress_only: bool = True,
     show_ok: bool = True,
     show_skipped: bool = True,
   ):
-    self.file = file
+    self.file = file or sys.stdout
+    self.console = Console(file=self.file, highlight=False, soft_wrap=True)
     self.show_ok = show_ok
     self.show_skipped = show_skipped
     self.log_info_for_progress_only = log_info_for_progress_only
     self.lock = threading.Lock()
     self.line_unfinished = False
-    self.term = blessings.Terminal()
 
   def display_banner(self) -> None:
-    if self.term.does_styling:
-      print(self.term.bold(f'gcpdiag {emoji_wrap("🩺")} {config.VERSION}\n'))
-    else:
-      print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
+    self.console.print(f'gcpdiag {emoji_wrap("🩺")} {config.VERSION}\n', style='bold')
 
   def display_header(self) -> None:
-    print('Starting runbook inspection [Alpha Release]\n', file=sys.stderr)
+    self.console.print('Starting runbook inspection [Alpha Release]\n')
 
   def display_runbook_description(self, tree):
-    self.terminal_print_line(f'{self.term.yellow(tree.name)}: {tree.__doc__}')
+    self.terminal_print_line(f'[yellow]{escape(tree.name)}[/yellow]: {escape(tree.__doc__)}')
 
   def display_footer(self, result) -> None:
     totals = result.get_totals_by_status()
     state_strs = [
       f'{totals.get(state, 0)} {state}' for state in ['skipped', 'ok', 'failed', 'uncertain']
     ]
-    print(f'Rules summary: {", ".join(state_strs)}', file=sys.stderr)
+    self.console.print(f'Rules summary: {", ".join(state_strs)}')
 
   def get_logging_handler(self) -> logging.Handler:
     return _LoggingHandler(self)
@@ -95,21 +93,18 @@ class TerminalOutput(BaseOutput):
     print(text, file=self.file, flush=True)
 
   def _wrap_indent(self, text: str, prefix: str) -> str:
-    width = self.term.width or 80
+    width = self.console.width if self.console.is_terminal else 80
     width = min(width, 80)
     return textwrap.indent(textwrap.fill(text, width - len(prefix)), prefix)
 
   def _italic(self, text: str) -> str:
-    if is_cloud_shell():
-      # TODO(b/201958597): Cloud Shell with tmux doesn't format italic properly at the moment
-      return text
-    else:
-      return self.term.italic(text)
+    return f'[italic]{escape(text)}[/italic]'
 
   def terminal_update_line(self, text: str) -> None:
     """Update the current line on the terminal."""
-    if self.term.width:
-      print(self.term.move_x(0) + self.term.clear_eol() + text, end='', flush=True, file=self.file)
+    if self.console.is_terminal:
+      self.file.write('\r\033[K' + text)
+      self.file.flush()
       self.line_unfinished = True
     else:
       # If it's a stream, do not output anything, assuming that the
@@ -118,113 +113,119 @@ class TerminalOutput(BaseOutput):
 
   def terminal_erase_line(self) -> None:
     """Remove the current content on the line."""
-    if self.line_unfinished and self.term.width:
-      print(self.term.move_x(0) + self.term.clear_eol(), flush=True, end='', file=self.file)
+    if self.line_unfinished and self.console.is_terminal:
+      self.file.write('\r\033[K')
+      self.file.flush()
     self.line_unfinished = False
 
   def terminal_print_line(self, text: str = '') -> None:
     """Write a line to the terminal, replacing any current line content, and add a line feed."""
-    if self.term.width:
-      self.terminal_update_line(text)
-      print(file=sys.stdout)
+    text = text.expandtabs()
+    if self.line_unfinished and self.console.is_terminal:
+      self.file.write('\r\033[K')
+      self.file.flush()
+      self.console.print(text)
     else:
-      print(text, file=sys.stdout)
-      # flush the output, so that we can more easily grep, tee, etc.
-      sys.stdout.flush()
+      self.console.print(text)
+    # flush the output, so that we can more easily grep, tee, etc.
+    self.file.flush()
     self.line_unfinished = False
 
   def _print_rule_header(self, rule: 'runbook.DiagnosticTree') -> None:
     bullet = ''
-    if self.term.does_styling:
+    if self.console.is_terminal:
       bullet = emoji_wrap('🔎') + ' '
     else:
       bullet = '*  '
-    self.terminal_print_line(bullet + self.term.yellow(rule.name))
+    self.terminal_print_line(bullet + f'[yellow]{escape(rule.name)}[/yellow]')
 
   def _print_long_desc(self, rule: 'runbook.DiagnosticTree') -> None:
     self.terminal_print_line()
     self.terminal_print_line(self._italic(self._wrap_indent(rule.__doc__ or '', '   ')))
     self.terminal_print_line()
-    self.terminal_print_line('   ' + rule.doc_url)
+    self.terminal_print_line('   ' + escape(rule.doc_url))
 
   def print_skipped(
     self, resource: Optional[models.Resource], reason: str, remediation: str = None
   ) -> None:
+    self.terminal_print_line()
     short_path = (
       resource.short_path if resource is not None and resource.short_path is not None else ''
     )
-    self.terminal_print_line()
     self.terminal_print_line(
-      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.yellow('SKIP') + ']'
+      '   - ' + escape(short_path.ljust(OUTPUT_WIDTH)) + ' [' + '[yellow]SKIP[/yellow]' + ']'
     )
     if reason:
-      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
-      self.terminal_print_line(textwrap.indent(reason, '     '))
+      self.terminal_print_line('     [' + '[green]REASON[/green]' + ']')
+      self.terminal_print_line(textwrap.indent(escape(reason), '     '))
 
     if remediation:
-      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
-      self.terminal_print_line(textwrap.indent(remediation, '     '))
+      self.terminal_print_line('     [' + '[green]REMEDIATION[/green]' + ']')
+      self.terminal_print_line(textwrap.indent(escape(remediation), '     '))
 
-  def print_ok(self, resource: models.Resource, reason: str = '') -> None:
+  def print_ok(self, resource: Optional[models.Resource], reason: str = '') -> None:
     if not self.show_ok:
       return
+    self.terminal_print_line()
     short_path = (
       resource.short_path if resource is not None and resource.short_path is not None else ''
     )
-    self.terminal_print_line()
     self.terminal_print_line(
-      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.green('OK') + ']'
+      '   - ' + escape(short_path.ljust(OUTPUT_WIDTH)) + ' [' + '[green]OK[/green]' + ']'
     )
     if reason:
-      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
-      self.terminal_print_line(textwrap.indent(reason, '     '))
+      self.terminal_print_line('     [' + '[green]REASON[/green]' + ']')
+      self.terminal_print_line(textwrap.indent(escape(reason), '     '))
 
-  def print_failed(self, resource: models.Resource, reason: str, remediation: str) -> None:
+  def print_failed(
+    self, resource: Optional[models.Resource], reason: str, remediation: str
+  ) -> None:
     """Output test result and registers the result to be used in
     the runbook report.
 
     The failure assigned a human task unless program is running
     autonomously
     """
-
+    self.terminal_print_line()
     short_path = (
       resource.short_path if resource is not None and resource.short_path is not None else ''
     )
-    self.terminal_print_line()
     self.terminal_print_line(
-      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.red('FAIL') + ']'
+      '   - ' + escape(short_path.ljust(OUTPUT_WIDTH)) + ' [' + '[red]FAIL[/red]' + ']'
     )
     if reason:
-      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
-      self.terminal_print_line(textwrap.indent(f'{reason}', '     '))
+      self.terminal_print_line('     [' + '[green]REASON[/green]' + ']')
+      self.terminal_print_line(textwrap.indent(escape(reason), '     '))
 
     if remediation:
-      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
-      self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
+      self.terminal_print_line('     [' + '[green]REMEDIATION[/green]' + ']')
+      self.terminal_print_line(textwrap.indent(escape(remediation), '     '))
 
   def print_uncertain(
-    self, resource: models.Resource, reason: str, remediation: str = None
+    self, resource: Optional[models.Resource], reason: str, remediation: str = None
   ) -> None:
+    self.terminal_print_line()
     short_path = (
       resource.short_path if resource is not None and resource.short_path is not None else ''
     )
-    self.terminal_print_line()
     self.terminal_print_line(
-      '   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' + self.term.yellow('UNCERTAIN') + ']'
+      '   - ' + escape(short_path.ljust(OUTPUT_WIDTH)) + ' [' + '[yellow]UNCERTAIN[/yellow]' + ']'
     )
     if reason:
-      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
-      self.terminal_print_line(textwrap.indent(reason, '     '))
+      self.terminal_print_line('     [' + '[green]REASON[/green]' + ']')
+      self.terminal_print_line(textwrap.indent(escape(reason), '     '))
 
     if remediation:
-      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
-      self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
+      self.terminal_print_line('     [' + '[green]REMEDIATION[/green]' + ']')
+      self.terminal_print_line(textwrap.indent(escape(remediation), '     '))
 
   def info(self, message: str, step_type='INFO'):
     """
     For informational update and getting a response from user
     """
-    self.terminal_print_line(text='' + '[' + self.term.green(step_type) + ']: ' + f'{message}')
+    self.terminal_print_line(
+      text='' + '[' + f'[green]{escape(step_type)}[/green]' + ']: ' + f'{escape(message)}'
+    )
 
   def prompt(
     self,
@@ -240,7 +241,9 @@ class TerminalOutput(BaseOutput):
     non_interactive = non_interactive or config.get(INTERACTIVE_MODE)
     if non_interactive:
       return
-    self.terminal_print_line(text='' + '[' + self.term.green(kind) + ']: ' + f'{message}')
+    self.terminal_print_line(
+      text='' + '[' + f'[green]{escape(kind)}[/green]' + ']: ' + f'{escape(message)}'
+    )
 
     self.default_answer = False
     self.answer = None
@@ -248,13 +251,19 @@ class TerminalOutput(BaseOutput):
     try:
       if kind in constants.HUMAN_TASK and not options:
         for option, description in constants.HUMAN_TASK_OPTIONS.items():
-          options_text += '[' + self.term.green(f'{option}') + ']' + f' - {description}\n'
+          options_text += (
+            '[' + f'[green]{escape(str(option))}[/green]' + ']' + f' - {escape(description)}\n'
+          )
       if kind in constants.CONFIRMATION and not options:
         for option, description in constants.CONFIRMATION_OPTIONS.items():
-          options_text += '[' + self.term.green(f'{option}') + ']' + f' - {description}\n'
+          options_text += (
+            '[' + f'[green]{escape(str(option))}[/green]' + ']' + f' - {escape(description)}\n'
+          )
       if (kind in constants.CONFIRMATION or kind in constants.HUMAN_TASK) and options:
         for option, description in options.items():
-          options_text += '[' + self.term.green(f'{option}') + ']' + f' - {description}\n'
+          options_text += (
+            '[' + f'[green]{escape(str(option))}[/green]' + ']' + f' - {escape(description)}\n'
+          )
 
       if options_text:
         self.terminal_print_line(text=textwrap.indent(options_text, '     '))
@@ -301,8 +310,8 @@ class _LoggingHandler(logging.Handler):
     if record.levelno == logging.INFO and self.output.log_info_for_progress_only:
       msg = '   ... ' + self.format(record)
       # make sure we don't go beyond the terminal width
-      if self.output.term.width:
-        term_overflow = len(msg) - self.output.term.width
+      if self.output.console.is_terminal:
+        term_overflow = len(msg) - self.output.console.width
         if term_overflow > 0:
           msg = msg[:-term_overflow]
       with self.output.lock:
@@ -314,4 +323,4 @@ class _LoggingHandler(logging.Handler):
       if 'Invalid JSON content from response' in msg:
         return
       with self.output.lock:
-        self.output.terminal_print_line(msg)
+        self.output.terminal_print_line(escape(msg))
