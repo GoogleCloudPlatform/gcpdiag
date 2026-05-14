@@ -27,6 +27,11 @@ dataflow/failed-streaming-pipeline: Diagnostic checks for failed Dataflow Stream
    - gcs_to_pubsub                                                        [OK]
      [REASON]
      Dataflow job Beam SDK is supported.
+[AUTOMATED STEP]: Checks the Dataflow job's state.
+
+   - gcs_to_pubsub                                                        [OK]
+     [REASON]
+     Job is running successfully
 [AUTOMATED STEP]: Checks if a Dataflow job graph is successfully constructed.
 
    - gcs_to_pubsub                                                        [OK]

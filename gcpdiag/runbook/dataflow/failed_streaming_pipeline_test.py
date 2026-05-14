@@ -87,6 +87,7 @@ class FailedStreamingPipelineBuildTreeTest(unittest.TestCase):
       any(isinstance(s, failed_streaming_pipeline.JobIsStreaming) for s in steps_added)
     )
     self.assertTrue(any(isinstance(s, dataflow_rb.generalized_steps.ValidSdk) for s in steps_added))
+    self.assertTrue(any(isinstance(s, failed_streaming_pipeline.JobState) for s in steps_added))
     self.assertTrue(
       any(isinstance(s, dataflow_rb.generalized_steps.JobGraphIsConstructed) for s in steps_added)
     )
@@ -189,12 +190,12 @@ class JobIsStreamingTest(FailedStreamingPipelineStepTestBase):
 class JobStateTest(FailedStreamingPipelineStepTestBase, parameterized.TestCase):
   """Test JobState step."""
 
-  @mock.patch('gcpdiag.queries.logs.query')
+  @mock.patch('gcpdiag.queries.logs.realtime_query')
   @mock.patch('gcpdiag.queries.dataflow.get_job')
   def test_job_state_failed_no_error_logs(self, mock_get_job, mock_logs_query):
     mock_job = mock.Mock(spec=dataflow.Job, state='JOB_STATE_FAILED')
     mock_get_job.return_value = mock_job
-    mock_logs_query.return_value = mock.Mock(entries=[])
+    mock_logs_query.return_value = []
     step = failed_streaming_pipeline.JobState()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -203,14 +204,12 @@ class JobStateTest(FailedStreamingPipelineStepTestBase, parameterized.TestCase):
     self.mock_interface.info.assert_not_called()
     self.mock_interface.add_failed.assert_called_once()
 
-  @mock.patch('gcpdiag.queries.logs.query')
+  @mock.patch('gcpdiag.queries.logs.realtime_query')
   @mock.patch('gcpdiag.queries.dataflow.get_job')
   def test_job_state_failed_with_error_logs(self, mock_get_job, mock_logs_query):
     mock_job = mock.Mock(spec=dataflow.Job, state='JOB_STATE_FAILED')
     mock_get_job.return_value = mock_job
-    mock_logs_query.return_value = mock.Mock(
-      entries=[{'severity': 'ERROR', 'message': 'error log'}]
-    )
+    mock_logs_query.return_value = [{'severity': 'ERROR', 'message': 'error log'}]
     step = failed_streaming_pipeline.JobState()
     with op.operator_context(self.operator):
       self.operator.set_step(step)
@@ -218,6 +217,41 @@ class JobStateTest(FailedStreamingPipelineStepTestBase, parameterized.TestCase):
     mock_logs_query.assert_called_once()
     self.mock_interface.info.assert_called_once()
     self.mock_interface.add_failed.assert_called_once()
+
+  @parameterized.parameters(
+    ('Permission denied', 'troubleshoot-permissions'),
+    ('403', 'troubleshoot-permissions'),
+    ('BigQuery error', 'bigquery_errors'),
+    ('table not found in db', 'bigquery_errors'),
+    ('Pub/Sub subscription failed', 'pubsub_errors'),
+    ('generic failure', None),
+  )
+  @mock.patch('gcpdiag.runbook.op.prep_msg')
+  @mock.patch('gcpdiag.queries.logs.realtime_query')
+  @mock.patch('gcpdiag.queries.dataflow.get_job')
+  def test_job_state_failed_error_catalog(
+    self, log_message, expected_anchor, mock_get_job, mock_logs_query, mock_prep_msg
+  ):
+    mock_prep_msg.return_value = 'mocked_message'
+    mock_job = mock.Mock(spec=dataflow.Job, state='JOB_STATE_FAILED')
+    mock_job.full_path = 'projects/p/locations/l/jobs/j'
+    mock_get_job.return_value = mock_job
+    mock_logs_query.return_value = [{'severity': 'ERROR', 'message': log_message}]
+    step = failed_streaming_pipeline.JobState()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+
+    remediation_call = None
+    for call in mock_prep_msg.call_args_list:
+      if call[0] and call[0][0] == op.FAILURE_REMEDIATION:
+        remediation_call = call
+        break
+    self.assertIsNotNone(remediation_call)
+    if expected_anchor:
+      self.assertEqual(remediation_call[1].get('anchor'), expected_anchor)
+    else:
+      self.assertNotIn('anchor', remediation_call[1])
 
   @mock.patch('gcpdiag.queries.dataflow.get_job')
   def test_job_state_stopped(self, mock_get_job):
