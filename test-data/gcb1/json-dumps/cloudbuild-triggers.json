@@ -5,7 +5,7 @@
       "build": {
         "steps": [
           {
-            "name": "gcr.io/cloud-builders/gsutil"
+            "name": "gcr.io/cloud-builders/gcloud"
           }
         ],
         "timeout": "600s"
