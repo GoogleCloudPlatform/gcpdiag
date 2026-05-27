@@ -42,6 +42,7 @@ repos:
   rev: v2.3.0
   hooks:
   - id: codespell
+    args: ["--ignore-words=.pylint-dictionary.txt"]
     exclude: (^test-data/.*|^.*_test\.py$|^.*_unittest\.py$|^.*\.lock$|^pyinstaller/.*$|^.*\.spec$|^website/content/en/runbook/.*$|^gcpdiag/lint/snapshots/.*$|^gcpdiag/runbook/snapshots/.*$)
 
 - repo: https://github.com/pre-commit/mirrors-mypy
