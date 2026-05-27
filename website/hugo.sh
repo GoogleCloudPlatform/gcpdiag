@@ -41,6 +41,13 @@ if [ "$RUNTIME" = podman ]; then
   export PODMAN_USERNS=keep-id
 fi
 
+HOST_PWD="$(pwd)"
+HOST_HOME="$HOME"
+if [ -n "${KOKORO_HOST_ROOT_DIR:-}" ] && [ -n "${KOKORO_ROOT_DIR:-}" ]; then
+  HOST_PWD="${PWD/#${KOKORO_ROOT_DIR%/}/${KOKORO_HOST_ROOT_DIR%/}}"
+  HOST_HOME="${HOME/#${KOKORO_ROOT_DIR%/}/${KOKORO_HOST_ROOT_DIR%/}}"
+fi
+
 exec "$RUNTIME" run ${USE_TTY:-} \
   --rm \
   -u "$(id -u):$(id -g)" \
@@ -50,8 +57,8 @@ exec "$RUNTIME" run ${USE_TTY:-} \
   -e HOME -e LANG \
   -e GOOGLE_APPLICATION_CREDENTIALS \
   -w /src \
-  -v "$(pwd):/src" \
-  -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
+  -v "$HOST_PWD:/src" \
+  -v "$HOST_HOME/.config/gcloud:$HOME/.config/gcloud" \
   -p 1313:1313 \
   "$IMAGE" \
   "$@"

@@ -21,6 +21,22 @@ mkdir -p "$HOME/.config/gcloud"
 mkdir -p .pipenv-dockerized/venv-$PYTHON_VERSION
 mkdir -p .pipenv-dockerized/home
 mkdir -p .venv
+
+cat << 'EOF' > .pipenv-dockerized/home/.gitconfig
+[safe]
+	directory = *
+[user]
+	name = Kokoro
+	email = kokoro@google.com
+EOF
+
+HOST_CWD="$CWD"
+HOST_HOME="$HOME"
+if [ -n "${KOKORO_HOST_ROOT_DIR:-}" ] && [ -n "${KOKORO_ROOT_DIR:-}" ]; then
+  HOST_CWD="${CWD/#${KOKORO_ROOT_DIR%/}/${KOKORO_HOST_ROOT_DIR%/}}"
+  HOST_HOME="${HOME/#${KOKORO_ROOT_DIR%/}/${KOKORO_HOST_ROOT_DIR%/}}"
+fi
+
 exec docker run $USE_TTY \
   --rm \
   -u "$(id -u):$(id -g)" \
@@ -29,10 +45,13 @@ exec docker run $USE_TTY \
   -e "HOME=$HOME" \
   -e "LANG=$LANG" \
   -e "SHELL=/bin/bash" \
+  -e "GIT_CONFIG_COUNT=1" \
+  -e "GIT_CONFIG_KEY_0=safe.directory" \
+  -e "GIT_CONFIG_VALUE_0=*" \
   -e "KOKORO_BUILD_NUMBER=$KOKORO_BUILD_NUMBER" \
-  -v "$CWD:$CWD" \
-  -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
-  -v "$CWD/.pipenv-dockerized/home:$HOME" \
-  -v "$CWD/.pipenv-dockerized/venv-$PYTHON_VERSION:$CWD/.venv" \
+  -v "$HOST_CWD:$CWD" \
+  -v "$HOST_CWD/.pipenv-dockerized/home:$HOME" \
+  -v "$HOST_HOME/.config/gcloud:$HOME/.config/gcloud" \
+  -v "$HOST_CWD/.pipenv-dockerized/venv-$PYTHON_VERSION:$CWD/.venv" \
   -w "$CWD" \
   $IMAGE pipenv "$@"

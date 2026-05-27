@@ -1,10 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 
 # terraform wrapper using docker
 
 USE_TTY=""
 CWD=$(pwd)
 [ -t 0 ] && USE_TTY="-it"
+
+HOST_CWD="$CWD"
+HOST_HOME="$HOME"
+if [ -n "${KOKORO_HOST_ROOT_DIR:-}" ] && [ -n "${KOKORO_ROOT_DIR:-}" ]; then
+  HOST_CWD="${CWD/#${KOKORO_ROOT_DIR%/}/${KOKORO_HOST_ROOT_DIR%/}}"
+  HOST_HOME="${HOME/#${KOKORO_ROOT_DIR%/}/${KOKORO_HOST_ROOT_DIR%/}}"
+fi
 
 exec docker run $USE_TTY \
   --rm \
@@ -14,7 +21,7 @@ exec docker run $USE_TTY \
   -e "HOME=$HOME" \
   -e "LANG=$LANG" \
   -e "SHELL=/bin/bash" \
-  -v "$CWD:$CWD" \
-  -v "$HOME/.config/gcloud:/home/.config/gcloud" \
+  -v "$HOST_CWD:$CWD" \
+  -v "$HOST_HOME/.config/gcloud:/home/.config/gcloud" \
   -w "$CWD" \
   mirror.gcr.io/hashicorp/terraform:light "$@"
