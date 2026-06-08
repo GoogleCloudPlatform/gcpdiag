@@ -26,6 +26,9 @@ class DataflowJobsStub:
     pass
 
   def get(self, projectId, location, jobId):
+    # BATCH JOB
+    if '2026-05-18_07_03_26-5088364741087117679' in jobId:
+      return apis_stub.RestCallStub(projectId, f'dataflow-jobs-{location}-batch')
     return apis_stub.RestCallStub(projectId, f'dataflow-jobs-{location}-streaming')
 
   def aggregated(

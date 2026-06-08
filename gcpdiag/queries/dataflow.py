@@ -59,7 +59,7 @@ class Job(models.Resource):
 
   @property
   def full_path(self) -> str:
-    return self._resource_data['name']
+    return self._resource_data.get('name', '')
 
   @property
   def id(self) -> str:

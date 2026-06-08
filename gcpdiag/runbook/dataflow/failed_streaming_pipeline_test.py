@@ -88,7 +88,7 @@ class FailedStreamingPipelineBuildTreeTest(unittest.TestCase):
     )
     self.assertTrue(any(isinstance(s, dataflow_rb.generalized_steps.ValidSdk) for s in steps_added))
     self.assertTrue(
-      any(isinstance(s, failed_streaming_pipeline.JobGraphIsConstructed) for s in steps_added)
+      any(isinstance(s, dataflow_rb.generalized_steps.JobGraphIsConstructed) for s in steps_added)
     )
     mock_add_end.assert_called_once()
     self.assertIsInstance(
@@ -242,135 +242,8 @@ class JobStateTest(FailedStreamingPipelineStepTestBase, parameterized.TestCase):
     self.mock_interface.add_uncertain.assert_not_called()
 
 
-class JobGraphIsConstructedTest(FailedStreamingPipelineStepTestBase):
-  """Test JobGraphIsConstructed step."""
-
-  def setUp(self):
-    super().setUp()
-    self.add_child_patch = self.enterContext(
-      mock.patch(
-        'gcpdiag.runbook.dataflow.failed_streaming_pipeline.JobGraphIsConstructed.add_child'
-      )
-    )
-
-  @mock.patch('gcpdiag.queries.dataflow.get_job')
-  def test_graph_construction_error_yes(self, mock_get_job):
-    mock_job = mock.Mock(spec=dataflow.Job)
-    mock_job.sdk_language = 'java'
-    mock_get_job.return_value = mock_job
-    self.mock_op_prompt.return_value = op.YES
-    step = failed_streaming_pipeline.JobGraphIsConstructed()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    self.mock_op_prompt.assert_called_once()
-    self.mock_interface.add_failed.assert_called_once()
-    self.add_child_patch.assert_called_once()
-    self.assertIsInstance(
-      self.add_child_patch.call_args[1]['child'],
-      failed_streaming_pipeline.FailedStreamingPipelineEnd,
-    )
-
-  @mock.patch('gcpdiag.queries.dataflow.get_job')
-  def test_graph_construction_error_no(self, mock_get_job):
-    mock_job = mock.Mock(spec=dataflow.Job)
-    mock_job.sdk_language = 'java'
-    mock_get_job.return_value = mock_job
-    self.mock_op_prompt.return_value = op.NO
-    step = failed_streaming_pipeline.JobGraphIsConstructed()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    self.mock_op_prompt.assert_called_once()
-    self.mock_interface.add_failed.assert_not_called()
-    self.add_child_patch.assert_called_once()
-    self.assertIsInstance(
-      self.add_child_patch.call_args[1]['child'],
-      failed_streaming_pipeline.JobLogsVisible,
-    )
-
-  @mock.patch('gcpdiag.queries.dataflow.get_job')
-  def test_graph_construction_error_python_sdk(self, mock_get_job):
-    mock_job = mock.Mock(spec=dataflow.Job)
-    mock_job.sdk_language = 'python'
-    mock_get_job.return_value = mock_job
-    self.mock_op_prompt.return_value = op.NO
-    step = failed_streaming_pipeline.JobGraphIsConstructed()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    self.mock_op_prompt.assert_called_once()
-    self.assertIn('TypeCheckError', self.mock_op_prompt.call_args[1]['message'])
-    self.mock_interface.add_failed.assert_not_called()
-    self.add_child_patch.assert_called_once()
-    self.assertIsInstance(
-      self.add_child_patch.call_args[1]['child'],
-      failed_streaming_pipeline.JobLogsVisible,
-    )
-
-  @mock.patch('gcpdiag.queries.dataflow.get_job')
-  def test_graph_construction_error_go_sdk(self, mock_get_job):
-    mock_job = mock.Mock(spec=dataflow.Job)
-    mock_job.sdk_language = 'go'
-    mock_get_job.return_value = mock_job
-    self.mock_op_prompt.return_value = op.NO
-    step = failed_streaming_pipeline.JobGraphIsConstructed()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    self.mock_op_prompt.assert_called_once()
-    self.assertIn('panic: Method', self.mock_op_prompt.call_args[1]['message'])
-    self.mock_interface.add_failed.assert_not_called()
-    self.add_child_patch.assert_called_once()
-    self.assertIsInstance(
-      self.add_child_patch.call_args[1]['child'],
-      failed_streaming_pipeline.JobLogsVisible,
-    )
-
-
-class JobLogsVisibleTest(FailedStreamingPipelineStepTestBase):
-  """Test JobLogsVisible step."""
-
-  @mock.patch('gcpdiag.queries.dataflow.logs_excluded', return_value=False)
-  def test_logs_not_excluded(self, mock_logs_excluded):
-    step = failed_streaming_pipeline.JobLogsVisible()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    mock_logs_excluded.assert_called_once_with(DUMMY_PROJECT_ID)
-    self.mock_interface.add_ok.assert_called_once()
-    self.mock_interface.add_failed.assert_not_called()
-
-  @mock.patch('gcpdiag.queries.dataflow.logs_excluded', return_value=None)
-  def test_logs_api_disabled(self, mock_logs_excluded):
-    step = failed_streaming_pipeline.JobLogsVisible()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    mock_logs_excluded.assert_called_once_with(DUMMY_PROJECT_ID)
-    self.mock_interface.add_ok.assert_not_called()
-    self.assertEqual(self.mock_interface.add_failed.call_args[1]['resource'], None)
-    self.mock_interface.add_failed.assert_called_once()
-
-  @mock.patch('gcpdiag.queries.dataflow.logs_excluded', side_effect=[True, None])
-  def test_logs_excluded_is_none_on_second_call(self, mock_logs_excluded):
-    step = failed_streaming_pipeline.JobLogsVisible()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    self.assertEqual(mock_logs_excluded.call_count, 1)
-    self.mock_interface.add_failed.assert_called_once()
-    self.mock_interface.add_ok.assert_not_called()
-
-  @mock.patch('gcpdiag.queries.dataflow.logs_excluded', return_value=True)
-  def test_logs_excluded(self, mock_logs_excluded):
-    step = failed_streaming_pipeline.JobLogsVisible()
-    with op.operator_context(self.operator):
-      self.operator.set_step(step)
-      step.execute()
-    mock_logs_excluded.assert_called_with(DUMMY_PROJECT_ID)
-    self.mock_interface.add_failed.assert_called_once()
-    self.mock_interface.add_ok.assert_not_called()
+# Refactor the common unittests to generalized test class
+# to allow parallel development of the streaming pipeline runbook.
 
 
 class FailedStreamingPipelineEndTest(FailedStreamingPipelineStepTestBase):

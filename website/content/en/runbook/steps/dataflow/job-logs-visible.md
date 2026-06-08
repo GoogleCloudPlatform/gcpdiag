@@ -13,10 +13,8 @@ description: >
 ### Description
 
 This affects visibility of the error causing job failure. If there are no logs
-  on the
-  Dataflow Monitoring Interface or the launching console/platform, this is a
-  good check
-  to make sure Dataflow logs are visible.
+  on the Dataflow Monitoring Interface or the launching console/platform, this is a
+  good check to make sure Dataflow logs are visible.
 
 
 

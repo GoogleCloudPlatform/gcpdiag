@@ -74,8 +74,10 @@ class FailedStreamingPipeline(runbook.DiagnosticTree):
     supported_sdk = dataflow_gs.ValidSdk()
     self.add_step(parent=streaming, child=supported_sdk)
 
-    job_graph = JobGraphIsConstructed()
+    job_graph = dataflow_gs.JobGraphIsConstructed()
     self.add_step(parent=supported_sdk, child=job_graph)
+
+    self.add_step(parent=job_graph, child=dataflow_gs.JobLogsVisible())
 
     # Ending your runbook
     self.add_end(FailedStreamingPipelineEnd())
@@ -197,86 +199,6 @@ class JobState(runbook.Step):
       op.add_ok(resource=job, reason='Job has been terminated successfully')
     elif job.state == 'JOB_STATE_RUNNING':
       op.add_ok(resource=job, reason='Job is running successfully')
-
-
-class JobGraphIsConstructed(runbook.Gateway):
-  """Has common step to check if the job has an error in graph construction.
-
-  If a job fails during graph construction, it's error is not logged in the
-  Dataflow Monitoring Interface as it never launched. The error appears in the
-  console or terminal window where job is ran and may be language-specific.
-  Manual check if there's any error using the 3 supported languages: Java,
-  Python, Go.
-  """
-
-  def execute(self):
-    """Checks if a Dataflow job graph is successfully constructed."""
-    job = dataflow.get_job(
-      op.get(flags.PROJECT_ID),
-      op.get(flags.DATAFLOW_JOB_ID),
-      op.get(flags.JOB_REGION),
-    )
-    message = (
-      'Does the job experience any graph or pipeline construction errors e.g.wording like %s'
-    )
-
-    example_wording = ''
-    if 'java' in job.sdk_language.lower():
-      example_wording = 'Exception in thread "main" java.lang.IllegalStateException'
-    elif 'python' in job.sdk_language.lower():
-      example_wording = (
-        'TypeCheckError: Input type hint violation at group: expected Tuple , got str'
-      )
-    elif 'go' in job.sdk_language.lower():
-      example_wording = 'panic: Method ProcessElement in DoFn main.extractFn is missing all inputs'
-
-    response = op.prompt(message=message % example_wording, kind=op.CONFIRMATION)
-
-    if response == op.YES:
-      op.add_failed(
-        resource=job,
-        reason='Job was not launched',
-        remediation='Correct job launch errors and retry.',
-      )
-      self.add_child(child=FailedStreamingPipelineEnd())
-    else:
-      self.add_child(child=JobLogsVisible())
-
-
-class JobLogsVisible(runbook.Step):
-  """Has step to check if the project has logs exclusion filter for dataflow logs.
-
-  This affects visibility of the error causing job failure. If there are no logs
-  on the
-  Dataflow Monitoring Interface or the launching console/platform, this is a
-  good check
-  to make sure Dataflow logs are visible.
-  """
-
-  def execute(self):
-    """Checks if a Dataflow job has visible logs."""
-    excluded = dataflow.logs_excluded(op.get(flags.PROJECT_ID))
-
-    if excluded is False:
-      op.add_ok(
-        resource=crm.get_project(op.get(flags.PROJECT_ID)),
-        reason='Dataflow Logs are not excluded',
-      )
-    elif excluded is None:
-      op.add_failed(
-        resource=None,
-        reason='logging API is disabled',
-        remediation='Enable Logging API',
-      )
-    else:
-      op.add_failed(
-        resource=crm.get_project(op.get(flags.PROJECT_ID)),
-        reason='Dataflow Logs are excluded',
-        remediation=(
-          'Please include Dataflow logs to allow troubleshooting job'
-          ' failures, or route them to a visible sink'
-        ),
-      )
 
 
 class FailedStreamingPipelineEnd(runbook.EndStep):

@@ -8,7 +8,7 @@ description: >
 ---
 
 **Product**: [Dataflow](https://cloud.google.com/dataflow)\
-**Step Type**: GATEWAY
+**Step Type**: AUTOMATED STEP
 
 ### Description
 

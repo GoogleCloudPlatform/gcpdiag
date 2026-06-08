@@ -1,0 +1,49 @@
+dataflow_job_id=2026-05-18_07_03_26-5088364741087117679,job_region=us-central1,project_id=gcpdiag-
+dataflow1-aaaa
+
+dataflow/failed-batch-pipeline: Diagnostic checks for failed Dataflow Batch Pipelines.
+
+  Provides a DiagnosticTree to check for issues related to failed batch
+  pipelines.
+
+  - Examples:
+    - Pipeline failed to launch
+    - Workers failed to start or are crashlooping
+  
+[START]: Start Step for failed batch pipelines runbook.
+[INFO]: name: gcpdiag test - datafusion1: id: gcpdiag-datafusion1-aaaa
+
+   - wordcount                                                            [OK]
+     [REASON]
+       Successfully found job 2026-05-18_07_03_26-5088364741087117679 in region us-central1
+
+[AUTOMATED STEP]: Checks if a Dataflow job is indeed a batch job by field JobType.
+
+   - wordcount                                                            [OK]
+     [REASON]
+     Job is of type batch
+[AUTOMATED STEP]: Checks SDK is not in the list that might trigger known SDK issues.
+
+   - wordcount                                                            [OK]
+     [REASON]
+     Dataflow job Beam SDK is supported.
+[AUTOMATED STEP]: Checks if any Dataflow quotas are being exceeded.
+[AUTOMATED STEP]: Checks if a Dataflow job graph is successfully constructed.
+
+   - wordcount                                                            [OK]
+     [REASON]
+     Job graph successfully created
+[AUTOMATED STEP]: Checks if a Dataflow job has visible logs.
+
+   - gcpdiag-datafusion1-aaaa                                             [OK]
+     [REASON]
+     Dataflow Logs are not excluded
+[COMPOSITE STEP]: Checks that the Dataflow job's state.
+
+   - wordcount                                                            [OK]
+     [REASON]
+     Job has been terminated successfully
+[END]: End step.
+[INFO]: No more checks to perform.
+
+

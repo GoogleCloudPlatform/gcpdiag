@@ -59,6 +59,10 @@ class GeneralizedStepsTestBase(unittest.TestCase):
     self.operator.parameters = self.params
 
 
+# Refactor the common unittests from failedstreamingpipeline to this generalized test class
+# to allow parallel development of the streaming pipeline runbook.
+
+
 class ValidSdkTest(GeneralizedStepsTestBase):
   """Test ValidSdk step."""
 

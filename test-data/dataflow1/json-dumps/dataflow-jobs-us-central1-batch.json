@@ -1,0 +1,182 @@
+{
+  "id": "2026-05-18_07_03_26-5088364741087117679",
+  "projectId": "gcpdiag-dataflow1-aaaa",
+  "name": "wordcount",
+  "type": "JOB_TYPE_BATCH",
+  "environment": {
+    "userAgent": {
+      "support": {
+        "status": "SUPPORTED",
+        "url": "https://github.com/apache/beam/releases"
+      },
+      "os.name": "Linux",
+      "name": "Apache Beam SDK for Java",
+      "version": "2.72.0",
+      "fnapi.environment.major.version": "8",
+      "java.vendor": "Eclipse Adoptium",
+      "fnapi.container.version": "2.72.0",
+      "os.version": "6.17.0-1012-gcp",
+      "java.version": "17.0.19",
+      "legacy.environment.major.version": "8",
+      "container.base_repository": "gcr.io/cloud-dataflow/v1beta3",
+      "os.arch": "amd64",
+      "legacy.container.version": "2.72.0"
+    },
+    "version": {
+      "job_type": "FNAPI_BATCH",
+      "major": "8"
+    },
+    "shuffleMode": "SERVICE_BASED",
+    "usePublicIps": true
+  },
+  "currentState": "JOB_STATE_DONE",
+  "currentStateTime": "2026-05-18T14:07:14.170552Z",
+  "createTime": "2026-05-18T14:03:27.118666Z",
+  "labels": {
+    "goog-dataflow-provided-template-type": "legacy",
+    "goog-terraform-provisioned": "true",
+    "goog-dataflow-provided-template-name": "word_count",
+    "goog-dataflow-provided-template-version": "2026-05-05-00_rc00"
+  },
+  "location": "us-central1",
+  "stageStates": [
+    {
+      "executionStageName": "failure64",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2026-05-18T14:03:45.136Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-FinalizeTempFileBundles-Reshuffle-ViaRandomKey-Reshuffle-GroupByKey-shuffle-session23",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:31.047Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-WriteUnshardedBundlesToTempFiles-GroupUnwritten-close-shuffle41",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:27.538Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-GatherTempFileResults-View-AsIterable-MapElements-Map-ParMultiDo-Anonymous-.output",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:30.620Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-GatherTempFileResults-Consolidate-Reshuffle-GroupByKey-close-shuffle35",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:28.353Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-WriteUnshardedBundlesToTempFiles-GroupUnwritten-open-shuffle39",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:25.086Z"
+    },
+    {
+      "executionStageName": "WriteCounts/WriteFiles/GatherTempFileResults/AsPossiblyEmptyList/Reify.ReifyView/ParDo(Anonymous)/ParMultiDo(Anonymous)/View-org.apache.beam.sdk.values.PCollectionViews$SimplePCollectionView.\u003cinit\u003e:1935#d6c184af69871a3b.out",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:30.791Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-WriteUnshardedBundlesToTempFiles-GroupUnwritten-shuffle-session38",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:25.137Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-GatherTempFileResults-Consolidate-Reshuffle-GroupByKey-open-shuffle33",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:25.363Z"
+    },
+    {
+      "executionStageName": "F58",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:28.250Z"
+    },
+    {
+      "executionStageName": "F59",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:32.581Z"
+    },
+    {
+      "executionStageName": "WordCount-CountWords-Count-PerElement-Combine-perKey-Count--GroupByKey10-close-shuffle18",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:24.867Z"
+    },
+    {
+      "executionStageName": "F61",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:24.759Z"
+    },
+    {
+      "executionStageName": "ReadLines-Read-ParDo-BoundedSourceAsSDFWrapper--ParMultiDo-BoundedSourceAsSDFWrapper--split-with-sizing-out3",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:20.997Z"
+    },
+    {
+      "executionStageName": "F57",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:30.563Z"
+    },
+    {
+      "executionStageName": "start65",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:03:45.266Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-GatherTempFileResults-Consolidate-Reshuffle-GroupByKey-shuffle-session32",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:25.424Z"
+    },
+    {
+      "executionStageName": "F60",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:27.426Z"
+    },
+    {
+      "executionStageName": "WordCount-CountWords-Count-PerElement-Combine-perKey-Count--GroupByKey10-open-shuffle16",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:21.578Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-FinalizeTempFileBundles-Reshuffle-ViaRandomKey-Reshuffle-GroupByKey-open-shuffle24",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:30.991Z"
+    },
+    {
+      "executionStageName": "F62",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:20.932Z"
+    },
+    {
+      "executionStageName": "WriteCounts/WriteFiles/GatherTempFileResults/AsPossiblyEmptyList/Reify.ReifyView/ParDo(Anonymous)/ParMultiDo(Anonymous)/View-org.apache.beam.sdk.values.PCollectionViews$SimplePCollectionView.\u003cinit\u003e:1935#d6c184af69871a3b",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:30.726Z"
+    },
+    {
+      "executionStageName": "WriteCounts-WriteFiles-FinalizeTempFileBundles-Reshuffle-ViaRandomKey-Reshuffle-GroupByKey-close-shuffle26",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:32.683Z"
+    },
+    {
+      "executionStageName": "success63",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:33.253Z"
+    },
+    {
+      "executionStageName": "F56",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:33.199Z"
+    },
+    {
+      "executionStageName": "WordCount-CountWords-Count-PerElement-Combine-perKey-Count--GroupByKey10-shuffle-session15",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2026-05-18T14:06:21.627Z"
+    }
+  ],
+  "jobMetadata": {
+    "sdkVersion": {
+      "version": "2.72.0",
+      "versionDisplayName": "Apache Beam SDK for Java",
+      "sdkSupportStatus": "SUPPORTED"
+    }
+  },
+  "startTime": "2026-05-18T14:03:27.118666Z"
+}
