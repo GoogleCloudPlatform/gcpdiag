@@ -158,7 +158,7 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
     if op.get(flags.DEST_IP):
       if ipaddress.IPv4Address(op.get(flags.DEST_IP)).is_private:
         op.add_failed(
-          op.get(flags.DEST_IP),
+          vm,
           reason=f'{op.get(flags.DEST_IP)} is not a public/external ip address.',
           remediation='Run using a valid public/external ip address.',
         )
