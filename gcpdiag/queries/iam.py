@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional, Tuple, Type
 import googleapiclient
 import googleapiclient.errors
 
-from gcpdiag import caching, config, models, utils
+from gcpdiag import caching, config, hooks, models, utils
 from gcpdiag.queries import apis, apis_utils, crm
 
 
@@ -231,8 +231,14 @@ class BaseIAMPolicy(models.Resource):
         # Ignore roles if cannot retrieve a role
         # For example, due to lack of permissions
         if isinstance(err, utils.GcpApiError):
-          logging.error('API failure getting IAM roles: %s', err)
-          raise utils.GcpApiError(err) from err
+          if hooks.is_inspection_env() and err.status == 403:
+            logging.warning(
+              "Unable to get IAM role '%s' due to lack of permissions, ignoring.",
+              role,
+            )
+          else:
+            logging.error('API failure getting IAM roles: %s', err)
+            raise utils.GcpApiError(err) from err
         elif isinstance(err, RoleNotFoundError):
           logging.warning("Unable to get IAM role '%s', ignoring: %s", role, err)
 
@@ -267,8 +273,14 @@ class BaseIAMPolicy(models.Resource):
         permissions.update(_get_iam_role(role, self.project_id).permissions)
       except (RoleNotFoundError, utils.GcpApiError) as err:
         if isinstance(err, utils.GcpApiError):
-          logging.error('API failure getting IAM roles: %s', err)
-          raise utils.GcpApiError(err) from err
+          if hooks.is_inspection_env() and err.status == 403:
+            logging.warning(
+              "Unable to get IAM role '%s' due to lack of permissions, ignoring.",
+              role,
+            )
+          else:
+            logging.error('API failure getting IAM roles: %s', err)
+            raise utils.GcpApiError(err) from err
         elif isinstance(err, RoleNotFoundError):
           logging.warning("Unable to find IAM role '%s', ignoring: %s", role, err)
     member_policy['permissions'] = permissions
@@ -342,7 +354,7 @@ class BaseIAMPolicy(models.Resource):
     """Return true if user or service account member has this permission.
 
     Note that any indirect bindings, for example through group membership,
-    aren't supported and only direct bindings to this member are checked
+    aren't supported and only direct bindings to this member are checked.
     """
 
     if member not in self._policy_by_member:
@@ -385,7 +397,7 @@ class BaseIAMPolicy(models.Resource):
     return self._is_active_member(member)
 
   def has_role_permissions(self, member: str, role: str) -> bool:
-    """Checks that this member has all the permissions defined by this role"""
+    """Checks that this member has all the permissions defined by this role."""
 
     if member not in self._policy_by_member:
       return False
@@ -479,7 +491,12 @@ def get_project_policy(context: models.Context, raise_error_if_fails=True) -> Pr
   crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
   request = crm_api.projects().getIamPolicy(resource='projects/' + project_id)
   return fetch_iam_policy(
-    request, ProjectPolicy, project_id, resource_name, context, raise_error_if_fails
+    request,
+    ProjectPolicy,
+    project_id,
+    resource_name,
+    context,
+    raise_error_if_fails,
   )
 
 
@@ -510,7 +527,12 @@ def get_organization_policy(
   crm_api = apis.get_api('cloudresourcemanager', 'v1')
   request = crm_api.organizations().getIamPolicy(resource=resource_name)
   return fetch_iam_policy(
-    request, OrganizationPolicy, None, resource_name, context, raise_error_if_fails
+    request,
+    OrganizationPolicy,
+    None,
+    resource_name,
+    context,
+    raise_error_if_fails,
   )
 
 

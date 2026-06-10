@@ -112,15 +112,16 @@ def get_project(project_id: str) -> Project:
   except googleapiclient.errors.HttpError as e:
     error = utils.GcpApiError(response=e)
     if 'IAM_PERMISSION_DENIED' == error.reason:
-      print(
-        f"[ERROR]:Authenticated account doesn't have access to project details of {project_id}."
-        f'\nExecute:\ngcloud projects add-iam-policy-binding {project_id} --role=roles/viewer'
-        '--member="user|group|serviceAccount:EMAIL_ACCOUNT"',
-        file=sys.stderr,
+      error.message = (
+        "Authenticated account doesn't have access to project details of "
+        f'{project_id}.\nExecute:\n'
+        f'gcloud projects add-iam-policy-binding {project_id} '
+        '--role=roles/viewer '
+        '--member="user|group|serviceAccount:EMAIL_ACCOUNT"'
       )
     else:
-      print(f"[ERROR]:can't access project {project_id}: {error.message}.", file=sys.stderr)
-    print(f'[DEBUG]: An Http Error occurred whiles accessing projects.get \n\n{e}', file=sys.stderr)
+      error.message = f"can't access project {project_id}: {error.message}."
+    logging.debug('An Http Error occurred whiles accessing projects.get \n\n%s', e)
     raise error from e
   else:
     return Project(resource_data=response)
