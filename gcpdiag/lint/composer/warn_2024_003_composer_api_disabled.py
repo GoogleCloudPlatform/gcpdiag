@@ -28,8 +28,8 @@ MATCH_STR2 = 'google.api.serviceusage.v1.ServiceUsage.EnableService'
 MATCH_STR3 = '/services/composer.googleapis.com'
 
 FILTER_1 = [
-    f'protoPayload.methodName = ("{MATCH_STR1}" OR "{MATCH_STR2}")',
-    f'protoPayload.request.name=~ ("{MATCH_STR3}")',
+  f'protoPayload.methodName = ("{MATCH_STR1}" OR "{MATCH_STR2}")',
+  f'protoPayload.request.name=~ ("{MATCH_STR3}")',
 ]
 
 logs_by_project = {}
@@ -42,10 +42,10 @@ def prefetch_rule(context: models.Context):
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='audited_resource',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=' AND '.join(FILTER_1),
+    project_id=context.project_id,
+    resource_type='audited_resource',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=' AND '.join(FILTER_1),
   )
 
 
@@ -57,30 +57,25 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'logging api is disabled')
     return
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if MATCH_STR1 in get_path(log_entry, ('protoPayload', 'methodName'),
-                                '') and MATCH_STR3 in get_path(
-                                    log_entry,
-                                    ('protoPayload', 'request', 'name'), ''):
-        report.add_failed(project,
-                          'Request to disable the composer API recently done')
+      if MATCH_STR1 in get_path(
+        log_entry, ('protoPayload', 'methodName'), ''
+      ) and MATCH_STR3 in get_path(log_entry, ('protoPayload', 'request', 'name'), ''):
+        report.add_failed(project, 'Request to disable the composer API recently done')
         return
 
-      if MATCH_STR2 in get_path(log_entry, ('protoPayload', 'methodName'),
-                                '') and MATCH_STR3 in get_path(
-                                    log_entry,
-                                    ('protoPayload', 'request', 'name'), ''):
-
+      if MATCH_STR2 in get_path(
+        log_entry, ('protoPayload', 'methodName'), ''
+      ) and MATCH_STR3 in get_path(log_entry, ('protoPayload', 'request', 'name'), ''):
         envs = envs_by_project[context.project_id]
 
         if envs:
           report.add_failed(
-              project,
-              'Re-enabling the composer API (after disabling),You may see the '
-              ' the active environment entered into an error state.',
+            project,
+            'Re-enabling the composer API (after disabling),You may see the '
+            ' the active environment entered into an error state.',
           )
           return
 

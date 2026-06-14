@@ -18,13 +18,11 @@ services like Docker service, Docker reverse proxy agent, Jupyter service and
 Jupyter API.
 
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, notebooks
 
-GUEST_ATTRIBUTES = {
-    'enable-guest-attributes': 'true',
-    'report-system-health': 'true'
-}
+GUEST_ATTRIBUTES = {'enable-guest-attributes': 'true', 'report-system-health': 'true'}
 
 instances_by_project = {}
 
@@ -34,7 +32,6 @@ def prefetch_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not apis.is_enabled(context.project_id, 'notebooks'):
     report.add_skipped(None, 'Notebooks API is disabled')
     return
@@ -47,8 +44,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for instance in instances.values():
     if all(
-        instance.metadata.get(k, 'false').casefold() == v.casefold()
-        for k, v in GUEST_ATTRIBUTES.items()):
+      instance.metadata.get(k, 'false').casefold() == v.casefold()
+      for k, v in GUEST_ATTRIBUTES.items()
+    ):
       report.add_ok(instance)
     else:
       report.add_failed(instance)

@@ -27,8 +27,8 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'too many API requests per user per method for this user_method'
 
 TOO_MANY_API_REQUESTS_FILTER = [
-    'severity=ERROR',
-    f'protoPayload.status.message =~ ("{MATCH_STR}")',
+  'severity=ERROR',
+  f'protoPayload.status.message =~ ("{MATCH_STR}")',
 ]
 
 logs_by_project = {}
@@ -36,15 +36,14 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=' AND '.join(TOO_MANY_API_REQUESTS_FILTER),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=' AND '.join(TOO_MANY_API_REQUESTS_FILTER),
   )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   project = crm.get_project(context.project_id)
 
   # skip entire rule is logging disabled
@@ -56,18 +55,18 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'bigquery api is disabled')
     return
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), default=''):
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         continue
       method_name = get_path(log_entry, ('protoPayload', 'methodName'))
       report.add_failed(
-          project,
-          f'BigQuery user_method ({method_name}) exceeded quota for concurrent'
-          ' api requests per user per method',
+        project,
+        f'BigQuery user_method ({method_name}) exceeded quota for concurrent'
+        ' api requests per user per method',
       )
       return
 

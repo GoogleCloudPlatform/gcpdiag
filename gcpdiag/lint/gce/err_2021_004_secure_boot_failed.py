@@ -29,11 +29,11 @@ from gcpdiag.queries import gce
 from gcpdiag.queries.logs import LogEntryShort
 
 SECURE_BOOT_ERR_MESSAGES = [
-    'UEFI: Failed to load image.',
-    'UEFI: Failed to start image.',
-    'Status: Security Violation',
-    'Binary is blacklisted ',
-    'Verification failed: (0x1A) Security Violation',
+  'UEFI: Failed to load image.',
+  'UEFI: Failed to start image.',
+  'Status: Security Violation',
+  'Binary is blacklisted ',
+  'Verification failed: (0x1A) Security Violation',
 ]
 
 logs_by_project = {}
@@ -41,7 +41,8 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = utils.SerialOutputSearch(
-      context, search_strings=SECURE_BOOT_ERR_MESSAGES)
+    context, search_strings=SECURE_BOOT_ERR_MESSAGES
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -60,14 +61,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if instance.is_gke_node():
       continue
 
-    match: Optional[LogEntryShort] = search.get_last_match(
-        instance_id=instance.id)
+    match: Optional[LogEntryShort] = search.get_last_match(instance_id=instance.id)
     if match:
       report.add_failed(
-          instance,
-          ('There are messages indicating that the Secure Boot violations'
-           ' prevent booting {}\n{}: "{}"').format(instance.name,
-                                                   match.timestamp_iso,
-                                                   match.text))
+        instance,
+        (
+          'There are messages indicating that the Secure Boot violations'
+          ' prevent booting {}\n{}: "{}"'
+        ).format(instance.name, match.timestamp_iso, match.text),
+      )
     else:
       report.add_ok(instance)

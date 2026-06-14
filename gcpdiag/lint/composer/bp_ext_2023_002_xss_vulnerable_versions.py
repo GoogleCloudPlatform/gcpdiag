@@ -47,7 +47,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for env in envs:
     if version.parse(env.airflow_version) < xss_fixed_version:
       report.add_failed(
-          env, f'{env.name} image is {env.image_version}, which is vulnerable '
-          'to XSS attack. Upgrade to the latest Cloud Composer version')
+        env,
+        f'{env.name} image is {env.image_version}, which is vulnerable '
+        'to XSS attack. Upgrade to the latest Cloud Composer version',
+      )
     else:
       report.add_ok(env)

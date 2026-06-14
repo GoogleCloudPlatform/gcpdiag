@@ -16,6 +16,7 @@
 If CPU utilization is over 98% for six hours, your instance is not properly
 sized for your workload, and it is not covered by the SLA.
 """
+
 from typing import Dict
 
 from boltons.iterutils import get_path
@@ -35,16 +36,16 @@ def prefetch_rule(context: models.Context):
   if not instances_by_project[context.project_id]:
     return
 
-  _query_results_per_project_id[context.project_id] = \
-    monitoring.query(
-      context.project_id,
-      f"""
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id,
+    f"""
       fetch cloudsql_database
        | metric 'cloudsql.googleapis.com/database/cpu/utilization'
        | group_by 6h, [value_utilization_mean: mean(value.utilization)]
        | every 5m
        | filter val() >= {CPU_USAGE_THRESHOLD}
-      """)
+      """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

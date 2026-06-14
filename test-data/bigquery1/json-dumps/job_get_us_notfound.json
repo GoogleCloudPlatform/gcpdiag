@@ -1,0 +1,5 @@
+{
+  "id": "gcpdiag-bigquery1-aaaa:us.test_notfound",
+  "status": { "state": "DONE", "errorResult": { "reason": "notFound", "message": "Not found: Job gcpdiag-bigquery1-aaaa:us.test_notfound" } },
+  "jobReference": { "projectId": "gcpdiag-bigquery1-aaaa", "jobId": "test_notfound", "location": "us" }
+}

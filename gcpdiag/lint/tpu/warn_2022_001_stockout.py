@@ -19,6 +19,7 @@ Resource errors occur when you try to request new resources in a zone that
 cannot accommodate your request due to the current unavailability of a Cloud
 TPU resource.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -29,10 +30,10 @@ MATCH_STR2 = 'you can try in another zone where Cloud TPU Nodes'
 METHOD_NAME = 'google.cloud.tpu.v1.Tpu.CreateNode'
 
 LOG_FILTER = [
-    'severity=ERROR',
-    f'protoPayload.methodName="{METHOD_NAME}"',
-    f'protoPayload.status.message:"{MATCH_STR}"',
-    f'protoPayload.status.message:"{MATCH_STR2}"',
+  'severity=ERROR',
+  f'protoPayload.methodName="{METHOD_NAME}"',
+  f'protoPayload.status.message:"{MATCH_STR}"',
+  f'protoPayload.status.message:"{MATCH_STR2}"',
 ]
 
 logs_by_project = {}
@@ -40,10 +41,11 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='audited_resource',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='audited_resource',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -58,20 +60,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'logging api is disabled')
     return
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'ERROR' or \
-         METHOD_NAME not in get_path(log_entry,
-                     ('protoPayload', 'methodName'), default='') or \
-         MATCH_STR not in get_path(log_entry,
-                     ('protoPayload', 'status', 'message'), default='') or \
-         MATCH_STR2 not in get_path(log_entry,
-                     ('protoPayload', 'status', 'message'), default=''):
+      if (
+        log_entry['severity'] != 'ERROR'
+        or METHOD_NAME not in get_path(log_entry, ('protoPayload', 'methodName'), default='')
+        or MATCH_STR not in get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
+        or MATCH_STR2 not in get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
+      ):
         continue
-      report.add_failed(project,
-                        'TPU failed to create due to resource availability')
+      report.add_failed(project, 'TPU failed to create due to resource availability')
       return
 
   # in case of there is no log or all logs are non-relevant

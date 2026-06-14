@@ -23,8 +23,6 @@ import re
 from gcpdiag import utils
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-
 
 class ContainerApiStub(apis_stub.ApiStub):
   """Mock object to simulate container api calls."""
@@ -42,12 +40,10 @@ class ContainerApiStub(apis_stub.ApiStub):
   def clusters(self):
     return self
 
-  # pylint: disable=invalid-name
   def getServerConfig(self, name):
     project_id = utils.get_project_by_res_name(name)
     region = utils.get_region_by_res_name(name)
-    return apis_stub.RestCallStub(project_id,
-                                  f'container-server-config-{region}')
+    return apis_stub.RestCallStub(project_id, f'container-server-config-{region}')
 
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)

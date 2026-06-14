@@ -2,8 +2,31 @@ VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
 DIST_NAME=gcpdiag-$(VERSION)
 SHELL=/bin/bash
 
-test:
-	pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
+.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code
+
+# Comprehensive environment check.
+check-environment:
+	@command -v pipenv >/dev/null 2>&1 || { echo >&2 "ERROR: pipenv is not installed. Please run 'pip install pipenv' and try again."; exit 1; }
+	@if [ -z "$$(pipenv --venv)" ]; then \
+		echo "Pipenv environment not created. Please run 'pipenv install --dev'."; \
+		exit 1; \
+	fi
+	@pipenv check || { \
+		REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\\1/p' < Pipfile); \
+		echo >&2 "ERROR: Pipenv check failed. Your Python version might be incorrect."; \
+		echo >&2 "Please run 'pipenv --rm && pipenv --python $$REQUIRED_PYTHON_VERSION install --dev' to fix this."; \
+		exit 1; \
+	}
+
+test: check-environment
+	pipenv run pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
+
+coverage-report:
+	pipenv run pytest --cov-config=.coveragerc --cov=gcpdiag --forked --cov-report html --cov-report term-missing
+	@echo ""
+	@echo "To view the report, run the following command in your terminal:"
+	@echo "python3 -m http.server 8080"
+	@echo "Then open http://localhost:8080/htmlcov/ in your browser."
 
 test_async_api:
 	python -m unittest gcpdiag.async_queries.api.api_slowtest
@@ -14,9 +37,6 @@ test-mocked:
 	  EXIT_CODE=$$?; \
 	  if [ $$EXIT_CODE != 2 ]; then echo "incorrect exit code $$EXIT_CODE" >&2; exit 1; fi; \
 	  exit 0
-
-spelling:
-	 pip install -U PyEnchant; pylint --disable all --enable spelling --spelling-dict en_US gcpdiag
 
 snapshots:
 	pytest --snapshot-update --forked -v -v
@@ -31,8 +51,8 @@ build:
 	rm -f dist/gcpdiag
 	pyinstaller --workpath=.pyinstaller.build pyinstaller.spec
 
-bump-version:
-	bumpversion --commit minor
+bump-my-version:
+	bump-my-version bump --commit minor
 
 new-rule:
 	python cookiecutter-gcpdiag-rule/cookiecutter_runner.py
@@ -60,7 +80,8 @@ release:
 	# Remove '-test' in the version.
 	# Note: this will fail if we have already a release tag, in which case
 	# you should first increase the minor version with a code review.
-	bumpversion --commit --tag --tag-message "Release v{new_version}" release
+	bump-my-version bump --commit --tag --tag-message "Release v{new_version}" release
+
 	# Push to the release branch and tag the release.
 	# Note: We want ff-only because otherwise the commit ids will be different
 	# between master and release, and that causes problems with tags
@@ -74,7 +95,7 @@ release:
 	git push origin HEAD:release
 	git push --tags
 	# increment the version (and add back '-test')
-	bumpversion --commit minor
+	bump-my-version bump --commit minor
 	git push origin HEAD:refs/for/master
 
 runbook-docs:
@@ -90,5 +111,3 @@ runbook-starter-code:
 	fi;\
 	echo "Using Python at $$PYTHON"; \
 	$$PYTHON bin/runbook-starter-code-generator py_path=$$PYTHON name=$(name) prepenv=$(prepenv)
-
-.PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code spelling

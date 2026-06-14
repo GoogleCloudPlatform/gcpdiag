@@ -1,0 +1,46 @@
+{% block tunnel_success_reason%}
+VPN tunnel '{tunnel}' in project '{project}' is in status '{tunnel.status}'.
+{% endblock tunnel_success_reason %}
+{% block log_explorer_success_reason%}
+VPN tunnel '{tunnel}' in project '{project}' is in status '{tunnel.status}': No relevant logs found during the chosen TimeFrame
+{% endblock log_explorer_success_reason %}
+{% block tunnel_failure_reason%}
+VPN tunnel '{tunnel}' in project '{project}': {issue}
+{% endblock tunnel_failure_reason%}
+{% block tunnel_failure_remediation%}
+{remediations}
+{% endblock tunnel_failure_remediation %}
+
+{% block log_explorer_failure_reason%}
+VPN tunnel '{tunnel}' in project '{project}' is in status '{tunnel.status}': {issue}
+{% endblock log_explorer_failure_reason %}
+{% block log_explorer_skipped_reason%}
+Please verify the tunnel and project details provided are accurate.
+{% endblock log_explorer_skipped_reason %}
+{% block log_explorer_failure_remediation%}
+{remediations}
+{% endblock log_explorer_failure_remediation %}
+{% block packet_drop_check_success_reason%}
+VPN tunnel '{tunnel}' in project '{project}' is in status '{tunnel.status}': No Packet drop during the chosen TimeFrame
+{% endblock packet_drop_check_success_reason %}
+{% block packet_drop_check_failure_reason%}
+{issue}
+{% endblock packet_drop_check_failure_reason%}
+{% block packet_drop_check_failure_remediation%}
+{remediations}
+{% endblock packet_drop_check_failure_remediation %}
+{% block packet_drop_check_skipped_reason%}
+{issue}
+{% endblock packet_drop_check_skipped_reason %}
+{% block packet_check_success_reason%}
+VPN tunnel '{tunnel}' in project '{project}' is in status '{tunnel.status}': Packet did not reach max value during the chosen TimeFrame
+{% endblock packet_check_success_reason %}
+{% block packet_check_failure_reason%}
+VPN tunnel '{tunnel}' in project '{project}': {issue}
+{% endblock packet_check_failure_reason%}
+{% block packet_check_failure_remediation%}
+{remediations}
+{% endblock packet_check_failure_remediation %}
+{% block packet_check_skipped_reason%}
+{issue}
+{% endblock packet_check_skipped_reason %}

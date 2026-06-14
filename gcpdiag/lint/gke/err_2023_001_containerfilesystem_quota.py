@@ -31,10 +31,11 @@ def prepare_rule(context: models.Context):
   clusters = gke.get_clusters(context)
   for project_id in {c.project_id for c in clusters.values()}:
     logs_by_project[project_id] = logs.query(
-        project_id=project_id,
-        resource_type='k8s_node',
-        log_name='log_id("gcfsd")',
-        filter_str=f'jsonPayload.MESSAGE:"{MATCH_STR}"')
+      project_id=project_id,
+      resource_type='k8s_node',
+      log_name='log_id("gcfsd")',
+      filter_str=f'jsonPayload.MESSAGE:"{MATCH_STR}"',
+    )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -68,13 +69,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       return False
 
   bad_nodes_by_cluster = util.gke_logs_find_bad_nodes(
-      context=context, logs_by_project=logs_by_project, filter_f=filter_f)
+    context=context, logs_by_project=logs_by_project, filter_f=filter_f
+  )
 
   # Create the report.
   for _, c in sorted(clusters.items()):
     if c in bad_nodes_by_cluster:
       report.add_failed(
-          c, 'Container File System API quota exceeded detected. Nodes:\n. ' +
-          '\n. '.join(bad_nodes_by_cluster[c]))
+        c,
+        'Container File System API quota exceeded detected. Nodes:\n. '
+        + '\n. '.join(bad_nodes_by_cluster[c]),
+      )
     else:
       report.add_ok(c)

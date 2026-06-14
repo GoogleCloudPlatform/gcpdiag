@@ -38,10 +38,11 @@ clusters_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_dataproc_cluster',
-      log_name='log_id("google.dataproc.agent")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='cloud_dataproc_cluster',
+    log_name='log_id("google.dataproc.agent")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def prefetch_rule(context: models.Context):
@@ -49,22 +50,22 @@ def prefetch_rule(context: models.Context):
 
 
 def is_relevant(entry, context):
-  return all([
-      get_path(entry,
-               ('resource', 'labels', 'project_id')) == context.project_id,
+  return all(
+    [
+      get_path(entry, ('resource', 'labels', 'project_id')) == context.project_id,
       get_path(entry, ('resource', 'type')) == 'cloud_dataproc_cluster',
-      get_path(entry, ('logName')) ==
-      f'projects/{context.project_id}/logs/google.dataproc.agent',
+      get_path(entry, ('logName')) == f'projects/{context.project_id}/logs/google.dataproc.agent',
       get_path(entry, ('severity')) == 'WARNING',
-      MSG_RE.match(get_path(entry, ('jsonPayload', 'message')))
-  ])
+      MSG_RE.match(get_path(entry, ('jsonPayload', 'message'))),
+    ]
+  )
 
 
 def get_clusters_having_relevant_log_entries(context):
   return {
-      get_path(e, ('resource', 'labels', 'cluster_name'), default=None)
-      for e in logs_by_project[context.project_id].entries
-      if is_relevant(e, context)
+    get_path(e, ('resource', 'labels', 'cluster_name'), default=None)
+    for e in logs_by_project[context.project_id].entries
+    if is_relevant(e, context)
   }
 
 

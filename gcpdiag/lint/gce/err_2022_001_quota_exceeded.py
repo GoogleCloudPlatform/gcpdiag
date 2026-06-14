@@ -29,19 +29,17 @@ _query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
 
 def prefetch_rule(context: models.Context):
-
   params = {'within_days': config.get('within_days')}
-  _query_results_per_project_id[context.project_id] = \
-      monitoring.query(
-          context.project_id,
-          quotas.QUOTA_EXCEEDED_QUERY_TEMPLATE.format_map(params))
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id, quotas.QUOTA_EXCEEDED_QUERY_TEMPLATE.format_map(params)
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
 
   if len(_query_results_per_project_id[context.project_id]) == 0:
-    #no quota exceeded event during the period of time
+    # no quota exceeded event during the period of time
     report.add_ok(project)
     return
   else:
@@ -51,10 +49,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         exceeded_quotas.append(i['labels']['metric.limit_name'])
       except KeyError:
         report.add_skipped(project, 'no data')
-        #invalid query result
+        # invalid query result
         return
     exceeded_quota_names = ', '.join(exceeded_quotas)
     report.add_failed(
-        project,
-        f'Project has recently exceeded the following quotas: {exceeded_quota_names}.'
+      project, f'Project has recently exceeded the following quotas: {exceeded_quota_names}.'
     )

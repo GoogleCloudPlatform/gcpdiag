@@ -1,4 +1,4 @@
-dest_ip=8.8.8.8,name=gke1,project_id=gcpdiag-gke4-runbook,src_ip=0.0.0.0
+dest_ip=8.8.8.8,gke_cluster_name=gke1,project_id=gcpdiag-gke4-runbook,src_ip=0.0.0.0
 
 gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading issues on GKE Cluster.
 

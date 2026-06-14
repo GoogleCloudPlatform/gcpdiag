@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """pyinstaller configuration for gcpdiag.queries."""
+
 datas = [('gcpdiag/queries/client_secrets.json', 'gcpdiag/queries')]

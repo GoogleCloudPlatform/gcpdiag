@@ -1,0 +1,19 @@
+{
+  "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-9pm6hng1",
+  "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1",
+  "pushConfig": {},
+  "ackDeadlineSeconds": 10,
+  "messageRetentionDuration": "604800s",
+  "expirationPolicy": {
+    "ttl": "2678400s"
+  },
+  "deadLetterPolicy": {
+    "deadLetterTopic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-bqdlqtopic-9pm6hng1",
+    "maxDeliveryAttempts": 5
+  },
+  "bigqueryConfig": {
+    "table": "gcpdiag-pubsub1-aaaa.pubsub1_dataset.pubsub1_table",
+    "state": "ACTIVE"
+  },
+  "state": "ACTIVE"
+}

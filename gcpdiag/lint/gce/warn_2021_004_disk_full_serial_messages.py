@@ -19,6 +19,7 @@ The messages:
 "No space left on device" / "I/O error" / "No usable temporary directory found"
 in serial output usually indicate that the disk is full.
 """
+
 from typing import Optional
 
 from gcpdiag import lint, models
@@ -27,9 +28,9 @@ from gcpdiag.queries import gce
 from gcpdiag.queries.logs import LogEntryShort
 
 NO_SPACE_LEFT_MESSAGES = [
-    'I/O error',  #
-    'No space left on device',
-    'No usable temporary directory found'
+  'I/O error',  #
+  'No space left on device',
+  'No usable temporary directory found',
 ]
 
 logs_by_project = {}
@@ -37,7 +38,8 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = utils.SerialOutputSearch(
-      context, search_strings=NO_SPACE_LEFT_MESSAGES)
+    context, search_strings=NO_SPACE_LEFT_MESSAGES
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -53,12 +55,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'No instances found')
   else:
     for instance in sorted(instances, key=lambda i: i.full_path):
-      match: Optional[LogEntryShort] = search.get_last_match(
-          instance_id=instance.id)
+      match: Optional[LogEntryShort] = search.get_last_match(instance_id=instance.id)
       if match:
-        report.add_failed(instance,
-                          ('There are messages indicating that the disk might'
-                           ' be full in serial output of {}\n{}: "{}"').format(
-                               instance.name, match.timestamp_iso, match.text))
+        report.add_failed(
+          instance,
+          (
+            'There are messages indicating that the disk might'
+            ' be full in serial output of {}\n{}: "{}"'
+          ).format(instance.name, match.timestamp_iso, match.text),
+        )
       else:
         report.add_ok(instance)

@@ -30,6 +30,11 @@ resource "google_project_service" "iam" {
   service = "iam.googleapis.com"
 }
 
+resource "google_project_service" "pubsub" {
+  project = google_project.project.project_id
+  service = "pubsub.googleapis.com"
+}
+
 output "project_id" {
   value = google_project.project.project_id
 }
@@ -44,6 +49,10 @@ output "project_nr" {
 
 output "org_id" {
   value = var.org_id
+}
+
+output "batch_job_id" {
+  value = google_dataflow_job.wordcount.id
 }
 
 output "job_id" {

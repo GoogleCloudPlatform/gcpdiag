@@ -1,7 +1,6 @@
 """Stub for Data Fusion API."""
 
-from gcpdiag.queries.generic_api.api_build.generic_api_stub import \
-    GenericApiStub
+from gcpdiag.queries.generic_api.api_build.generic_api_stub import GenericApiStub
 
 
 class DataFusionApiStub(GenericApiStub):
@@ -29,5 +28,4 @@ class DataFusionApiStub(GenericApiStub):
     return self._load_json(f'datafusion-{namespace}-applications')
 
   def get_application_preferences(self, namespace: str, application_name: str):
-    return self._load_json(
-        f'datafusion-{namespace}-application-{application_name}-preferences')
+    return self._load_json(f'datafusion-{namespace}-application-{application_name}-preferences')

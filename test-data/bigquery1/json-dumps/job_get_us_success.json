@@ -1,0 +1,5 @@
+{
+  "id": "gcpdiag-bigquery1-aaaa:us.test_success",
+  "status": { "state": "DONE" },
+  "jobReference": { "projectId": "gcpdiag-bigquery1-aaaa", "jobId": "test_success", "location": "us" }
+}

@@ -12,10 +12,10 @@ description: >
 
 ### Description
 
-This step is crucial for confirming the VM's availability and operational readiness.
-  It checks the VM's lifecycle state and reports success if the VM is running or fails the
-  check if the VM is in any other state, providing detailed status information for
-  troubleshooting.
+This step is crucial for confirming the VM's availability and operational
+  readiness. It checks the VM's lifecycle state and reports success if the VM
+  is running or fails the check if the VM is in any other state, providing
+  detailed status information for troubleshooting.
 
 ### Failure Reason
 

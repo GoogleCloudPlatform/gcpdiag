@@ -1,0 +1,4 @@
+security:
+  ignore-vulnerabilities:
+    # Waiting for upstream fix for CVE-2025-69872 in diskcache
+    "86338":

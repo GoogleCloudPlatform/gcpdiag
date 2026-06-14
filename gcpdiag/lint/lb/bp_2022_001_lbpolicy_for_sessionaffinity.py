@@ -38,5 +38,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_ok(project)
   else:
     result = 'Session affinity might not work in the following backend services: ' + ', '.join(
-        report_list)
+      report_list
+    )
     report.add_failed(project, result)

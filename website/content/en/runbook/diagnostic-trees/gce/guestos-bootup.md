@@ -13,29 +13,29 @@ description: >
 ### Description
 
 This runbook is designed to investigate the various boot-up stages of a Linux or Windows Guest
-    OS running on Google Compute Engine. It is intended to help you identify and troubleshoot issues
-    that may arise during the boot process. The runbook provides a structured approach to resolve
-    issues.
+  OS running on Google Compute Engine. It is intended to help you identify and troubleshoot issues
+  that may arise during the boot process. The runbook provides a structured approach to resolve
+  issues.
 
-    Key Investigation Areas:
+  Key Investigation Areas:
 
-    Boot Issues:
-        - Check for Boot issues happening due to Kernel panics
-        - Check for GRUB related issues.
-        - Check if system failed to find boot disk.
-        - Check if Filesystem corruption is causing issues with system boot.
-        - Check if "/" Filesystem consumption is causing issues with system boot.
+  Boot Issues:
+      - Check for Boot issues happening due to Kernel panics
+      - Check for GRUB related issues.
+      - Check if system failed to find boot disk.
+      - Check if Filesystem corruption is causing issues with system boot.
+      - Check if "/" Filesystem consumption is causing issues with system boot.
 
-    Cloud-init checks:
-        - Check if cloud-init has initialised or started.
-        - Check if NIC has received the IP.
+  Cloud-init checks:
+      - Check if cloud-init has initialised or started.
+      - Check if NIC has received the IP.
 
-    Network related issues:
-        - Check if metadata server became unreachable since last boot.
-        - Check if there are any time sync related errors.
+  Network related issues:
+      - Check if metadata server became unreachable since last boot.
+      - Check if there are any time sync related errors.
 
-    Google Guest Agent checks:
-        - Check if there are logs related to successful startup of Google Guest Agent.
+  Google Guest Agent checks:
+      - Check if there are logs related to successful startup of Google Guest Agent.
 
 ### Executing this runbook
 

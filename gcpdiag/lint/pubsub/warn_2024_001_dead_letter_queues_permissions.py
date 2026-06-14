@@ -34,8 +34,7 @@ projects = {}
 
 def prefetch_rule(context: models.Context):
   projects[context.project_id] = crm.get_project(context.project_id)
-  policy_by_project[context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policy_by_project[context.project_id] = iam.get_project_policy(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -63,15 +62,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   else:
     project_policy = policy_by_project[context.project_id]
-    service_account_re = re.compile('serviceAccount:service-' +
-                                    str(project.number) +
-                                    '@gcp-sa-pubsub.iam.gserviceaccount.com')
+    service_account_re = re.compile(
+      'serviceAccount:service-' + str(project.number) + '@gcp-sa-pubsub.iam.gserviceaccount.com'
+    )
     service_account = next(
-        filter(
-            service_account_re.match,
-            project_policy.get_members(),
-        ),
-        None,
+      filter(
+        service_account_re.match,
+        project_policy.get_members(),
+      ),
+      None,
     )
 
     if not service_account:
@@ -79,16 +78,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     if not project_policy.has_role_permissions(service_account, role_publisher):
       report.add_failed(
-          project,
-          f'{service_account}\nmissing role: {role_publisher}',
+        project,
+        f'{service_account}\nmissing role: {role_publisher}',
       )
       required_permission = False
 
-    if not project_policy.has_role_permissions(service_account,
-                                               role_subscriber):
+    if not project_policy.has_role_permissions(service_account, role_subscriber):
       report.add_failed(
-          project,
-          f'{service_account}\nmissing role: {role_subscriber}',
+        project,
+        f'{service_account}\nmissing role: {role_subscriber}',
       )
       required_permission = False
 

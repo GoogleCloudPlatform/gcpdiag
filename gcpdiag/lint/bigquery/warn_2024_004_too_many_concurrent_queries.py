@@ -28,9 +28,9 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'too many concurrent queries with remote functions for this project'
 
 RATE_LIMITS_FILTER = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 
 logs_by_project = {}
@@ -38,10 +38,10 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(RATE_LIMITS_FILTER),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(RATE_LIMITS_FILTER),
   )
 
 
@@ -55,18 +55,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'BigQuery api is disabled')
     return
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), default=''):
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         continue
 
       report.add_failed(
-          project,
-          'Exceeded rate limits: too many concurrent queries with remote'
-          ' functions for this project',
+        project,
+        'Exceeded rate limits: too many concurrent queries with remote functions for this project',
       )
       return
 

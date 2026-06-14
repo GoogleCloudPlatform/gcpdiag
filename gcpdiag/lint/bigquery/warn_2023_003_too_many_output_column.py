@@ -27,8 +27,8 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'Resources exceeded during query execution: Too many output columns'
 
 TOO_MANY_OUTPUT_COLUMNS_FILTER = [
-    'severity=ERROR',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 
 logs_by_project = {}
@@ -36,10 +36,10 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(TOO_MANY_OUTPUT_COLUMNS_FILTER),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(TOO_MANY_OUTPUT_COLUMNS_FILTER),
   )
 
 
@@ -55,28 +55,27 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'bigquery api is disabled')
     return
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), default=''):
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         continue
       job_id = get_path(
-          log_entry,
-          (
-              'protoPayload',
-              'serviceData',
-              'jobCompletedEvent',
-              'job',
-              'jobName',
-              'jobId',
-          ),
+        log_entry,
+        (
+          'protoPayload',
+          'serviceData',
+          'jobCompletedEvent',
+          'job',
+          'jobName',
+          'jobId',
+        ),
       )
       report.add_failed(
-          project,
-          'BigQuery job failed with Too many output columns. A sample failed job : '
-          + job_id)
+        project, 'BigQuery job failed with Too many output columns. A sample failed job : ' + job_id
+      )
       return
 
   # in case of there is no log or all logs are non-relevant

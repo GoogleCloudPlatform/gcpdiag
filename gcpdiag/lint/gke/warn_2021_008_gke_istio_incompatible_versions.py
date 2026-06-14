@@ -33,9 +33,9 @@ def prefetch_rule(context: models.Context):
     return
 
   # Fetch the metrics for all clusters.
-  _query_results_per_project_id[context.project_id] = \
-      monitoring.query(
-          context.project_id, """
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+    context.project_id,
+    """
 fetch k8s_container
 | metric 'kubernetes.io/container/uptime'
 | filter (metadata.system_labels.container_image =~ '.*pilot.*')
@@ -44,7 +44,8 @@ fetch k8s_container
     cluster_name: resource.cluster_name,
     location: resource.location,
     container_image: metadata.system_labels.container_image]
-  """)
+  """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -69,8 +70,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   per_cluster_results: Dict[tuple, Dict[str, str]] = {}
   for ts in _query_results_per_project_id[context.project_id].values():
     try:
-      cluster_key = (ts['labels']['resource.project_id'],
-                     ts['labels']['location'], ts['labels']['cluster_name'])
+      cluster_key = (
+        ts['labels']['resource.project_id'],
+        ts['labels']['location'],
+        ts['labels']['cluster_name'],
+      )
       cluster_values = per_cluster_results.setdefault(cluster_key, {})
       cluster_values['container_image'] = ts['labels']['container_image']
     except KeyError:
@@ -90,8 +94,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         return
       else:
         report.add_failed(
-            c,
-            f'Current GKE version: {c.master_version} (Release channel: '+\
-            f'{c.release_channel})\nIn-cluster Istio/ASM control plane ' +\
-            f'version: {istio_version}'
+          c,
+          f'Current GKE version: {c.master_version} (Release channel: '
+          + f'{c.release_channel})\nIn-cluster Istio/ASM control plane '
+          + f'version: {istio_version}',
         )

@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Constants applicable relevant to only dataproc implementation."""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.iam.constants import *
 
-PORT_EXHAUSTION_LOG = (
-    "Address already in use: Service 'sparkDriver' failed after 1000 retries")
+PORT_EXHAUSTION_LOG = "Address already in use: Service 'sparkDriver' failed after 1000 retries"
 
 SW_PREEMPTION_LOG = (
-    '(requesting driver to remove executor | lost executor | Container'
-    ' released on a lost node)')
+  '(requesting driver to remove executor | lost executor | Container released on a lost node)'
+)
 
 WORKER_DISK_USAGE_LOG = (
-    'Most of the disks failed. 1/1 local-dirs usable space is below'
-    ' utilization percentage/no more usable space')
+  'Most of the disks failed. 1/1 local-dirs usable space is below'
+  ' utilization percentage/no more usable space'
+)
 
 GC_PAUSE_LOG = 'Detected pause in JVM or host machine (eg GC)'
 
@@ -46,23 +46,31 @@ NOT_INITIALIZED_LOG = 'Master agent not initialized'
 
 NOT_ENOUGH_DISK_LOG = 'Disk space too low on Master'
 
-YARN_RUNTIME_LOG = ('YarnRuntimeException: Could not load history file .*'
-                    ' /mapreduce-job-history/intermediate-done/root')
+YARN_RUNTIME_LOG = (
+  'YarnRuntimeException: Could not load history file .*'
+  ' /mapreduce-job-history/intermediate-done/root'
+)
 
-ERROR_403_LOG = ('com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.'
-                 'googleapis.json.GoogleJsonResponseException: 403 Forbidden')
+ERROR_403_LOG = (
+  'com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.'
+  'googleapis.json.GoogleJsonResponseException: 403 Forbidden'
+)
 
 ERROR_429_GCE_LOG = (
-    'com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.http.'
-    'HttpResponseException: 429 Too Many Requests')
+  'com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.http.'
+  'HttpResponseException: 429 Too Many Requests'
+)
 
 ERROR_429_DRIVER_LOG = (
-    'com.google.cloud.hadoop.services.repackaged.com.google.api.client.'
-    'googleapis.json.GoogleJsonResponseException: 429 Too Many Requests')
+  'com.google.cloud.hadoop.services.repackaged.com.google.api.client.'
+  'googleapis.json.GoogleJsonResponseException: 429 Too Many Requests'
+)
 
 ERROR_412_LOG = (
-    'com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.'
-    'googleapis.json.GoogleJsonResponseException: 412 Precondition Failed')
+  'com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.'
+  'googleapis.json.GoogleJsonResponseException: 412 Precondition Failed'
+)
 
-BQ_RESOURCE_LOG = ('com.google.cloud.spark.bigquery.repackaged.io.grpc.'
-                   'StatusRuntimeException: RESOURCE_EXHAUSTED')
+BQ_RESOURCE_LOG = (
+  'com.google.cloud.spark.bigquery.repackaged.io.grpc.StatusRuntimeException: RESOURCE_EXHAUSTED'
+)

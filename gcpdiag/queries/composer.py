@@ -26,7 +26,8 @@ from gcpdiag.queries import apis, crm
 
 
 class Environment(models.Resource):
-  """ Represents Composer environment """
+  """Represents Composer environment"""
+
   _resource_data: dict
 
   def __init__(self, project_id: str, resource_data: dict):
@@ -37,28 +38,24 @@ class Environment(models.Resource):
 
   @property
   def num_schedulers(self) -> int:
-    return get_path(self._resource_data,
-                    ('config', 'workloadsConfig', 'scheduler', 'count'),
-                    default=1)
+    return get_path(
+      self._resource_data, ('config', 'workloadsConfig', 'scheduler', 'count'), default=1
+    )
 
   @property
   def worker_cpu(self) -> float:
-    return get_path(self._resource_data,
-                    ('config', 'workloadsConfig', 'worker', 'cpu'))
+    return get_path(self._resource_data, ('config', 'workloadsConfig', 'worker', 'cpu'))
 
   @property
   def worker_memory_gb(self) -> float:
-    return get_path(self._resource_data,
-                    ('config', 'workloadsConfig', 'worker', 'memoryGb'))
+    return get_path(self._resource_data, ('config', 'workloadsConfig', 'worker', 'memoryGb'))
 
   @property
   def worker_max_count(self) -> int:
-    return get_path(self._resource_data,
-                    ('config', 'workloadsConfig', 'worker', 'maxCount'))
+    return get_path(self._resource_data, ('config', 'workloadsConfig', 'worker', 'maxCount'))
 
   @property
   def worker_concurrency(self) -> float:
-
     def default_value():
       airflow_version = self.airflow_version
 
@@ -67,9 +64,7 @@ class Environment(models.Resource):
       else:
         return min(32, 12 * self.worker_cpu, 8 * self.worker_memory_gb)
 
-    return float(
-        self.airflow_config_overrides.get('celery-worker_concurrency',
-                                          default_value()))
+    return float(self.airflow_config_overrides.get('celery-worker_concurrency', default_value()))
 
   @property
   def parallelism(self) -> float:
@@ -109,8 +104,7 @@ class Environment(models.Resource):
 
   @property
   def airflow_config_overrides(self) -> dict:
-    return self._resource_data['config']['softwareConfig'].get(
-        'airflowConfigOverrides', {})
+    return self._resource_data['config']['softwareConfig'].get('airflowConfigOverrides', {})
 
   @property
   def service_account(self) -> str:
@@ -123,10 +117,9 @@ class Environment(models.Resource):
     return sa
 
   def parse_full_path(self) -> Tuple[str, str]:
-    match = re.match(r'projects/[^/]*/locations/([^/]*)/environments/([^/]*)',
-                     self.full_path)
+    match = re.match(r'projects/[^/]*/locations/([^/]*)/environments/([^/]*)', self.full_path)
     if not match:
-      raise RuntimeError(f'Can\'t parse full_path {self.full_path}')
+      raise RuntimeError(f"Can't parse full_path {self.full_path}")
     return match.group(1), match.group(2)
 
   def __str__(self) -> str:
@@ -134,7 +127,8 @@ class Environment(models.Resource):
 
   def is_private_ip(self) -> bool:
     return self._resource_data['config']['privateEnvironmentConfig'].get(
-        'enablePrivateEnvironment', False)
+      'enablePrivateEnvironment', False
+    )
 
   @property
   def gke_cluster(self) -> str:
@@ -142,28 +136,47 @@ class Environment(models.Resource):
 
 
 COMPOSER_REGIONS = [
-    'asia-northeast2', 'us-central1', 'northamerica-northeast1', 'us-west3',
-    'southamerica-east1', 'us-east1', 'asia-northeast1', 'europe-west1',
-    'europe-west2', 'asia-northeast3', 'us-west4', 'asia-east2',
-    'europe-central2', 'europe-west6', 'us-west2', 'australia-southeast1',
-    'europe-west3', 'asia-south1', 'us-west1', 'us-east4', 'asia-southeast1'
+  'asia-northeast2',
+  'us-central1',
+  'northamerica-northeast1',
+  'us-west3',
+  'southamerica-east1',
+  'us-east1',
+  'asia-northeast1',
+  'europe-west1',
+  'europe-west2',
+  'asia-northeast3',
+  'us-west4',
+  'asia-east2',
+  'europe-central2',
+  'europe-west6',
+  'us-west2',
+  'australia-southeast1',
+  'europe-west3',
+  'asia-south1',
+  'us-west1',
+  'us-east4',
+  'asia-southeast1',
 ]
 
 
 def _query_region_envs(region, api, project_id):
-  query = api.projects().locations().environments().list(
-      parent=f'projects/{project_id}/locations/{region}')
+  query = (
+    api.projects()
+    .locations()
+    .environments()
+    .list(parent=f'projects/{project_id}/locations/{region}')
+  )
   # be careful not to retry too many times because querying all regions
   # sometimes causes requests to fail permanently
   resp = query.execute(num_retries=1)
   return resp.get('environments', [])
 
 
-def _query_regions_envs(regions, api, project_id):
+def _query_regions_envs(regions, api, project_id, context: models.Context):
   result: List[Environment] = []
-  executor = get_executor()
-  for descriptions in executor.map(
-      lambda r: _query_region_envs(r, api, project_id), regions):
+  executor = get_executor(context)
+  for descriptions in executor.map(lambda r: _query_region_envs(r, api, project_id), regions):
     result += descriptions
   return result
 
@@ -175,18 +188,16 @@ def get_environments(context: models.Context) -> Iterable[Environment]:
     return environments
   api = apis.get_api('composer', 'v1', context.project_id)
 
-  for env in _query_regions_envs(COMPOSER_REGIONS, api, context.project_id):
+  for env in _query_regions_envs(COMPOSER_REGIONS, api, context.project_id, context):
     # projects/{projectId}/locations/{locationId}/environments/{environmentId}.
-    result = re.match(r'projects/[^/]+/locations/([^/]+)/environments/([^/]+)',
-                      env['name'])
+    result = re.match(r'projects/[^/]+/locations/([^/]+)/environments/([^/]+)', env['name'])
     if not result:
       logging.error('invalid composer name: %s', env['name'])
       continue
     location = result.group(1)
     labels = env.get('labels', {})
     name = result.group(2)
-    if not context.match_project_resource(
-        location=location, labels=labels, resource=name):
+    if not context.match_project_resource(location=location, labels=labels, resource=name):
       continue
 
     environments.append(Environment(context.project_id, env))

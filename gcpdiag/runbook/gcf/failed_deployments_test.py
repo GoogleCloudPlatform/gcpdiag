@@ -23,8 +23,6 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   project_id = 'gcpdiag-gcf1-aaaa'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
-  rule_parameters = [{
-      'project_id': 'gcpdiag-gcf1-aaaa',
-      'name': 'gcf1',
-      'region': 'us-central1'
-  }]
+  rule_parameters = [
+    {'project_id': 'gcpdiag-gcf1-aaaa', 'cloud_function_name': 'gcf1', 'region': 'us-central1-a'}
+  ]

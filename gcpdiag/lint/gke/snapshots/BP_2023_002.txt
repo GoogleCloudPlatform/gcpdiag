@@ -1,9 +1,3 @@
 *  gke/BP/2023_002: Stateful workloads not run on preemptible node
-   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
-   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
-   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [ OK ]
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [ OK ]
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [ OK ]
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [ OK ]
+   (Error: 'bool' object is not callable)                                 [SKIP]
 

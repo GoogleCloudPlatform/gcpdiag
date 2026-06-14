@@ -3,38 +3,28 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[requires]
+python_version = "3.12"
+
 [packages]
 aiohttp = "*"
-appdirs = "*"
+platformdirs = "*"
 boltons = "*"
-blessings = "*"
-dataclasses = "==0.6"
+rich = "*"
 diskcache = "*"
 dnspython = "*"
 google-api-python-client = "*"
-google-auth-oauthlib = "*"
-importlib-resources = "*"
-jinja2 = "*"
+jinja2 = ">=3.0.0"
 packaging = "==23.*"
 python-dateutil = "*"
 pyyaml = "*"
 ratelimit = "*"
-six = "==1.16.0"
-# Python 3.7 compatibility
-typing-extensions = "*"
-# Python 3.9 compatibility
-exceptiongroup = "*"
 beautifulsoup4 = "*"
-async-timeout = "*"
-bs4 = "*"
 
 [dev-packages]
-astunparse = "*"
-bump2version = "*"
+absl-py = "*"
+bump-my-version = "*"
 coverage = "*"
-dnspython = "*"
-importlib-metadata = "*"
-isort = "==5.12.0"
 mypy = "*"
 pdoc = "*"
 pre-commit = "*"
@@ -43,9 +33,9 @@ pytest = "*"
 pytest-cov = "*"
 pytest-forked = "*"
 pytest-snapshot = "*"
-yapf = "*"
-pylint = "*"
+ruff = "*"
 # for vim:
 # pip install 'python-language-server[yapf,pyflakes,mccabe]'
+safety = "*"
 types-pyyaml = "*"
 cookiecutter = "*"

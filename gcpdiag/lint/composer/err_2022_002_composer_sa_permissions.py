@@ -35,11 +35,9 @@ policy_by_service_account = {}
 
 
 def prefetch_rule(context: models.Context):
-  environments_by_project[context.project_id] = composer.get_environments(
-      context)
+  environments_by_project[context.project_id] = composer.get_environments(context)
 
-  policy_by_project[context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policy_by_project[context.project_id] = iam.get_project_policy(context)
   for environment in environments_by_project[context.project_id]:
     # Service account policy is needed for private IP envs only
     if not environment.is_private_ip():
@@ -48,13 +46,12 @@ def prefetch_rule(context: models.Context):
     if environment.service_account in policy_by_service_account:
       continue
 
-    policy_by_service_account[
-        environment.service_account] = iam.get_service_account_iam_policy(
-            context.project_id, environment.service_account)
+    policy_by_service_account[environment.service_account] = iam.get_service_account_iam_policy(
+      context, environment.service_account
+    )
 
 
-def run_rule(context: models.Context,
-             report: lint.LintReportRuleInterface) -> None:
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   environments = environments_by_project[context.project_id]
   if len(environments) == 0:
     report.add_skipped(None, 'no composer environments found')
@@ -66,26 +63,23 @@ def run_rule(context: models.Context,
 
     project_policy = policy_by_project[environment.project_id]
     for role in [ROLE] + ALT_ROLES:
-      if project_policy.has_role_permissions(
-          f'serviceAccount:{service_account}', role):
+      if project_policy.has_role_permissions(f'serviceAccount:{service_account}', role):
         break
     else:
       has_failed = True
       # `composer.worker` is preferred, using it in error messages
-      report.add_failed(environment, (f'service account: {service_account}\n'
-                                      f'missing role: {ROLE}'))
+      report.add_failed(environment, (f'service account: {service_account}\nmissing role: {ROLE}'))
 
     if environment.is_private_ip():
-      service_account_policy = policy_by_service_account[
-          environment.service_account]
+      service_account_policy = policy_by_service_account[environment.service_account]
       for scope in (service_account_policy, project_policy):
-        if scope.has_role_permissions(f'serviceAccount:{service_account}',
-                                      PRIVATE_IP_ROLE):
+        if scope.has_role_permissions(f'serviceAccount:{service_account}', PRIVATE_IP_ROLE):
           break
       else:
         has_failed = True
-        report.add_failed(environment, (f'service account: {service_account}\n'
-                                        f'missing role: {PRIVATE_IP_ROLE}'))
+        report.add_failed(
+          environment, (f'service account: {service_account}\nmissing role: {PRIVATE_IP_ROLE}')
+        )
 
     if not has_failed:
       report.add_ok(environment)

@@ -20,8 +20,8 @@ from gcpdiag.queries import datafusion_test
 
 
 @mock.patch(
-    'gcpdiag.queries.datafusion.extract_support_datafusion_version',
-    new=lambda: datafusion_test.SUPPORTED_VERSIONS_DICT,
+  'gcpdiag.queries.datafusion.extract_support_datafusion_version',
+  new=lambda: datafusion_test.SUPPORTED_VERSIONS_DICT,
 )
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = datafusion

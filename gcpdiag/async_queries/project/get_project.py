@@ -1,4 +1,5 @@
-""" Helper method to initialize Project object """
+"""Helper method to initialize Project object"""
+
 from gcpdiag.async_queries.api import get_api
 from gcpdiag.async_queries.project import project
 

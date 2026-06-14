@@ -20,8 +20,9 @@ from gcpdiag.queries import kubectl
 
 
 def check_gke_ingress(executor: kubectl.KubectlExecutor):
-  filepath = pathlib.Path(__file__).parents[
-      2] / 'test-data/gke1/json-dumps' / 'container-kubectl.json'
+  filepath = (
+    pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps' / 'container-kubectl.json'
+  )
   with open(filepath, encoding='utf-8') as json_file:
     cluster_list = json.load(json_file)
     return json.dumps(cluster_list[executor.cluster.short_path]), None

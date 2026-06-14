@@ -6,6 +6,7 @@ CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 REGION = us-central1
 STREAMING_JOB := $(shell terraform output job_id)
+BATCH_JOB := $(shell terraform output batch_job_id)
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340010
@@ -18,7 +19,9 @@ all:	\
 	json-dumps/services.json \
 	json-dumps/dataflow-jobs-${REGION}.json \
 	json-dumps/dataflow-jobs-${REGION}-streaming.json \
-	json-dumps/log-exclusions.json
+	json-dumps/dataflow-jobs-${REGION}-batch.json \
+	json-dumps/log-exclusions.json \
+	json-dumps/dataflow-jobs-aggregated
 
 include ../Makefile.inc
 
@@ -32,7 +35,17 @@ json-dumps/dataflow-jobs-${REGION}-streaming.json:
 		"https://dataflow.googleapis.com/v1b3/projects/${PROJECT_ID}/locations/${REGION}/jobs/${STREAMING_JOB}" \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/dataflow-jobs-${REGION}-batch.json:
+	../../bin/curl-wrap.sh -fsS \
+		"https://dataflow.googleapis.com/v1b3/projects/${PROJECT_ID}/locations/${REGION}/jobs/${BATCH_JOB}" \
+		| $(SED_SUBST_FAKE) >$@
+
 json-dumps/log-exclusions.json:
 	$(CURL) -fsS \
 		"https://logging.googleapis.com/v2/projects/${PROJECT_ID}/exclusions" \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/dataflow-jobs-aggregated.json:
+	$(CURL) -fsS \
+		"https://dataflow.googleapis.com/v1b3/projects/${PROJECT_ID}/jobs:aggregated" \
 		| $(SED_SUBST_FAKE) >$@

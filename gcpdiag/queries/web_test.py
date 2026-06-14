@@ -27,21 +27,20 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
 
   def test_fetch_and_extract_table(self, mock_get):
     with open(
-        'test-data/web/static/'
-        'cloud-google-com-data-fusion-docs-support-version-support-policy',
-        encoding='utf-8') as fh:
+      'test-data/web/static/cloud-google-com-data-fusion-docs-support-version-support-policy',
+      encoding='utf-8',
+    ) as fh:
       mock_get.return_value.content = fh.read().encode('utf-8')
       mock_get.return_value.status_code = 200
 
       test_table = web.fetch_and_extract_table(
-          page_url=
-          'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
-          tag='h2',
-          tag_id='support_timelines')
+        page_url='https://cloud.google.com/data-fusion/docs/support/version-support-policy',
+        tag='h2',
+        tag_id='support_timelines',
+      )
       assert test_table is not None
       assert len(test_table.find_all('tr')) == 10
-      assert test_table.find_all('tr')[1].find_all(
-          'td')[0].text.strip() == '6.9'
+      assert test_table.find_all('tr')[1].find_all('td')[0].text.strip() == '6.9'
       assert test_table.find_all('tr')
 
   def test_fetch_and_extract_table_with_no_tag(self, mock_get):
@@ -58,13 +57,11 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     mock_get.return_value.status_code = 200
 
     test_table = web.fetch_and_extract_table(
-        page_url=
-        'https://cloud.google.com/data-fusion/docs/support/version-support-policy'
+      page_url='https://cloud.google.com/data-fusion/docs/support/version-support-policy'
     )
     self.assertIsNone(test_table)
 
-  def test_fetch_and_extract_table_with_no_tag_id_and_class_name(
-      self, mock_get):
+  def test_fetch_and_extract_table_with_no_tag_id_and_class_name(self, mock_get):
     mock_get.return_value.content = """
       <html>
         <body>
@@ -79,9 +76,8 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     mock_get.return_value.status_code = 200
 
     test_table = web.fetch_and_extract_table(
-        page_url=
-        'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
-        tag='h1')
+      page_url='https://cloud.google.com/data-fusion/docs/support/version-support-policy', tag='h1'
+    )
     assert test_table is not None
     assert len(test_table.find_all('tr')) == 2
 
@@ -101,14 +97,13 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     mock_get.return_value.status_code = 200
 
     test_table = web.fetch_and_extract_table(
-        page_url=
-        'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
-        tag='h1',
-        class_name='my-table')
+      page_url='https://cloud.google.com/data-fusion/docs/support/version-support-policy',
+      tag='h1',
+      class_name='my-table',
+    )
     assert test_table is not None
     assert len(test_table.find_all('tr')) == 3
-    assert test_table.find_all('tr')[1].find_all(
-        'td')[0].text.strip() == 'Value1'
+    assert test_table.find_all('tr')[1].find_all('td')[0].text.strip() == 'Value1'
 
   def test_fetch_and_extract_table_with_tag_id(self, mock_get):
     mock_get.return_value.content = """
@@ -126,11 +121,10 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     mock_get.return_value.status_code = 200
 
     test_table = web.fetch_and_extract_table(
-        page_url=
-        'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
-        tag='h1',
-        tag_id='my-table')
+      page_url='https://cloud.google.com/data-fusion/docs/support/version-support-policy',
+      tag='h1',
+      tag_id='my-table',
+    )
     assert test_table is not None
     assert len(test_table.find_all('tr')) == 3
-    assert test_table.find_all('tr')[2].find_all(
-        'td')[1].text.strip() == 'Value4'
+    assert test_table.find_all('tr')[2].find_all('td')[1].text.strip() == 'Value4'

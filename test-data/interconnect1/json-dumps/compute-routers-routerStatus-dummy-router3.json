@@ -1,0 +1,134 @@
+{
+  "kind": "compute#routerStatusResponse",
+  "result": {
+    "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+    "bestRoutes": [
+      {
+        "kind": "compute#route",
+        "creationTimestamp": "2024-08-24T02:13:17.617-07:00",
+        "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+        "destRange": "172.17.16.0/24",
+        "priority": 100,
+        "nextHopIp": "169.254.111.2",
+        "routeType": "BGP",
+        "asPaths": [
+          {
+            "pathSegmentType": "AS_SEQUENCE",
+            "asLists": [
+              64500
+            ]
+          }
+        ],
+        "nextHopOrigin": "INCOMPLETE"
+      },
+      {
+        "kind": "compute#route",
+        "creationTimestamp": "2024-08-20T22:40:00.972-07:00",
+        "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+        "destRange": "192.168.114.0/24",
+        "priority": 0,
+        "nextHopIp": "169.254.46.184",
+        "routeType": "BGP",
+        "asPaths": [
+          {
+            "pathSegmentType": "AS_SEQUENCE",
+            "asLists": [
+              1140
+            ]
+          }
+        ],
+        "nextHopOrigin": "INCOMPLETE"
+      }
+    ],
+    "bestRoutesForRouter": [
+      {
+        "kind": "compute#route",
+        "creationTimestamp": "2024-08-13T00:45:02.483-07:00",
+        "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+        "destRange": "172.17.16.0/24",
+        "priority": 100,
+        "nextHopIp": "169.254.111.2",
+        "routeType": "BGP",
+        "asPaths": [
+          {
+            "pathSegmentType": "AS_SEQUENCE",
+            "asLists": [
+              64200
+            ]
+          }
+        ],
+        "routeStatus": "ACTIVE",
+        "nextHopOrigin": "INCOMPLETE"
+      },
+      {
+        "kind": "compute#route",
+        "creationTimestamp": "2024-08-20T09:46:06.079-07:00",
+        "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+        "destRange": "192.168.114.0/24",
+        "priority": 0,
+        "nextHopIp": "169.254.46.184",
+        "routeType": "BGP",
+        "asPaths": [
+          {
+            "pathSegmentType": "AS_SEQUENCE",
+            "asLists": [
+              1240
+            ]
+          }
+        ],
+        "routeStatus": "ACTIVE",
+        "nextHopOrigin": "INCOMPLETE"
+      }
+    ],
+    "bgpPeerStatus": [
+      {
+        "name": "dummy-vlan51",
+        "ipAddress": "169.254.5.1",
+        "peerIpAddress": "169.254.5.2",
+        "enableIpv6": false,
+        "status": "UP",
+        "state": "Idle",
+        "uptime": "1 weeks, 4 days, 5 hours, 20 minutes, 52 seconds",
+        "uptimeSeconds": "969652",
+        "numLearnedRoutes": 1,
+        "advertisedRoutes": [
+          {
+            "kind": "compute#route",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+            "destRange": "10.216.0.0/20",
+            "priority": 1397,
+            "nextHopIp": "169.254.111.1",
+            "routeType": "BGP",
+            "nextHopOrigin": "INCOMPLETE"
+          }
+        ],
+        "md5AuthEnabled": false,
+        "enableIpv4": true
+      },
+      {
+        "name": "dummy-vlan61",
+        "ipAddress": "169.254.6.1",
+        "peerIpAddress": "169.254.6.2",
+        "enableIpv6": false,
+        "status": "UP",
+        "state": "Established",
+        "uptime": "3 days, 20 hours, 19 minutes, 47 seconds",
+        "uptimeSeconds": "332387",
+        "numLearnedRoutes": 1,
+        "advertisedRoutes": [
+          {
+            "kind": "compute#route",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+            "destRange": "10.168.0.0/20",
+            "priority": 373,
+            "nextHopIp": "169.254.46.193",
+            "routeType": "BGP",
+            "nextHopOrigin": "INCOMPLETE"
+          }
+        ],
+        "md5AuthEnabled": false,
+        "enableIpv4": true
+      }
+    ]
+  }
+}

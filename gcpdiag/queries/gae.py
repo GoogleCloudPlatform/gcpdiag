@@ -27,6 +27,7 @@ from gcpdiag.queries import apis
 
 class Service(models.Resource):
   """Represents an App Engine Standard app service."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -37,8 +38,7 @@ class Service(models.Resource):
   def name(self) -> str:
     m = re.search(r'/services/([^/]+)$', self._resource_data['name'])
     if not m:
-      raise RuntimeError('can\'t determine name of service %s' %
-                         (self._resource_data['name']))
+      raise RuntimeError("can't determine name of service %s" % (self._resource_data['name']))
     return m.group(1)
 
   @property
@@ -57,6 +57,7 @@ class Service(models.Resource):
 
 class Version(models.Resource):
   """Represents an App Engine Standard app version."""
+
   _resource_data: dict
   service: Service
 
@@ -94,8 +95,7 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
   if not apis.is_enabled(context.project_id, 'appengine'):
     return services
   appengine_api = apis.get_api('appengine', 'v1', context.project_id)
-  logging.debug('fetching list of app engine services in the project %s',
-                context.project_id)
+  logging.debug('fetching list of app engine services in the project %s', context.project_id)
   query = appengine_api.apps().services().list(appsId=context.project_id)
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
@@ -110,12 +110,10 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
 
       labels = s.get('labels', {})
 
-      if not context.match_project_resource(resource=result.group(1),
-                                            labels=labels):
+      if not context.match_project_resource(resource=result.group(1), labels=labels):
         continue
 
-      services[s['id']] = Service(project_id=context.project_id,
-                                  resource_data=s)
+      services[s['id']] = Service(project_id=context.project_id, resource_data=s)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return services
@@ -124,7 +122,7 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
 @caching.cached_api_call
 def get_versions(context: models.Context) -> Mapping[str, Version]:
   """Get a list of App Engine Standard service versions the given context,
-    indexed by a version id."""
+  indexed by a version id."""
   versions: Dict[str, Version] = {}
   if not apis.is_enabled(context.project_id, 'appengine'):
     return versions
@@ -134,8 +132,12 @@ def get_versions(context: models.Context) -> Mapping[str, Version]:
   services = get_services(context)
 
   for service in services.values():
-    query = appengine_api.apps().services().versions().list(
-        appsId=context.project_id, servicesId=service.id)
+    query = (
+      appengine_api.apps()
+      .services()
+      .versions()
+      .list(appsId=context.project_id, servicesId=service.id)
+    )
     try:
       resp = query.execute(num_retries=config.API_RETRIES)
       if 'versions' not in resp:
@@ -150,7 +152,6 @@ def get_versions(context: models.Context) -> Mapping[str, Version]:
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
 
-    logging.debug('fetching list of app engine services in the project %s',
-                  context.project_id)
+    logging.debug('fetching list of app engine services in the project %s', context.project_id)
 
   return versions

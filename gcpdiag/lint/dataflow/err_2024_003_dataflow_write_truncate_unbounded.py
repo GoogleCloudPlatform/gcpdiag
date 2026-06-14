@@ -28,8 +28,7 @@ from boltons.iterutils import get_path
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = ('WriteDisposition.WRITE_TRUNCATE is not supported for an unbounded'
-             ' PCollection')
+MATCH_STR = 'WriteDisposition.WRITE_TRUNCATE is not supported for an unbounded PCollection'
 
 # Criteria to filter for logs
 LOG_FILTER = ['severity=WARNING', f'jsonPayload.message=~"{MATCH_STR}"']
@@ -38,10 +37,10 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='dataflow_step',
-      log_name='log_id("dataflow.googleapis.com/job-message")',
-      filter_str=' AND '.join(LOG_FILTER),
+    project_id=context.project_id,
+    resource_type='dataflow_step',
+    log_name='log_id("dataflow.googleapis.com/job-message")',
+    filter_str=' AND '.join(LOG_FILTER),
   )
 
 
@@ -62,22 +61,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'WARNING' or MATCH_STR not in get_path(
-          log_entry, 'jsonPayload.message', default=''):
+        log_entry, 'jsonPayload.message', default=''
+      ):
         continue
 
       job_id = get_path(
-          log_entry,
-          ('resource', 'labels', 'job_id'),
+        log_entry,
+        ('resource', 'labels', 'job_id'),
       )
 
       failed_jobs.add(job_id)
 
     if failed_jobs:
       report.add_failed(
-          project,
-          'Dataflow jobs are using WRITE_TRUNCATE which does not work with'
-          ' unbounded PCollection: ' +
-          ', '.join(itertools.islice(failed_jobs, 20)),
+        project,
+        'Dataflow jobs are using WRITE_TRUNCATE which does not work with'
+        ' unbounded PCollection: ' + ', '.join(itertools.islice(failed_jobs, 20)),
       )
     else:
       report.add_ok(project)

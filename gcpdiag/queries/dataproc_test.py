@@ -92,25 +92,26 @@ class TestDataproc:
 
   def test_auto_scaling_policy(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    policy = dataproc.get_auto_scaling_policy(context.project_id, REGION,
-                                              POLICY_ID)
-    policy_name = ('projects/gcpdiag-dataproc1-aaaa/regions/us-central1/'
-                   'autoscalingPolicies/CDF_AUTOSCALING_POLICY_V1')
+    policy = dataproc.get_auto_scaling_policy(context.project_id, REGION, POLICY_ID)
+    policy_name = (
+      'projects/gcpdiag-dataproc1-aaaa/regions/us-central1/'
+      'autoscalingPolicies/CDF_AUTOSCALING_POLICY_V1'
+    )
     assert policy.name == policy_name
 
   def test_get_job_by_jobid_(self):
     failed_job = dataproc.get_job_by_jobid(
-        project_id=DUMMY_PROJECT_NAME,
-        region='us-central1',
-        job_id=DUMMY_FAILED_JOB_ID,
+      project_id=DUMMY_PROJECT_NAME,
+      region='us-central1',
+      job_id=DUMMY_FAILED_JOB_ID,
     )
 
     assert failed_job.state == 'ERROR'
 
     success_job = dataproc.get_job_by_jobid(
-        project_id=DUMMY_PROJECT_NAME,
-        region='us-central1',
-        job_id=DUMMY_SUCCESS_JOB_ID,
+      project_id=DUMMY_PROJECT_NAME,
+      region='us-central1',
+      job_id=DUMMY_SUCCESS_JOB_ID,
     )
 
     assert success_job.state == 'DONE'

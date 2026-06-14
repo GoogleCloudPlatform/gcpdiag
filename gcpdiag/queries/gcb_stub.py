@@ -22,8 +22,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-#pylint: disable=unused-argument
-
 
 class CloudBuildApiStub:
   """Mock object to simulate function api calls."""
@@ -47,7 +45,6 @@ class CloudBuildApiStub:
 class CloudBuildBuildsApiStub:
   """Mock object to simulate functions of builds api calls."""
 
-  # pylint: disable-next=redefined-builtin
   def list(self, parent, filter):
     del filter  # unused
     m = re.match(r'^projects/([^/]+)/locations/([^/]+)', parent)
@@ -58,10 +55,8 @@ class CloudBuildBuildsApiStub:
     else:
       path = f'cloudbuild-{location}'
     return apis_stub.RestCallStub(
-        project_id,
-        path,
-        default={},
-        request_uri=f'https://build.googleapis.com/{parent}')
+      project_id, path, default={}, request_uri=f'https://build.googleapis.com/{parent}'
+    )
 
 
 class CloudBuildTriggersApiStub:

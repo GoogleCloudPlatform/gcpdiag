@@ -16,6 +16,7 @@
 In order for the Ingress service to work correctly, the network connection from
 the load balancer must be allowed.
 """
+
 import re
 
 from gcpdiag import lint, models
@@ -60,7 +61,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         # use default tags for autopilot clusters
         tags = [f'gke-{c.name}-{c.cluster_hash}-node']
       rules = c.network.firewall.get_vpc_ingress_rules(
-          name_pattern=FIREWALL_RULE_NAME_PATTERN, target_tags=tags)
+        name_pattern=FIREWALL_RULE_NAME_PATTERN, target_tags=tags
+      )
       if not rules:
         report.add_skipped(np, 'no ingress detected')
         break
@@ -68,16 +70,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       for r in rules:
         for src_range, port in _get_rule_allowed_ports(r):
           result = c.network.firewall.check_connectivity_ingress(
-              src_ip=src_range,
-              ip_protocol='tcp',
-              port=int(port),
-              target_service_account=np.service_account,
-              target_tags=np.node_tags)
+            src_ip=src_range,
+            ip_protocol='tcp',
+            port=int(port),
+            target_service_account=np.service_account,
+            target_tags=np.node_tags,
+          )
           if result.action == 'deny':
             failed = True
             report.add_failed(
-                np,
-                f'connections from {src_range} to port {port} blocked by {result.matched_by_str}'
+              np, f'connections from {src_range} to port {port} blocked by {result.matched_by_str}'
             )
             break
       if not failed:

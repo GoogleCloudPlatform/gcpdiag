@@ -1,4 +1,4 @@
-""" Simple decorator injecting real logs.query into PureLogsQuery """
+"""Simple decorator injecting real logs.query into PureLogsQuery"""
 
 from gcpdiag.queries import logs
 
@@ -7,12 +7,10 @@ from .search_exprs import AnyREFound, Equals, REFound
 
 
 class LogsQuery:
-  """ Simple decorator injecting real logs.query into PureLogsQuery """
+  """Simple decorator injecting real logs.query into PureLogsQuery"""
 
   def __init__(self, *args, **kwargs):
-    self._pure_logs_query = PureLogsQuery(logs_query_fn=logs.query,
-                                          *args,
-                                          **kwargs)
+    self._pure_logs_query = PureLogsQuery(logs_query_fn=logs.query, *args, **kwargs)
 
   def mk_query(self):
     self._pure_logs_query.mk_query()

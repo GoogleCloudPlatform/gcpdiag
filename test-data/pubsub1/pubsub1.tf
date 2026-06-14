@@ -116,12 +116,30 @@ resource "google_project_iam_member" "gcs_admin" {
   member   = "serviceAccount:service-${google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
 }
 
+resource "google_pubsub_topic" "dlq_gcs_topic" {
+  project    = google_project.project.project_id
+  name       = "gcpdiag-gcsdlqtopic-${random_string.project_id_suffix.id}"
+  depends_on = [google_project_iam_member.pubsub_publisher_role, google_project_iam_member.pubsub_subscriber_role]
+}
+
+resource "google_pubsub_subscription" "dlq_gcs_subscription" {
+  project = google_project.project.project_id
+  name    = "gcpdiag-gcsdlqsubscription-${random_string.project_id_suffix.id}"
+  topic   = google_pubsub_topic.dlq_gcs_topic.name
+}
+
 resource "google_storage_bucket" "pubsub_gcs_subscription_bucket" {
   project                     = google_project.project.project_id
-  name                        = "pubsub1_bucket"
+  name                        = "pubsub1_bucket_${random_string.project_id_suffix.id}"
   location                    = "EU"
   force_destroy               = true
   uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_member" "member" {
+  bucket = google_storage_bucket.pubsub_gcs_subscription_bucket.name
+  role   = "roles/storage.admin"
+  member = "serviceAccount:service-${google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
 }
 
 resource "google_pubsub_subscription" "pubsub1subscription3gcs" {
@@ -134,6 +152,10 @@ resource "google_pubsub_subscription" "pubsub1subscription3gcs" {
     bucket       = google_storage_bucket.pubsub_gcs_subscription_bucket.name
     max_bytes    = 1000
     max_duration = "300s"
+  }
+
+  dead_letter_policy {
+    dead_letter_topic = google_pubsub_topic.dlq_gcs_topic.id
   }
 
   depends_on = [

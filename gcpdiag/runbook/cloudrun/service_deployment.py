@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Contains diagnostic tree for Cloud Run failing to deploy."""
+
 import re
 from datetime import datetime
 
@@ -35,31 +36,39 @@ class ServiceDeployment(runbook.DiagnosticTree):
     - Note that this runbook does not provide troubleshooting steps for errors
       caused by the code running in the container.
   """
+
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True
-      },
-      flags.REGION: {
-          'type': str,
-          'help': 'Region of the service.',
-          'required': True
-      },
-      flags.SERVICE_NAME: {
-          'type': str,
-          'help': 'Name of the Cloud Run service',
-          'required': True,
-      },
-      flags.START_TIME: {
-          'type': datetime,
-          'help': 'Start time of the issue',
-      },
-      flags.END_TIME: {
-          'type': datetime,
-          'help': 'End time of the issue',
-      },
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.REGION: {'type': str, 'help': 'Region of the service.', 'required': True},
+    flags.SERVICE_NAME: {
+      'type': str,
+      'help': 'Name of the Cloud Run service',
+      'deprecated': True,
+      'new_parameter': 'cloudrun_service_name',
+    },
+    flags.CLOUDRUN_SERVICE_NAME: {
+      'type': str,
+      'help': 'Name of the Cloud Run service',
+      'required': True,
+    },
+    flags.START_TIME: {
+      'type': datetime,
+      'help': 'Start time of the issue',
+    },
+    flags.END_TIME: {
+      'type': datetime,
+      'help': 'End time of the issue',
+    },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    """Handle legacy parameters for cloudrun/service-deployment runbook."""
+    if flags.SERVICE_NAME in parameters:
+      parameters[flags.CLOUDRUN_SERVICE_NAME] = parameters[flags.SERVICE_NAME]
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -78,13 +87,15 @@ class ServiceDeploymentStart(runbook.StartStep):
     """Verify context and parameters required for deployment runbook checks."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
-      cloudrun.get_service(op.get(flags.PROJECT_ID), op.get(flags.REGION),
-                           op.get(flags.SERVICE_NAME))
+      cloudrun.get_service(
+        op.get(flags.PROJECT_ID), op.get(flags.REGION), op.get(flags.CLOUDRUN_SERVICE_NAME)
+      )
     except googleapiclient.errors.HttpError:
       op.add_skipped(
-          project,
-          reason=f'Service {op.get(flags.SERVICE_NAME)} does not exist in region '
-          f'{op.get(flags.REGION)} or project {op.get(flags.PROJECT_ID)}')
+        project,
+        reason=f'Service {op.get(flags.CLOUDRUN_SERVICE_NAME)} does not exist in region '
+        f'{op.get(flags.REGION)} or project {op.get(flags.PROJECT_ID)}',
+      )
 
 
 class ServiceDeploymentCodeStep(runbook.CompositeStep):
@@ -105,20 +116,23 @@ class ContainerFailedToStartStep(runbook.Step):
 
   template = 'service_deployment::starts_correctly'
   message_re = re.compile(
-      r"Revision '[\w-]+' is not ready and cannot serve traffic. The user-provided container "
-      r'failed to start and listen on the port defined provided by the PORT=(\d+) environment '
-      r'variable.')
+    r"Revision '[\w-]+' is not ready and cannot serve traffic. The user-provided container "
+    r'failed to start and listen on the port defined provided by the PORT=(\d+) environment '
+    r'variable.'
+  )
 
   def execute(self):
     """Verify if there is an error that container failed to start."""
-    service = cloudrun.get_service(op.get(flags.PROJECT_ID),
-                                   op.get(flags.REGION),
-                                   op.get(flags.SERVICE_NAME))
+    service = cloudrun.get_service(
+      op.get(flags.PROJECT_ID), op.get(flags.REGION), op.get(flags.CLOUDRUN_SERVICE_NAME)
+    )
     match = self.message_re.match(service.conditions['RoutesReady'].message)
     if match:
-      op.add_failed(service,
-                    reason=op.prep_msg(op.FAILURE_REASON, name=service.name),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        service,
+        reason=op.prep_msg(op.FAILURE_REASON, name=service.name),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
 
 class ImageWasNotFoundStep(runbook.Step):
@@ -129,22 +143,21 @@ class ImageWasNotFoundStep(runbook.Step):
 
   template = 'service_deployment::image_exists'
   message_re = re.compile(
-      r"Revision '[\w-]+' is not ready and cannot serve traffic. Image '([^']+)' not found."
+    r"Revision '[\w-]+' is not ready and cannot serve traffic. Image '([^']+)' not found."
   )
 
   def execute(self):
     """Verify if specified image exists."""
-    service = cloudrun.get_service(op.get(flags.PROJECT_ID),
-                                   op.get(flags.REGION),
-                                   op.get(flags.SERVICE_NAME))
+    service = cloudrun.get_service(
+      op.get(flags.PROJECT_ID), op.get(flags.REGION), op.get(flags.CLOUDRUN_SERVICE_NAME)
+    )
     match = self.message_re.match(service.conditions['RoutesReady'].message)
     if match:
-      op.add_failed(service,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       name=service.name,
-                                       image=match.group(1)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            image=match.group(1)))
+      op.add_failed(
+        service,
+        reason=op.prep_msg(op.FAILURE_REASON, name=service.name, image=match.group(1)),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, image=match.group(1)),
+      )
 
 
 class NoPermissionForImageStep(runbook.Step):
@@ -155,22 +168,22 @@ class NoPermissionForImageStep(runbook.Step):
 
   template = 'service_deployment::has_permission_for_image'
   message_re = re.compile(
-      r"Revision '[\w-]+' is not ready and cannot serve traffic. Google Cloud "
-      r'Run Service Agent ([^ ]+) must have permission to read the image, '
-      r'([^ ]+).')
+    r"Revision '[\w-]+' is not ready and cannot serve traffic. Google Cloud "
+    r'Run Service Agent ([^ ]+) must have permission to read the image, '
+    r'([^ ]+).'
+  )
 
   def execute(self):
     """Verify if Cloud Run service agent can fetch the image."""
-    service = cloudrun.get_service(op.get(flags.PROJECT_ID),
-                                   op.get(flags.REGION),
-                                   op.get(flags.SERVICE_NAME))
+    service = cloudrun.get_service(
+      op.get(flags.PROJECT_ID), op.get(flags.REGION), op.get(flags.CLOUDRUN_SERVICE_NAME)
+    )
     match = self.message_re.match(service.conditions['RoutesReady'].message)
     if match:
-      op.add_failed(service,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       name=service.name,
-                                       sa=match.group(1),
-                                       image=match.group(2)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            sa=match.group(1),
-                                            image=match.group(2)))
+      op.add_failed(
+        service,
+        reason=op.prep_msg(
+          op.FAILURE_REASON, name=service.name, sa=match.group(1), image=match.group(2)
+        ),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, sa=match.group(1), image=match.group(2)),
+      )

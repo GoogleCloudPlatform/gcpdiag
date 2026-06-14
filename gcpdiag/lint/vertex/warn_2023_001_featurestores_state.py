@@ -24,12 +24,10 @@ featurestores_by_project = {}
 
 
 def prefetch_rule(context: models.Context):
-  featurestores_by_project[context.project_id] = vertex.get_featurestores(
-      context)
+  featurestores_by_project[context.project_id] = vertex.get_featurestores(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not apis.is_enabled(context.project_id, 'aiplatform'):
     report.add_skipped(None, 'Vertex API is disabled')
     return

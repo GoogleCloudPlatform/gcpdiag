@@ -1,4 +1,4 @@
-location=europe-west10-a,name=gcp-cluster,node=gke-gcp-cluster-default-
+gke_cluster_name=gcp-cluster,location=europe-west10-a,node=gke-gcp-cluster-default-
 pool-82e0c046-8m8b,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
 
 gke/node-auto-repair: Provides the reason why a Node was auto-repaired

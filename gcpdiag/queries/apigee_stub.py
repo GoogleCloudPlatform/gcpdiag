@@ -22,8 +22,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-
 DUMMY_PROJECT_ID = 'gcpdiag-apigee1-aaaa'
 
 
@@ -58,9 +56,8 @@ class ApigeeEnvgroupsApiStub(ApigeeApiStub):
 
   def list(self, parent):
     return apis_stub.RestCallStub(
-        self.project_id,
-        'apigee-envgroups',
-        default_json_basename='apigee-envgroups-empty')
+      self.project_id, 'apigee-envgroups', default_json_basename='apigee-envgroups-empty'
+    )
 
   def attachments(self):
     return ApigeeEnvGroupsAttachmentsApiStub(self.project_id)
@@ -74,9 +71,8 @@ class ApigeeInstancesApiStub(ApigeeApiStub):
 
   def list(self, parent):
     return apis_stub.RestCallStub(
-        self.project_id,
-        'apigee-instances',
-        default_json_basename='apigee-instances-empty')
+      self.project_id, 'apigee-instances', default_json_basename='apigee-instances-empty'
+    )
 
   def attachments(self):
     return ApigeeInstancesAttachmentsApiStub(self.project_id)
@@ -93,9 +89,10 @@ class ApigeeEnvGroupsAttachmentsApiStub(ApigeeApiStub):
     if m:
       envgroup_name = m.group(2)
       return apis_stub.RestCallStub(
-          self.project_id,
-          f'apigee-envgroups-{envgroup_name}-attachments',
-          default_json_basename='apigee-envgroups-attachments-empty')
+        self.project_id,
+        f'apigee-envgroups-{envgroup_name}-attachments',
+        default_json_basename='apigee-envgroups-attachments-empty',
+      )
 
   def list_next(self, previous_request, previous_response):
     return None
@@ -109,9 +106,10 @@ class ApigeeInstancesAttachmentsApiStub(ApigeeApiStub):
     if m:
       instance_name = m.group(2)
       return apis_stub.RestCallStub(
-          self.project_id,
-          f'apigee-instances-{instance_name}-attachments',
-          default_json_basename='apigee-instances-attachments-empty')
+        self.project_id,
+        f'apigee-instances-{instance_name}-attachments',
+        default_json_basename='apigee-instances-attachments-empty',
+      )
 
   def list_next(self, previous_request, previous_response):
     return None

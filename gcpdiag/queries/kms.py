@@ -51,7 +51,6 @@ class CryptoKey(models.Resource):
 
 
 class KMSCryptoKeyIAMPolicy(iam.BaseIAMPolicy):
-
   def _is_resource_permission(self, permission):
     return True
 
@@ -62,11 +61,12 @@ def get_crypto_key(key_name: str) -> CryptoKey:
 
   project_id = utils.get_project_by_res_name(key_name)
   kms_api = apis.get_api('cloudkms', 'v1', project_id)
-  query = kms_api.projects().locations().keyRings().cryptoKeys().get(
-      name=key_name)
-  logging.debug('fetching KMS Key %s in project %s',
-                utils.extract_value_from_res_name(key_name, 'cryptoKeys'),
-                project_id)
+  query = kms_api.projects().locations().keyRings().cryptoKeys().get(name=key_name)
+  logging.debug(
+    'fetching KMS Key %s in project %s',
+    utils.extract_value_from_res_name(key_name, 'cryptoKeys'),
+    project_id,
+  )
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
@@ -75,12 +75,9 @@ def get_crypto_key(key_name: str) -> CryptoKey:
 
 
 @caching.cached_api_call
-def get_crypto_key_iam_policy(key_name: str) -> KMSCryptoKeyIAMPolicy:
-
+def get_crypto_key_iam_policy(context: models.Context, key_name: str) -> KMSCryptoKeyIAMPolicy:
   project_id = utils.get_project_by_res_name(key_name)
   kms_api = apis.get_api('cloudkms', 'v1', project_id)
 
-  query = kms_api.projects().locations().keyRings().cryptoKeys().getIamPolicy(
-      resource=key_name)
-  return iam.fetch_iam_policy(query, KMSCryptoKeyIAMPolicy, project_id,
-                              key_name)
+  query = kms_api.projects().locations().keyRings().cryptoKeys().getIamPolicy(resource=key_name)
+  return iam.fetch_iam_policy(query, KMSCryptoKeyIAMPolicy, project_id, key_name, context)

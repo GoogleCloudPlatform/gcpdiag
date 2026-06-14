@@ -19,6 +19,7 @@ In other words, you must assign an environment to a group before
 you can use it. Or you would receive 404 errors while accessing
 every hostname in the environment group.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import apigee
 
@@ -29,14 +30,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no Apigee organizations found')
     return
   envgroup_list = apigee.get_envgroups(apigee_org)
-  for envgroup in sorted(envgroup_list.values(),
-                         key=lambda envgroup: envgroup.name):
+  for envgroup in sorted(envgroup_list.values(), key=lambda envgroup: envgroup.name):
     environments = apigee.get_envgroups_attachments(envgroup.full_path)
     if environments:
       report.add_ok(envgroup)
     else:
       report.add_failed(
-          envgroup,
-          f'No environment is attached to the environment group: {envgroup.name}\nAll of the '
-          f'requests to the hostname list below will receive 404 errors: \n{envgroup.host_names}'
+        envgroup,
+        f'No environment is attached to the environment group: {envgroup.name}\nAll of the '
+        f'requests to the hostname list below will receive 404 errors: \n{envgroup.host_names}',
       )

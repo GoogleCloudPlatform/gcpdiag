@@ -22,8 +22,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-
 
 class DataFusionApiStub(apis_stub.ApiStub):
   """Mock object to simulate instance api calls."""

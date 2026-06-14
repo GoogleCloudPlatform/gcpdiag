@@ -23,9 +23,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 DUMMY_PROJECT_NAME = 'gcpdiag-pubsub1-aaaa'
 
 

@@ -16,6 +16,7 @@
 
 # pylint: disable=cyclic-import
 """Generates API documentation for queries modules"""
+
 import textwrap
 from pathlib import Path
 
@@ -25,12 +26,12 @@ pwd = Path().parent
 modules = pwd / '..' / 'gcpdiag'
 output = pwd / 'content' / 'en' / 'docs' / 'development' / 'api'
 
-pdoc.render.configure(template_directory=pwd / 'assets' / 'pdoc_templates',
-                      docformat='google')
+pdoc.render.configure(template_directory=pwd / 'assets' / 'pdoc_templates', docformat='google')
 
 
-def customize_index_file(file_directory, page_title, page_link_title,
-                         page_weight, page_description) -> None:
+def customize_index_file(
+  file_directory, page_title, page_link_title, page_weight, page_description
+) -> None:
   """pdoc creates an index.html file per directory, however Hugo expects _index.html file.
     This method removes the default index.html file and creates a custom one per directory
 
@@ -57,7 +58,7 @@ def customize_index_file(file_directory, page_title, page_link_title,
     pass
 
   new_filename.write_text(
-      textwrap.dedent(f'''
+    textwrap.dedent(f"""
     ---
     title: {page_title}
     linkTitle: {page_link_title}
@@ -65,7 +66,8 @@ def customize_index_file(file_directory, page_title, page_link_title,
     description: >
       {page_description}
     ---
-    '''))
+    """)
+  )
 
 
 # Generate API documentation for queries module
@@ -74,8 +76,12 @@ queries = modules / 'queries'
 query_modules = []
 
 for module in queries.iterdir():
-  if (module.suffix == '.py' and 'test' not in module.name and
-      'stub' not in module.name and '__init__' not in module.name):
+  if (
+    module.suffix == '.py'
+    and 'test' not in module.name
+    and 'stub' not in module.name
+    and '__init__' not in module.name
+  ):
     query_modules.append(module)
 
 # Create output directory if it does not exist

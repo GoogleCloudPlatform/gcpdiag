@@ -27,23 +27,24 @@ class Test(unittest.TestCase):
 
   def test_get_effective_org_policy(self):
     p = orgpolicy.get_effective_org_policy(
-        DUMMY_PROJECT_ID, 'constraints/compute.disableSerialPortAccess')
+      DUMMY_PROJECT_ID, 'constraints/compute.disableSerialPortAccess'
+    )
     assert p.is_enforced()
 
-    p = orgpolicy.get_effective_org_policy(
-        DUMMY_PROJECT_ID, 'constraints/compute.requireOsLogin')
+    p = orgpolicy.get_effective_org_policy(DUMMY_PROJECT_ID, 'constraints/compute.requireOsLogin')
     assert not p.is_enforced()
 
   def test_get_all_project_org_policies(self):
     policies = orgpolicy.get_all_project_org_policies(DUMMY_PROJECT_ID)
     assert len(policies) == 2
     assert isinstance(
-        policies['constraints/cloudbuild.allowedWorkerPools'],
-        orgpolicy.ListPolicyConstraint,
+      policies['constraints/cloudbuild.allowedWorkerPools'],
+      orgpolicy.ListPolicyConstraint,
     )
     assert isinstance(
-        policies['constraints/compute.skipDefaultNetworkCreation'],
-        orgpolicy.BooleanPolicyConstraint,
+      policies['constraints/compute.skipDefaultNetworkCreation'],
+      orgpolicy.BooleanPolicyConstraint,
     )
-    assert policies['constraints/cloudbuild.allowedWorkerPools'].allowed_values(
-    ) == ['projects/12340004/locations/us-central1/workerPools/test-pool']
+    assert policies['constraints/cloudbuild.allowedWorkerPools'].allowed_values() == [
+      'projects/12340004/locations/us-central1/workerPools/test-pool'
+    ]

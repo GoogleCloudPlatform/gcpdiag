@@ -13,9 +13,12 @@
 # limitations under the License.
 """Common flags applicable to any runbook"""
 
+from gcpdiag.runbook.gcp.flags import *
+
 PROJECT_ID = 'project_id'
 PROJECT_NUMBER = 'project_number'
 NETWORK = 'network'
+NAT_NETWORK = 'nat_network'
 REGION = 'region'
 NAT_GATEWAY_NAME = 'nat_gateway_name'
 CLOUD_ROUTER_NAME = 'cloud_router_name'

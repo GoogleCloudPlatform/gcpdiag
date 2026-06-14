@@ -19,6 +19,7 @@ for/home/airflow/gcs/dags/exampledagname.py with PID 12345678 started at
 error shouldnot occur as it is a cause of scheduler resource constraint and
 complex DAGparsing implementation.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -36,10 +37,10 @@ def prefetch_rule(context: models.Context):
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_composer_environment',
-      log_name='log_id("dag-processor-manager")',
-      filter_str=' AND '.join(LOG_FILTER),
+    project_id=context.project_id,
+    resource_type='cloud_composer_environment',
+    log_name='log_id("dag-processor-manager")',
+    filter_str=' AND '.join(LOG_FILTER),
   )
 
 
@@ -60,12 +61,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   sigkilled_envs = set()
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'ERROR' or MATCH_STR not in log_entry.get(
-          'textPayload', ''):
+      if log_entry['severity'] != 'ERROR' or MATCH_STR not in log_entry.get('textPayload', ''):
         continue
 
       env_name = get_path(log_entry, ('resource', 'labels', 'environment_name'))

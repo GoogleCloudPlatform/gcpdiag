@@ -16,6 +16,7 @@
 The Airflow monitoring pod pings the database every minute and reports health
 status as True if a SQL connection can be established or False if not.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -31,13 +32,15 @@ def prefetch_rule(context: models.Context):
     return
 
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id, """
+    context.project_id,
+    """
       fetch cloud_composer_environment
       | metric 'composer.googleapis.com/environment/database_health'
       | align fraction_true_aligner(30m)
       | within 6h
       | filter val() == 0
-      """)
+      """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

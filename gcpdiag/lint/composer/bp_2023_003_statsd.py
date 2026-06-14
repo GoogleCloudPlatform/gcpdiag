@@ -42,9 +42,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for env in envs:
-    if any(
-        key.startswith('metrics-statsd_')
-        for key in env.airflow_config_overrides.keys()):
+    if any(key.startswith('metrics-statsd_') for key in env.airflow_config_overrides.keys()):
       report.add_failed(env)
     else:
       report.add_ok(env)

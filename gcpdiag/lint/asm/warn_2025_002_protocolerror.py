@@ -29,10 +29,10 @@ logs_by_project = {}
 def prepare_rule(context: models.Context):
   project_id = context.project_id
   logs_by_project[project_id] = logs.query(
-      project_id=project_id,
-      resource_type='k8s_container',
-      log_name='log_id("server-accesslog-stackdriver")',
-      filter_str=f'labels.response_details:"{MATCH_STR_1}"',
+    project_id=project_id,
+    resource_type='k8s_container',
+    log_name='log_id("server-accesslog-stackdriver")',
+    filter_str=f'labels.response_details:"{MATCH_STR_1}"',
   )
 
 
@@ -55,7 +55,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       return False
 
   bad_clusters = util.gke_logs_find_bad_clusters(
-      context=context, logs_by_project=logs_by_project, filter_f=filter_f)
+    context=context, logs_by_project=logs_by_project, filter_f=filter_f
+  )
   # Create the report.
   for _, c in clusters.items():
     if c in bad_clusters:

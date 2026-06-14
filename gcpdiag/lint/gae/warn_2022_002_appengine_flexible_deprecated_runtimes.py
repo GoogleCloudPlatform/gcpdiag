@@ -36,8 +36,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       return
     if version.runtime in DEPRECATED_RUNTIMES:
       report.add_failed(
-          version, f'the version \'{version.id}\' for '
-          f'the service \'{version.service.name}\' '
-          f'uses deprecated runtime {version.runtime}')
+        version,
+        f"the version '{version.id}' for "
+        f"the service '{version.service.name}' "
+        f'uses deprecated runtime {version.runtime}',
+      )
     else:
       report.add_ok(version)

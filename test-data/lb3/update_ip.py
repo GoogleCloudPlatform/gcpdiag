@@ -9,15 +9,14 @@ import json
 import sys
 
 new_global_ip_addresses = {
-    'https-content-rule': ('1.2.3.4'),
-    'https-content-rule-working': ('2600:1901:0:d0d7::'),
-    'ssl-rule': ('192.168.3.5')
+  'https-content-rule': ('1.2.3.4'),
+  'https-content-rule-working': ('2600:1901:0:d0d7::'),
+  'ssl-rule': ('192.168.3.5'),
 }
 
 data = json.load(sys.stdin)
 
-if ('items' in data and 'global' in data['items'] and
-    'forwardingRules' in data['items']['global']):
+if 'items' in data and 'global' in data['items'] and 'forwardingRules' in data['items']['global']:
   for rule in data['items']['global']['forwardingRules']:
     if rule['name'] in new_global_ip_addresses:
       rule['IPAddress'] = new_global_ip_addresses[rule['name']]

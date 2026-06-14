@@ -1,4 +1,5 @@
-""" Search terms for LogsQueres """
+"""Search terms for LogsQueres"""
+
 import re
 from functools import cached_property
 
@@ -102,9 +103,9 @@ class AnyREFound:
 
   @property
   def stackdriver_expr(self):
-    return '{field}=~({re_list})'.format(field=self._field,
-                                         re_list=' OR '.join(
-                                             f'"{p}"' for p in self._re_exps))
+    return '{field}=~({re_list})'.format(
+      field=self._field, re_list=' OR '.join(f'"{p}"' for p in self._re_exps)
+    )
 
   def is_log_entry_matches(self, log_entry):
     value = get_path(log_entry, self._field.split('.'), default=None)

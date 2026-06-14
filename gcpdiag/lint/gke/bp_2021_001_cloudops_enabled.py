@@ -29,8 +29,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for _, c in sorted(clusters.items()):
     if not c.is_autopilot:
       disabled: list[str] = []
-      if c.has_logging_enabled() and \
-        'WORKLOADS' not in c.enabled_logging_components():
+      if c.has_logging_enabled() and 'WORKLOADS' not in c.enabled_logging_components():
         disabled.append('workload logs')
       elif not c.has_logging_enabled():
         disabled.append('logging')

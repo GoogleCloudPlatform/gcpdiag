@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Contains Util related Tests"""
+
+import re
 import unittest
 from datetime import datetime, timezone
+from unittest import mock
+
+from jinja2 import Environment
 
 from gcpdiag.runbook import util
 
@@ -22,49 +27,52 @@ class TestStringConversions(unittest.TestCase):
   """Test case type conversion used for Runbook and step name conversions."""
 
   def test_pascal_case_to_kebab_case(self):
-    self.assertEqual(util.pascal_case_to_kebab_case('PascalCase'),
-                     'pascal-case')
+    self.assertEqual(util.pascal_case_to_kebab_case('PascalCase'), 'pascal-case')
     # should be able to handle camelcase too
     self.assertEqual(util.pascal_case_to_kebab_case('camelCase'), 'camel-case')
     self.assertEqual(util.pascal_case_to_kebab_case('Pascal'), 'pascal')
-    self.assertNotEqual(util.pascal_case_to_kebab_case('Not Pascal'),
-                        'not-pascal')
+    self.assertNotEqual(util.pascal_case_to_kebab_case('Not Pascal'), 'not-pascal')
 
   def test_pascal_case_to_title(self):
     self.assertEqual(util.pascal_case_to_title('PascalCase'), 'Pascal Case')
     self.assertEqual(util.pascal_case_to_title('Errors5xx'), 'Errors 5xx')
-    self.assertEqual(util.pascal_case_to_title('Errors5xxStart'),
-                     'Errors 5xx Start')
+    self.assertEqual(util.pascal_case_to_title('Errors5xxStart'), 'Errors 5xx Start')
     self.assertEqual(util.pascal_case_to_title('Errors503'), 'Errors 503')
+
+  def test_pascal_case_to_snake_case(self):
+    self.assertEqual(util.pascal_case_to_snake_case('PascalCase'), 'pascal_case')
+    self.assertEqual(util.pascal_case_to_snake_case('Errors5xx'), 'errors_5xx')
+    self.assertEqual(util.pascal_case_to_snake_case('Errors5xxStart'), 'errors_5xx_start')
+    self.assertEqual(util.pascal_case_to_snake_case('Errors503'), 'errors_503')
+
+  def test_kebab_case_to_pascal_case(self):
+    self.assertEqual(util.kebab_case_to_pascal_case('kebab-case'), 'KebabCase')
+    self.assertEqual(util.kebab_case_to_pascal_case('kebab-case-long'), 'KebabCaseLong')
 
   def test_runbook_name_parser(self):
     self.assertEqual(util.runbook_name_parser('product/word'), 'product/word')
-    self.assertEqual(util.runbook_name_parser('product/kebab-case'),
-                     'product/kebab-case')
+    self.assertEqual(util.runbook_name_parser('product/kebab-case'), 'product/kebab-case')
     self.assertEqual(
-        util.runbook_name_parser('product/kebab_case_name'),
-        'product/kebab-case-name',
+      util.runbook_name_parser('product/kebab_case_name'),
+      'product/kebab-case-name',
     )
-    self.assertEqual(util.runbook_name_parser('Product/PascalCase'),
-                     'product/pascal-case')
-    self.assertEqual(util.runbook_name_parser('Product/PascalCase'),
-                     'product/pascal-case')
+    self.assertEqual(util.runbook_name_parser('Product/PascalCase'), 'product/pascal-case')
+    self.assertEqual(util.runbook_name_parser('Product/PascalCase'), 'product/pascal-case')
     self.assertEqual(
-        util.runbook_name_parser('Product/PascalCase5xx'),
-        'product/pascal-case-5xx',
+      util.runbook_name_parser('Product/PascalCase5xx'),
+      'product/pascal-case-5xx',
     )
     self.assertEqual(
-        util.runbook_name_parser('Product/PascalCase5Test'),
-        'product/pascal-case-5-test',
+      util.runbook_name_parser('Product/PascalCase5Test'),
+      'product/pascal-case-5-test',
     )
 
     self.assertEqual(util.runbook_name_parser('PascalCase'), 'pascal-case')
     self.assertEqual(util.runbook_name_parser('snake_case'), 'snake-case')
-    self.assertEqual(util.runbook_name_parser('pascal-snake_case'),
-                     'pascal-snake-case')
+    self.assertEqual(util.runbook_name_parser('pascal-snake_case'), 'pascal-snake-case')
     self.assertEqual(
-        util.runbook_name_parser('MixAnd-Match_Examplev3'),
-        'mix-and-match-examplev-3',
+      util.runbook_name_parser('MixAnd-Match_Examplev3'),
+      'mix-and-match-examplev-3',
     )
 
   def test_parse_rfc3339_format(self):
@@ -99,7 +107,7 @@ class TestGenerateUUID(unittest.TestCase):
     """Test with default length and separator."""
     result = util.generate_uuid()
 
-    self.assertEqual(len(result), 8 + result.count('.'))  # Check length
+    self.assertEqual(len(result), 10 + result.count('.'))  # Check length
     self.assertTrue('.' in result)  # Check for separator
 
   def test_custom_length(self):
@@ -116,7 +124,7 @@ class TestGenerateUUID(unittest.TestCase):
     """Test with a custom separator interval."""
     result = util.generate_uuid(separator_interval=3)
     separator_count = result.count('.')
-    self.assertEqual(separator_count, 2)
+    self.assertEqual(separator_count, 3)
 
   def test_truncate(self):
     """Test truncation when length is shorter than UUID."""
@@ -128,3 +136,97 @@ class TestGenerateUUID(unittest.TestCase):
     result = util.generate_uuid(length=40)
     self.assertEqual(len(result), 40 + result.count('.'))
     self.assertTrue(result.endswith('0'))
+
+
+class MockConstantsModule:
+  SINGLE_PATTERN = 'single_pattern'
+  LIST_PATTERN = ['list_pattern1', 'list_pattern2']
+
+
+class TestResolvePatterns(unittest.TestCase):
+  """Test resolve_patterns function."""
+
+  def test_no_references(self):
+    patterns = util.resolve_patterns('pattern1;;pattern2', MockConstantsModule)
+    self.assertEqual(patterns, ['pattern1', 'pattern2'])
+
+  def test_single_string_reference(self):
+    patterns = util.resolve_patterns('ref:SINGLE_PATTERN', MockConstantsModule)
+    self.assertEqual(patterns, ['single_pattern'])
+
+  def test_list_reference(self):
+    patterns = util.resolve_patterns('ref:LIST_PATTERN', MockConstantsModule)
+    self.assertEqual(patterns, ['list_pattern1', 'list_pattern2'])
+
+  def test_mixed_patterns_and_references(self):
+    patterns = util.resolve_patterns(
+      'pattern1;;ref:SINGLE_PATTERN;;pattern2;;ref:LIST_PATTERN', MockConstantsModule
+    )
+    self.assertEqual(
+      patterns, ['pattern1', 'single_pattern', 'pattern2', 'list_pattern1', 'list_pattern2']
+    )
+
+  def test_invalid_reference(self):
+    with self.assertRaises(ValueError):
+      util.resolve_patterns('ref:INVALID_PATTERN', MockConstantsModule)
+
+
+class TestGetOperatorFn(unittest.TestCase):
+  """Test get_operator_fn function."""
+
+  def test_get_operator_fn(self):
+    self.assertEqual(util.get_operator_fn('eq'), re.match)
+    self.assertEqual(util.get_operator_fn('ne'), re.match)
+    self.assertEqual(util.get_operator_fn('lt'), re.match)
+    self.assertEqual(util.get_operator_fn('le'), re.match)
+    self.assertEqual(util.get_operator_fn('gt'), re.match)
+    self.assertEqual(util.get_operator_fn('ge'), re.match)
+
+  def test_get_operator_fn_invalid(self):
+    with self.assertRaises(ValueError):
+      util.get_operator_fn('invalid')
+
+
+class TestTemplateFunctions(unittest.TestCase):
+  """Test load_template_block and render_template functions."""
+
+  def setUp(self):
+    super().setUp()
+    self.mock_env = mock.Mock(spec=Environment)
+    self.mock_get_template = self.mock_env.get_template
+    util.env = self.mock_env
+
+    m = mock.MagicMock()
+    m.__file__ = '/tmp/dummy/path/file.py'
+    self.mock_importlib = self.enterContext(mock.patch('importlib.import_module', return_value=m))
+
+    # Use patch.object to ensure the correct module variable is patched
+    self.mock_step_outcomes = self.enterContext(
+      mock.patch.object(util, 'step_outcomes', ['ok', 'failed'])
+    )
+
+  def test_load_template_block(self):
+    template_mock = mock.MagicMock()
+    block_ok_mock = mock.Mock(return_value=['ok_content'])
+    block_failed_mock = mock.Mock(return_value=['failed_content'])
+    template_mock.blocks = {
+      'myblock_ok': block_ok_mock,
+      'myblock_failed': block_failed_mock,
+    }
+    template_mock.new_context.return_value = {}
+    self.mock_get_template.return_value = template_mock
+    result = util.load_template_block('dummy_module', 'dummy_template', 'myblock')
+    self.assertEqual(result, {'ok': 'ok_content', 'failed': 'failed_content'})
+    self.mock_importlib.assert_called_once_with('dummy_module')
+    self.mock_get_template.assert_called_once_with('dummy_template.jinja')
+    block_ok_mock.assert_called_once_with({})
+    block_failed_mock.assert_called_once_with({})
+
+  def test_render_template(self):
+    mock_template = mock.Mock()
+    self.mock_get_template.return_value = mock_template
+    mock_template.render.return_value = 'rendered_content'
+    result = util.render_template('/tmp/dummy/path', 'template.jinja', {'data': 123}, 'p', 's')
+    self.assertEqual(result, 'rendered_content')
+    self.mock_get_template.assert_called_once_with('template.jinja')
+    mock_template.render.assert_called_once_with({'data': 123, 'render_block': 'p_s'})

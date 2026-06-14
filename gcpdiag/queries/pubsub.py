@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP PubSub
-
-"""
+"""Queries related to GCP PubSub"""
 
 import logging
 import re
@@ -30,6 +28,7 @@ from gcpdiag.queries import apis, iam
 
 class Topic(models.Resource):
   """Represent a Topic"""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -41,8 +40,7 @@ class Topic(models.Resource):
   def name(self) -> str:
     m = re.search(r'/topics/([^/]+)$', self._resource_data['name'])
     if not m:
-      raise RuntimeError('can\'t determine name of topic %s' %
-                         (self._resource_data['name']))
+      raise RuntimeError("can't determine name of topic %s" % (self._resource_data['name']))
     return m.group(1)
 
   @property
@@ -66,10 +64,8 @@ def get_topics(context: models.Context) -> Mapping[str, Topic]:
   if not apis.is_enabled(context.project_id, 'pubsub'):
     return topics
   pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
-  logging.debug('fetching list of PubSub topics in project %s',
-                context.project_id)
-  query = pubsub_api.projects().topics().list(
-      project=f'projects/{context.project_id}')
+  logging.debug('fetching list of PubSub topics in project %s', context.project_id)
+  query = pubsub_api.projects().topics().list(project=f'projects/{context.project_id}')
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'topics' not in resp:
@@ -84,8 +80,7 @@ def get_topics(context: models.Context) -> Mapping[str, Topic]:
         logging.error('invalid topic data: %s', t['name'])
         continue
 
-      if not context.match_project_resource(resource=result.group(1),
-                                            labels=t.get('labels', {})):
+      if not context.match_project_resource(resource=result.group(1), labels=t.get('labels', {})):
         continue
 
       topics[t['name']] = Topic(project_id=context.project_id, resource_data=t)
@@ -95,23 +90,23 @@ def get_topics(context: models.Context) -> Mapping[str, Topic]:
 
 
 class TopicIAMPolicy(iam.BaseIAMPolicy):
-
   def _is_resource_permission(self, permission):
     return True
 
 
 @caching.cached_api_call(in_memory=True)
-def get_topic_iam_policy(name: str) -> TopicIAMPolicy:
+def get_topic_iam_policy(context: models.Context, name: str) -> TopicIAMPolicy:
   project_id = utils.get_project_by_res_name(name)
 
   pubsub_api = apis.get_api('pubsub', 'v1', project_id)
   request = pubsub_api.projects().topics().getIamPolicy(resource=name)
 
-  return iam.fetch_iam_policy(request, TopicIAMPolicy, project_id, name)
+  return iam.fetch_iam_policy(request, TopicIAMPolicy, project_id, name, context)
 
 
 class Subscription(models.Resource):
   """Represent a Subscription."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -123,8 +118,7 @@ class Subscription(models.Resource):
   def name(self) -> str:
     m = re.search(r'/subscriptions/([^/]+)$', self._resource_data['name'])
     if not m:
-      raise RuntimeError('can\'t determine name of subscription %s' %
-                         (self._resource_data['name']))
+      raise RuntimeError("can't determine name of subscription %s" % (self._resource_data['name']))
     return m.group(1)
 
   @property
@@ -147,16 +141,23 @@ class Subscription(models.Resource):
     elif self._resource_data['topic'] == '_deleted-topic_':
       return '_deleted_topic_'
 
-    m = re.match(r'projects/([^/]+)/topics/([^/]+)',
-                 self._resource_data['topic'])
+    m = re.match(r'projects/([^/]+)/topics/([^/]+)', self._resource_data['topic'])
     if not m:
       raise RuntimeError("can't parse topic: %s" % self._resource_data['topic'])
     (project_id, topic_name) = (m.group(1), self._resource_data['topic'])
     topics = get_topics(models.Context(project_id))
     if topic_name not in topics:
-      raise RuntimeError(
-          f'Topic {topic_name} for Subscription {self.name} not found')
+      raise RuntimeError(f'Topic {topic_name} for Subscription {self.name} not found')
     return topics[topic_name]
+
+  @property
+  def push_config(self) -> dict:
+    return self._resource_data.get('pushConfig', {})
+
+  @property
+  def push_oidc_service_account_email(self) -> str:
+    """Return the OIDC service account email for a push subscription."""
+    return self.push_config.get('oidcToken', {}).get('serviceAccountEmail', '')
 
   def is_detached(self) -> bool:
     """Return if subscription is detached."""
@@ -178,16 +179,29 @@ class Subscription(models.Resource):
 
   def is_push_subscription(self) -> bool:
     """Return Boolean value if subscription is a push subscription."""
-    if (self._resource_data['pushConfig'] or self.is_big_query_subscription() or
-        self.is_gcs_subscription()):
+    if (
+      self._resource_data['pushConfig']
+      or self.is_big_query_subscription()
+      or self.is_gcs_subscription()
+    ):
       return True
     return False
+
+  def is_active(self) -> bool:
+    """Return Boolean value if subscription is active."""
+    return self._resource_data['state'] == 'ACTIVE'
 
   def has_dead_letter_topic(self) -> bool:
     """Return Truthy value if subscription has a dead-letter topic."""
     if 'deadLetterPolicy' in self._resource_data:
       return bool(self._resource_data['deadLetterPolicy']['deadLetterTopic'])
     return False
+
+  def dead_letter_topic(self) -> str:
+    """Return the dead-letter topic."""
+    if self.has_dead_letter_topic():
+      return self._resource_data.get('deadLetterPolicy', {}).get('deadLetterTopic', '')
+    return ''
 
   def gcs_subscription_bucket(self) -> str:
     """Return the name of the bucket attached to GCS subscription."""
@@ -202,10 +216,8 @@ def get_subscriptions(context: models.Context) -> Mapping[str, Subscription]:
   if not apis.is_enabled(context.project_id, 'pubsub'):
     return subscriptions
   pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
-  logging.debug('fetching list of PubSub subscriptions in project %s',
-                context.project_id)
-  query = pubsub_api.projects().subscriptions().list(
-      project=f'projects/{context.project_id}')
+  logging.debug('fetching list of PubSub subscriptions in project %s', context.project_id)
+  query = pubsub_api.projects().subscriptions().list(project=f'projects/{context.project_id}')
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'subscriptions' not in resp:
@@ -221,26 +233,26 @@ def get_subscriptions(context: models.Context) -> Mapping[str, Subscription]:
         logging.error('invalid subscription data: %s', s['name'])
         continue
 
-      if not context.match_project_resource(resource=result.group(1),
-                                            labels=s.get('labels', {})):
+      if not context.match_project_resource(resource=result.group(1), labels=s.get('labels', {})):
         continue
 
-      subscriptions[s['name']] = Subscription(project_id=context.project_id,
-                                              resource_data=s)
+      subscriptions[s['name']] = Subscription(project_id=context.project_id, resource_data=s)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return subscriptions
 
 
 @caching.cached_api_call
-def get_subscription(project_id: str,
-                     subscription_name: str) -> Union[None, Subscription]:
+def get_subscription(project_id: str, subscription_name: str) -> Union[None, Subscription]:
   if not apis.is_enabled(project_id, 'pubsub'):
     return None
   pubsub_api = apis.get_api('pubsub', 'v1', project_id)
   logging.debug('fetching PubSub subscription in project %s', project_id)
-  query = pubsub_api.projects().subscriptions().get(
-      subscription=f'projects/{project_id}/subscriptions/{subscription_name}')
+  query = (
+    pubsub_api.projects()
+    .subscriptions()
+    .get(subscription=f'projects/{project_id}/subscriptions/{subscription_name}')
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     return Subscription(project_id=project_id, resource_data=resp)
@@ -249,16 +261,15 @@ def get_subscription(project_id: str,
 
 
 class SubscriptionIAMPolicy(iam.BaseIAMPolicy):
-
   def _is_resource_permission(self, permission):
     return True
 
 
 @caching.cached_api_call(in_memory=True)
-def get_subscription_iam_policy(name: str) -> SubscriptionIAMPolicy:
+def get_subscription_iam_policy(context: models.Context, name: str) -> SubscriptionIAMPolicy:
   project_id = utils.get_project_by_res_name(name)
 
   pubsub_api = apis.get_api('pubsub', 'v1', project_id)
   request = pubsub_api.projects().subscriptions().getIamPolicy(resource=name)
 
-  return iam.fetch_iam_policy(request, SubscriptionIAMPolicy, project_id, name)
+  return iam.fetch_iam_policy(request, SubscriptionIAMPolicy, project_id, name, context)

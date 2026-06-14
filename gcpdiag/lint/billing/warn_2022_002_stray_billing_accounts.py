@@ -43,8 +43,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
   for billing_account in all_account_billing_info:
     if not len(billing_account.list_projects(context)) > 0:
-      report.add_failed(billing_account, 'billing account does not have any '
-                        'projects')
+      report.add_failed(billing_account, 'billing account does not have any projects')
       return
   # all billing account have projects associated with them
   report.add_ok(project, 'Billing account has projects linked correctly.')

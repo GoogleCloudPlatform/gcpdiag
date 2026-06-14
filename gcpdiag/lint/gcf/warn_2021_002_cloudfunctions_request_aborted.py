@@ -17,12 +17,11 @@
 
 Log entries with Cloud Functions having scale up issues have been found.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import gcf, logs
-
-#pylint: disable=line-too-long
 
 MATCH_STR = 'The request was aborted because there was no available instance.'
 
@@ -31,10 +30,11 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_function',
-      log_name='log_id("cloudfunctions.googleapis.com/cloud-functions")',
-      filter_str=f'textPayload:"{MATCH_STR}"')
+    project_id=context.project_id,
+    resource_type='cloud_function',
+    log_name='log_id("cloudfunctions.googleapis.com/cloud-functions")',
+    filter_str=f'textPayload:"{MATCH_STR}"',
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -49,16 +49,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for log_entry in query.entries:
       if MATCH_STR not in get_path(log_entry, ('textPayload'), default=''):
         continue
-      function_name = get_path(log_entry,
-                               ('resource', 'labels', 'function_name'),
-                               default='')
+      function_name = get_path(log_entry, ('resource', 'labels', 'function_name'), default='')
       status = get_path(log_entry, ('httpRequest', 'status'), default=0)
       if status in [429, 500] and function_name:
         failed_functions.add(function_name)
 
   for _, cloudfunction in sorted(cloudfunctions.items()):
     if cloudfunction.name in failed_functions:
-      report.add_failed(cloudfunction,
-                        f'{cloudfunction.name} failed to scale up.')
+      report.add_failed(cloudfunction, f'{cloudfunction.name} failed to scale up.')
     else:
       report.add_ok(cloudfunction)

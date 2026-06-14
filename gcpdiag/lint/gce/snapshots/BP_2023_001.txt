@@ -1,3 +1,14 @@
 *  gce/BP/2023_001: Instance time source is configured with Google NTP server
-   (serial port output is unavailable)                                    [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [SKIP]
+     No indication of NTP Service time sync
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [SKIP]
+     No indication of NTP Service time sync
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [SKIP]
+     No indication of NTP Service time sync
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-35923fbc-2xxp [SKIP]
+     No indication of NTP Service time sync
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [SKIP]
+     No indication of NTP Service time sync
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [SKIP]
+     No indication of NTP Service time sync
 

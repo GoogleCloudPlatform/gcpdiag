@@ -25,16 +25,12 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from gcpdiag.runbook import constants
 
-env = Environment(trim_blocks=True,
-                  lstrip_blocks=True,
-                  autoescape=select_autoescape())
+env = Environment(trim_blocks=True, lstrip_blocks=True, autoescape=select_autoescape())
 
 step_outcomes = constants.StepConstants.keys()
 
 
-def generate_uuid(length: int = 8,
-                  separator_interval: int = 4,
-                  separator: str = '.'):
+def generate_uuid(length: int = 10, separator_interval: int = 4, separator: str = '.'):
   """
   Generates a UUID string with the specified length and separators.
 
@@ -54,8 +50,8 @@ def generate_uuid(length: int = 8,
     uuid_str = uuid_str.ljust(length, '0')
 
   unique_id = separator.join(
-      uuid_str[i:i + separator_interval]
-      for i in range(0, len(uuid_str), separator_interval))
+    uuid_str[i : i + separator_interval] for i in range(0, len(uuid_str), separator_interval)
+  )
 
   return unique_id
 
@@ -159,16 +155,11 @@ def load_template_block(module_name, file_name, block_name):
     t_block_name = f'{block_name}_{entry}'
     # Attempt to load each sub-block if it exists within the main block
     if t_block_name in template.blocks:
-      observations[entry] = ''.join(template.blocks[t_block_name](
-          template.new_context()))
+      observations[entry] = ''.join(template.blocks[t_block_name](template.new_context()))
   return observations
 
 
-def render_template(file_dir,
-                    file_name_with_ext,
-                    context,
-                    block_prefix=None,
-                    block_suffix=None):
+def render_template(file_dir, file_name_with_ext, context, block_prefix=None, block_suffix=None):
   """
   Load specified blocks from a Jinja2 template.
 
@@ -200,3 +191,42 @@ def parse_time_input(time_str):
   # Not an ISO 8601 / RFC 3339 formatted date
   # If none of the formats matched, raise an exception
   raise ValueError(f'Date format not recognized: {time_str}')
+
+
+def resolve_patterns(patterns_str: str, constants_module) -> list[str]:
+  """Resolves a ';;' separated string of patterns, handling 'ref:' prefix."""
+  patterns = []
+  for pattern in patterns_str.split(';;'):
+    pattern = pattern.strip()
+    if pattern.startswith('ref:'):
+      const_name = pattern[4:]
+      resolved_value = getattr(constants_module, const_name, None)
+      if resolved_value is None:
+        raise ValueError(
+          f"Could not resolve constant reference: '{pattern}'. "
+          f"Ensure '{const_name}' is defined in {constants_module.__name__}."
+        )
+      if isinstance(resolved_value, list):
+        patterns.extend(resolved_value)
+      else:
+        patterns.append(resolved_value)
+    else:
+      patterns.append(pattern)
+  return patterns
+
+
+def get_operator_fn(op_str: str):
+  """Maps an operator string to a function from the operator module."""
+  operators = {
+    'eq': re.match,
+    'ne': re.match,
+    'lt': re.match,
+    'le': re.match,
+    'gt': re.match,
+    'ge': re.match,
+  }
+  if op_str not in operators:
+    raise ValueError(
+      f"Unsupported operator: '{op_str}'. Supported operators are: {list(operators.keys())}"
+    )
+  return operators[op_str]

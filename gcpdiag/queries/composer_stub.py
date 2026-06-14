@@ -20,8 +20,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-#pylint: disable=unused-argument
-
 
 class ComposerApiStub:
   """Mock object to simulate Composer api calls."""
@@ -35,12 +33,9 @@ class ComposerApiStub:
   def environments(self):
     return self
 
-  # pylint: disable=invalid-name
   def list(self, parent):
     match = re.match(r'projects/([^/]*)/locations/([^/]*)', parent)
     if not match:
       raise RuntimeError(f"Can't parse parent {parent}")
     project_id, region = match.group(1), match.group(2)
-    return apis_stub.RestCallStub(project_id,
-                                  f'composer-environments-{region}',
-                                  default={})
+    return apis_stub.RestCallStub(project_id, f'composer-environments-{region}', default={})

@@ -23,8 +23,9 @@ from gcpdiag.queries import apis_stub, vertex
 DUMMY_PROJECT_NAME = 'gcpdiag-vertex1-aaaa'
 DUMMY_PROJECT_NUMBER = '12340015'
 DUMMY_FEATURESTORE_NAME = 'gcpdiag_vertex1featurestore_aaaa'
-DUMMY_FEATURESTORE_FULL_PATH_NAME = \
+DUMMY_FEATURESTORE_FULL_PATH_NAME = (
   f'projects/{DUMMY_PROJECT_NUMBER}/locations/us-west1/featurestores/{DUMMY_FEATURESTORE_NAME}'
+)
 DUMMY_PERM = 'domain:google.com'
 DUMMY_FEATURESTORE_STATE = vertex.FeaturestoreStateEnum('STATE_UNSPECIFIED')
 

@@ -42,7 +42,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for env in envs:
     if env.num_schedulers > 2:
       report.add_failed(
-          env, f'{env.name} is configured more than 2 Airflow schedulers'
-          ' (number_of_schedulers: {env.num_schedulers})')
+        env,
+        f'{env.name} is configured more than 2 Airflow schedulers'
+        ' (number_of_schedulers: {env.num_schedulers})',
+      )
     else:
       report.add_ok(env)

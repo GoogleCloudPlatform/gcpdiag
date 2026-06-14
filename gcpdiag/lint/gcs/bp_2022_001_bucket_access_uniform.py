@@ -45,8 +45,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     elif b.is_uniform_access():
       report.add_ok(b)
     else:
-      report.add_failed(b,
-                        'it is recommend to use uniform access on your bucket')
+      report.add_failed(b, 'it is recommend to use uniform access on your bucket')
 
   if bucket_count == 0:
     report.add_skipped(None, 'no buckets found')

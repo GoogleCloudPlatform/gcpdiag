@@ -1,0 +1,3 @@
+*  looker/BP/2025_001: List all Looker Core instances in given GCP project.
+   - projects/gcpdiag-looker1-aaaa/locations/us-central1/instances/gcpdiag-test-01 [ OK ] ACTIVE
+

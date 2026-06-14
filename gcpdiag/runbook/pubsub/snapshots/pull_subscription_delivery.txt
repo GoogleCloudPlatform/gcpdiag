@@ -3,7 +3,7 @@ project_id=gcpdiag-pubsub1-aaaa,subscription_name=gcpdiag-pubsub1subscription-9p
 pubsub/pull-subscription-delivery: Diagnostic checks for Cloud Pub/Sub pull delivery issues.
 
   Provides a DiagnosticTree to check for issues related to delivery issues
-  for resources in Cloud Pub/Sub. Particularly this runbook focuses on common issues
+  for subscriptions in Cloud Pub/Sub. Particularly this runbook focuses on common issues
   experienced while using Pub/Sub pull subscriptions.
 
   - Areas:

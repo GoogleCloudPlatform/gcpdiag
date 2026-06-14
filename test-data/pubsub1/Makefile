@@ -5,9 +5,10 @@ ORG_ID      := $(shell terraform output -json org_id)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 
-TOPIC := $(shell terraformm output -json topic | sed -e 's|"||g')
+TOPIC := $(shell terraform output -json topic | sed -e 's|"||g')
 SUBSCRIPTION := $(shell terraform output -json subscription | sed -e 's|"||g')
 BQ_SUBSCRIPTION := $(shell terraform output -json bqsubscription | sed -e 's|"||g')
+GCS_SUBSCRIPTION := $(shell terraform output -json gcs_subscription | sed -e 's|"||g')
 BUCKET_ID := $(shell terraform output -json gcs_subscription_bucket_name | sed -e 's|"||g')
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
@@ -24,6 +25,8 @@ all:	\
 	json-dumps/topic-iam.json \
 	json-dumps/subscriptions.json \
 	json-dumps/pull-subscription.json \
+	json-dumps/bq-subscription.json \
+	json-dumps/gcs-subscription.json \
 	json-dumps/subscriptions-iam.json \
 	json-dumps/iam-policy.json \
 	json-dumps/iam-service-accounts.json \
@@ -58,6 +61,16 @@ json-dumps/subscriptions.json:
 json-dumps/pull-subscription.json:
 	$(CURL) -fv \
 		'https://pubsub.googleapis.com/v1/projects/$(PROJECT_ID)/subscriptions/$(SUBSCRIPTION)' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/bq-subscription.json:
+	$(CURL) -fv \
+		'https://pubsub.googleapis.com/v1/projects/$(PROJECT_ID)/subscriptions/$(BQ_SUBSCRIPTION)' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/gcs-subscription.json:
+	$(CURL) -fv \
+		'https://pubsub.googleapis.com/v1/projects/$(PROJECT_ID)/subscriptions/$(GCS_SUBSCRIPTION)' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/subscriptions-iam.json:

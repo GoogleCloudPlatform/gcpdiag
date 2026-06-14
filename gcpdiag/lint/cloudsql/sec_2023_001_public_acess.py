@@ -39,8 +39,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for instance in instances:
     if '0.0.0.0/0' in instance.is_publically_accessible:
-      report.add_failed(
-          instance,
-          f'{instance.name} is having 0.0.0.0/0 as an allowed network')
+      report.add_failed(instance, f'{instance.name} is having 0.0.0.0/0 as an allowed network')
     else:
       report.add_ok(instance)

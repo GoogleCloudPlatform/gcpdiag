@@ -34,6 +34,7 @@ gcpdiag runbook nat/public-nat-ip-allocation-failed \
   -p nat_gateway_name=value \
   -p cloud_router_name=value \
   -p network=value \
+  -p nat_network=value \
   -p region=value
 ```
 
@@ -44,7 +45,8 @@ gcpdiag runbook nat/public-nat-ip-allocation-failed \
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
 | `nat_gateway_name` | True | None | str | The name of the NATGW |
 | `cloud_router_name` | True | None | str | The name of the Cloud Router of the NATGW |
-| `network` | True | None | str | The VPC network of the target NATGW |
+| `network` | False | None | str | The VPC network of the target NATGW |
+| `nat_network` | True | None | str | The VPC network of the target NATGW |
 | `region` | True | None | str | The region of the target NATGW |
 
 Get help on available commands

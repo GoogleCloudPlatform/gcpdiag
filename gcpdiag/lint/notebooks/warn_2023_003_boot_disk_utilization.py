@@ -16,6 +16,7 @@
 The boot disk space status is unhealthy if the disk space is greater than 85%
 full.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, notebooks
 
@@ -27,7 +28,6 @@ def prefetch_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not apis.is_enabled(context.project_id, 'notebooks'):
     report.add_skipped(None, 'Notebooks API is disabled')
     return

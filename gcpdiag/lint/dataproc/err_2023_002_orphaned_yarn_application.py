@@ -37,10 +37,11 @@ clusters_by_project = set()
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type=RESOURCE_TYPE,
-      log_name='log_id("google.dataproc.agent")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type=RESOURCE_TYPE,
+    log_name='log_id("google.dataproc.agent")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -61,14 +62,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   logs_entries = logs_by_project[context.project_id]
   entries = logs_entries.entries
   for log_entry in entries:
-    if (log_entry['severity'] != 'ERROR' or CLASS_NAME not in get_path(
-        log_entry, ('jsonPayload', 'class'), default='') or
-        MATCH_STR not in get_path(log_entry, ('jsonPayload', 'message'),
-                                  default='')):
+    if (
+      log_entry['severity'] != 'ERROR'
+      or CLASS_NAME not in get_path(log_entry, ('jsonPayload', 'class'), default='')
+      or MATCH_STR not in get_path(log_entry, ('jsonPayload', 'message'), default='')
+    ):
       continue
 
-    cluster_name = get_path(log_entry, ('resource', 'labels', 'cluster_name'),
-                            default='')
+    cluster_name = get_path(log_entry, ('resource', 'labels', 'cluster_name'), default='')
 
     if cluster_name:
       clusters_by_project.add(cluster_name)

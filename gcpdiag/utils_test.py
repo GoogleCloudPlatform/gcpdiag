@@ -14,6 +14,7 @@
 
 # Lint as: python3
 """Test code in utils.py."""
+
 import httplib2
 import pytest
 from googleapiclient import errors
@@ -30,8 +31,7 @@ JSON_ERROR_CONTENT = b"""
 """
 
 
-class TestGcpApiError():
-
+class TestGcpApiError:
   def test_exception(self):
     """GcpApiError correctly formats an error from a Google API JSON string."""
     with pytest.raises(utils.GcpApiError) as api_error:
@@ -50,18 +50,15 @@ def test_is_region():
 
 def test_is_full_res_name():
   """is_full_res_name() should return correct result for a valid/invalid full resource name."""
-  assert utils.is_full_res_name(
-      'https://library.googleapis.com/shelves/shelf1/books/book2')
+  assert utils.is_full_res_name('https://library.googleapis.com/shelves/shelf1/books/book2')
   assert utils.is_full_res_name('//googleapis.com/shelves/shelf1/books/book2')
   assert not utils.is_full_res_name('shelves/shelf1/books/book2')
 
 
 def test_is_rel_res_name():
   """is_rel_res_name() should return correct result for a valid/invalid relative resource name."""
-  assert not utils.is_rel_res_name(
-      '//library.googleapis.com/shelves/shelf1/books/book2')
-  assert utils.is_rel_res_name(
-      'projects/testproject/locations/us-central1/keyRings/usckr')
+  assert not utils.is_rel_res_name('//library.googleapis.com/shelves/shelf1/books/book2')
+  assert utils.is_rel_res_name('projects/testproject/locations/us-central1/keyRings/usckr')
 
 
 def test_is_valid_res_name():
@@ -69,8 +66,7 @@ def test_is_valid_res_name():
   assert utils.is_valid_res_name('//googleapis.com/shelves/shelf1/books/book2')
   assert utils.is_valid_res_name('//googleapis.com/shelves/shelf1/books/2')
   assert utils.is_valid_res_name('shelves/shelf1/books/book2')
-  assert not utils.is_valid_res_name(
-      'googleapis.com/shelves/shelf1/books/book2')
+  assert not utils.is_valid_res_name('googleapis.com/shelves/shelf1/books/book2')
   assert not utils.is_valid_res_name('//googleapis.com/shelves/shelf1/books/-')
   assert not utils.is_valid_res_name('//googleapis.com/shelves/shelf1/2/2')
   assert not utils.is_valid_res_name('shelves/shelf1/books')
@@ -80,38 +76,37 @@ def test_is_valid_res_name():
 
 def test_get_region_by_res_name():
   """get_region_by_res_name() should extract a region name from a resource name."""
-  result = utils.get_region_by_res_name(
-      'projects/testproject/locations/us-central1/keyRings/usckr')
+  result = utils.get_region_by_res_name('projects/testproject/locations/us-central1/keyRings/usckr')
   assert result == 'us-central1'
 
 
 def test_get_zone_by_res_name():
   """get_zone_by_res_name() should extract a zone name from a resource name."""
-  result = utils.get_zone_by_res_name(
-      'projects/testproject/zones/us-central1-c/keyRings/usckr')
+  result = utils.get_zone_by_res_name('projects/testproject/zones/us-central1-c/keyRings/usckr')
   assert result == 'us-central1-c'
 
 
 def test_get_project_by_res_name():
   """get_project_by_res_name() should extract a project name from a resource name."""
   result = utils.get_project_by_res_name(
-      'projects/testproject/locations/us-central1/keyRings/usckr')
+    'projects/testproject/locations/us-central1/keyRings/usckr'
+  )
   assert result == 'testproject'
 
 
 def test_extract_value_from_res_name():
   """extract_value_from_res_name() should extract a value by a given key from a resource name."""
   result = utils.extract_value_from_res_name(
-      'projects/testproject/locations/us-central1/keyRings/usckr', 'keyRings')
+    'projects/testproject/locations/us-central1/keyRings/usckr', 'keyRings'
+  )
   assert result == 'usckr'
   with pytest.raises(ValueError):
     utils.extract_value_from_res_name('', 'keyRings')
   with pytest.raises(ValueError):
-    utils.extract_value_from_res_name(
-        'projects/testproject/locations/us-central1', 'us-central1')
+    utils.extract_value_from_res_name('projects/testproject/locations/us-central1', 'us-central1')
   result = utils.extract_value_from_res_name(
-      'projects/testproject/locations/us-east1/keyRings/testkeyring/cryptoKeys/test_key',
-      'projects')
+    'projects/testproject/locations/us-east1/keyRings/testkeyring/cryptoKeys/test_key', 'projects'
+  )
   assert result == 'testproject'
 
 
@@ -121,7 +116,7 @@ def test_iter_dictlist():
   assert list(utils.iter_dictlist(test_dict)) == [('a', 1), ('a', 2), ('b', 3)]
 
 
-class TestVersionComponentsParser():
+class TestVersionComponentsParser:
   """Test Class for Version Components Parser."""
 
   def test_extract_base_version(self):

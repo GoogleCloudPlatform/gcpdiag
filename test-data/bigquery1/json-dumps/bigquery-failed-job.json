@@ -1,0 +1,47 @@
+{
+  "kind": "bigquery#job",
+  "etag": "N0ge4qTBNooQUmVCoxGG8g==",
+  "id": "gcpdiag-bigquery1-aaaa:US.bquxjob_12d56171_191bd834486",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/gcpdiag-bigquery1-aaaa/jobs/bquxjob_12d56171_191bd834486?location=US",
+  "user_email": "pschnayder@google.com",
+  "configuration": {
+    "query": {
+      "query": "-- Find the top 100 names from the year 2017.\nCREATE TEMP TABLE top_names_1(name STRING) CLUSTER BY name\nAS\n SELECT name\n FROM `bigquery-public-data`.usa_names.usa_1910_current\n WHERE year = 2017\n ORDER BY number DESC LIMIT 100\n;\n-- Which names appear as words in Shakespeare's plays?\nSELECT\n name AS shakespeare_name\nFROM top_names_1\nWHERE name IN (\n SELECT word\n FROM `bigquery-public-data`.samples.shakespeare\n);",
+      "priority": "INTERACTIVE",
+      "useLegacySql": false
+    },
+    "jobType": "QUERY"
+  },
+  "jobReference": {
+    "projectId": "gcpdiag-bigquery1-aaaa",
+    "jobId": "bquxjob_12d56171_191bd834486",
+    "location": "US"
+  },
+  "statistics": {
+    "creationTime": "1725461382806",
+    "startTime": "1725461382902",
+    "endTime": "1725461383642",
+    "totalBytesProcessed": "0",
+    "query": {
+      "totalBytesProcessed": "0",
+      "totalBytesBilled": "0",
+      "totalSlotMs": "0",
+      "statementType": "SCRIPT"
+    },
+    "totalSlotMs": "0",
+    "numChildJobs": "1"
+  },
+  "status": {
+    "errorResult": {
+      "reason": "invalidQuery",
+      "location": "query",
+      "debugInfo": "[INVALID_INPUT] message=QUERY_ERROR: [Result of ORDER BY queries cannot be clustered.] debug=code: \t BAD_QUERY\ndescription: \"Result of ORDER BY queries cannot be clustered.\"\ncause: USER_ERROR\naddress: \"http://ovpe12.prod.google.com:4901/task?handle=logs.344.serving.mixer.0.cloud-dataengine.3845348967303\"\nstatus_proto {\n  code: 3\n  space: \"generic\"\n  message: \"Result of ORDER BY queries cannot be clustered.\"\n}\nerror_details {\n  argument_error {\n    query_error {\n    }\n  }\n  debug_info {\n    error_message_template: \"Result of ORDER BY queries cannot be clustered.\"\n    error_id: 2257563603\n  }\n}\n errorProto=code: \"QUERY_ERROR\"\nargument: \"Result of ORDER BY queries cannot be clustered.\"\nlocation_type: OTHER\nlocation: \"query\"\n\n\tat com.google.cloud.helix.common.Exceptions.fromProto(Exceptions.java:2091)\n\tat com.google.cloud.helix.common.dremel.QueryExecutorImpl.mapDremelErrorsTohelixException(QueryExecutorImpl.java:1117)\n\tat com.google.cloud.helix.common.dremel.QueryExecutorImpl$ConfiguredQueryMigration$StreamHandler.onMessage(QueryExecutorImpl.java:714)\n\tat com.google.cloud.helix.common.dremel.QueryExecutorImpl$ConfiguredQueryMigration$StreamHandler.onMessage(QueryExecutorImpl.java:642)\n\tat com.google.net.rpc3.stream.RpcMessageCallback$Internal$Adapter.onMessage(RpcMessageCallback.java:96)\n\tat com.google.net.rpc3.impl.RpcStreamInternalContext.processMessageUnlocked(RpcStreamInternalContext.java:1747)\n\tat com.google.net.rpc3.impl.RpcStreamInternalContext.invokeCallbacksInternalUnlocked(RpcStreamInternalContext.java:2756)\n\tat com.google.net.rpc3.impl.RpcStreamInternalContext.invokeCallbacksUnlocked(RpcStreamInternalContext.java:2680)\n\tat com.google.net.eventmanager.AbstractFutureTask$Sync.innerRun(AbstractFutureTask.java:259)\n\tat com.google.net.eventmanager.AbstractFutureTask.run(AbstractFutureTask.java:120)\n\tat com.google.net.eventmanager.EventManagerImpl.runTaskTraced(EventManagerImpl.java:901)\n\tat com.google.net.eventmanager.EventManagerImpl.runTask(EventManagerImpl.java:893)\n\tat com.google.net.eventmanager.EventManagerImpl.internalRunWorkerLoop(EventManagerImpl.java:1320)\n\tat com.google.net.eventmanager.EventManagerImpl.runWorkerLoop(EventManagerImpl.java:1211)\n\tat com.google.net.eventmanager.WorkerThreadInfo.runWorkerLoop(WorkerThreadInfo.java:153)\n\tat com.google.net.eventmanager.EventManagerImpl$WorkerThread.run(EventManagerImpl.java:2000)\n",
+      "message": "Query error: Result of ORDER BY queries cannot be clustered. at [2:1]"
+    },
+    "state": "DONE"
+  },
+  "principal_subject": "user:pschnayder@google.com",
+  "jobCreationReason": {
+    "code": "REQUESTED"
+  }
+}

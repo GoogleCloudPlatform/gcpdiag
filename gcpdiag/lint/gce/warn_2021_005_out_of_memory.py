@@ -20,6 +20,7 @@ The messages:
 "Memory cgroup out of memory" in serial output usually indicate that
 a Linux instance is under memory pressure.
 """
+
 from typing import Optional
 
 from gcpdiag import lint, models
@@ -28,10 +29,10 @@ from gcpdiag.queries import gce
 from gcpdiag.queries.logs import LogEntryShort
 
 OOM_MESSAGES = [
-    'Out of memory: Kill process',  #
-    'sacrifice child',
-    'Killed process',
-    'Memory cgroup out of memory'
+  'Out of memory: Kill process',  #
+  'sacrifice child',
+  'Killed process',
+  'Memory cgroup out of memory',
 ]
 
 logs_by_project = {}
@@ -39,7 +40,8 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = utils.SerialOutputSearch(
-      context, search_strings=OOM_MESSAGES)
+    context, search_strings=OOM_MESSAGES
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -55,12 +57,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'No instances found')
   else:
     for instance in sorted(instances, key=lambda i: i.full_path):
-      match: Optional[LogEntryShort] = search.get_last_match(
-          instance_id=instance.id)
+      match: Optional[LogEntryShort] = search.get_last_match(instance_id=instance.id)
       if match:
-        report.add_failed(instance,
-                          ('There are messages indicating that OS is running'
-                           ' out of memory for {}\n{}: "{}"').format(
-                               instance.name, match.timestamp_iso, match.text))
+        report.add_failed(
+          instance,
+          (
+            'There are messages indicating that OS is running out of memory for {}\n{}: "{}"'
+          ).format(instance.name, match.timestamp_iso, match.text),
+        )
       else:
         report.add_ok(instance)

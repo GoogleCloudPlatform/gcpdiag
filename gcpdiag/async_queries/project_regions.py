@@ -1,11 +1,13 @@
-""" Gateway for extracting available GCP regions """
+"""Gateway for extracting available GCP regions"""
+
 from typing import Any, Iterable, List, Mapping, Optional
 
 from gcpdiag.async_queries.utils import loader, protocols
 
 
 class ProjectRegions:
-  """ Gateway for extracting available GCP regions """
+  """Gateway for extracting available GCP regions"""
+
   api: protocols.API
   project_id: str
   loader: loader.Loader
@@ -28,10 +30,11 @@ class ProjectRegions:
 
   async def call_api(self) -> Any:
     return await self.api.call(
-        method='GET',
-        url=
-        'https://compute.googleapis.com/compute/v1/projects/{project_id}/regions'
-        .format(project_id=self.project_id))
+      method='GET',
+      url='https://compute.googleapis.com/compute/v1/projects/{project_id}/regions'.format(
+        project_id=self.project_id
+      ),
+    )
 
   def parse_resp(self, resp: Any) -> List[str]:
     assert isinstance(resp, Mapping)

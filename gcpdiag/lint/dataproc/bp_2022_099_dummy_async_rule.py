@@ -9,7 +9,6 @@ from gcpdiag import lint, models
 
 
 class FakeResource(models.Resource):
-
   def __init__(self, text):
     super().__init__(project_id=None)
     self.text = text
@@ -19,9 +18,7 @@ class FakeResource(models.Resource):
     return self.text
 
 
-# pylint: disable=unused-argument
-async def async_run_rule(context: models.Context,
-                         report: lint.LintReportRuleInterface) -> None:
+async def async_run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   # Some async sleep calls to pretend we're doing some work
   await asyncio.sleep(1)
   report.add_ok(FakeResource(text='fake resource 1'), 'test ok')

@@ -20,9 +20,6 @@ Instead of doing real API calls, we return test JSON data.
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 DUMMY_PROJECT_ID = 'gcpdiag-billing1-aaaa'
 
 
@@ -66,8 +63,7 @@ class BillingAccountProjectsStub(BillingApiStub):
   """Mock object to simulate Billing Account Projects api calls"""
 
   def list(self, name):
-    return apis_stub.RestCallStub(self.project_id,
-                                  'all_billing_account_projects')
+    return apis_stub.RestCallStub(self.project_id, 'all_billing_account_projects')
 
   def list_next(self, previous_request, previous_response):
     return None

@@ -115,3 +115,15 @@ The local user "{local_user}" lacks at least one valid SSH key for VM: "{full_re
 Ensure "{local_user}" has a valid SSH key by following the guide:
 <https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_instance_metadata>
 {% endblock valid_ssh_key_failure_remediation %}
+
+{% block duplicate_ssh_keys_failure_reason %}
+VM {instance_name} has {count} duplicate SSH key(s) in its metadata: {keys}
+{% endblock duplicate_ssh_keys_failure_reason %}
+
+{% block duplicate_ssh_keys_failure_remediation %}
+Remove duplicate SSH keys from the instance or project metadata to avoid potential SSH issues and improve security hygiene.
+{% endblock duplicate_ssh_keys_failure_remediation %}
+
+{% block duplicate_ssh_keys_success_reason %}
+No duplicate SSH keys were found in metadata for VM {instance_name}.
+{% endblock duplicate_ssh_keys_success_reason %}

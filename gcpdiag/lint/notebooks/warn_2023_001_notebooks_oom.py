@@ -16,21 +16,21 @@
 High memory utilization more than 85% in the user-managed notebooks instance
 could be a cause of 524 (A Timeout Occurred) errors while opening Jupyterlab.
 """
+
 import re
 
 from gcpdiag import lint, models
 from gcpdiag.lint.gce import utils
 from gcpdiag.queries import apis, gce, notebooks
 
-OOMKILLED_MESSAGES = [
-    'Out of memory: Kill process', 'oom_reaper: reaped process'
-]
+OOMKILLED_MESSAGES = ['Out of memory: Kill process', 'oom_reaper: reaped process']
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = utils.SerialOutputSearch(
-      context, search_strings=OOMKILLED_MESSAGES)
+    context, search_strings=OOMKILLED_MESSAGES
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

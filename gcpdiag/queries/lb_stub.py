@@ -26,26 +26,23 @@ from googleapiclient import errors
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 backend_service_states = ('backendServices', 'regionBackendServices')
 forwarding_rule_states = ('forwardingRules', 'globalForwardingRules')
 target_http_proxy_states = ('targetHttpProxies', 'regionTargetHttpProxies')
 target_https_proxy_states = (
-    'targetHttpsProxies',
-    'regionTargetHttpsProxies',
+  'targetHttpsProxies',
+  'regionTargetHttpsProxies',
 )
 target_ssl_proxy_states = 'targetSslProxies'
 target_grpc_proxy_states = 'targetGrpcProxies'
 target_tcp_proxy_states = ('targetTcpProxies', 'regionTargetTcpProxies')
 
 aggregated_supported = (
-    'backendServices',
-    'forwardingRules',
-    'targetHttpProxies',
-    'targetHttpsProxies',
-    'targetTcpProxies',
+  'backendServices',
+  'forwardingRules',
+  'targetHttpProxies',
+  'targetHttpsProxies',
+  'targetTcpProxies',
 )
 
 
@@ -60,30 +57,26 @@ class LbApiStub:
 
   def aggregatedList(self, project):
     if self.mock_state == 'forwardingRules':
-      return apis_stub.RestCallStub(project,
-                                    'compute-aggregated-forwardingRules')
+      return apis_stub.RestCallStub(project, 'compute-aggregated-forwardingRules')
     if self.mock_state == 'backendServices':
-      return apis_stub.RestCallStub(project,
-                                    'compute-aggregated-backendServices')
+      return apis_stub.RestCallStub(project, 'compute-aggregated-backendServices')
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
-  # pylint: disable=redefined-builtin
   def list(self, project, region=None):
     if self.mock_state == 'backendServices':
       return apis_stub.RestCallStub(project, 'compute-backendServices')
     if self.mock_state == 'regionBackendServices':
-      return apis_stub.RestCallStub(project,
-                                    f'compute-backendServices-{region}')
+      return apis_stub.RestCallStub(project, f'compute-backendServices-{region}')
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
   def get(
-      self,
-      project,
-      region=None,
-      backendService=None,
-      forwardingRule=None,
+    self,
+    project,
+    region=None,
+    backendService=None,
+    forwardingRule=None,
   ):
     self.region = region
     self.project = project
@@ -99,26 +92,28 @@ class LbApiStub:
   def getHealth(self, project, backendService, body, region=None):
     backend_url_parts = body.get('group').split('/')
     backend_name, backend_type, backend_scope = (
-        backend_url_parts[-1],
-        backend_url_parts[-2],
-        backend_url_parts[-3],
+      backend_url_parts[-1],
+      backend_url_parts[-2],
+      backend_url_parts[-3],
     )
 
     if self.mock_state == 'backendServices':
-      stub_name = (f'backendService-{backendService}-get-health-{backend_type}-'
-                   f'{backend_name}-{backend_scope}')
+      stub_name = (
+        f'backendService-{backendService}-get-health-{backend_type}-{backend_name}-{backend_scope}'
+      )
       return apis_stub.RestCallStub(project, stub_name)
     if self.mock_state == 'regionBackendServices':
-      stub_name = (f'regionBackendService-{backendService}-{region}-get-health-'
-                   f'{backend_type}-{backend_name}-{backend_scope}')
+      stub_name = (
+        f'regionBackendService-{backendService}-{region}-get-health-'
+        f'{backend_type}-{backend_name}-{backend_scope}'
+      )
       return apis_stub.RestCallStub(project, stub_name)
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
   def _get_resources_from_json_items(self, items: Any, resource_name: str):
     if resource_name in aggregated_supported:
-      items_by_scope = items[f'regions/{self.region}' if self.
-                             region else 'global']
+      items_by_scope = items[f'regions/{self.region}' if self.region else 'global']
       return items_by_scope[resource_name]
     return items
 
@@ -130,9 +125,11 @@ class LbApiStub:
       resource_name = 'forwardingRules'
     else:
       resource_name = self.mock_state
-    json_file_name = (f'compute-aggregated-{resource_name}.json'
-                      if resource_name in aggregated_supported else
-                      f'compute-{resource_name}.json')
+    json_file_name = (
+      f'compute-aggregated-{resource_name}.json'
+      if resource_name in aggregated_supported
+      else f'compute-{resource_name}.json'
+    )
 
     with open(json_dir / f'{json_file_name}', encoding='utf-8') as json_file:
       items = json.load(json_file)['items']
@@ -140,11 +137,8 @@ class LbApiStub:
 
       if not resources:
         raise errors.HttpError(
-            httplib2.Response({
-                'status': 404,
-                'reason': 'Not Found'
-            }),
-            b'The resource is not found',
+          httplib2.Response({'status': 404, 'reason': 'Not Found'}),
+          b'The resource is not found',
         )
       if self.mock_state in backend_service_states:
         for backend_service in resources:
@@ -152,12 +146,8 @@ class LbApiStub:
             return backend_service
           else:
             raise errors.HttpError(
-                httplib2.Response({
-                    'status': 404,
-                    'reason': 'Not Found'
-                }),
-                f'The backend service {self.backend_service} is not found'.
-                encode(),
+              httplib2.Response({'status': 404, 'reason': 'Not Found'}),
+              f'The backend service {self.backend_service} is not found'.encode(),
             )
       elif self.mock_state in forwarding_rule_states:
         for forwarding_rule in resources:
@@ -165,12 +155,8 @@ class LbApiStub:
             return forwarding_rule
           else:
             raise errors.HttpError(
-                httplib2.Response({
-                    'status': 404,
-                    'reason': 'Not Found'
-                }),
-                f'The forwarding rule {self.forwarding_rule} is not found'.
-                encode(),
+              httplib2.Response({'status': 404, 'reason': 'Not Found'}),
+              f'The forwarding rule {self.forwarding_rule} is not found'.encode(),
             )
       else:
         raise ValueError(f'cannot call method {self.mock_state} here')
@@ -207,11 +193,8 @@ class SslCertificateApiStub:
           if ssl_certificate['name'] == self.ssl_certificate:
             return ssl_certificate
         raise errors.HttpError(
-            httplib2.Response({
-                'status': 404,
-                'reason': 'Not Found'
-            }),
-            f'The SSL certificate {self.ssl_certificate} is not found'.encode(),
+          httplib2.Response({'status': 404, 'reason': 'Not Found'}),
+          f'The SSL certificate {self.ssl_certificate} is not found'.encode(),
         )
       else:
         raise ValueError(f'cannot call method {self.mock_state} here')
@@ -224,21 +207,20 @@ class TargetProxyStub:
     self.mock_state = mock_state
 
   def aggregatedList(self, project):
-    return apis_stub.RestCallStub(project,
-                                  f'compute-aggregated-{self.mock_state}')
+    return apis_stub.RestCallStub(project, f'compute-aggregated-{self.mock_state}')
 
   def list(self, project):
     return apis_stub.RestCallStub(project, f'compute-{self.mock_state}')
 
   def get(
-      self,
-      project,
-      region=None,
-      targetHttpProxy=None,
-      targetHttpsProxy=None,
-      targetSslProxy=None,
-      targetGrpcProxy=None,
-      targetTcpProxy=None,
+    self,
+    project,
+    region=None,
+    targetHttpProxy=None,
+    targetHttpsProxy=None,
+    targetSslProxy=None,
+    targetGrpcProxy=None,
+    targetTcpProxy=None,
   ):
     self.region = region
     self.project = project
@@ -273,11 +255,8 @@ class TargetProxyStub:
           if target_proxy['name'] == self.target_proxy:
             return target_proxy
         raise errors.HttpError(
-            httplib2.Response({
-                'status': 404,
-                'reason': 'Not Found'
-            }),
-            f'The Target proxy {self.target_proxy} is not found'.encode(),
+          httplib2.Response({'status': 404, 'reason': 'Not Found'}),
+          f'The Target proxy {self.target_proxy} is not found'.encode(),
         )
       else:
         raise ValueError(f'cannot call method {self.mock_state} here')

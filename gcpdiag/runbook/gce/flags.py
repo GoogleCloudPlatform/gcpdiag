@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Parameters applicable to GCE runbooks."""
-# pylint: disable=wildcard-import, unused-wildcard-import
+
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *
 
@@ -22,3 +22,5 @@ CHECK_OS_LOGIN = 'check_os_login'
 POSIX_USER = 'posix_user'
 ACCESS_METHOD = 'access_method'
 INSTANCE_CREATED = 'instance_created'
+CHECK_ZONE_SEPARATION_POLICY = 'check_zone_separation_policy'
+OPERATION_TYPE = 'operation_type'

@@ -17,14 +17,15 @@ Traffic from the IP range 35.235.240.0/20 to VM instances is necessary for
 IAP TCP forwarding to establish an encrypted tunnel over which you can forward
 SSH, RDP traffic to VM instances.
 """
+
 import ipaddress
 
 from gcpdiag import lint, models
 from gcpdiag.queries import gce
 
 VERIFY_PORTS = {  #
-    'ssh': 22,
-    'rdp': 3389
+  'ssh': 22,
+  'rdp': 3389,
 }
 
 IAP_SOURCE_NETWORK = ipaddress.ip_network('35.235.240.0/20')
@@ -44,15 +45,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       if instance.is_windows_machine():
         port = VERIFY_PORTS['rdp']
       result = network.firewall.check_connectivity_ingress(
-          src_ip=IAP_SOURCE_NETWORK,
-          ip_protocol='tcp',
-          port=port,
-          target_service_account=instance.service_account,
-          target_tags=instance.tags)
+        src_ip=IAP_SOURCE_NETWORK,
+        ip_protocol='tcp',
+        port=port,
+        target_service_account=instance.service_account,
+        target_tags=instance.tags,
+      )
       if result.action == 'deny':
         report.add_failed(
-            instance,
-            (f'connections from {IAP_SOURCE_NETWORK} to tcp:{port} blocked by '
-             f'{result.matched_by_str} (instance: {instance.name})'))
+          instance,
+          (
+            f'connections from {IAP_SOURCE_NETWORK} to tcp:{port} blocked by '
+            f'{result.matched_by_str} (instance: {instance.name})'
+          ),
+        )
       else:
         report.add_ok(instance)

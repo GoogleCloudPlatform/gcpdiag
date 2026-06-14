@@ -18,6 +18,7 @@
 When creating a VPC connector it fails to create a subnet overlapping with
 the auto subnet networks in the range 10.128.0.0/9
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -32,10 +33,11 @@ LOG_ID = 'log_id("cloudaudit.googleapis.com/activity")'
 RESOURCE_TYPE = 'audited_resource'
 
 LOG_FILTER = [
-    f'severity={SEVERITY}', f'protoPayload.methodName="{METHOD_NAME}"',
-    f'protoPayload.serviceName="{SERVICE_NAME}"',
-    f'protoPayload.authenticationInfo.principalEmail="{PRINCIPAL_EMAIL}"',
-    f'"{MESSAGE}"'
+  f'severity={SEVERITY}',
+  f'protoPayload.methodName="{METHOD_NAME}"',
+  f'protoPayload.serviceName="{SERVICE_NAME}"',
+  f'protoPayload.authenticationInfo.principalEmail="{PRINCIPAL_EMAIL}"',
+  f'"{MESSAGE}"',
 ]
 
 logs_by_project = {}
@@ -43,10 +45,11 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type=RESOURCE_TYPE,
-      log_name=LOG_ID,
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type=RESOURCE_TYPE,
+    log_name=LOG_ID,
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -62,27 +65,26 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'vpc access api is disabled')
     return
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'ERROR' or \
-          METHOD_NAME not in get_path(log_entry,
-                     ('protoPayload', \
-                      'methodName'), default='') or \
-          SERVICE_NAME not in get_path(log_entry,
-                     ('protoPayload', \
-                      'serviceName'), default='') or \
-          PRINCIPAL_EMAIL not in get_path(log_entry,
-                     ('protoPayload', \
-                      'authenticationInfo', \
-                      'principalEmail'), default='') or \
-          MESSAGE not in log_entry:
+      if (
+        log_entry['severity'] != 'ERROR'
+        or METHOD_NAME not in get_path(log_entry, ('protoPayload', 'methodName'), default='')
+        or SERVICE_NAME not in get_path(log_entry, ('protoPayload', 'serviceName'), default='')
+        or PRINCIPAL_EMAIL
+        not in get_path(
+          log_entry, ('protoPayload', 'authenticationInfo', 'principalEmail'), default=''
+        )
+        or MESSAGE not in log_entry
+      ):
         continue
       report.add_failed(
-          project, 'There may have been a failed VPC \
+        project,
+        'There may have been a failed VPC \
             connector creation issue on App Engine due to overlapping subnetworks \
-              in the range 10.128.0.0/9 [auto-subnetworks]')
+              in the range 10.128.0.0/9 [auto-subnetworks]',
+      )
       return
 
   # in case of there is no log or all logs are non-relevant

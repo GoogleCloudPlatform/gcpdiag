@@ -23,12 +23,12 @@ from gcpdiag.queries import crm, gke, iam
 
 # defining permissions
 PERMISSIONS = [
-    'compute.firewalls.create',
-    'compute.firewalls.delete',
-    'compute.firewalls.get',
-    'compute.firewalls.list',
-    'compute.firewalls.update',
-    'compute.networks.updatePolicy',
+  'compute.firewalls.create',
+  'compute.firewalls.delete',
+  'compute.firewalls.get',
+  'compute.firewalls.list',
+  'compute.firewalls.update',
+  'compute.networks.updatePolicy',
 ]
 
 
@@ -46,10 +46,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if c.project_id != c.network.project_id:
       # shared vpc
       p = c.network.project_id
-    sa = (f'serviceAccount:service-{project.number}'
-          '@container-engine-robot.iam.gserviceaccount.com')
+    sa = f'serviceAccount:service-{project.number}@container-engine-robot.iam.gserviceaccount.com'
     # get iam policy
-    iam_policy = iam.get_project_policy(p)
+    iam_policy = iam.get_project_policy(context.copy_with(project_id=p))
     failed = False
     missing = []
     for permission in PERMISSIONS:
@@ -57,8 +56,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         failed = True
         missing.append(permission)
     if failed:
-      report.add_failed(c, (f'service account: {sa}\n'
-                            f'VPC network: {c.network.short_path}\n'
-                            f"missing permissions: {','.join(missing)})"))
+      report.add_failed(
+        c,
+        (
+          f'service account: {sa}\n'
+          f'VPC network: {c.network.short_path}\n'
+          f'missing permissions: {",".join(missing)})'
+        ),
+      )
     else:
       report.add_ok(c)

@@ -24,29 +24,27 @@ ROLE = 'roles/dataproc.serviceAgent'
 ALT_ROLE = 'roles/editor'
 
 
-def run_rule(context: models.Context,
-             report: lint.LintReportRuleInterface) -> None:
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   project = crm.get_project(context.project_id)
 
   if not dataproc.get_clusters(context):
     report.add_skipped(project, 'no dataproc clusters found')
     return
 
-  policy = iam.get_project_policy(context.project_id)
+  policy = iam.get_project_policy(context)
   dp_sa = f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com'
   alt_sa = f'{project.number}@cloudservices.gserviceaccount.com'
 
-  if iam.is_service_account_existing(dp_sa, context.project_id):
+  if iam.is_service_account_existing(dp_sa, context):
     if policy.has_role_permissions(f'serviceAccount:{dp_sa}', ROLE):
       report.add_ok(project)
     else:
-      report.add_failed(project, (f'service account: {dp_sa}\n'
-                                  f'missing role: {ROLE}'))
+      report.add_failed(project, (f'service account: {dp_sa}\nmissing role: {ROLE}'))
   else:
     if any(
-        policy.has_role_permissions(f'serviceAccount:{alt_sa}', ROLE) or
-        policy.has_role_permissions(f'serviceAccount:{alt_sa}', ALT_ROLE)):
+      policy.has_role_permissions(f'serviceAccount:{alt_sa}', ROLE)
+      or policy.has_role_permissions(f'serviceAccount:{alt_sa}', ALT_ROLE)
+    ):
       report.add_ok(project)
     else:
-      report.add_failed(project, (f'service account: {alt_sa}\n'
-                                  f'missing role: {ROLE}'))
+      report.add_failed(project, (f'service account: {alt_sa}\nmissing role: {ROLE}'))

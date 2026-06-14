@@ -18,8 +18,6 @@ Instead of doing real API calls, we return test JSON data.
 
 from gcpdiag.queries import apis_stub
 
-#pylint: disable=unused-argument
-
 
 class CloudSQLApiStub:
   """Mock object to simulate CloudSQL api calls."""
@@ -27,6 +25,5 @@ class CloudSQLApiStub:
   def instances(self):
     return self
 
-  # pylint: disable=invalid-name
   def list(self, project):
     return apis_stub.RestCallStub(project, 'cloudsql-instances', default={})

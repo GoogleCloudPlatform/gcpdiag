@@ -33,37 +33,40 @@ COMPUTE_NETWORK_VIEWER_ROLE = 'roles/compute.networkViewer'
 
 
 def validate_iam_roles(
-    service_account: str,
-    service_account_name: str,
-    host_project: str,
-    host_iam_policy: iam.BaseIAMPolicy,
-    cluster: dataproc.Cluster,
-    report: lint.LintReportRuleInterface,
-    master_vm: gce.Instance,
+  context: models.Context,
+  service_account: str,
+  service_account_name: str,
+  host_project: str,
+  host_iam_policy: iam.BaseIAMPolicy,
+  cluster: dataproc.Cluster,
+  report: lint.LintReportRuleInterface,
+  master_vm: gce.Instance,
 ) -> bool:
   # Project Level Check
   sa_has_net_user = host_iam_policy.has_role_permissions(
-      f'serviceAccount:{service_account}', COMPUTE_NETWORK_USER_ROLE)
+    f'serviceAccount:{service_account}', COMPUTE_NETWORK_USER_ROLE
+  )
 
   # Subnet level check
   if not sa_has_net_user:
     for subnet in master_vm.subnetworks:
       if subnet.region == cluster.region:
-        subnet_iam_policy = network.get_subnetwork_iam_policy(
-            host_project, subnet.region, subnet.name)
+        subnet_iam_policy = network.get_subnetwork_iam_policy(context, subnet.region, subnet.name)
         sa_has_net_user = subnet_iam_policy.has_role_permissions(
-            f'serviceAccount:{service_account}',
-            COMPUTE_NETWORK_USER_ROLE,
+          f'serviceAccount:{service_account}',
+          COMPUTE_NETWORK_USER_ROLE,
         )
         if sa_has_net_user:
           return True
 
       if not sa_has_net_user:
         report.add_failed(
-            cluster,
-            (f'{service_account_name} {service_account} '
-             f'missing {COMPUTE_NETWORK_USER_ROLE} IAM role '
-             f'in host project {host_project}'),
+          cluster,
+          (
+            f'{service_account_name} {service_account} '
+            f'missing {COMPUTE_NETWORK_USER_ROLE} IAM role '
+            f'in host project {host_project}'
+          ),
         )
         return False
 
@@ -80,46 +83,47 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'No Clusters Found')
 
   service_project = crm.get_project(context.project_id)
-  dataproc_service_agent = (f'service-{service_project.number}'
-                            '@dataproc-accounts.iam.gserviceaccount.com')
+  dataproc_service_agent = (
+    f'service-{service_project.number}@dataproc-accounts.iam.gserviceaccount.com'
+  )
 
   for cluster in clusters:
     if cluster.is_gce_cluster:
       cluster_network = cluster.gce_network_uri
-      host_project = str(
-          str(cluster_network).rsplit('/projects/',
-                                      maxsplit=1)[1]).rsplit('/global/networks',
-                                                             maxsplit=1)[0]
+      host_project = str(str(cluster_network).rsplit('/projects/', maxsplit=1)[1]).rsplit(
+        '/global/networks', maxsplit=1
+      )[0]
 
       no_shared_vpc = shared_vpc_check(host_project, context.project_id)
       if not no_shared_vpc:
-        host_iam_policy = iam.get_project_policy(host_project)
         try:
           if cluster.is_ha_cluster:
             master_vm = gce.get_instance(
-                project_id=context.project_id,
-                zone=cluster.zone,
-                instance_name=f'{cluster.name}-m-0',
+              project_id=context.project_id,
+              zone=cluster.zone,
+              instance_name=f'{cluster.name}-m-0',
             )
           else:
             master_vm = gce.get_instance(
-                project_id=context.project_id,
-                zone=cluster.zone,
-                instance_name=f'{cluster.name}-m',
+              project_id=context.project_id,
+              zone=cluster.zone,
+              instance_name=f'{cluster.name}-m',
             )
-        except:  # pylint: disable=bare-except
-          report.add_skipped(
-              cluster, 'Master VM is not running. Not able to check Network')
+        except Exception:
+          report.add_skipped(cluster, 'Master VM is not running. Not able to check Network')
           continue
 
+        host_project_context = context.copy_with(project_id=host_project)
+        host_iam_policy = iam.get_project_policy(host_project_context)
         dataproc_sa_is_valid = validate_iam_roles(
-            dataproc_service_agent,
-            'Dataproc Service Agent service account',
-            host_project,
-            host_iam_policy,
-            cluster,
-            report,
-            master_vm,
+          host_project_context,
+          dataproc_service_agent,
+          'Dataproc Service Agent service account',
+          host_project,
+          host_iam_policy,
+          cluster,
+          report,
+          master_vm,
         )
         if dataproc_sa_is_valid:
           report.add_ok(cluster)

@@ -40,7 +40,6 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       utilization are being checked.
   
 [START]: Analyze unhealthy backends for backend service "web-backend-service" in scope "global".
-[INFO]: name: web-backend-service, region: global
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
      [REASON]
@@ -48,6 +47,17 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example has 2/2 unhealthy backends
 
+     The backend service web-backend-service uses the following health check: http-basic-check.
+
+     The health check is using HTTP protocol, and it is set to: 
+     - send a prober requests to the / path on port 80 
+     - expect a response with an HTTP 200 (OK) status code
+
+     The health check is configured with the following timing and threshold settings:
+     - **Check Interval:** A health check is performed every 5 seconds.
+     - **Timeout:** The prober will wait up to 5 seconds for a response.
+     - **Healthy Threshold:** It takes 2 consecutive successes for a backend to be considered healthy.
+     - **Unhealthy Threshold:** It takes 2 consecutive failures for a backend to be considered unhealthy.
 
 [GATEWAY]: Verify health check logging enabled for backend service "web-backend-service" in scope "global".
 
@@ -78,7 +88,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate the application's expected response time.
 
-     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. Your health check is using HTTP protocol, and it is set to: 
+     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. The health check is using HTTP protocol, and it is set to: 
      - send a prober requests to the / path on port 80 
      - expect a response with an HTTP 200 (OK) status code
 
@@ -107,13 +117,28 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      This configuration can be problematic unless the load balancer has been configured to use a different port for health checks purposefully.
 
      [REMEDIATION]
-     Verify that the health check port is correctly configured to match the port used by the application if the health check is intended to check the serving port.
+     1.  **Verify Intent:** Confirm if the health check port `88` is *meant* to be different from the serving port defined by "http" on the backends.
+
+     2.  **Test Port on Backend VMs:** Check if port `88` is listening on an instance from the affected groups. Run this command from your local machine/Cloud Shell:
+
+         ```bash
+         gcloud compute ssh [INSTANCE_NAME] --zone [ZONE] --project gcpdiag-lb2-aaaa --command="sudo ss -tlnp | grep ':88'"
+         ```
+         *   Output showing `LISTEN` indicates the port is open and your application is likely listening.
+         *   No output suggests the port is not in a listening state on that VM.
+
+     3.  **Adjust Configuration:**
+         *   **If Mismatch is Unintentional:** Align the load balancer's health check port in the backend service `projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service` to match the actual port number used by "http" in the instance groups.
+         *   **If Mismatch is Intentional:** Ensure your application on the VMs is correctly configured to listen on port `88`.
+         *   **If Port Not Listening:** Troubleshoot your application on the VM to ensure it's running and bound to port `88`. Check the VM's local firewall as well.
+
+     If the health check port `88` is meant to be different from the serving port (e.g., a dedicated management/health endpoint), confirm that your application is correctly configured to listen on the health check port.
 
 [AUTOMATED STEP]: Validate protocol configuration for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [OK]
      [REASON]
-     The load balancer is performing health checks using the same protocol (HTTP) used for serving traffic. This is the standard configuration.
+     The load balancer is performing health checks using the same protocol (HTTP) used for serving traffic on backend service projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service. This is the standard configuration.
 
 [AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "web-backend-service" in scope "global".
 
@@ -266,7 +291,6 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       utilization are being checked.
   
 [START]: Analyze unhealthy backends for backend service "backend-service-2" in scope "europe-west4".
-[INFO]: name: backend-service-2, region: europe-west4
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [FAIL]
      [REASON]
@@ -274,6 +298,17 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/networkEndpointGroups/neg1 has 1/1 unhealthy backends
 
+     The backend service backend-service-2 uses the following health check: tcp-basic-check-2.
+
+     The health check is using TCP protocol, and it is set to: 
+     - send a prober requests on port 80
+     - expect a successful TCP handshake
+
+     The health check is configured with the following timing and threshold settings:
+     - **Check Interval:** A health check is performed every 5 seconds.
+     - **Timeout:** The prober will wait up to 5 seconds for a response.
+     - **Healthy Threshold:** It takes 2 consecutive successes for a backend to be considered healthy.
+     - **Unhealthy Threshold:** It takes 2 consecutive failures for a backend to be considered unhealthy.
 
 [GATEWAY]: Verify health check logging enabled for backend service "backend-service-2" in scope "europe-west4".
 
@@ -304,7 +339,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate the application's expected response time.
 
-     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. Your health check is using TCP protocol, and it is set to: 
+     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. The health check is using TCP protocol, and it is set to: 
      - send a prober requests on port 80
      - expect a successful TCP handshake
 
@@ -322,15 +357,18 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
 [AUTOMATED STEP]: Validate port configuration for backend service "backend-service-2" in scope "europe-west4".
 
-   - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
+   - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]
      [REASON]
-     The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
+     Backend service "backend-service-2" is a external Passthrough Load Balancer. These load balancers forward traffic to backends without changing the destination port, so there isn't a single "serving port" on the load balancer itself. The health check probes are sent to the port defined directly in the HealthCheck resource. The associated health check "tcp-basic-check-2" is configured to use port 80.
+
+     [REMEDIATION]
+     Please ensure that the backend instances (VMs or endpoints) are configured to accept and respond to health check probes specifically on port 80. The application running on the backends must be actively listening on this port (80) for the health checks to succeed, regardless of the ports used for actual application traffic.
 
 [AUTOMATED STEP]: Validate protocol configuration for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
-     The load balancer is performing health checks using the same protocol (TCP) used for serving traffic. This is the standard configuration.
+     The load balancer is performing health checks using the same protocol (TCP) used for serving traffic on backend service projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2. This is the standard configuration.
 
 [AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "backend-service-2" in scope "europe-west4".
 

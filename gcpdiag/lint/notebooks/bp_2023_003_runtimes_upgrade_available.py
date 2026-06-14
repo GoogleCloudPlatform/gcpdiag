@@ -17,6 +17,7 @@ Maintaining runtimes up to date is generally beneficial thanks to new
 capabilities, framework updates, package updates, and bug fixes that have been
 implemented in newer versions of your environment.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, notebooks
 

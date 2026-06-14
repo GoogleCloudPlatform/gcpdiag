@@ -15,11 +15,10 @@
 
 Instead of doing real API calls, we return test JSON data.
 """
+
 import re
 
 from gcpdiag.queries import apis_stub
-
-#pylint: disable=unused-argument
 
 
 class CloudAssetApiStub(apis_stub.ApiStub):
@@ -28,7 +27,6 @@ class CloudAssetApiStub(apis_stub.ApiStub):
   def v1(self):
     return self
 
-  # pylint: disable=invalid-name
   def searchAllResources(self, scope, assetTypes=None, query=None):
     project_id_match = re.match(r'projects/([^/]*)', scope)
     if not project_id_match:
@@ -39,5 +37,4 @@ class CloudAssetApiStub(apis_stub.ApiStub):
     if not location_match:
       raise RuntimeError(f"Can't parse query {query}")
     location = location_match.group(1)
-    return apis_stub.RestCallStub(project_id,
-                                  f'search-all-resources-{location}')
+    return apis_stub.RestCallStub(project_id, f'search-all-resources-{location}')

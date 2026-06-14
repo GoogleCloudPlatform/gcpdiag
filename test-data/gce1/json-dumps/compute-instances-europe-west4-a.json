@@ -51,6 +51,7 @@
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"
       },
+      "minCpuPlatform": "Intel Skylake",
       "name": "gce1",
       "networkInterfaces": [
         {
@@ -292,6 +293,7 @@
         ],
         "kind": "compute#metadata"
       },
+
       "name": "gce2",
       "networkInterfaces": [
         {

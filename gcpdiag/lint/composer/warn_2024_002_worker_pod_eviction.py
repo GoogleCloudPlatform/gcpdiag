@@ -34,8 +34,8 @@ def prefetch_rule(context: models.Context):
     return
 
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id,
-      """
+    context.project_id,
+    """
        fetch cloud_composer_environment
        | metric 'composer.googleapis.com/environment/worker/pod_eviction_count'
        | within 6h
@@ -47,7 +47,6 @@ def prefetch_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not apis.is_enabled(context.project_id, 'composer'):
     report.add_skipped(None, 'composer is disabled')
     return

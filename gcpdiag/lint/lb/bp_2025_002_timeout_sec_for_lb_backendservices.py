@@ -27,7 +27,6 @@ MAX_BACKENDSERVICES_TO_REPORT = 10
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   bs_list = lb.get_backend_services(context.project_id)
 
   # return if there are no BackendServices found in the project
@@ -38,13 +37,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for bs in bs_list:
     # fail for backend services where backend service timeout is greater than 24
     # hours for external application load balancers
-    if (bs.load_balancing_scheme in ('EXTERNAL_MANAGED', 'EXTERNAL') and
-        bs.timeout_sec > 86400):
+    if bs.load_balancing_scheme in ('EXTERNAL_MANAGED', 'EXTERNAL') and bs.timeout_sec > 86400:
       report.add_failed(bs)
 
     # pass for backend services with timeout less than 24 hours.
-    elif (bs.load_balancing_scheme in ('EXTERNAL_MANAGED', 'EXTERNAL') and
-          bs.timeout_sec < 86400):
+    elif bs.load_balancing_scheme in ('EXTERNAL_MANAGED', 'EXTERNAL') and bs.timeout_sec < 86400:
       report.add_ok(bs)
 
     else:

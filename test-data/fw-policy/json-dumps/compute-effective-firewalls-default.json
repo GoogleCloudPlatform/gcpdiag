@@ -600,6 +600,71 @@
           "direction": "INGRESS"
         }
       ]
+    },
+    {
+      "name": "test-sorting-policy-same-ip",
+      "type": "HIERARCHY",
+      "shortName": "test-sorting-same-ip-policy",
+      "displayName": "test-sorting-same-ip-policy",
+      "rules": [
+        {
+          "kind": "compute#firewallPolicyRule",
+          "description": "allow rule with priority 1000 and same src ip range",
+          "priority": 1000,
+          "match": {
+            "srcIpRanges": [
+              "10.104.0.1/32"
+            ],
+            "layer4Configs": [
+              {
+                "ipProtocol": "tcp",
+                "ports": [
+                  "80"
+                ]
+              }
+            ]
+          },
+          "action": "allow",
+          "direction": "INGRESS"
+        },
+        {
+          "kind": "compute#firewallPolicyRule",
+          "description": "deny rule with priority 1000 and same src ip range",
+          "priority": 1000,
+          "match": {
+            "srcIpRanges": [
+              "10.104.0.1/32"
+            ],
+            "layer4Configs": [
+              {
+                "ipProtocol": "tcp",
+                "ports": [
+                  "80"
+                ]
+              }
+            ]
+          },
+          "action": "deny",
+          "direction": "INGRESS"
+        },
+        {
+          "kind": "compute#firewallPolicyRule",
+          "description": "",
+          "priority": 2147483647,
+          "match": {
+            "srcIpRanges": [
+              "0.0.0.0/0"
+            ],
+            "layer4Configs": [
+              {
+                "ipProtocol": "all"
+              }
+            ]
+          },
+          "action": "goto_next",
+          "direction": "INGRESS"
+        }
+      ]
     }
   ]
 }

@@ -19,10 +19,20 @@ None
 The backend service {name} in the {region} scope has unhealthy backends.
 
 {detailed_reason}
+The backend service {name} uses the following health check: {hc_name}.
+
+{success_criteria}
+
+{timing_and_threshold}
 
 ### Success Reason
 
-All backends are healthy in backend service {name} in scope {region}.
+All backends are currently healthy in backend service {name} in scope {region}.
+
+### Uncertain Reason
+
+All backends are currently healthy in backend service {name} in scope {region}.
+However, health check logging is disabled, so recent unhealthy events could not be checked.
 
 
 

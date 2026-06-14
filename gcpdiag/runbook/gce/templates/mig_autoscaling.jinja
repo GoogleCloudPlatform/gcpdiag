@@ -1,0 +1,16 @@
+{% block policy_check_skipped_reason %}
+MIG could not be determined or found.
+{% endblock %}
+
+{% block policy_check_success_reason %}
+MIG {mig_name} property '{property_path}' with value '{actual_value}' meets condition: {operator} '{expected_value}'.
+{% endblock %}
+
+{% block policy_check_failure_reason %}
+MIG {mig_name} property '{property_path}' with value '{actual_value}' does not meet condition: {operator} '{expected_value}'.
+{% endblock %}
+
+{% block policy_check_failure_remediation %}
+Review the autoscaling policy for MIG {mig_name} and ensure it meets the required configuration.
+See: <https://cloud.google.com/compute/docs/reference/rest/v1/instanceGroupManagers>
+{% endblock %}

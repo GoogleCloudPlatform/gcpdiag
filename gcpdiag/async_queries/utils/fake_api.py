@@ -1,10 +1,12 @@
-'Testing double for gcpdiag.async_queries.api.API'
+"Testing double for gcpdiag.async_queries.api.API"
+
 from asyncio import sleep
 from typing import Any, List, Optional, Tuple
 
 
 class APICall:
-  'Helper class representing an API call'
+  "Helper class representing an API call"
+
   method: str
   url: str
   json: Any
@@ -23,7 +25,8 @@ class APICall:
 
 
 class FakeAPI:
-  'Testing double for gcpdiag.async_queries.api.API'
+  "Testing double for gcpdiag.async_queries.api.API"
+
   responses: List[Tuple[APICall, Any]]
   calls: List[APICall]
 
@@ -31,10 +34,7 @@ class FakeAPI:
     self.responses = responses
     self.calls = []
 
-  async def call(self,
-                 method: str,
-                 url: str,
-                 json: Optional[Any] = None) -> Any:
+  async def call(self, method: str, url: str, json: Optional[Any] = None) -> Any:
     call = APICall(method, url, json)
     await sleep(0)
     self.calls.append(call)

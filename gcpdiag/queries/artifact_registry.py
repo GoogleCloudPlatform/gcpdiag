@@ -13,17 +13,15 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP Artifact Registry
+"""Queries related to GCP Artifact Registry"""
 
-"""
 import dataclasses
 
-from gcpdiag import caching, config
+from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, iam
 
 
 class ArtifactRegistryIAMPolicy(iam.BaseIAMPolicy):
-
   def _is_resource_permission(self, permission):
     return True
 
@@ -34,22 +32,26 @@ class ProjectSettings:
 
 
 @caching.cached_api_call(in_memory=True)
-def get_registry_iam_policy(project_id: str, location: str,
-                            registry_name: str) -> ArtifactRegistryIAMPolicy:
+def get_registry_iam_policy(
+  context: models.Context, location: str, registry_name: str
+) -> ArtifactRegistryIAMPolicy:
+  project_id = context.project_id
   ar_api = apis.get_api('artifactregistry', 'v1', project_id)
   registry_id = 'projects/{}/locations/{}/repositories/{}'.format(
-      project_id, location, registry_name)
-  request = ar_api.projects().locations().repositories().getIamPolicy(
-      resource=registry_id)
-  return iam.fetch_iam_policy(request, ArtifactRegistryIAMPolicy, project_id,
-                              registry_id)
+    project_id, location, registry_name
+  )
+  request = ar_api.projects().locations().repositories().getIamPolicy(resource=registry_id)
+  return iam.fetch_iam_policy(request, ArtifactRegistryIAMPolicy, project_id, registry_id, context)
 
 
 @caching.cached_api_call(in_memory=True)
 def get_project_settings(project_id: str) -> ProjectSettings:
   ar_api = apis.get_api('artifactregistry', 'v1', project_id)
-  response = ar_api.projects().getProjectSettings(
-      name=f'projects/{project_id}/projectSettings').execute(
-          num_retries=config.API_RETRIES)
-  return ProjectSettings(legacy_redirect=response.get('legacyRedirectionState')
-                         == 'REDIRECTION_FROM_GCR_IO_ENABLED')
+  response = (
+    ar_api.projects()
+    .getProjectSettings(name=f'projects/{project_id}/projectSettings')
+    .execute(num_retries=config.API_RETRIES)
+  )
+  return ProjectSettings(
+    legacy_redirect=response.get('legacyRedirectionState') == 'REDIRECTION_FROM_GCR_IO_ENABLED'
+  )

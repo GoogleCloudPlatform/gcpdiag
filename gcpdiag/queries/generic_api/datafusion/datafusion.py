@@ -6,8 +6,7 @@ from gcpdiag.queries.generic_api.api_build import api
 class Datafusion(api.API):
   """Gateway for Datafusion service"""
 
-  def __init__(self, base_url: str, creds: api.Creds,
-               retry_strategy: api.RetryStrategy) -> None:
+  def __init__(self, base_url: str, creds: api.Creds, retry_strategy: api.RetryStrategy) -> None:
     super().__init__(base_url, creds, retry_strategy)
 
   def get_system_profiles(self):

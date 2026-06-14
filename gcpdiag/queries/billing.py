@@ -133,8 +133,7 @@ class CostInsights(models.Resource):
 
   @property
   def anomaly_type(self) -> str:
-    return 'Below' if self._resource_data['insightSubtype'] == \
-                         'COST_BELOW_FORECASTED' else 'Above'
+    return 'Below' if self._resource_data['insightSubtype'] == 'COST_BELOW_FORECASTED' else 'Above'
 
   def is_anomaly(self) -> bool:
     if 'description' in self._resource_data.keys():
@@ -142,11 +141,23 @@ class CostInsights(models.Resource):
     return False
 
   def build_anomaly_description(self):
-    return self.description + '\nCost ' + self.anomaly_type + \
-           ' forecast, Forecasted: ' + self.forecasted_units + \
-           ' ' + self.forecasted_currency + ', Actual: ' + \
-           self.actual_units + ' ' + self.actual_currency + \
-           '\nAnomaly Period From: ' + self.start_time + ', To: ' + self.end_time
+    return (
+      self.description
+      + '\nCost '
+      + self.anomaly_type
+      + ' forecast, Forecasted: '
+      + self.forecasted_units
+      + ' '
+      + self.forecasted_currency
+      + ', Actual: '
+      + self.actual_units
+      + ' '
+      + self.actual_currency
+      + '\nAnomaly Period From: '
+      + self.start_time
+      + ', To: '
+      + self.end_time
+    )
 
   def __init__(self, project_id, resource_data):
     super().__init__(project_id=project_id)
@@ -177,15 +188,13 @@ def get_billing_account(project_id: str) -> Optional[BillingAccount]:
     return None
 
   billing_account_api = apis.get_api('cloudbilling', 'v1', project_id)
-  query = billing_account_api.billingAccounts().get(
-      name=billing_info.billing_account_name)
+  query = billing_account_api.billingAccounts().get(name=billing_info.billing_account_name)
   logging.debug('fetching Billing Account for project %s', project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as error:
     e = utils.GcpApiError(error)
-    if ('The caller does not have permission'
-        in e.message) or ('PERMISSION_DENIED' in e.reason):
+    if ('The caller does not have permission' in e.message) or ('PERMISSION_DENIED' in e.reason):
       # billing rules cannot be tested without permissions on billing account
       return None
     else:
@@ -203,13 +212,13 @@ def get_all_billing_accounts(project_id: str) -> Optional[List[BillingAccount]]:
 
   try:
     for account in apis_utils.list_all(
-        request=api.billingAccounts().list(),
-        next_function=api.billingAccounts().list_next,
-        response_keyword='billingAccounts'):
+      request=api.billingAccounts().list(),
+      next_function=api.billingAccounts().list_next,
+      response_keyword='billingAccounts',
+    ):
       accounts.append(BillingAccount(project_id, account))
   except utils.GcpApiError as e:
-    if ('The caller does not have permission'
-        in e.message) or ('PERMISSION_DENIED' in e.reason):
+    if ('The caller does not have permission' in e.message) or ('PERMISSION_DENIED' in e.reason):
       # billing rules cannot be tested without permissions on billing account
       return None
     else:
@@ -219,36 +228,39 @@ def get_all_billing_accounts(project_id: str) -> Optional[List[BillingAccount]]:
 
 @caching.cached_api_call
 def get_all_projects_in_billing_account(
-    context: models.Context,
-    billing_account_name: str) -> List[ProjectBillingInfo]:
+  context: models.Context, billing_account_name: str
+) -> List[ProjectBillingInfo]:
   """Get all projects associated with the Billing Account that current user has
   permission to view"""
   projects = []
   api = apis.get_api('cloudbilling', API_VERSION, context.project_id)
 
   for p in apis_utils.list_all(
-      request=api.billingAccounts().projects().list(name=billing_account_name,),
-      next_function=api.billingAccounts().projects().list_next,
-      response_keyword='projectBillingInfo'):
+    request=api.billingAccounts()
+    .projects()
+    .list(
+      name=billing_account_name,
+    ),
+    next_function=api.billingAccounts().projects().list_next,
+    response_keyword='projectBillingInfo',
+  ):
     try:
       crm_api = apis.get_api('cloudresourcemanager', 'v3', p['projectId'])
-      p_name = 'projects/' + p['projectId'] if 'projects/' not in p[
-          'projectId'] else p['projectId']
+      p_name = 'projects/' + p['projectId'] if 'projects/' not in p['projectId'] else p['projectId']
       request = crm_api.projects().get(name=p_name)
       response = request.execute(num_retries=config.API_RETRIES)
       projects.append(ProjectBillingInfo(response['projectId'], p))
     except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
       if isinstance(error, googleapiclient.errors.HttpError):
         error = utils.GcpApiError(error)
-      if error.reason in [
-          'IAM_PERMISSION_DENIED', 'USER_PROJECT_DENIED', 'SERVICE_DISABLED'
-      ]:
+      if error.reason in ['IAM_PERMISSION_DENIED', 'USER_PROJECT_DENIED', 'SERVICE_DISABLED']:
         # skip projects that user does not have permissions on
         continue
       else:
         print(
-            f'[ERROR]: An Http Error occurred whiles accessing projects.get \n\n{error}',
-            file=sys.stderr)
+          f'[ERROR]: An Http Error occurred whiles accessing projects.get \n\n{error}',
+          file=sys.stderr,
+        )
       raise error from error
   return projects
 
@@ -268,10 +280,9 @@ def get_cost_insights_for_a_project(project_id: str):
   insight_name = billing_account.name + '/locations/global/insightTypes/google.billing.CostInsight'
   insights = []
   for insight in apis_utils.list_all(
-      request=api.billingAccounts().locations().insightTypes().insights().list(
-          parent=insight_name),
-      next_function=api.billingAccounts().locations().insightTypes().insights(
-      ).list_next,
-      response_keyword='insights'):
+    request=api.billingAccounts().locations().insightTypes().insights().list(parent=insight_name),
+    next_function=api.billingAccounts().locations().insightTypes().insights().list_next,
+    response_keyword='insights',
+  ):
     insights.append(CostInsights(project_id, insight))
   return insights

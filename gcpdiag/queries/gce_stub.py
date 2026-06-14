@@ -17,12 +17,10 @@
 
 Instead of doing real API calls, we return test JSON data.
 """
+
 import json
 
-from gcpdiag.queries import apis_stub, interconnect_stub, lb_stub, network_stub
-
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
+from gcpdiag.queries import apis_stub, interconnect_stub, lb_stub, network_stub, vpn_stub
 
 
 class ComputeEngineApiStub(apis_stub.ApiStub):
@@ -59,9 +57,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     # TODO: implement fields filtering
     if self.mock_state in ['igs', 'instances', 'disks', 'negs']:
       return apis_stub.RestCallStub(
-          project,
-          f'compute-{self.mock_state}-{zone}',
-          default=f'compute-{self.mock_state}-empty',
+        project,
+        f'compute-{self.mock_state}-{zone}',
+        default=f'compute-{self.mock_state}-empty',
       )
     elif self.mock_state in ['regions', 'templates', 'zones']:
       return apis_stub.RestCallStub(project, f'compute-{self.mock_state}')
@@ -71,40 +69,37 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
       raise RuntimeError(f"can't list for mock state {self.mock_state}")
 
   def aggregatedList(
-      self,
-      project,
-      filter=None,  # pylint:disable=redefined-builtin
-      returnPartialSuccess=None,
-      orderBy=None,
-      maxResults=None,
-      serviceProjectNumber=None,
+    self,
+    project,
+    filter=None,
+    returnPartialSuccess=None,
+    orderBy=None,
+    maxResults=None,
+    serviceProjectNumber=None,
   ):
     if self.mock_state == 'projects':
       return apis_stub.RestCallStub(project, 'compute-project')
     elif self.mock_state == 'globalOperations':
       return apis_stub.RestCallStub(project, 'global-operations')
     else:
-      return apis_stub.RestCallStub(project,
-                                    f'compute-{self.mock_state}-aggregated')
+      return apis_stub.RestCallStub(project, f'compute-{self.mock_state}-aggregated')
 
   def aggregatedList_next(self, previous_request, previous_response):
-    if isinstance(previous_response,
-                  dict) and previous_response.get('nextPageToken'):
+    if isinstance(previous_response, dict) and previous_response.get('nextPageToken'):
       return apis_stub.RestCallStub(
-          project_id=previous_request.project_id,
-          json_basename=previous_request.json_basename,
-          page=previous_request.page + 1,
+        project_id=previous_request.project_id,
+        json_basename=previous_request.json_basename,
+        page=previous_request.page + 1,
       )
     else:
       return None
 
   def list_next(self, previous_request, previous_response):
-    if isinstance(previous_response,
-                  dict) and previous_response.get('nextPageToken'):
+    if isinstance(previous_response, dict) and previous_response.get('nextPageToken'):
       return apis_stub.RestCallStub(
-          project_id=previous_request.project_id,
-          json_basename=previous_request.json_basename,
-          page=previous_request.page + 1,
+        project_id=previous_request.project_id,
+        json_basename=previous_request.json_basename,
+        page=previous_request.page + 1,
       )
     else:
       return None
@@ -132,8 +127,8 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def getSerialPortOutput(self, project, zone, instance, start):
     return apis_stub.RestCallStub(
-        project_id=project,
-        json_basename=f'compute-serial-port-output-{instance}',
+      project_id=project,
+      json_basename=f'compute-serial-port-output-{instance}',
     )
 
   def networkEndpointGroups(self):
@@ -167,8 +162,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
         self.disk = disk
         return self
       else:
-        return apis_stub.RestCallStub(project,
-                                      f'compute-instances-disks-{zone}')
+        return apis_stub.RestCallStub(project, f'compute-instances-disks-{zone}')
 
   def projects(self):
     return ComputeEngineApiStub('projects')
@@ -224,10 +218,12 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def interconnectAttachments(self):
     return interconnect_stub.VlanAttachmentApiStub(mock_state='vlan_attachment')
 
+  def vpnTunnels(self):
+    return vpn_stub.VpnTunnelApiStub('vpnTunnels')
+
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project)
-    with open(json_dir / f'compute-instances-{self.zone}.json',
-              encoding='utf-8') as json_file:
+    with open(json_dir / f'compute-instances-{self.zone}.json', encoding='utf-8') as json_file:
       instances = json.load(json_file)['items']
       # get instance
       if self.mock_state == 'instance':
@@ -247,16 +243,15 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
               return interfaces
       elif self.mock_state == 'disk':
         with open(
-            json_dir / f'compute-instances-disks-{self.zone}.json',
-            encoding='utf-8',
+          json_dir / f'compute-instances-disks-{self.zone}.json',
+          encoding='utf-8',
         ) as json_file:
           disks = json.load(json_file)['items']
           for disk in disks:
             if disk['name'] == self.disk:
               return disk
       else:
-        raise ValueError(
-            f"can't call this method here (mock_state: {self.mock_state}")
+        raise ValueError(f"can't call this method here (mock_state: {self.mock_state}")
 
   def getEffectiveFirewalls(self, project, zone, instance, networkInterface):
     self.mock_state = 'effective_firewalls'
@@ -271,32 +266,55 @@ class InstanceGroupManagersApiStub(ComputeEngineApiStub):
   """Mock object to simulate zonal instance group managers api calls"""
 
   def list(self, project, zone=None):
-    return apis_stub.RestCallStub(project,
-                                  f'compute-migs-{zone}',
-                                  default='compute-migs-empty')
+    return apis_stub.RestCallStub(project, f'compute-migs-{zone}', default='compute-migs-empty')
 
   def aggregatedList(self, project, returnPartialSuccess=True):
     return apis_stub.RestCallStub(project, 'compute-migs-aggregated')
 
   def aggregatedList_next(self, previous_request, previous_response):
-    if isinstance(previous_response,
-                  dict) and previous_response.get('nextPageToken'):
+    if isinstance(previous_response, dict) and previous_response.get('nextPageToken'):
       return apis_stub.RestCallStub(
-          project_id=previous_request.project_id,
-          json_basename=previous_request.json_basename,
-          page=previous_request.page + 1,
+        project_id=previous_request.project_id,
+        json_basename=previous_request.json_basename,
+        page=previous_request.page + 1,
       )
     else:
       return None
+
+  def get(self, project, zone=None, instanceGroupManager=None):
+    if instanceGroupManager:
+      self.instance_group_manager = instanceGroupManager
+      self.project = project
+      self.zone = zone
+      return self
+    else:
+      raise ValueError('missing instanceGroupManager')
+
+  def execute(self, num_retries=0):
+    json_dir = apis_stub.get_json_dir(self.project)
+    with open(json_dir / f'compute-migs-{self.zone}.json', encoding='utf-8') as json_file:
+      migs = json.load(json_file)
+      if 'items' in migs:
+        for mig in migs['items']:
+          if mig['name'] == self.instance_group_manager:
+            return mig
+    # fallback to aggregated list
+    with open(json_dir / 'compute-migs-aggregated.json', encoding='utf-8') as json_file:
+      migs_by_zone = json.load(json_file)['items']
+      for zone_migs in migs_by_zone.values():
+        if 'instanceGroupManagers' not in zone_migs:
+          continue
+        for mig in zone_migs['instanceGroupManagers']:
+          if mig['name'] == self.instance_group_manager:
+            return mig
+    raise ValueError(f'instanceGroupManager {self.instance_group_manager} not found')
 
 
 class RegionInstanceGroupManagersApiStub(ComputeEngineApiStub):
   """Mock object to simulate regional instance group managers api calls"""
 
   def list(self, project, region=None):
-    return apis_stub.RestCallStub(project,
-                                  f'compute-migs-{region}',
-                                  default='compute-migs-empty')
+    return apis_stub.RestCallStub(project, f'compute-migs-{region}', default='compute-migs-empty')
 
 
 class HealthCheckApiStub:
@@ -305,7 +323,6 @@ class HealthCheckApiStub:
   def __init__(self, mock_state):
     self.mock_state = mock_state
 
-  # pylint: disable=redefined-builtin
   def list(self, project, region=None):
     if self.mock_state == 'healthChecks':
       return apis_stub.RestCallStub(project, 'lb-health-checks')
@@ -336,7 +353,6 @@ class HealthCheckApiStub:
           if health_check['name'] == self.health_check:
             return health_check
           else:
-            raise ValueError(
-                f'the health check {self.health_check} is not found')
+            raise ValueError(f'the health check {self.health_check} is not found')
       else:
         raise ValueError(f'cannot call method {self.mock_state} here')

@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Flags used in the VPC runbook"""
-# pylint: disable=unused-wildcard-import, wildcard-import
 
 from gcpdiag.runbook.flags import *
+from gcpdiag.runbook.gcp.flags import *
 
 PROJECT_ID = 'project_id'
 PROJECT_NUMBER = 'project_number'

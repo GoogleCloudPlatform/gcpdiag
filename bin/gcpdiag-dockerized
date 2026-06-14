@@ -9,6 +9,7 @@ CONFIG_FILE=""
 AUTH_KEY=""
 TEST_RELEASE=""
 REPORT_DIR=""
+BUNDLE_SPEC_FILE=""
 # Array to hold arguments intended for the gcpdiag command
 declare -a gcpdiag_args=()
 
@@ -50,6 +51,16 @@ while [[ $# -gt 0 ]]; do
       ;;
     --report-dir)
       REPORT_DIR="$2"
+      gcpdiag_args+=("$1" "$2")
+      shift 2 # consume flag
+      ;;
+    --bundle-spec=*)
+      BUNDLE_SPEC_FILE="${1#*=}"
+      gcpdiag_args+=("$1")
+      shift # consume argument
+      ;;
+    --bundle-spec)
+      BUNDLE_SPEC_FILE="$2"
       gcpdiag_args+=("$1" "$2")
       shift 2 # consume flag
       ;;
@@ -102,29 +113,41 @@ version_ge () {
   return 0  # V1 >= V2
 }
 
-# Test whether 1st arg (file) was provided and exists, then prepare mount path
-# that will be used inside container with the same path if absolute path was used
-# or inside root folder if relative path was used.
+# Test whether a file was provided and exists, then prepare its mount path
+# and update its path in gcpdiag_args for the container context.
+# The mount path is returned via the global variable MOUNT_RESULT.
 handle_mount_path () {
   local FILE="$1"
-  local MOUNT=""
+  MOUNT_RESULT=""
+
   if [ -n "$FILE" ]; then
     if [ -f "$FILE" ]; then
       if [[ "$FILE" = /* ]]; then
         # absolute path shall be mounted as is
-        MOUNT="-v $FILE:$FILE"
+        MOUNT_RESULT="-v $FILE:$FILE"
       else
         # local path need to be mounted inside root folder
-        MOUNT="-v $PWD/$FILE:/$FILE"
+        MOUNT_RESULT="-v $PWD/$FILE:/$FILE"
+        # We also need to update the path in gcpdiag_args to be absolute
+        # so the container finds it at /<file>
+        for i in "${!gcpdiag_args[@]}"; do
+          if [[ "${gcpdiag_args[$i]}" == "$FILE" ]]; then
+            gcpdiag_args[$i]="/$FILE"
+            break
+          # Handle --arg=file case, ensuring we match the exact value
+          elif [[ "${gcpdiag_args[$i]}" == *"=$FILE" ]]; then
+            gcpdiag_args[$i]="${gcpdiag_args[$i]%%$FILE*}/$FILE"
+            break
+          fi
+        done
       fi
-      echo "$MOUNT"
     else
       return 1
     fi
   fi
+  # Success
   return 0
 }
-
 # Test whether 1st arg (abs path to mount) was provided and exists, then prepare mount path
 # If no custom mount point was provided, create and mount the DEFAULT_OUTPUT_DIR
 # that will be used inside container with the same path
@@ -195,39 +218,55 @@ fi
 
 # Prepare config file mount
 CONFIG_MOUNT=""
+MOUNT_RESULT=""
 if [ -n "$CONFIG_FILE" ]; then
-    if ! CONFIG_MOUNT=$(handle_mount_path "$CONFIG_FILE"); then
+    if ! handle_mount_path "$CONFIG_FILE"; then
         echo >&2 # Print errors to stderr
         echo >&2 "## ERROR:"
         echo >&2 "## Configuration file: '$CONFIG_FILE' does not exist or is not a regular file!"
         echo >&2
         exit 1
     fi
+    CONFIG_MOUNT=$MOUNT_RESULT
 fi
-
 # Prepare auth key mount
 AUTH_KEY_MOUNT=""
+MOUNT_RESULT=""
 if [ -n "$AUTH_KEY" ]; then
-    if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
+    if ! handle_mount_path "$AUTH_KEY"; then
         echo >&2 # Print errors to stderr
         echo >&2 "## ERROR:"
         echo >&2 "## Authentication key file: '$AUTH_KEY' does not exist or is not a regular file!"
         echo >&2
         exit 1
     fi
+    AUTH_KEY_MOUNT=$MOUNT_RESULT
 fi
 
-# Execute the container
+BUNDLE_SPEC_MOUNT=""
+MOUNT_RESULT=""
+if [ -n "$BUNDLE_SPEC_FILE" ]; then
+    if ! handle_mount_path "$BUNDLE_SPEC_FILE"; then
+        echo >&2 # Print errors to stderr
+        echo >&2 "## ERROR:"
+        echo >&2 "## Bundle spec file: '$BUNDLE_SPEC_FILE' does not exist or is not a regular file!"
+        echo >&2
+        exit 1
+    fi
+    BUNDLE_SPEC_MOUNT=$MOUNT_RESULT
+fi
+
+# Prepare report dir mount
 if ! REPORT_DIR_MOUNT=$(handle_mount_dir "$REPORT_DIR"); then
-    echo
-    echo "## ERROR:"
-    echo "## Error creating report dir: $REPORT_DIR"
-    echo
-    exit 1
+  echo >&2
+  echo >&2 "## ERROR:"
+  echo >&2 "## Error creating report dir: $REPORT_DIR"
+  echo >&2
+  exit 1
 fi
 
 # shellcheck disable=SC2086
-exec "$RUNTIME" run $USE_TTY \
+exec "$RUNTIME" run --rm $USE_TTY \
   --rm \
   -u "$(id -u):$(id -g)" \
   -e "USER=$(id -n -u)" \
@@ -238,5 +277,6 @@ exec "$RUNTIME" run $USE_TTY \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
   $CONFIG_MOUNT \
   $AUTH_KEY_MOUNT \
+  $BUNDLE_SPEC_MOUNT \
   $REPORT_DIR_MOUNT \
   "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag "${gcpdiag_args[@]}"

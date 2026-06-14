@@ -33,8 +33,7 @@ ROLE_OBJECT_CREATOR = 'roles/storage.objectCreator'
 
 def prefetch_rule(context: models.Context):
   """Collect project & unique bucket policies."""
-  policies['projects'][context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policies['projects'][context.project_id] = iam.get_project_policy(context)
 
   gcs_subscription_buckets = set()
   subscriptions = pubsub.get_subscriptions(context)
@@ -46,8 +45,7 @@ def prefetch_rule(context: models.Context):
 
   if gcs_subscription_buckets:
     for bucket in gcs_subscription_buckets:
-      policies['buckets'][bucket] = gcs.get_bucket_iam_policy(
-          context.project_id, bucket)
+      policies['buckets'][bucket] = gcs.get_bucket_iam_policy(context, bucket)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -59,26 +57,25 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not policies['buckets']:
     report.add_skipped(None, 'no GCS subscriptions found')
   else:
-    service_account_re = re.compile('serviceAccount:service-' +
-                                    str(project_nr) +
-                                    '@gcp-sa-pubsub.iam.gserviceaccount.com')
+    service_account_re = re.compile(
+      'serviceAccount:service-' + str(project_nr) + '@gcp-sa-pubsub.iam.gserviceaccount.com'
+    )
     member = next(
-        filter(
-            service_account_re.match,
-            policies['projects'][context.project_id].get_members(),
-        ),
-        None,
+      filter(
+        service_account_re.match,
+        policies['projects'][context.project_id].get_members(),
+      ),
+      None,
     )
 
     if not member:
       report.add_failed(project, 'no Pub/Sub Service Account found')
     # Check at project level for role_gcs_storage_admin
     # and at bucket level for all(role_legacy_bucket_reader,role_object_creator)
-    elif not check_policy_project(context,
-                                  member) and not check_policy_buckets(member):
+    elif not check_policy_project(context, member) and not check_policy_buckets(member):
       report.add_failed(
-          project,
-          f'{member} does not have GCS subscription permissions for the role',
+        project,
+        f'{member} does not have GCS subscription permissions for the role',
       )
     else:
       report.add_ok(project)
@@ -87,7 +84,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 def check_policy_project(context, member) -> bool:
   """Check if a member is assigned the (one) apt role at project level."""
   if not policies['projects'][context.project_id].has_role_permissions(
-      member, ROLE_GCS_STORAGE_ADMIN):
+    member, ROLE_GCS_STORAGE_ADMIN
+  ):
     return False
   return True
 
@@ -96,8 +94,7 @@ def check_policy_buckets(member) -> bool:
   """Check if a member is assigned the (two) apt roles at bucket level."""
   for bucket_policy in policies['buckets'].values():
     if not bucket_policy.has_role_permissions(
-        member,
-        ROLE_LEGACY_BUCKET_READER) or not bucket_policy.has_role_permissions(
-            member, ROLE_OBJECT_CREATOR):
+      member, ROLE_LEGACY_BUCKET_READER
+    ) or not bucket_policy.has_role_permissions(member, ROLE_OBJECT_CREATOR):
       return False
   return True

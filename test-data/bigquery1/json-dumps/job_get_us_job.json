@@ -1,0 +1,15 @@
+{
+  "id": "gcpdiag-bigquery1-aaaa:us.test_no_error_message_in_job",
+  "status": {
+    "state": "DONE",
+    "errorResult": {
+      "message": null
+    },
+    "errors": []
+  },
+  "jobReference": {
+    "projectId": "gcpdiag-bigquery1-aaaa",
+    "jobId": "test_no_error_message_in_job",
+    "location": "us"
+  }
+}

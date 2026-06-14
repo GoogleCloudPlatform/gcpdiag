@@ -16,12 +16,12 @@ Performance best practices recommend configuring connection draining
 timeout to allow existing requests to complete when instances are removed
 from a backend service.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import lb
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   bs_list = lb.get_backend_services(context.project_id)
 
   # return if there are no BackendServices found in the project
@@ -31,34 +31,32 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Define load balancer types for which connection draining is applicable.
   proxy_lb_types = [
-      lb.LoadBalancerType.GLOBAL_EXTERNAL_PROXY_NETWORK_LB,
-      lb.LoadBalancerType.REGIONAL_INTERNAL_PROXY_NETWORK_LB,
-      lb.LoadBalancerType.REGIONAL_EXTERNAL_PROXY_NETWORK_LB,
-      lb.LoadBalancerType.CROSS_REGION_INTERNAL_PROXY_NETWORK_LB,
-      lb.LoadBalancerType.CLASSIC_PROXY_NETWORK_LB,
-      lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB,
-      lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB,
-      lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB,
-      lb.LoadBalancerType.CROSS_REGION_INTERNAL_APPLICATION_LB,
-      lb.LoadBalancerType.CLASSIC_APPLICATION_LB,
+    lb.LoadBalancerType.GLOBAL_EXTERNAL_PROXY_NETWORK_LB,
+    lb.LoadBalancerType.REGIONAL_INTERNAL_PROXY_NETWORK_LB,
+    lb.LoadBalancerType.REGIONAL_EXTERNAL_PROXY_NETWORK_LB,
+    lb.LoadBalancerType.CROSS_REGION_INTERNAL_PROXY_NETWORK_LB,
+    lb.LoadBalancerType.CLASSIC_PROXY_NETWORK_LB,
+    lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB,
+    lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB,
+    lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB,
+    lb.LoadBalancerType.CROSS_REGION_INTERNAL_APPLICATION_LB,
+    lb.LoadBalancerType.CLASSIC_APPLICATION_LB,
   ]
 
   for bs in bs_list:
     if bs.load_balancer_type in proxy_lb_types:
       if bs.draining_timeout_sec > 0:
         report.add_ok(
-            bs,
-            'Connection draining timeout is configured:'
-            f' {bs.draining_timeout_sec} seconds.',
+          bs,
+          f'Connection draining timeout is configured: {bs.draining_timeout_sec} seconds.',
         )
       else:
         report.add_failed(
-            bs,
-            'Connection draining timeout is not configured (set to 0 seconds).',
+          bs,
+          'Connection draining timeout is not configured (set to 0 seconds).',
         )
     else:
       report.add_skipped(
-          bs,
-          'Connection draining timeout not applicable to this load balancer'
-          ' type.',
+        bs,
+        'Connection draining timeout not applicable to this load balancer type.',
       )

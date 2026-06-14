@@ -30,8 +30,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for _, c in sorted(clusters.items()):
     if not c.has_logging_enabled():
       report.add_skipped(c, 'GKE logging is disabled')
-    elif c.has_logging_enabled() and \
-        not apis.is_enabled(context.project_id, 'logging'):
+    elif c.has_logging_enabled() and not apis.is_enabled(context.project_id, 'logging'):
       report.add_failed(c)
     else:
       report.add_ok(c)

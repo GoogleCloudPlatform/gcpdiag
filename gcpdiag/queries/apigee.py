@@ -25,14 +25,15 @@ from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, gce, network
 from gcpdiag.utils import GcpApiError
 
-MIG_STARTUP_SCRIPT_URL = \
-    'gs://apigee-5g-saas/apigee-envoy-proxy-release/latest/conf/startup-script.sh'
+MIG_STARTUP_SCRIPT_URL = (
+  'gs://apigee-5g-saas/apigee-envoy-proxy-release/latest/conf/startup-script.sh'
+)
 
 
 class ApigeeEnvironment(models.Resource):
   """Represents an Apigee Environment
-    https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations.environments#Environment
-    """
+  https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations.environments#Environment
+  """
 
   def __init__(self, apigee_org, env_name: str):
     super().__init__(project_id=apigee_org.project_id)
@@ -46,17 +47,15 @@ class ApigeeEnvironment(models.Resource):
 
 class ApigeeOrganization(models.Resource):
   """Represents an Apigee Organization
-    https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations#Organization
-    """
+  https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations#Organization
+  """
+
   _resource_data: Optional[dict]
   _environments: List[ApigeeEnvironment]
 
   # It is possible to create an Apigee organization resource in another GCP project,
   # set the resource_data as optional to avoid permission issues while accessing another GCP project
-  def __init__(self,
-               project_id: str,
-               org_name: str,
-               resource_data: Optional[dict] = None):
+  def __init__(self, project_id: str, org_name: str, resource_data: Optional[dict] = None):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
     self.name = org_name
@@ -70,10 +69,7 @@ class ApigeeOrganization(models.Resource):
     if self._resource_data is None:
       return []
 
-    return [
-        ApigeeEnvironment(self, env)
-        for env in self._resource_data.get('environments', [])
-    ]
+    return [ApigeeEnvironment(self, env) for env in self._resource_data.get('environments', [])]
 
   @property
   def runtime_type(self) -> str:
@@ -99,24 +95,32 @@ class ApigeeOrganization(models.Resource):
   def network(self) -> network.Network:
     if self.authorized_network:
       match = re.match(
-          r'projects/(?P<project>[^/]+)/([^/]+)/networks/(?P<network>[^/]+)$',
-          self.authorized_network)
+        r'projects/(?P<project>[^/]+)/([^/]+)/networks/(?P<network>[^/]+)$', self.authorized_network
+      )
       # Check whether the authorized network is a shared VPC network
       # A shared VPC network is using following format:
       # `projects/{host-project-id}/{region}/networks/{network-name}`
       if match:
-        return network.get_network(match.group('project'),
-                                   match.group('network'))
+        return network.get_network(
+          match.group('project'),
+          match.group('network'),
+          models.Context(project_id=match.group('project')),
+        )
       else:
-        return network.get_network(self.project_id, self.authorized_network)
+        return network.get_network(
+          self.project_id, self.authorized_network, models.Context(project_id=self.project_id)
+        )
 
-    return network.get_network(self.project_id, 'default')
+    return network.get_network(
+      self.project_id, 'default', models.Context(project_id=self.project_id)
+    )
 
 
 class EnvironmentGroup(models.Resource):
   """Represents an Apigee Environment Group
-    https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations.envgroups#resource:-environmentgroup
-    """
+  https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations.envgroups#resource:-environmentgroup
+  """
+
   _resource_data: dict
 
   def __init__(self, apigee_org: ApigeeOrganization, resource_data):
@@ -139,8 +143,9 @@ class EnvironmentGroup(models.Resource):
 
 class ApigeeInstance(models.Resource):
   """Represents an Apigee Runtime Instance
-    https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations.instances#Instance
-    """
+  https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations.instances#Instance
+  """
+
   _resource_data: dict
 
   def __init__(self, apigee_org: ApigeeOrganization, resource_data):
@@ -186,31 +191,27 @@ def get_org(context: models.Context) -> Optional[ApigeeOrganization]:
         raise RuntimeError('missing data in organizations.list response')
       if context.project_id == resp_o['projectId']:
         org_name = resp_o['organization']
-        get_org_query = apigee_api.organizations().get(
-            name=f'organizations/{org_name}')
+        get_org_query = apigee_api.organizations().get(name=f'organizations/{org_name}')
         get_org_resp = get_org_query.execute(num_retries=config.API_RETRIES)
-        return ApigeeOrganization(context.project_id, resp_o['organization'],
-                                  get_org_resp)
+        return ApigeeOrganization(context.project_id, resp_o['organization'], get_org_resp)
   except googleapiclient.errors.HttpError as err:
     raise GcpApiError(err) from err
   return None
 
 
 @caching.cached_api_call
-def get_envgroups(
-    apigee_org: ApigeeOrganization) -> Mapping[str, EnvironmentGroup]:
+def get_envgroups(apigee_org: ApigeeOrganization) -> Mapping[str, EnvironmentGroup]:
   """Get Environment group list by organization name, caching the result."""
   envgroups: Dict[str, EnvironmentGroup] = {}
   apigee_api = apis.get_api('apigee', 'v1')
 
-  request = apigee_api.organizations().envgroups().list(
-      parent=f'organizations/{apigee_org.name}')
+  request = apigee_api.organizations().envgroups().list(parent=f'organizations/{apigee_org.name}')
   for envgroup in apis_utils.list_all(
-      request,
-      next_function=apigee_api.organizations().envgroups().list_next,
-      response_keyword='environmentGroups'):
-    envgroups[envgroup['name']] = EnvironmentGroup(apigee_org=apigee_org,
-                                                   resource_data=envgroup)
+    request,
+    next_function=apigee_api.organizations().envgroups().list_next,
+    response_keyword='environmentGroups',
+  ):
+    envgroups[envgroup['name']] = EnvironmentGroup(apigee_org=apigee_org, resource_data=envgroup)
   return envgroups
 
 
@@ -220,20 +221,18 @@ def get_envgroups_attachments(envgroup_name: str) -> List[str]:
   environments: List[str] = []
   apigee_api = apis.get_api('apigee', 'v1')
 
-  request = apigee_api.organizations().envgroups().attachments().list(
-      parent=envgroup_name)
+  request = apigee_api.organizations().envgroups().attachments().list(parent=envgroup_name)
   for attachments in apis_utils.list_all(
-      request,
-      next_function=apigee_api.organizations().envgroups().attachments(
-      ).list_next,
-      response_keyword='environmentGroupAttachments'):
+    request,
+    next_function=apigee_api.organizations().envgroups().attachments().list_next,
+    response_keyword='environmentGroupAttachments',
+  ):
     environments.append(attachments['environment'])
   return environments
 
 
 @caching.cached_api_call
-def get_instances(
-    apigee_org: ApigeeOrganization) -> Mapping[str, ApigeeInstance]:
+def get_instances(apigee_org: ApigeeOrganization) -> Mapping[str, ApigeeInstance]:
   """Get instance list from Apigee Organization, caching the result."""
   instances: Dict[str, ApigeeInstance] = {}
   # Not supported for Apigee hybrid.
@@ -241,14 +240,13 @@ def get_instances(
     return instances
 
   apigee_api = apis.get_api('apigee', 'v1')
-  request = apigee_api.organizations().instances().list(
-      parent=f'organizations/{apigee_org.name}')
+  request = apigee_api.organizations().instances().list(parent=f'organizations/{apigee_org.name}')
   for instance in apis_utils.list_all(
-      request,
-      next_function=apigee_api.organizations().instances().list_next,
-      response_keyword='instances'):
-    instances[instance['name']] = ApigeeInstance(apigee_org=apigee_org,
-                                                 resource_data=instance)
+    request,
+    next_function=apigee_api.organizations().instances().list_next,
+    response_keyword='instances',
+  ):
+    instances[instance['name']] = ApigeeInstance(apigee_org=apigee_org, resource_data=instance)
   return instances
 
 
@@ -260,23 +258,21 @@ def get_instances_attachments(instance_name: str) -> List[str]:
     return environments
 
   apigee_api = apis.get_api('apigee', 'v1')
-  request = apigee_api.organizations().instances().attachments().list(
-      parent=instance_name)
-  for attachments in apis_utils.list_all(request,
-                                         next_function=apigee_api.organizations(
-                                         ).instances().attachments().list_next,
-                                         response_keyword='attachments'):
+  request = apigee_api.organizations().instances().attachments().list(parent=instance_name)
+  for attachments in apis_utils.list_all(
+    request,
+    next_function=apigee_api.organizations().instances().attachments().list_next,
+    response_keyword='attachments',
+  ):
     environments.append(attachments['environment'])
   return environments
 
 
 @functools.lru_cache()
-def get_network_bridge_instance_groups(
-    project_id: str) -> List[gce.ManagedInstanceGroup]:
+def get_network_bridge_instance_groups(project_id: str) -> List[gce.ManagedInstanceGroup]:
   """Get a list of managed instance groups used by Apigee for routing purposes."""
   migs: List[gce.ManagedInstanceGroup] = []
-  for m in gce.get_region_managed_instance_groups(
-      models.Context(project_id=project_id)).values():
+  for m in gce.get_region_managed_instance_groups(models.Context(project_id=project_id)).values():
     if m.template.get_metadata('startup-script-url') == MIG_STARTUP_SCRIPT_URL:
       migs.append(m)
   return migs

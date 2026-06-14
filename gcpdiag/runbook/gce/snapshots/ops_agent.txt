@@ -89,11 +89,6 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
-
-   - gcpdiag-gce3-aaaa                                                    [OK]
-     [REASON]
-     The constraints/compute.disableSerialPortLogging is not enforced.
-
 [AUTOMATED STEP]: Verify VM metadata value.
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [FAIL]
@@ -252,11 +247,6 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
-
-   - gcpdiag-gce3-aaaa                                                    [OK]
-     [REASON]
-     The constraints/compute.disableSerialPortLogging is not enforced.
-
 [AUTOMATED STEP]: Verify VM metadata value.
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [FAIL]
@@ -395,11 +385,6 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
-
-   - gcpdiag-gce3-aaaa                                                    [OK]
-     [REASON]
-     The constraints/compute.disableSerialPortLogging is not enforced.
-
 [AUTOMATED STEP]: Verify VM metadata value.
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]

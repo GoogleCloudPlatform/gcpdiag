@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Vertex AI Runbooks flags"""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.iam.flags import *
 
 INSTANCE_NAME = 'instance_name'

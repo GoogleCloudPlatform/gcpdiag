@@ -31,18 +31,16 @@ MATCH_STR1 = 'GETTING_PUBSUB_SUBSCRIPTION_FAILED'
 MATCH_STR2 = 'User not authorized to perform this action'
 
 # Criteria to filter for logs
-LOG_FILTER = [
-    'severity>=WARNING', f'textPayload=~("{MATCH_STR1}" AND "{MATCH_STR2}")'
-]
+LOG_FILTER = ['severity>=WARNING', f'textPayload=~("{MATCH_STR1}" AND "{MATCH_STR2}")']
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='dataflow_step',
-      log_name='log_id("dataflow.googleapis.com/job-message")',
-      filter_str=' AND '.join(LOG_FILTER),
+    project_id=context.project_id,
+    resource_type='dataflow_step',
+    log_name='log_id("dataflow.googleapis.com/job-message")',
+    filter_str=' AND '.join(LOG_FILTER),
   )
 
 
@@ -75,21 +73,21 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'WARNING' or MATCH_STR1 not in get_path(
-          log_entry, 'textPayload', default=''):
+        log_entry, 'textPayload', default=''
+      ):
         continue
 
       project_ok_flag = False
 
       job_id = get_path(
-          log_entry,
-          ('resource', 'labels', 'job_id'),
+        log_entry,
+        ('resource', 'labels', 'job_id'),
       )
 
       if job_id not in failed_jobs:
         failed_jobs.add(job_id)
         report.add_failed(
-            project,
-            f'Dataflow not creating Pub/Sub subscriptions for the job id:{job_id}'
+          project, f'Dataflow not creating Pub/Sub subscriptions for the job id:{job_id}'
         )
 
   if project_ok_flag:

@@ -17,14 +17,16 @@ import secrets
 import string
 import threading
 import unittest
+from unittest import mock
+
+from googleapiclient import errors
 
 from gcpdiag import caching
 
 
 def simple_function(mixer_arg):
   # Generate a unique string of 10 characters
-  return mixer_arg.join(
-      secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
+  return mixer_arg.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(10))
 
 
 # Decorated versions of the simple_function for in-memory and disk cache testing
@@ -78,10 +80,14 @@ class CacheBypassTests(unittest.TestCase):
       results.add(result)
 
     threads = [
-        threading.Thread(target=worker, args=(
-            arg,
-            results,
-        )) for arg in ['a', 'a', 'b', 'c']
+      threading.Thread(
+        target=worker,
+        args=(
+          arg,
+          results,
+        ),
+      )
+      for arg in ['a', 'a', 'b', 'c']
     ]
     for t in threads:
       t.start()
@@ -113,3 +119,15 @@ class UseCacheTests(unittest.TestCase):
     disk_result = cached_on_disk('same-arg-but-different-result')
     next_disk_result = cached_on_disk('same-arg-but-different-result')
     self.assertNotEqual(disk_result, next_disk_result)
+
+  def test_exception_raised_when_cache_disabled(self):
+    caching.configure_global_cache(enabled=False)
+
+    @caching.cached_api_call()
+    def failing_function():
+      resp = mock.Mock()
+      resp.status = 403
+      raise errors.HttpError(resp, b'Forbidden')
+
+    with self.assertRaises(errors.HttpError):
+      failing_function()

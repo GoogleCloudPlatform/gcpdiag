@@ -20,6 +20,7 @@ from unittest import mock
 import diskcache
 import pytest
 
+from gcpdiag import models
 from gcpdiag.queries import apis_stub, iam
 
 
@@ -34,47 +35,47 @@ TEST_PROJECT_IAM_ID = 'gcpdiag-iam1-aaaa'
 TEST_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 TEST_SERVICE_ACCOUNT_ROLE = 'projects/gcpdiag-gke1-aaaa/roles/gke2_custom_role'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
-    'autoscaling.sites.writeMetrics',
-    'cloudnotifications.activities.list',
-    'logging.logEntries.create',
-    'monitoring.alertPolicies.get',
-    'monitoring.alertPolicies.list',
-    'monitoring.dashboards.get',
-    'monitoring.dashboards.list',
-    'monitoring.groups.get',
-    'monitoring.groups.list',
-    'monitoring.metricDescriptors.create',
-    'monitoring.metricDescriptors.get',
-    'monitoring.metricDescriptors.list',
-    'monitoring.monitoredResourceDescriptors.get',
-    'monitoring.monitoredResourceDescriptors.list',
-    'monitoring.notificationChannelDescriptors.get',
-    'monitoring.notificationChannelDescriptors.list',
-    'monitoring.notificationChannels.get',
-    'monitoring.notificationChannels.list',
-    'monitoring.publicWidgets.get',
-    'monitoring.publicWidgets.list',
-    'monitoring.services.get',
-    'monitoring.services.list',
-    'monitoring.slos.get',
-    'monitoring.slos.list',
-    'monitoring.timeSeries.create',
-    'monitoring.timeSeries.list',
-    'monitoring.uptimeCheckConfigs.get',
-    'monitoring.uptimeCheckConfigs.list',
-    'opsconfigmonitoring.resourceMetadata.list',
-    'stackdriver.resourceMetadata.write',
-    'storage.objects.get',
-    'storage.objects.list',
+  'autoscaling.sites.writeMetrics',
+  'cloudnotifications.activities.list',
+  'logging.logEntries.create',
+  'monitoring.alertPolicies.get',
+  'monitoring.alertPolicies.list',
+  'monitoring.dashboards.get',
+  'monitoring.dashboards.list',
+  'monitoring.groups.get',
+  'monitoring.groups.list',
+  'monitoring.metricDescriptors.create',
+  'monitoring.metricDescriptors.get',
+  'monitoring.metricDescriptors.list',
+  'monitoring.monitoredResourceDescriptors.get',
+  'monitoring.monitoredResourceDescriptors.list',
+  'monitoring.notificationChannelDescriptors.get',
+  'monitoring.notificationChannelDescriptors.list',
+  'monitoring.notificationChannels.get',
+  'monitoring.notificationChannels.list',
+  'monitoring.publicWidgets.get',
+  'monitoring.publicWidgets.list',
+  'monitoring.services.get',
+  'monitoring.services.list',
+  'monitoring.slos.get',
+  'monitoring.slos.list',
+  'monitoring.timeSeries.create',
+  'monitoring.timeSeries.list',
+  'monitoring.uptimeCheckConfigs.get',
+  'monitoring.uptimeCheckConfigs.list',
+  'opsconfigmonitoring.resourceMetadata.list',
+  'stackdriver.resourceMetadata.write',
+  'storage.objects.get',
+  'storage.objects.list',
 ]
 
 TEST_DUMMY_SERVICE_ACCOUNT = {
-    'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com',  # custom service account
-    'gcpdiag-gke1-aaaa@appspot.gserviceaccount.com',  # GAE Default SA
-    '12340002-compute@developer.gserviceaccount.com',  # GCE Default SA
-    # Sample Service Agent
-    'service-12340002@gcp-sa-aiplatform-cc.iam.gserviceaccount.com',
-    'p12340002-123a@gcp-sa-cloud-sql.iam.gserviceaccount.com'
+  'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com',  # custom service account
+  'gcpdiag-gke1-aaaa@appspot.gserviceaccount.com',  # GAE Default SA
+  '12340002-compute@developer.gserviceaccount.com',  # GCE Default SA
+  # Sample Service Agent
+  'service-12340002@gcp-sa-aiplatform-cc.iam.gserviceaccount.com',
+  'p12340002-123a@gcp-sa-cloud-sql.iam.gserviceaccount.com',
 }
 
 
@@ -84,62 +85,75 @@ class TestProjectPolicy:
   """Test gke.ProjectPolicy"""
 
   def test_get_member_permissions(self):
-    policy = iam.get_project_policy(TEST_PROJECT_ID)
-    assert policy.get_member_permissions(
-        f'serviceAccount:{TEST_SERVICE_ACCOUNT}'
-    ) == TEST_SERVICE_ACCOUNT_PERMISSIONS
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    policy = iam.get_project_policy(context)
+    assert (
+      policy.get_member_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}')
+      == TEST_SERVICE_ACCOUNT_PERMISSIONS
+    )
 
   def test_has_permission(self):
-    policy = iam.get_project_policy(TEST_PROJECT_ID)
-    assert policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                                 'monitoring.groups.get')
-    assert not policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                                     'monitoring.groups.create')
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    policy = iam.get_project_policy(context)
+    assert policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'monitoring.groups.get')
+    assert not policy.has_permission(
+      f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'monitoring.groups.create'
+    )
 
-  # pylint: disable=protected-access
   def test_has_role(self):
-    policy = iam.get_project_policy(TEST_PROJECT_ID)
-    assert policy._has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                            TEST_SERVICE_ACCOUNT_ROLE)
-    assert not policy._has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                                'roles/container.nodeServiceAgent')
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    policy = iam.get_project_policy(context)
+    assert policy._has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}', TEST_SERVICE_ACCOUNT_ROLE)
+    assert not policy._has_role(
+      f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/container.nodeServiceAgent'
+    )
 
   def test_has_role_permissions(self):
-    policy = iam.get_project_policy(TEST_PROJECT_ID)
-    assert policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                                       'roles/monitoring.viewer')
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    policy = iam.get_project_policy(context)
+    assert policy.has_role_permissions(
+      f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.viewer'
+    )
     assert not policy.has_role_permissions(
-        f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')
+      f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor'
+    )
 
   def test_missing_role(self):
     with pytest.raises(iam.RoleNotFoundError):
-      policy = iam.get_project_policy(TEST_PROJECT_ID)
-      policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                                  'roles/non-existing-role')
+      context = models.Context(project_id=TEST_PROJECT_ID)
+      policy = iam.get_project_policy(context)
+      policy.has_role_permissions(
+        f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/non-existing-role'
+      )
 
   def test_internal_role(self):
-    policy = iam.get_project_policy(TEST_PROJECT_ID)
-    policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                                'roles/container.nodeServiceAgent')
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    policy = iam.get_project_policy(context)
+    policy.has_role_permissions(
+      f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/container.nodeServiceAgent'
+    )
 
   def test_is_service_acccount_existing(self):
-    assert iam.is_service_account_existing(TEST_SERVICE_ACCOUNT,
-                                           TEST_PROJECT_ID)
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    assert iam.is_service_account_existing(TEST_SERVICE_ACCOUNT, context)
 
   def test_is_service_acccount_existing_inexisting(self):
-    assert not iam.is_service_account_existing('foobar@example.com',
-                                               TEST_PROJECT_ID)
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    assert not iam.is_service_account_existing('foobar@example.com', context)
 
   def test_is_service_acccount_enabled(self):
-    assert iam.is_service_account_enabled(TEST_SERVICE_ACCOUNT, TEST_PROJECT_ID)
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    assert iam.is_service_account_enabled(TEST_SERVICE_ACCOUNT, context)
 
   def test_service_account_policy(self):
-    policy = iam.get_service_account_iam_policy(TEST_PROJECT_ID,
-                                                TEST_SERVICE_ACCOUNT)
-    assert policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                                       'roles/iam.serviceAccountUser')
+    context = models.Context(project_id=TEST_PROJECT_ID)
+    policy = iam.get_service_account_iam_policy(context, TEST_SERVICE_ACCOUNT)
+    assert policy.has_role_permissions(
+      f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/iam.serviceAccountUser'
+    )
     assert not policy.has_role_permissions(
-        f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')
+      f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor'
+    )
 
   def test_project_id_extraction_from_service_account(self):
     for sa in TEST_DUMMY_SERVICE_ACCOUNT:
@@ -156,13 +170,10 @@ class TestProjectPolicy:
 
     for account in service_accounts:
       if account.unique_id == '102417873155869406705':
-        assert (account.email ==
-                'demo2sa@gcpdiag-iam1-aaaa.iam.gserviceaccount.com')
+        assert account.email == 'demo2sa@gcpdiag-iam1-aaaa.iam.gserviceaccount.com'
       if account.unique_id == '112819826788395589395':
         assert account.email == '12340002-compute@developer.gserviceaccount.com'
       if account.unique_id == '106302102062593675693':
-        assert (
-            account.email == 'demo1@gcpdiag-iam1-aaaa.iam.gserviceaccount.com')
+        assert account.email == 'demo1@gcpdiag-iam1-aaaa.iam.gserviceaccount.com'
       if account.unique_id == '104735732736559639086':
-        assert (
-            account.email == 'demo3@gcpdiag-iam1-aaaa.iam.gserviceaccount.com')
+        assert account.email == 'demo3@gcpdiag-iam1-aaaa.iam.gserviceaccount.com'

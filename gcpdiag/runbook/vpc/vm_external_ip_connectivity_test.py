@@ -22,18 +22,21 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'vpc/vm-external-ip-connectivity'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-vpc2-runbook',
-      'name': 'public-linux-valid',
+      'instance_name': 'public-linux-valid',
       'zone': 'us-central1-a',
       'dest_ip': '151.101.3.5',
       'src_nic': 'nic0',
-      'dest_port': '443'
-  }, {
+      'dest_port': '443',
+    },
+    {
       'project_id': 'gcpdiag-vpc2-runbook',
       'name': 'public-linux-faulty',
       'zone': 'us-central1-a',
       'dest_ip': '151.101.3.5',
       'src_nic': 'nic0',
-      'dest_port': '443'
-  }]
+      'dest_port': '443',
+    },
+  ]

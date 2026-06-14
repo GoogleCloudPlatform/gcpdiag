@@ -1,4 +1,4 @@
-project_id=gcpdiag-cloudrun2-aaaa,region=us-central1,service_name=invalid-container
+cloudrun_service_name=invalid-container,project_id=gcpdiag-cloudrun2-aaaa,region=us-central1
 
 cloudrun/service-deployment: Investigates the necessary GCP components searching for reasons for deployment errors.
 
@@ -27,7 +27,7 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
 [END]: Finalize runbook investigations.
 
 
-project_id=gcpdiag-cloudrun2-aaaa,region=us-central1,service_name=image-does-not-exist
+cloudrun_service_name=image-does-not-exist,project_id=gcpdiag-cloudrun2-aaaa,region=us-central1
 
 cloudrun/service-deployment: Investigates the necessary GCP components searching for reasons for deployment errors.
 
@@ -56,7 +56,7 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
 [END]: Finalize runbook investigations.
 
 
-project_id=gcpdiag-cloudrun2-aaaa,region=us-central1,service_name=no-image-permission
+cloudrun_service_name=no-image-permission,project_id=gcpdiag-cloudrun2-aaaa,region=us-central1
 
 cloudrun/service-deployment: Investigates the necessary GCP components searching for reasons for deployment errors.
 

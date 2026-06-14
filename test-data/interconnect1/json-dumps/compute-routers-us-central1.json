@@ -1,0 +1,23 @@
+{
+  "kind": "compute#routerList",
+  "id": "projects/gcpdiag-interconnect1-aaaa/regions/us-central1/routers",
+  "items": [
+    {
+      "kind": "compute#router",
+      "id": "1111119776642123456",
+      "creationTimestamp": "2019-05-13T09:37:58.875-07:00",
+      "name": "dummy-router3",
+      "description": "Interconnect Lab Juniper",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+      "bgp": {
+        "asn": 64200,
+        "advertiseMode": "DEFAULT",
+        "keepaliveInterval": 20
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1/routers/dummy-router11",
+      "encryptedInterconnectRouter": false
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1/routers"
+}

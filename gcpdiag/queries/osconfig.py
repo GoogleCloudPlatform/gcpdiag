@@ -72,8 +72,7 @@ class Inventory(models.Resource):
     installed_packages: Dict[str, str] = {}
     if 'items' in self._resource_data:
       installed_items = [
-          i for i in self._resource_data['items'].values()
-          if i.get('type', '') == 'INSTALLED_PACKAGE'
+        i for i in self._resource_data['items'].values() if i.get('type', '') == 'INSTALLED_PACKAGE'
       ]
       for item in installed_items:
         if 'installedPackage' not in item:
@@ -90,37 +89,34 @@ class Inventory(models.Resource):
           installed_packages[p.get('packageName', '')] = p.get('version', '')
         elif 'windowsApplication' in pkg:
           p = pkg['windowsApplication']
-          installed_packages[p.get('displayName',
-                                   '')] = p.get('displayVersion', '')
+          installed_packages[p.get('displayName', '')] = p.get('displayVersion', '')
     return installed_packages
 
 
 @caching.cached_api_call(in_memory=True)
 def list_inventories(
-    context: models.Context,
-    location: str,
+  context: models.Context,
+  location: str,
 ) -> Mapping[str, Inventory]:
   inventories: Dict[str, Inventory] = {}
   if not apis.is_enabled(context.project_id, 'osconfig'):
     return inventories
   osconfig_api = apis.get_api('osconfig', 'v1', context.project_id)
   logging.debug(
-      'fetching inventory data for all VMs under zone %s in project %s',
-      location,
-      context.project_id,
+    'fetching inventory data for all VMs under zone %s in project %s',
+    location,
+    context.project_id,
   )
   query = osconfig_api.projects().locations().instances().inventories()
 
   try:
     resp = apis_utils.list_all(
-        query.list(
-            parent=(
-                f'projects/{context.project_id}/locations/{location}/instances/-'
-            ),
-            view='FULL',
-        ),
-        query.list_next,
-        'inventories',
+      query.list(
+        parent=(f'projects/{context.project_id}/locations/{location}/instances/-'),
+        view='FULL',
+      ),
+      query.list_next,
+      'inventories',
     )
   except googleapiclient.errors.HttpError as err:
     if err.resp.status in [404]:
@@ -134,22 +130,28 @@ def list_inventories(
 
 
 @caching.cached_api_call(in_memory=True)
-def get_inventory(context: models.Context, location: str,
-                  instance_name: str) -> Optional[Inventory]:
+def get_inventory(
+  context: models.Context, location: str, instance_name: str
+) -> Optional[Inventory]:
   if not apis.is_enabled(context.project_id, 'osconfig'):
     return None
   osconfig_api = apis.get_api('osconfig', 'v1', context.project_id)
   logging.debug(
-      'fetching inventory data for VM %s in zone %s in project %s',
-      instance_name,
-      location,
-      context.project_id,
+    'fetching inventory data for VM %s in zone %s in project %s',
+    instance_name,
+    location,
+    context.project_id,
   )
-  query = (osconfig_api.projects().locations().instances().inventories().get(
-      name=
-      f'projects/{context.project_id}/locations/{location}/instances/{instance_name}/inventory',
+  query = (
+    osconfig_api.projects()
+    .locations()
+    .instances()
+    .inventories()
+    .get(
+      name=f'projects/{context.project_id}/locations/{location}/instances/{instance_name}/inventory',
       view='FULL',
-  ))
+    )
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:

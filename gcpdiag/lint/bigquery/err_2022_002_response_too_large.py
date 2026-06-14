@@ -17,6 +17,7 @@
 Query results for SQL queries in BigQuery that generate excessively large results and don't
 set a destination table fail with job error "responseTooLarge"
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -25,19 +26,20 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'Response too large to return'
 
 RESPONSE_TOO_LARGE = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(RESPONSE_TOO_LARGE))
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(RESPONSE_TOO_LARGE),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -49,19 +51,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'bigquery api is disabled')
     return
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       project_ok_flag = True
-      if MATCH_STR not in get_path(log_entry,
-                                   ('protoPayload', 'status', 'message'),
-                                   default=''):
+      if MATCH_STR not in get_path(log_entry, ('protoPayload', 'status', 'message'), default=''):
         continue
       else:
         report.add_failed(
-            project,
-            'has BigQuery jobs failing because query results are larger than the '
-            'maximum response size')
+          project,
+          'has BigQuery jobs failing because query results are larger than the '
+          'maximum response size',
+        )
         project_ok_flag = False
         break
     if project_ok_flag:

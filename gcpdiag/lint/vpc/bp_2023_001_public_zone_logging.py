@@ -14,7 +14,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no zones found')
     return
   for c in zones:
-    if (c.is_public and not c.cloud_logging_config):
+    if c.is_public and not c.cloud_logging_config:
       report.add_failed(c, None, ' logging is disabled for this public zone')
     else:
       report.add_ok(c)

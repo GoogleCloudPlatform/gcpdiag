@@ -24,23 +24,23 @@ from gcpdiag.queries import crm, iam
 
 def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
-  iam.get_project_policy(context.project_id)
+  iam.get_project_policy(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   role = 'roles/dataflow.serviceAgent'
 
   project = crm.get_project(context.project_id)
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
 
   project_nr = crm.get_project(context.project_id).number
 
   for member in sorted(iam_policy.get_members()):
     if member.startswith(
-        'serviceAccount:service-' + str(project_nr) +
-        '@dataflow-service-producer-prod.iam.gserviceaccount.com'):
-
+      'serviceAccount:service-'
+      + str(project_nr)
+      + '@dataflow-service-producer-prod.iam.gserviceaccount.com'
+    ):
       if iam_policy.has_role_permissions(member, role):
         report.add_ok(project)
         break

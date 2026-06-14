@@ -1,0 +1,15 @@
+{
+  "id": "gcpdiag-bigquery1-aaaa:us.test_csv_error",
+  "status": {
+    "state": "DONE",
+    "errorResult": {
+      "message": "Not found: table gcpdiag-bigquery1-aaaa:dataset.table"
+    },
+    "errors": []
+  },
+  "jobReference": {
+    "projectId": "gcpdiag-bigquery1-aaaa",
+    "jobId": "test_csv_error",
+    "location": "us"
+  }
+}

@@ -35,14 +35,13 @@ def prefetch_rule(context: models.Context):
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   """
-    Checks if the datafusion version is compatible with dataproc version
-    from the corresponding compute profiles.
+  Checks if the datafusion version is compatible with dataproc version
+  from the corresponding compute profiles.
   """
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        'Cloud Data Fusion API is not enabled in'
-        f' {crm.get_project(context.project_id)}',
+      None,
+      f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}',
     )
     return
 
@@ -56,21 +55,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     compute_profiles = []
     # fetch compute profiles of the instance
     compute_profiles.extend(
-        datafusion.get_instance_system_compute_profile(context,
-                                                       datafusion_instance))
+      datafusion.get_instance_system_compute_profile(context, datafusion_instance)
+    )
     compute_profiles.extend(
-        datafusion.get_instance_user_compute_profile(context,
-                                                     datafusion_instance))
+      datafusion.get_instance_user_compute_profile(context, datafusion_instance)
+    )
     if not compute_profiles:
       report.add_skipped(None, 'No compute profile found')
       return
 
-    datafusion_dataproc_version = datafusion.extract_datafusion_dataproc_version(
-    )
+    datafusion_dataproc_version = datafusion.extract_datafusion_dataproc_version()
 
     if not datafusion_dataproc_version:
-      report.add_skipped(None,
-                         "No datafusion and dataproc version's data obtained")
+      report.add_skipped(None, "No datafusion and dataproc version's data obtained")
 
     # Check the autoscaling property
     for profile in compute_profiles:
@@ -78,28 +75,24 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         dataproc_version = profile.image_version
         dataproc_parsed_version = re.match(r'(\d+\.\d+)', dataproc_version)
         if not dataproc_parsed_version:
-          report.add_skipped(
-              None, f'Dataproc version : {dataproc_version} is not valid')
+          report.add_skipped(None, f'Dataproc version : {dataproc_version} is not valid')
           return
         datafusion_version = version.parse(str(datafusion_instance.version))
-        version_to_compare = (
-            f'{datafusion_version.major}.{datafusion_version.minor}')
+        version_to_compare = f'{datafusion_version.major}.{datafusion_version.minor}'
         if version_to_compare in datafusion_dataproc_version:
-          if (dataproc_parsed_version.group(1)
-              in datafusion_dataproc_version[version_to_compare]):
+          if dataproc_parsed_version.group(1) in datafusion_dataproc_version[version_to_compare]:
             report.add_ok(
-                datafusion_instance,
-                f'\n\t{profile}\n\tDatafusion version :'
-                f' {datafusion_version}\n\tDataproc version :'
-                f' {dataproc_version}\n',
+              datafusion_instance,
+              f'\n\t{profile}\n\tDatafusion version :'
+              f' {datafusion_version}\n\tDataproc version :'
+              f' {dataproc_version}\n',
             )
           else:
             report.add_failed(
-                datafusion_instance,
-                f'\t{profile}\n\tDatafusion version :'
-                f' {datafusion_version}\n\tDataproc version :'
-                f' {dataproc_version}\n',
+              datafusion_instance,
+              f'\t{profile}\n\tDatafusion version :'
+              f' {datafusion_version}\n\tDataproc version :'
+              f' {dataproc_version}\n',
             )
       else:
-        report.add_ok(datafusion_instance,
-                      f'\n\t{profile}\n\t(No imageVersion defined)\n')
+        report.add_ok(datafusion_instance, f'\n\t{profile}\n\t(No imageVersion defined)\n')

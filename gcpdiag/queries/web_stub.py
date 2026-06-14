@@ -27,7 +27,6 @@ def _derive_basename_from_url(url):
   return formatted_url
 
 
-# pylint: disable=unused-argument, protected-access
 def get(url, params=None, timeout=None, *, data=None, headers=None):
   json_basename = _derive_basename_from_url(url)
   try:

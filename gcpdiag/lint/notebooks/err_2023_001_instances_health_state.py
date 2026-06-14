@@ -29,7 +29,6 @@ def prefetch_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not apis.is_enabled(context.project_id, 'notebooks'):
     report.add_skipped(None, 'Notebooks API is disabled')
     return

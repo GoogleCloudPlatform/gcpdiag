@@ -20,6 +20,7 @@ import re
 import time
 from unittest import mock
 
+from gcpdiag import models
 from gcpdiag.queries import apis_stub, logs, logs_stub
 
 DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
@@ -31,13 +32,16 @@ class TestLogs:
   """Test logs.py functions."""
 
   def test_single_query(self):
-    query = logs.query(project_id=DUMMY_PROJECT_ID,
-                       resource_type='gce_instance',
-                       log_name='fake.log',
-                       filter_str='filter1')
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    query = logs.query(
+      project_id=context.project_id,
+      resource_type='gce_instance',
+      log_name='fake.log',
+      filter_str='filter1',
+    )
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-      logs.execute_queries(executor)
+      logs.execute_queries(executor, context)
       # verify the number of entries
       all_entries = list(query.entries)
       assert len(all_entries) > 0
@@ -47,45 +51,58 @@ class TestLogs:
 
   def test_aggregated_query(self):
     """Verify that multiple queries get aggregated into one."""
-    logs.query(project_id=DUMMY_PROJECT_ID,
-               resource_type='gce_instance',
-               log_name='fake.log',
-               filter_str='filter1')
-    logs.query(project_id=DUMMY_PROJECT_ID,
-               resource_type='gce_instance',
-               log_name='fake.log',
-               filter_str='filter2')
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    logs.query(
+      project_id=context.project_id,
+      resource_type='gce_instance',
+      log_name='fake.log',
+      filter_str='filter1',
+    )
+    logs.query(
+      project_id=context.project_id,
+      resource_type='gce_instance',
+      log_name='fake.log',
+      filter_str='filter2',
+    )
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-      logs.execute_queries(executor)
+      logs.execute_queries(executor, context)
     # verify the filter that is used
     assert re.match(
-        r'timestamp>"\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00"\n'
-        r'resource.type="gce_instance"\n'
-        r'logName="fake.log"\n'
-        r'\(\(filter1\) OR \(filter2\)\)', logs_stub.logging_body['filter'])
+      r'timestamp>"\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00"\n'
+      r'resource.type="gce_instance"\n'
+      r'logName="fake.log"\n'
+      r'\(\(filter1\) OR \(filter2\)\)',
+      logs_stub.logging_body['filter'],
+    )
     # also verify other parameters of the job
     assert logs_stub.logging_body['orderBy'] == 'timestamp desc'
     assert logs_stub.logging_body['pageSize'] == 500
-    assert logs_stub.logging_body['resourceNames'] == [
-        'projects/gcpdiag-gke1-aaaa'
-    ]
+    assert logs_stub.logging_body['resourceNames'] == ['projects/gcpdiag-gke1-aaaa']
 
   def test_format_log_entry(self):
     with mock.patch.dict('os.environ', {'TZ': 'America/Los_Angeles'}):
       time.tzset()
-      assert logs.format_log_entry({
-          'jsonPayload': {
-              'message': 'test message'
-          },
-          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
-      }) == '2022-03-24 06:26:37-07:00: test message'
-      assert logs.format_log_entry({
-          'jsonPayload': {
-              'MESSAGE': 'test message'
-          },
-          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
-      }) == '2022-03-24 06:26:37-07:00: test message'
-      assert logs.format_log_entry({
-          'textPayload': 'test message',
-          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
-      }) == '2022-03-24 06:26:37-07:00: test message'
+      assert (
+        logs.format_log_entry(
+          {
+            'jsonPayload': {'message': 'test message'},
+            'receiveTimestamp': '2022-03-24T13:26:37.370862686Z',
+          }
+        )
+        == '2022-03-24 06:26:37-07:00: test message'
+      )
+      assert (
+        logs.format_log_entry(
+          {
+            'jsonPayload': {'MESSAGE': 'test message'},
+            'receiveTimestamp': '2022-03-24T13:26:37.370862686Z',
+          }
+        )
+        == '2022-03-24 06:26:37-07:00: test message'
+      )
+      assert (
+        logs.format_log_entry(
+          {'textPayload': 'test message', 'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'}
+        )
+        == '2022-03-24 06:26:37-07:00: test message'
+      )

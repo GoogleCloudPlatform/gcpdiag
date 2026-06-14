@@ -23,7 +23,8 @@ from gcpdiag.queries import apis, network
 
 
 class Instance(models.Resource):
-  """ Represents CloudSQL Instance"""
+  """Represents CloudSQL Instance"""
+
   _resource_data: dict
 
   def __init__(self, project_id: str, resource_data: dict):
@@ -44,26 +45,24 @@ class Instance(models.Resource):
 
   @property
   def is_regional(self) -> bool:
-    return get_path(self._resource_data, ('settings', 'availabilityType'),
-                    default='ZONAL') == 'REGIONAL'
+    return (
+      get_path(self._resource_data, ('settings', 'availabilityType'), default='ZONAL') == 'REGIONAL'
+    )
 
   @property
   def ip_addresses(self) -> Iterable[network.IPv4AddrOrIPv6Addr]:
     return [
-        ipaddress.ip_address(nic['ipAddress'])
-        for nic in self._resource_data.get('ipAddresses', [])
+      ipaddress.ip_address(nic['ipAddress']) for nic in self._resource_data.get('ipAddresses', [])
     ]
 
   @property
   def has_public_ip(self) -> bool:
-    return get_path(self._resource_data,
-                    ('settings', 'ipConfiguration', 'ipv4Enabled'))
+    return get_path(self._resource_data, ('settings', 'ipConfiguration', 'ipv4Enabled'))
 
   @property
   def has_maint_window(self) -> int:
     try:
-      return get_path(self._resource_data,
-                      ('settings', 'maintenanceWindow', 'day'))
+      return get_path(self._resource_data, ('settings', 'maintenanceWindow', 'day'))
     except KeyError:
       return 0
 
@@ -73,17 +72,14 @@ class Instance(models.Resource):
 
   @property
   def has_del_protection(self) -> bool:
-    return get_path(self._resource_data,
-                    ('settings', 'deletionProtectionEnabled'), False)
+    return get_path(self._resource_data, ('settings', 'deletionProtectionEnabled'), False)
 
   @property
   def authorizednetworks(self) -> List[str]:
     authorizednetworks = get_path(
-        self._resource_data,
-        ('settings', 'ipConfiguration', 'authorizedNetworks'), [])
-    return [
-        authorizednetwork['value'] for authorizednetwork in authorizednetworks
-    ]
+      self._resource_data, ('settings', 'ipConfiguration', 'authorizedNetworks'), []
+    )
+    return [authorizednetwork['value'] for authorizednetwork in authorizednetworks]
 
   @property
   def is_publically_accessible(self) -> List[str]:
@@ -91,8 +87,7 @@ class Instance(models.Resource):
 
   @property
   def is_automated_backup_enabled(self) -> bool:
-    return get_path(self._resource_data,
-                    ('settings', 'backupConfiguration', 'enabled'))
+    return get_path(self._resource_data, ('settings', 'backupConfiguration', 'enabled'))
 
   @property
   def is_suspended_state(self) -> bool:
@@ -101,13 +96,11 @@ class Instance(models.Resource):
   @property
   def is_shared_core(self) -> bool:
     shared_core_tiers = ['db-g1-small', 'db-f1-micro']
-    return get_path(self._resource_data,
-                    ('settings', 'tier')) in shared_core_tiers
+    return get_path(self._resource_data, ('settings', 'tier')) in shared_core_tiers
 
   @property
   def is_high_available(self) -> bool:
-    return get_path(self._resource_data,
-                    ('settings', 'availabilityType')) == 'REGIONAL'
+    return get_path(self._resource_data, ('settings', 'availabilityType')) == 'REGIONAL'
 
   @property
   def flags(self) -> dict:
@@ -143,8 +136,7 @@ def get_instances(context: models.Context) -> Iterable[Instance]:
     location = d.get('region', '')
     labels = d.get('userLabels', {})
     resource = d.get('name', '')
-    if not context.match_project_resource(
-        location=location, labels=labels, resource=resource):
+    if not context.match_project_resource(location=location, labels=labels, resource=resource):
       continue
 
     databases.append(Instance(context.project_id, d))

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" GKE clusters are private clusters.
+"""GKE clusters are private clusters.
 
 A private cluster is a type of VPC-native cluster that only depends on internal IP addresses.
 Nodes, Pods, and Services in a private cluster require unique subnet IP address ranges.

@@ -173,14 +173,48 @@
         "message": "There are no results "
       }
     },
+    "regions/us-central1": {
+      "interconnectAttachments": [
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.11.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.11.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect11",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment11",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1102
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1",
+          "mtu": 1450,
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1/routers/dummy-router11",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1/interconnectAttachments/dummy-attachment11",
+          "stackType": "IPV4_ONLY",
+          "state": "UNDER_MAINTENANCE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1102
+        }
+      ]
+    },
     "regions/us-west2": {
       "interconnectAttachments": [
         {
           "adminEnabled": true,
           "bandwidth": "BPS_10G",
-          "cloudRouterIpAddress": "169.254.3.1/29",
+          "cloudRouterIpAddress": "169.254.5.1/29",
           "creationTimestamp": "2021-01-01T00:00:00-00:00",
-          "customerRouterIpAddress": "169.254.3.2/29",
+          "customerRouterIpAddress": "169.254.5.2/29",
           "dataplaneVersion": 2,
           "description": "Dummy Description",
           "encryption": "IPSEC",
@@ -201,16 +235,16 @@
           "satisfiesPzs": false,
           "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5",
           "stackType": "IPV4_ONLY",
-          "state": "ACTIVE",
+          "state": "UNDER_MAINTENANCE",
           "type": "DEDICATED",
           "vlanTag8021q": 1102
         },
         {
           "adminEnabled": true,
           "bandwidth": "BPS_10G",
-          "cloudRouterIpAddress": "169.254.3.1/29",
+          "cloudRouterIpAddress": "169.254.6.1/29",
           "creationTimestamp": "2021-01-01T00:00:00-00:00",
-          "customerRouterIpAddress": "169.254.3.2/29",
+          "customerRouterIpAddress": "169.254.6.2/29",
           "dataplaneVersion": 2,
           "description": "Dummy Description",
           "encryption": "IPSEC",
@@ -237,9 +271,9 @@
         {
           "adminEnabled": true,
           "bandwidth": "BPS_10G",
-          "cloudRouterIpAddress": "169.254.3.1/29",
+          "cloudRouterIpAddress": "169.254.7.1/29",
           "creationTimestamp": "2021-01-01T00:00:00-00:00",
-          "customerRouterIpAddress": "169.254.3.2/29",
+          "customerRouterIpAddress": "169.254.7.2/29",
           "description": "Dummy Description",
           "encryption": "IPSEC",
           "id": "0000000000000000000",
@@ -256,7 +290,7 @@
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment7",
           "stackType": "IPV4_ONLY",
           "state": "ACTIVE",
           "type": "DEDICATED",
@@ -265,9 +299,9 @@
         {
           "adminEnabled": true,
           "bandwidth": "BPS_10G",
-          "cloudRouterIpAddress": "169.254.3.1/29",
+          "cloudRouterIpAddress": "169.254.8.1/29",
           "creationTimestamp": "2021-01-01T00:00:00-00:00",
-          "customerRouterIpAddress": "169.254.3.2/29",
+          "customerRouterIpAddress": "169.254.8.2/29",
           "dataplaneVersion": 2,
           "description": "Dummy Description",
           "encryption": "IPSEC",
@@ -285,7 +319,7 @@
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment8",
           "stackType": "IPV4_ONLY",
           "state": "ACTIVE",
           "type": "DEDICATED",
@@ -294,9 +328,9 @@
         {
           "adminEnabled": true,
           "bandwidth": "BPS_10G",
-          "cloudRouterIpAddress": "169.254.3.1/29",
+          "cloudRouterIpAddress": "169.254.9.1/29",
           "creationTimestamp": "2021-01-01T00:00:00-00:00",
-          "customerRouterIpAddress": "169.254.3.2/29",
+          "customerRouterIpAddress": "169.254.9.2/29",
           "dataplaneVersion": 2,
           "description": "Dummy Description",
           "encryption": "IPSEC",
@@ -314,7 +348,7 @@
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment9",
           "stackType": "IPV4_ONLY",
           "state": "ACTIVE",
           "type": "DEDICATED",
@@ -323,9 +357,9 @@
         {
           "adminEnabled": true,
           "bandwidth": "BPS_10G",
-          "cloudRouterIpAddress": "169.254.3.1/29",
+          "cloudRouterIpAddress": "169.254.10.1/29",
           "creationTimestamp": "2021-01-01T00:00:00-00:00",
-          "customerRouterIpAddress": "169.254.3.2/29",
+          "customerRouterIpAddress": "169.254.10.2/29",
           "dataplaneVersion": 2,
           "description": "Dummy Description",
           "encryption": "IPSEC",
@@ -343,7 +377,7 @@
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment10",
           "stackType": "IPV4_ONLY",
           "state": "DEFUNCT",
           "type": "DEDICATED",

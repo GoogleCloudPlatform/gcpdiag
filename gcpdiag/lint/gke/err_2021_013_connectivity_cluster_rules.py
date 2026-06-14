@@ -30,19 +30,19 @@ from gcpdiag.queries import gke
 def _run_rule_cluster(report: lint.LintReportRuleInterface, c: gke.Cluster):
   try:
     cluster_fw_rules_names = [
-        f'gke-{c.name}-{c.cluster_hash}-vms',
-        f'gke-{c.name}-{c.cluster_hash}-all',
+      f'gke-{c.name}-{c.cluster_hash}-vms',
+      f'gke-{c.name}-{c.cluster_hash}-all',
     ]
     if c.is_private:
       cluster_fw_rules_names.append(f'gke-{c.name}-{c.cluster_hash}-master')
 
     missing_rules = [
-        rule_name for rule_name in cluster_fw_rules_names \
-            if not c.network.firewall.verify_ingress_rule_exists(rule_name)
-        ]
+      rule_name
+      for rule_name in cluster_fw_rules_names
+      if not c.network.firewall.verify_ingress_rule_exists(rule_name)
+    ]
     if missing_rules:
-      report.add_failed(c,
-                        'missing firewall rules: ' + ', '.join(missing_rules))
+      report.add_failed(c, 'missing firewall rules: ' + ', '.join(missing_rules))
     else:
       report.add_ok(c)
   except gke.UndefinedClusterPropertyError as err:

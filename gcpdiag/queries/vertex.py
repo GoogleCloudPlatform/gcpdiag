@@ -13,8 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP Vertex AI
-"""
+"""Queries related to GCP Vertex AI"""
 
 import enum
 import logging
@@ -31,51 +30,74 @@ NAME_KEY = 'name'
 STATE_KEY = 'state'
 
 REGIONS = {
-    1: 'asia-east1',
-    2: 'asia-east2',
-    3: 'asia-northeast1',
-    4: 'asia-northeast2',
-    5: 'asia-northeast3',
-    6: 'asia-south1',
-    7: 'asia-south2',
-    8: 'asia-southeast1',
-    9: 'asia-southeast2',
-    10: 'australia-southeast1',
-    11: 'australia-southeast2',
-    12: 'europe-central2',
-    13: 'europe-north1',
-    14: 'europe-southwest1',
-    15: 'europe-west1',
-    16: 'europe-west2',
-    17: 'europe-west3',
-    18: 'europe-west4',
-    19: 'europe-west6',
-    20: 'europe-west8',
-    21: 'europe-west9',
-    22: 'europe-west12',
-    23: 'me-central1',
-    24: 'me-west1',
-    25: 'northamerica-northeast1',
-    26: 'northamerica-northeast2',
-    27: 'southamerica-east1',
-    28: 'southamerica-west1',
-    29: 'us-central1',
-    30: 'us-east1',
-    31: 'us-east4',
-    32: 'us-east5',
-    33: 'us-south1',
-    34: 'us-west1',
-    35: 'us-west2',
-    36: 'us-west3',
-    37: 'us-west4',
+  1: 'asia-east1',
+  2: 'asia-east2',
+  3: 'asia-northeast1',
+  4: 'asia-northeast2',
+  5: 'asia-northeast3',
+  6: 'asia-south1',
+  7: 'asia-south2',
+  8: 'asia-southeast1',
+  9: 'asia-southeast2',
+  10: 'australia-southeast1',
+  11: 'australia-southeast2',
+  12: 'europe-central2',
+  13: 'europe-north1',
+  14: 'europe-southwest1',
+  15: 'europe-west1',
+  16: 'europe-west2',
+  17: 'europe-west3',
+  18: 'europe-west4',
+  19: 'europe-west6',
+  20: 'europe-west8',
+  21: 'europe-west9',
+  22: 'europe-west12',
+  23: 'me-central1',
+  24: 'me-west1',
+  25: 'northamerica-northeast1',
+  26: 'northamerica-northeast2',
+  27: 'southamerica-east1',
+  28: 'southamerica-west1',
+  29: 'us-central1',
+  30: 'us-east1',
+  31: 'us-east4',
+  32: 'us-east5',
+  33: 'us-south1',
+  34: 'us-west1',
+  35: 'us-west2',
+  36: 'us-west3',
+  37: 'us-west4',
 }
 
 # Different Vertex AI features available in different regions
 FEATURE_REGIONS = {
-    FEATURESTORES_KEY: [
-        1, 2, 3, 5, 6, 8, 9, 10, 12, 15, 16, 17, 18, 19, 21, 25, 26, 27, 29, 30,
-        31, 34, 35, 36, 37
-    ]
+  FEATURESTORES_KEY: [
+    1,
+    2,
+    3,
+    5,
+    6,
+    8,
+    9,
+    10,
+    12,
+    15,
+    16,
+    17,
+    18,
+    19,
+    21,
+    25,
+    26,
+    27,
+    29,
+    30,
+    31,
+    34,
+    35,
+    36,
+    37,
+  ]
 }
 
 
@@ -141,12 +163,17 @@ def get_featurestores(context: models.Context) -> Dict[str, Featurestore]:
     featurestores_res: Dict[str, Featurestore] = {}
     region_name = REGIONS[region]
     logging.debug(
-        'fetching list of Vertex AI featurestores in project %s for region %s',
-        context.project_id, region_name)
-    vertex_api = apis.get_api('aiplatform', 'v1', context.project_id,
-                              region_name)
-    query = vertex_api.projects().locations().featurestores().list(
-        parent=f'projects/{context.project_id}/locations/{region_name}')
+      'fetching list of Vertex AI featurestores in project %s for region %s',
+      context.project_id,
+      region_name,
+    )
+    vertex_api = apis.get_api('aiplatform', 'v1', context.project_id, region_name)
+    query = (
+      vertex_api.projects()
+      .locations()
+      .featurestores()
+      .list(parent=f'projects/{context.project_id}/locations/{region_name}')
+    )
     try:
       resp = query.execute(num_retries=config.API_RETRIES)
       if FEATURESTORES_KEY not in resp:
@@ -155,7 +182,7 @@ def get_featurestores(context: models.Context) -> Dict[str, Featurestore]:
         # verify that we have some minimal data that we expect
         if NAME_KEY not in resp_i:
           raise RuntimeError(
-              'missing featurestore name in projects.locations.featurestores.list response'
+            'missing featurestore name in projects.locations.featurestores.list response'
           )
         i = Featurestore(project_id=context.project_id, resource_data=resp_i)
         featurestores_res[i.full_path] = i

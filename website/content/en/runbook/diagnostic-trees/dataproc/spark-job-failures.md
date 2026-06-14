@@ -39,6 +39,7 @@ This runbook focuses on a range of potential problems for Dataproc Spark jobs
 gcpdiag runbook dataproc/spark-job-failures \
   -p project_id=value \
   -p job_id=value \
+  -p dataproc_job_id=value \
   -p region=value \
   -p zone=value \
   -p service_account=value \
@@ -51,7 +52,8 @@ gcpdiag runbook dataproc/spark-job-failures \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `job_id` | True | None | str | The Job ID of the resource under investigation |
+| `job_id` | False | None | str | The Job ID of the resource under investigation |
+| `dataproc_job_id` | True | None | str | The Job ID of the resource under investigation |
 | `region` | True | None | str | Dataproc job/cluster Region |
 | `zone` | False | None | str | Dataproc cluster Zone |
 | `service_account` | False | None | str | Dataproc cluster Service Account used to create the resource |
@@ -66,29 +68,11 @@ gcpdiag runbook --help
 
 ### Potential Steps
 
-  - [Job Exists](/runbook/steps/dataproc/job-exists)
+  - [Job Start](/runbook/steps/dataproc/job-start)
 
-  - [Data Proc Cluster Exists](/runbook/steps/dataproc/data-proc-cluster-exists)
-
-  - [Check Stackdriver Setting](/runbook/steps/dataproc/check-stackdriver-setting)
-
-  - [Check Cluster Version](/runbook/steps/dataproc/check-cluster-version)
-
-  - [Check If Job Failed](/runbook/steps/dataproc/check-if-job-failed)
+  - [Job Details Dependency Gateway](/runbook/steps/dataproc/job-details-dependency-gateway)
 
   - [Check Task Not Found](/runbook/steps/dataproc/check-task-not-found)
-
-  - [Check Permissions](/runbook/steps/dataproc/check-permissions)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Org Policy Check](/runbook/steps/crm/org-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
 
   - [Check Master Oom](/runbook/steps/dataproc/check-master-oom)
 
@@ -96,69 +80,35 @@ gcpdiag runbook --help
 
   - [Check Sw Preemption](/runbook/steps/dataproc/check-sw-preemption)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
   - [Check Worker Disk Usage Issue](/runbook/steps/dataproc/check-worker-disk-usage-issue)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Cluster Network Connectivity](/runbook/steps/dataproc/check-cluster-network-connectivity)
 
   - [Check Port Exhaustion](/runbook/steps/dataproc/check-port-exhaustion)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
   - [Check Killing Orphaned Application](/runbook/steps/dataproc/check-killing-orphaned-application)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
 
   - [Check Python Import Failure](/runbook/steps/dataproc/check-python-import-failure)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Shuffle Failures](/runbook/steps/dataproc/check-shuffle-failures)
-
   - [Check Shuffle Service Kill](/runbook/steps/dataproc/check-shuffle-service-kill)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Autoscaling Policy](/runbook/steps/dataproc/check-autoscaling-policy)
 
   - [Check Gc Pause](/runbook/steps/dataproc/check-gc-pause)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
   - [Check Yarn Runtime Exception](/runbook/steps/dataproc/check-yarn-runtime-exception)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
 
   - [Check Job Throttling](/runbook/steps/dataproc/check-job-throttling)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
-
   - [Check Gcs Connector](/runbook/steps/dataproc/check-gcs-connector)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
+  - [Check Shuffle Failures](/runbook/steps/dataproc/check-shuffle-failures)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
+  - [Check Stackdriver Setting](/runbook/steps/dataproc/check-stackdriver-setting)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
+  - [Check Cluster Version](/runbook/steps/dataproc/check-cluster-version)
 
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
+  - [Check Permissions](/runbook/steps/dataproc/check-permissions)
+
+  - [Check Cluster Network Connectivity](/runbook/steps/dataproc/check-cluster-network-connectivity)
 
   - [Check Bq Connector](/runbook/steps/dataproc/check-bq-connector)
-
-  - [Check Logs Exist](/runbook/steps/dataproc/check-logs-exist)
 
   - [Spark Job End](/runbook/steps/dataproc/spark-job-end)
 

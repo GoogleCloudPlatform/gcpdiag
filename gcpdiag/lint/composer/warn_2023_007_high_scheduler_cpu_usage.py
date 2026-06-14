@@ -34,8 +34,8 @@ def prefetch_rule(context: models.Context):
     return
 
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id,
-      f"""
+    context.project_id,
+    f"""
       fetch k8s_container
        | metric 'kubernetes.io/container/cpu/limit_utilization'
        | filter (resource.container_name == 'airflow-scheduler')
@@ -68,7 +68,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for env in envs:
     if env.name in overloaded_envs:
-      report.add_failed(
-          env, f'Scheduler CPU limit exceeded({overloaded_envs[env.name]:.2f})')
+      report.add_failed(env, f'Scheduler CPU limit exceeded({overloaded_envs[env.name]:.2f})')
     else:
       report.add_ok(env)

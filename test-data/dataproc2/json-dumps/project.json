@@ -1,0 +1,14 @@
+{
+  "name": "projects/12340099",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-dataproc2-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - dataproc2",
+  "createTime": "2024-10-31T03:04:58.584562Z",
+  "updateTime": "2024-10-31T06:18:28.441603Z",
+  "etag": "W/\"520c285328f06d6d\"",
+  "labels": {
+    "gcpdiag": "test",
+    "goog-terraform-provisioned": "true"
+  }
+}

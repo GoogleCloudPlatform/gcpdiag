@@ -32,10 +32,11 @@ def prepare_rule(context: models.Context):
   clusters = gke.get_clusters(context)
   for project_id in {c.project_id for c in clusters.values()}:
     logs_by_project[project_id] = logs.query(
-        project_id=project_id,
-        resource_type='k8s_node',
-        log_name='log_id("container-runtime")',
-        filter_str=f'jsonPayload.MESSAGE:"{MATCH_STR}"')
+      project_id=project_id,
+      resource_type='k8s_node',
+      log_name='log_id("container-runtime")',
+      filter_str=f'jsonPayload.MESSAGE:"{MATCH_STR}"',
+    )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -57,18 +58,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       return False
 
   bad_nodes_by_cluster = util.gke_logs_find_bad_nodes(
-      context=context, logs_by_project=logs_by_project, filter_f=filter_f)
+    context=context, logs_by_project=logs_by_project, filter_f=filter_f
+  )
 
   # Create the report.
   for _, c in sorted(clusters.items()):
     if c in bad_nodes_by_cluster:
       # Report only MAX_NODES_TO_REPORT nodes to limit the output for big clusters
       report.add_failed(
-          c,
-          'Invalid config.toml configuration for containerd is detected. Nodes:\n. '
-          + '\n. '.join(list(bad_nodes_by_cluster[c])[:MAX_NODES_TO_REPORT]) +
-          ('\n. + ' + str(len(bad_nodes_by_cluster[c]) - MAX_NODES_TO_REPORT) +
-           ' more node(s)') *
-          (len(bad_nodes_by_cluster[c]) > MAX_NODES_TO_REPORT))
+        c,
+        'Invalid config.toml configuration for containerd is detected. Nodes:\n. '
+        + '\n. '.join(list(bad_nodes_by_cluster[c])[:MAX_NODES_TO_REPORT])
+        + ('\n. + ' + str(len(bad_nodes_by_cluster[c]) - MAX_NODES_TO_REPORT) + ' more node(s)')
+        * (len(bad_nodes_by_cluster[c]) > MAX_NODES_TO_REPORT),
+      )
     else:
       report.add_ok(c)

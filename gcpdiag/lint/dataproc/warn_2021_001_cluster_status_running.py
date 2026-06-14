@@ -26,8 +26,7 @@ def prefetch_rule(context: models.Context):
   clusters_by_project[context.project_id] = dataproc.get_clusters(context)
 
 
-def run_rule(context: models.Context,
-             report: lint.LintReportRuleInterface) -> None:
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   # clusters = dataproc.get_clusters(context)
   clusters = clusters_by_project[context.project_id]
   if not clusters:

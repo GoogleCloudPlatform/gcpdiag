@@ -50,10 +50,10 @@ def prefetch_rule(context: models.Context):
     return
 
   # Fetch the metrics for all clusters.
-  within_str = 'within %dd, d\'%s\'' % (config.get('within_days'),
-                                        monitoring.period_aligned_now(60))
+  within_str = "within %dd, d'%s'" % (config.get('within_days'), monitoring.period_aligned_now(60))
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id, f"""
+    context.project_id,
+    f"""
 fetch k8s_container
 | metric 'kubernetes.io/container/restart_count'
 | filter (resource.namespace_name == 'kube-system' ||
@@ -69,7 +69,8 @@ fetch k8s_container
     cluster_name: resource.cluster_name,
     location: resource.location,
     controller: metadata.system.top_level_controller_name], [ .count ]
-  """)
+  """,
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -82,8 +83,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   per_cluster_results: Dict[tuple, Dict[str, int]] = {}
   for ts in _query_results_per_project_id[context.project_id].values():
     try:
-      cluster_key = (ts['labels']['resource.project_id'],
-                     ts['labels']['location'], ts['labels']['cluster_name'])
+      cluster_key = (
+        ts['labels']['resource.project_id'],
+        ts['labels']['location'],
+        ts['labels']['cluster_name'],
+      )
       cluster_values = per_cluster_results.setdefault(cluster_key, {})
       cluster_values[ts['labels']['controller']] = ts
     except KeyError:
@@ -96,6 +100,4 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if ts_cluster_key not in per_cluster_results:
       report.add_ok(c)
     else:
-      report.add_failed(
-          c, 'restarting: ' +
-          ', '.join(per_cluster_results[ts_cluster_key].keys()))
+      report.add_failed(c, 'restarting: ' + ', '.join(per_cluster_results[ts_cluster_key].keys()))

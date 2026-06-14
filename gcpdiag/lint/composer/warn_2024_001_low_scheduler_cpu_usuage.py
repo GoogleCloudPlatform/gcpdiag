@@ -35,8 +35,8 @@ def prefetch_rule(context: models.Context):
     return
 
   _query_results_per_project_id[context.project_id] = monitoring.query(
-      context.project_id,
-      f"""
+    context.project_id,
+    f"""
       fetch k8s_container
        | metric 'kubernetes.io/container/cpu/limit_utilization'
        | filter (resource.container_name == 'airflow-scheduler')

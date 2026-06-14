@@ -1,0 +1,25 @@
+{
+  "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription3gcs-9pm6hng1",
+  "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1",
+  "pushConfig": {},
+  "ackDeadlineSeconds": 300,
+  "messageRetentionDuration": "604800s",
+  "labels": {
+    "goog-terraform-provisioned": "true"
+  },
+  "expirationPolicy": {
+    "ttl": "2678400s"
+  },
+  "deadLetterPolicy": {
+    "deadLetterTopic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-gcsdlqtopic-9pm6hng1",
+    "maxDeliveryAttempts": 5
+  },
+  "state": "ACTIVE",
+  "cloudStorageConfig": {
+    "bucket": "pubsub1_bucket",
+    "textConfig": {},
+    "maxDuration": "300s",
+    "maxBytes": "1000",
+    "state": "ACTIVE"
+  }
+}

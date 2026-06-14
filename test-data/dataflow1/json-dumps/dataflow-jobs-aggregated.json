@@ -1,0 +1,76 @@
+{
+  "jobs": [
+    {
+      "id": "2025-07-22_22_34_10-17451985144539182981",
+      "projectId": "gcpdiag-datafusion1-aaaa",
+      "name": "job4",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2025-07-23T05:38:11.317430Z",
+      "createTime": "2025-07-23T05:34:10.924396Z",
+      "location": "us-central1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.66.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2025-07-23T05:34:10.924396Z"
+    },
+    {
+      "id": "2025-07-22_21_52_11-3966210819828600312",
+      "projectId": "gcpdiag-datafusion1-aaaa",
+      "name": "job3",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2025-07-23T04:58:47.825097Z",
+      "createTime": "2025-07-23T04:52:14.529770Z",
+      "location": "southamerica-west1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.66.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2025-07-23T04:52:14.529770Z"
+    },
+    {
+      "id": "2025-07-22_21_51_15-11871078573741836091",
+      "projectId": "gcpdiag-datafusion1-aaaa",
+      "name": "job2",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2025-07-23T04:56:03.680855Z",
+      "createTime": "2025-07-23T04:51:17.831890Z",
+      "location": "europe-west1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.66.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2025-07-23T04:51:17.831890Z"
+    },
+    {
+      "id": "2025-07-22_21_47_07-15366228931864371363",
+      "projectId": "gcpdiag-datafusion1-aaaa",
+      "name": "job1",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2025-07-23T04:50:48.311811Z",
+      "createTime": "2025-07-23T04:47:08.425668Z",
+      "location": "us-central1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.66.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2025-07-23T04:47:08.425668Z"
+    }
+  ]
+}

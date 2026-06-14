@@ -22,6 +22,7 @@ If there are log entries that contain messages listed in the public documentatio
 gcpdiag runbook gke/resource-quotas \
   -p project_id=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p location=value \
   -p start_time=value \
   -p end_time=value
@@ -32,7 +33,8 @@ gcpdiag runbook gke/resource-quotas \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `name` | True | None | str | (Optional) The name of the GKE cluster, to limit search only for this cluster |
+| `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `location` | True | None | str | (Optional) The zone or region of the GKE cluster |
 | `start_time` | False | None | datetime | (Optional) The start window to query the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | (Optional) The end window for the logs. Format: YYYY-MM-DDTHH:MM:SSZ |

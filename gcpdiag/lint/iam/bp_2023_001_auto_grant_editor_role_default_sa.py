@@ -26,8 +26,8 @@ constraints = None
 def prefetch_rule(context: models.Context):
   global constraints
   constraints = orgpolicy.get_effective_org_policy(
-      context.project_id,
-      "constraints/iam.automaticIamGrantsForDefaultServiceAccounts")
+    context.project_id, 'constraints/iam.automaticIamGrantsForDefaultServiceAccounts'
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

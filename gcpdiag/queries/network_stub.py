@@ -20,9 +20,6 @@ import json
 
 from gcpdiag.queries import apis_stub
 
-# pylint: disable=unused-argument
-# pylint: disable=invalid-name
-
 SUBNETWORKS_REGION = 'europe-west4'
 
 
@@ -60,30 +57,24 @@ class NetworkApiStub:
     return apis_stub.RestCallStub(project, f'compute-network-{region}')
 
   def nat_router_status(self, project, router_name, region):
-    return apis_stub.RestCallStub(
-        project, f'compute-routers-routerStatus-{router_name}')
+    return apis_stub.RestCallStub(project, f'compute-routers-routerStatus-{router_name}')
 
   def get_nat_ip_info(self, project, router_name, region):
-    return apis_stub.RestCallStub(project,
-                                  f'compute-routers-rnatIpInfo-{router_name}')
+    return apis_stub.RestCallStub(project, f'compute-routers-rnatIpInfo-{router_name}')
 
   def getIamPolicy(self, project, region, resource):
     return apis_stub.RestCallStub(project, 'compute-subnetwork-policy')
 
   def getEffectiveFirewalls(self, project, network):
-    return apis_stub.RestCallStub(project,
-                                  f'compute-effective-firewalls-{network}')
+    return apis_stub.RestCallStub(project, f'compute-effective-firewalls-{network}')
 
-  # pylint: disable=redefined-builtin
   def list(self, project, region=None, filter=None, fields=None):
     if self.mock_state == 'subnetworks':
-      return apis_stub.RestCallStub(
-          project, f'compute-subnetworks-{SUBNETWORKS_REGION}')
+      return apis_stub.RestCallStub(project, f'compute-subnetworks-{SUBNETWORKS_REGION}')
     elif self.mock_state == 'routers':
       if region:
         return apis_stub.RestCallStub(project, f'compute-routers-{region}')
-      return apis_stub.RestCallStub(project,
-                                    f'compute-routers-{SUBNETWORKS_REGION}')
+      return apis_stub.RestCallStub(project, f'compute-routers-{SUBNETWORKS_REGION}')
     elif self.mock_state == 'networks':
       return apis_stub.RestCallStub(project, 'compute-network-default')
     elif self.mock_state == 'routes':
@@ -97,8 +88,7 @@ class NetworkApiStub:
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project_id)
     if self.mock_state == 'get_single_subnetwork':
-      with open(json_dir / 'compute-subnetworks-aggregated.json',
-                encoding='utf-8') as json_file:
+      with open(json_dir / 'compute-subnetworks-aggregated.json', encoding='utf-8') as json_file:
         items = json.load(json_file)['items']
         region = 'regions/' + self.region
         subnets = items[region]['subnetworks']
@@ -114,10 +104,8 @@ class NetworkApiStub:
 
   def getRouterStatus(self, project, router, region):
     if self.mock_state == 'routers':
-      return apis_stub.RestCallStub(project,
-                                    f'compute-routers-routerStatus-{router}')
+      return apis_stub.RestCallStub(project, f'compute-routers-routerStatus-{router}')
 
   def getNatIpInfo(self, project, router, region):
     if self.mock_state == 'routers':
-      return apis_stub.RestCallStub(project,
-                                    f'compute-routers-natIpInfo-{router}')
+      return apis_stub.RestCallStub(project, f'compute-routers-natIpInfo-{router}')

@@ -29,8 +29,9 @@ from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, crm, logs
 
 MATCH_STRING = (
-    '[queued]> finished (failed) although the task says its queued. ' +
-    '(Info: None) Was the task killed externally?')
+  '[queued]> finished (failed) although the task says its queued. '
+  + '(Info: None) Was the task killed externally?'
+)
 
 FILTER = ['severity=ERROR', f'textPayload:("{MATCH_STRING}")']
 
@@ -83,10 +84,10 @@ def prefetch_rule(context: models.Context):
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_composer_environment',
-      log_name='log_id("airflow-scheduler")',
-      filter_str=' AND '.join(FILTER),
+    project_id=context.project_id,
+    resource_type='cloud_composer_environment',
+    log_name='log_id("airflow-scheduler")',
+    filter_str=' AND '.join(FILTER),
   )
 
 
@@ -108,7 +109,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
       for log_entry in logs_.entries:
         if log_entry['severity'] != 'ERROR' or MATCH_STRING not in get_path(
-            log_entry, 'textPayload', default=''):
+          log_entry, 'textPayload', default=''
+        ):
           continue
 
         error_message = get_path(log_entry, 'textPayload')
@@ -117,13 +119,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
         environment = get_path(log_entry, ('resource', 'labels'))
 
-        environment_detials = find_env(env_list,
-                                       environment['environment_name'])
+        environment_detials = find_env(env_list, environment['environment_name'])
 
         if (dag_name, task_name, environment_detials) not in dag_task_list:
           report.add_failed(
-              environment_detials,
-              f'Task "{dag_name}/{task_name}" is failing intermittently',
+            environment_detials,
+            f'Task "{dag_name}/{task_name}" is failing intermittently',
           )
           dag_task_list.add((dag_name, task_name, environment_detials))
 

@@ -22,8 +22,8 @@ from gcpdiag.queries import gke
 
 # All ports must be allowed, but only verify a fixed set.
 VERIFY_PORTS = {  #
-    'tcp': [53, 80, 443, 8080, 10000],
-    'udp': [53, 1000, 10000]
+  'tcp': [53, 80, 443, 8080, 10000],
+  'udp': [53, 1000, 10000],
 }
 
 
@@ -48,18 +48,23 @@ def _run_rule_cluster(report: lint.LintReportRuleInterface, c: gke.Cluster):
     if c.is_autopilot:
       # use default tags for autopilot clusters
       tags = [f'gke-{c.name}-{c.cluster_hash}-node']
-    for (proto, port) in utils.iter_dictlist(VERIFY_PORTS):
+    for proto, port in utils.iter_dictlist(VERIFY_PORTS):
       result = network.firewall.check_connectivity_ingress(
-          src_ip=src_net,
-          ip_protocol=proto,
-          port=port,
-          target_service_account=np.service_account,
-          target_tags=tags)
+        src_ip=src_net,
+        ip_protocol=proto,
+        port=port,
+        target_service_account=np.service_account,
+        target_tags=tags,
+      )
 
       if result.action == 'deny':
         report.add_failed(
-            c, (f'connections from {src_net} to {proto}:{port} blocked by '
-                f'{result.matched_by_str} (node pool: {np.name})'))
+          c,
+          (
+            f'connections from {src_net} to {proto}:{port} blocked by '
+            f'{result.matched_by_str} (node pool: {np.name})'
+          ),
+        )
         return
   report.add_ok(c)
 

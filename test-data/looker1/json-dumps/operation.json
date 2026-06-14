@@ -1,0 +1,17 @@
+{
+  "operations": [
+    {
+      "name": "projects/gcpdiag-looker1-aaaa/locations/us-central1/operations/operation-1",
+      "done": true,
+      "metadata": {
+        "@type": "type.googleapis.com/google.cloud.looker.v1alpha2.OperationMetadata",
+        "createTime": "2025-05-16T09:27:11.660755969Z",
+        "endTime": "2025-05-16T09:28:59.269011025Z",
+        "target": "projects/gcpdiag-looker1-aaaa/locations/us-central1/instances/mukul-private-instance/backups/6a6c25be-2254-4999-8ebb-e223a93e3f0f",
+        "verb": "create",
+        "requestedCancellation": false,
+        "apiVersion": "v1alpha2"
+      }
+    }
+  ]
+}

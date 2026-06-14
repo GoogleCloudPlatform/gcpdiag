@@ -40,23 +40,29 @@ class CheckWorkbenchInstanceCustomScripts(runbook.Step):
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project_id, zone=zone, instance_name=instance_name)
-    if (workbench_instance.post_startup_script or
-        workbench_instance.startup_script or
-        workbench_instance.startup_script_url):
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
+    if (
+      workbench_instance.post_startup_script
+      or workbench_instance.startup_script
+      or workbench_instance.startup_script_url
+    ):
       op.add_uncertain(
-          resource=workbench_instance,
-          reason=op.prep_msg(
-              op.UNCERTAIN_REASON,
-              instance_name=instance_name,
-              post_startup_script=workbench_instance.post_startup_script,
-              startup_script=workbench_instance.startup_script,
-              startup_script_url=workbench_instance.startup_script_url),
-          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+        resource=workbench_instance,
+        reason=op.prep_msg(
+          op.UNCERTAIN_REASON,
+          instance_name=instance_name,
+          post_startup_script=workbench_instance.post_startup_script,
+          startup_script=workbench_instance.startup_script,
+          startup_script_url=workbench_instance.startup_script_url,
+        ),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+      )
     else:
-      op.add_ok(resource=workbench_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   instance_name=instance_name))
+      op.add_ok(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name),
+      )
 
 
 class CheckWorkbenchInstanceUsingOfficialImage(runbook.Step):
@@ -76,38 +82,43 @@ class CheckWorkbenchInstanceUsingOfficialImage(runbook.Step):
     project_id: str = self.project_id or op.get(flags.PROJECT_ID)
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
-    gce_instance = gce.get_instance(project_id=project_id,
-                                    zone=zone,
-                                    instance_name=instance_name)
+    gce_instance = gce.get_instance(project_id=project_id, zone=zone, instance_name=instance_name)
     gce_instance_boot_disk_image = gce_instance.get_boot_disk_image()
-    if (constants.WORKBENCH_INSTANCES_IMAGES_FAMILY
-        in gce_instance_boot_disk_image and
-        constants.WORKBENCH_INSTANCES_IMAGES_PROJECT
-        in gce_instance_boot_disk_image):
-      op.add_ok(resource=gce_instance,
-                reason=op.prep_msg(
-                    op.SUCCESS_REASON,
-                    instance_name=instance_name,
-                    image_family=constants.WORKBENCH_INSTANCES_IMAGES_FAMILY,
-                    image=gce_instance_boot_disk_image))
+    if (
+      constants.WORKBENCH_INSTANCES_IMAGES_FAMILY in gce_instance_boot_disk_image
+      and constants.WORKBENCH_INSTANCES_IMAGES_PROJECT in gce_instance_boot_disk_image
+    ):
+      op.add_ok(
+        resource=gce_instance,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON,
+          instance_name=instance_name,
+          image_family=constants.WORKBENCH_INSTANCES_IMAGES_FAMILY,
+          image=gce_instance_boot_disk_image,
+        ),
+      )
     elif constants.DEEP_LEARNING_VM_IMAGES_PROJECT in gce_instance_boot_disk_image:
       op.add_uncertain(
-          resource=gce_instance,
-          reason=op.prep_msg(
-              op.UNCERTAIN_REASON,
-              image=gce_instance_boot_disk_image,
-              images_family=constants.DEEP_LEARNING_VM_IMAGES_PROJECT),
-          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+        resource=gce_instance,
+        reason=op.prep_msg(
+          op.UNCERTAIN_REASON,
+          image=gce_instance_boot_disk_image,
+          images_family=constants.DEEP_LEARNING_VM_IMAGES_PROJECT,
+        ),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+      )
     else:
       op.add_failed(
-          resource=gce_instance,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              image=gce_instance_boot_disk_image,
-              images_family=constants.WORKBENCH_INSTANCES_IMAGES_FAMILY),
-          remediation=op.prep_msg(
-              op.FAILURE_REMEDIATION,
-              images_family=constants.WORKBENCH_INSTANCES_IMAGES_FAMILY))
+        resource=gce_instance,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          image=gce_instance_boot_disk_image,
+          images_family=constants.WORKBENCH_INSTANCES_IMAGES_FAMILY,
+        ),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION, images_family=constants.WORKBENCH_INSTANCES_IMAGES_FAMILY
+        ),
+      )
       # User will need to create a new Workbench Instance
 
 
@@ -128,62 +139,80 @@ class CheckWorkbenchInstanceIsUsingLatestEnvVersion(runbook.Step):
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project_id, zone=zone, instance_name=instance_name)
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
     workbench_instance_upgradability: dict = notebooks.workbench_instance_check_upgradability(
-        project_id=project_id, workbench_instance_name=workbench_instance.name)
+      project_id=project_id, workbench_instance_name=workbench_instance.name
+    )
     workbench_instance_upgradeable: bool = workbench_instance_upgradability.get(
-        'upgradeable', False)
+      'upgradeable', False
+    )
     workbench_instance_upgrade_version: str = workbench_instance_upgradability.get(
-        'upgradeVersion', '').upper()
-    workbench_instance_upgrade_info: str = workbench_instance_upgradability.get(
-        'upgradeInfo', '')
-    workbench_instance_upgrade_image: str = workbench_instance_upgradability.get(
-        'upgradeImage', '')
+      'upgradeVersion', ''
+    ).upper()
+    workbench_instance_upgrade_info: str = workbench_instance_upgradability.get('upgradeInfo', '')
+    workbench_instance_upgrade_image: str = workbench_instance_upgradability.get('upgradeImage', '')
     op.info(f'instance is upgradeable: {workbench_instance_upgradeable}')
     op.info(f'instance upgrade info: {workbench_instance_upgrade_info}')
     if workbench_instance_upgradeable:
       op.add_failed(
-          resource=workbench_instance,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              instance_name=instance_name,
-              environment_version=workbench_instance.environment_version),
-          remediation=op.prep_msg(
-              op.FAILURE_REMEDIATION,
-              upgrade_version=workbench_instance_upgrade_version,
-              upgrade_image=workbench_instance_upgrade_image))
+        resource=workbench_instance,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          instance_name=instance_name,
+          environment_version=workbench_instance.environment_version,
+        ),
+        remediation=op.prep_msg(
+          op.FAILURE_REMEDIATION,
+          upgrade_version=workbench_instance_upgrade_version,
+          upgrade_image=workbench_instance_upgrade_image,
+        ),
+      )
     else:
       if constants.WORKBENCH_INSTANCES_UPGRADABILITY_CURRENT in workbench_instance_upgrade_info:
         op.add_ok(
-            resource=workbench_instance,
-            reason=op.prep_msg(
-                op.SUCCESS_REASON,
-                instance_name=instance_name,
-                environment_version=workbench_instance.environment_version))
-      elif (constants.WORKBENCH_INSTANCES_UPGRADABILITY_INVALID_STATE_INFO
-            in workbench_instance_upgrade_info and
-            workbench_instance.state != notebooks.StateEnum.STOPPED):
-        op.add_uncertain(resource=workbench_instance,
-                         reason=op.prep_msg(
-                             op.UNCERTAIN_REASON,
-                             instance_name=instance_name,
-                             upgrade_info=workbench_instance_upgrade_info),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+          resource=workbench_instance,
+          reason=op.prep_msg(
+            op.SUCCESS_REASON,
+            instance_name=instance_name,
+            environment_version=workbench_instance.environment_version,
+          ),
+        )
+      elif (
+        constants.WORKBENCH_INSTANCES_UPGRADABILITY_INVALID_STATE_INFO
+        in workbench_instance_upgrade_info
+        and workbench_instance.state != notebooks.StateEnum.STOPPED
+      ):
+        op.add_uncertain(
+          resource=workbench_instance,
+          reason=op.prep_msg(
+            op.UNCERTAIN_REASON,
+            instance_name=instance_name,
+            upgrade_info=workbench_instance_upgrade_info,
+          ),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+        )
       elif not workbench_instance.environment_version:
         # Environment version is 0 and upgradability False when the instance is new
-        op.add_uncertain(resource=workbench_instance,
-                         reason=op.prep_msg(
-                             op.UNCERTAIN_REASON_ALT1,
-                             instance_name=instance_name,
-                             upgrade_info=workbench_instance_upgrade_info),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT1))
+        op.add_uncertain(
+          resource=workbench_instance,
+          reason=op.prep_msg(
+            op.UNCERTAIN_REASON_ALT1,
+            instance_name=instance_name,
+            upgrade_info=workbench_instance_upgrade_info,
+          ),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT1),
+        )
       else:
-        op.add_uncertain(resource=workbench_instance,
-                         reason=op.prep_msg(
-                             op.UNCERTAIN_REASON_ALT2,
-                             instance_name=instance_name,
-                             upgrade_info=workbench_instance_upgrade_info),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT2))
+        op.add_uncertain(
+          resource=workbench_instance,
+          reason=op.prep_msg(
+            op.UNCERTAIN_REASON_ALT2,
+            instance_name=instance_name,
+            upgrade_info=workbench_instance_upgrade_info,
+          ),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT2),
+        )
 
 
 class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
@@ -206,7 +235,8 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project_id, zone=zone, instance_name=instance_name)
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
     filter_str = r'''severity=INFO
                       AND
                       resource.type="gce_instance"
@@ -216,16 +246,13 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
                       labels."compute.googleapis.com/resource_name"="{instance_name}"
                       AND
                       textPayload=~"ServerApp.*Jupyter Server.*running at.*"'''.format(
-        project_id=project_id, instance_name=instance_name)
+      project_id=project_id, instance_name=instance_name
+    )
     serial_log_entries_jupyter_running = logs.realtime_query(
-        project_id=project_id,
-        filter_str=filter_str,
-        start_time=start_time,
-        end_time=end_time)
+      project_id=project_id, filter_str=filter_str, start_time=start_time, end_time=end_time
+    )
     if serial_log_entries_jupyter_running:
-      op.info(
-          'Jupyter is running! Verifying if it\'s running on port 127.0.0.1:8080.'
-      )
+      op.info("Jupyter is running! Verifying if it's running on port 127.0.0.1:8080.")
       filter_str = r'''severity=INFO
                     AND
                     resource.type="gce_instance"
@@ -237,28 +264,30 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
                     textPayload=~"ServerApp.*localhost:8080\/lab"
                     AND
                     textPayload=~"ServerApp.*localhost:[0-9]{{4}}\/lab"'''.format(
-          project_id=project_id, instance_name=instance_name)
+        project_id=project_id, instance_name=instance_name
+      )
       serial_log_entries_jupyter_port = logs.realtime_query(
-          project_id=project_id,
-          filter_str=filter_str,
-          start_time=start_time,
-          end_time=end_time)
+        project_id=project_id, filter_str=filter_str, start_time=start_time, end_time=end_time
+      )
       if serial_log_entries_jupyter_port:
-        #User will need to fix their instance o create a new one
-        op.add_failed(resource=workbench_instance,
-                      reason=op.prep_msg(op.FAILURE_REASON_ALT1,
-                                         instance_name=instance_name),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+        # User will need to fix their instance o create a new one
+        op.add_failed(
+          resource=workbench_instance,
+          reason=op.prep_msg(op.FAILURE_REASON_ALT1, instance_name=instance_name),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+        )
       else:
-        op.add_ok(resource=workbench_instance,
-                  reason=op.prep_msg(op.SUCCESS_REASON,
-                                     instance_name=instance_name))
+        op.add_ok(
+          resource=workbench_instance,
+          reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name),
+        )
     else:
-      #User needs to make sure their instance is not stopped to get logs
-      op.add_failed(resource=workbench_instance,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       instance_name=instance_name),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      # User needs to make sure their instance is not stopped to get logs
+      op.add_failed(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.FAILURE_REASON, instance_name=instance_name),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
 
 class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
@@ -276,26 +305,26 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
   def execute(self):
     """Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance."""
     within_hours = 8
-    within_str = 'within %dh, d\'%s\'' % (within_hours,
-                                          monitoring.period_aligned_now(5))
+    within_str = "within %dh, d'%s'" % (within_hours, monitoring.period_aligned_now(5))
     project_id: str = self.project_id or op.get(flags.PROJECT_ID)
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
     op.put(gce_flags.PROJECT_ID, project_id)
-    op.put(gce_flags.NAME, instance_name)
+    op.put(gce_flags.INSTANCE_NAME, instance_name)
     op.put(gce_flags.ZONE, zone)
     ops_agent_query = monitoring.query(
-        op.get(flags.PROJECT_ID), """
+      op.get(flags.PROJECT_ID),
+      """
               fetch gce_instance
               | metric 'agent.googleapis.com/agent/uptime'
               | filter (metadata.system_labels.name == '{}')
               | align rate(5m)
               | every 5m
               | {}
-            """.format(op.get(gce_flags.NAME), within_str))
+            """.format(op.get(gce_flags.INSTANCE_NAME), within_str),
+    )
     if ops_agent_query:
-      op.info(
-          'Runbook will use ops agent metrics for VM performance investigation')
+      op.info('Runbook will use ops agent metrics for VM performance investigation')
 
     vm_memory_utilization = gce_gs.HighVmMemoryUtilization()
     vm_memory_utilization.project_id = project_id
@@ -335,15 +364,21 @@ class CheckWorkbenchInstanceExternalIpDisabled(runbook.Step):
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project_id, zone=zone, instance_name=instance_name)
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
     if workbench_instance.disable_public_ip:
-      op.add_uncertain(resource=workbench_instance,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON,
-                                          instance_name=instance_name,
-                                          network=workbench_instance.network,
-                                          subnetwork=workbench_instance.subnet),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(
+        resource=workbench_instance,
+        reason=op.prep_msg(
+          op.UNCERTAIN_REASON,
+          instance_name=instance_name,
+          network=workbench_instance.network,
+          subnetwork=workbench_instance.subnet,
+        ),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+      )
     else:
-      op.add_ok(resource=workbench_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   instance_name=instance_name))
+      op.add_ok(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name),
+      )

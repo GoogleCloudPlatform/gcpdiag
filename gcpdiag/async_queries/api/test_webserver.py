@@ -1,17 +1,17 @@
-""" Simple web server used for testing """
+"""Simple web server used for testing"""
+
 from typing import Any, List, Protocol
 
 from aiohttp import web
 
 
 class Response(Protocol):
-
   def get_response(self) -> Any:
     pass
 
 
 class Success:
-  """ Canned successful response """
+  """Canned successful response"""
 
   def __init__(self, data: Any) -> None:
     self.data = data
@@ -21,14 +21,15 @@ class Success:
 
 
 AIOHTTP_EXCEPTIONS_BY_CODE = {
-    408: web.HTTPRequestTimeout,
-    429: web.HTTPTooManyRequests,
-    500: web.HTTPInternalServerError
+  408: web.HTTPRequestTimeout,
+  429: web.HTTPTooManyRequests,
+  500: web.HTTPInternalServerError,
 }
 
 
 class Failure:
-  """ Canned failed response """
+  """Canned failed response"""
+
   _status: int
 
   def __init__(self, status: int = 500) -> None:
@@ -44,7 +45,7 @@ class Failure:
 
 
 class WebServer:
-  """ Simple web server used for testing """
+  """Simple web server used for testing"""
 
   responses: List[Response]
 
@@ -57,11 +58,9 @@ class WebServer:
     routes = web.RouteTableDef()
 
     @routes.get('/test')
-    # pylint: disable=unused-argument
     async def hello(request: Any) -> Any:
       assert len(self.responses) > 0
-      assert request.headers[
-          'test_auth'] == f'test_auth {self.expected_auth_token}'
+      assert request.headers['test_auth'] == f'test_auth {self.expected_auth_token}'
       return self.responses.pop(0).get_response()
 
     app = web.Application()

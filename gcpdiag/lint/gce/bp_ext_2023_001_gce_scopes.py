@@ -30,39 +30,35 @@ from gcpdiag.queries import crm, gce, iam
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
-  #Fetching the list of instances and declaring an IAM policy object
+  # Fetching the list of instances and declaring an IAM policy object
   instances = gce.get_instances(context)
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
   project_number = crm.get_project(context.project_id).number
-  cloud_platform_scope = "https://www.googleapis.com/auth/cloud-platform"
+  cloud_platform_scope = 'https://www.googleapis.com/auth/cloud-platform'
 
-  #Defining list of pre-defined roles that a default SA must not have
-  roles = ["roles/editor", "roles/owner", "roles/viewer", "roles/browser"]
+  # Defining list of pre-defined roles that a default SA must not have
+  roles = ['roles/editor', 'roles/owner', 'roles/viewer', 'roles/browser']
 
   if not instances:
-    report.add_skipped(None, "no instances found")
+    report.add_skipped(None, 'no instances found')
     return
 
-  for i in sorted(instances.values(),
-                  key=op.attrgetter("project_id", "full_path")):
-    service_account = f"serviceAccount:{i.service_account}"
-    basic_roles_granted = [
-        iam_policy.has_role_permissions(service_account, role) for role in roles
-    ]
+  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'full_path')):
+    service_account = f'serviceAccount:{i.service_account}'
+    basic_roles_granted = [iam_policy.has_role_permissions(service_account, role) for role in roles]
     # GKE nodes are not checked by this rule
     if i.is_gke_node():
       continue
 
     if (cloud_platform_scope in i.access_scopes) and any(basic_roles_granted):
       report.add_failed(
-          i,
-          f"{i.service_account} has a basic role granted along with cloud-platform scope."
+        i, f'{i.service_account} has a basic role granted along with cloud-platform scope.'
       )
 
     elif any(basic_roles_granted):
-      report.add_failed(i, f"{i.service_account} has a basic role granted.")
+      report.add_failed(i, f'{i.service_account} has a basic role granted.')
 
-    elif (f"{project_number}-compute@developer.gserviceaccount.com"
-          not in service_account) and not any(basic_roles_granted):
+    elif (
+      f'{project_number}-compute@developer.gserviceaccount.com' not in service_account
+    ) and not any(basic_roles_granted):
       report.add_ok(i)

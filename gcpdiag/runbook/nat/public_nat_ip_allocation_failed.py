@@ -15,7 +15,7 @@
 
 import googleapiclient.errors
 
-from gcpdiag import config, runbook
+from gcpdiag import config, models, runbook
 from gcpdiag.queries import crm, monitoring, network
 from gcpdiag.runbook import op
 from gcpdiag.runbook.nat import flags
@@ -37,35 +37,38 @@ class PublicNatIpAllocationFailed(runbook.DiagnosticTree):
 
     - NAT IP and Port calculation: For source nic without an External IP address,
       verify the VM is served by a Public NAT Gateway and check there are no issues on the NATGW.
-    """
+  """
 
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True
-      },
-      flags.NAT_GATEWAY_NAME: {
-          'type': str,
-          'help': 'The name of the NATGW',
-          'required': True
-      },
-      flags.CLOUD_ROUTER_NAME: {
-          'type': str,
-          'help': 'The name of the Cloud Router of the NATGW',
-          'required': True
-      },
-      flags.NETWORK: {
-          'type': str,
-          'help': 'The VPC network of the target NATGW',
-          'required': True
-      },
-      flags.REGION: {
-          'type': str,
-          'help': 'The region of the target NATGW',
-          'required': True
-      }
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.NAT_GATEWAY_NAME: {'type': str, 'help': 'The name of the NATGW', 'required': True},
+    flags.CLOUD_ROUTER_NAME: {
+      'type': str,
+      'help': 'The name of the Cloud Router of the NATGW',
+      'required': True,
+    },
+    flags.NETWORK: {
+      'type': str,
+      'help': 'The VPC network of the target NATGW',
+      'new_parameter': 'nat_network',
+      'deprecated': True,
+    },
+    flags.NAT_NETWORK: {
+      'type': str,
+      'help': 'The VPC network of the target NATGW',
+      'required': True,
+    },
+    flags.REGION: {'type': str, 'help': 'The region of the target NATGW', 'required': True},
   }
+
+  def legacy_parameter_handler(self, parameters):
+    """Handles legacy parameters."""
+    if flags.NETWORK in parameters:
+      parameters[flags.NAT_NETWORK] = parameters.pop(flags.NETWORK)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -78,8 +81,7 @@ class PublicNatIpAllocationFailed(runbook.DiagnosticTree):
     self.add_start(start)
     # Describe the step relationships
     self.add_step(parent=start, child=nat_allocation_failed_check)
-    self.add_step(parent=nat_allocation_failed_check,
-                  child=nat_gw_ip_allocation_method_check)
+    self.add_step(parent=nat_allocation_failed_check, child=nat_gw_ip_allocation_method_check)
     # Ending your runbook
     self.add_end(NatIpAllocationFailedEnd())
 
@@ -101,56 +103,75 @@ class NatIpAllocationFailedStart(runbook.StartStep):
   def execute(self):
     """Starting Nat IP Allocation Failed diagnostics"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    context = models.Context(project_id=op.get(flags.PROJECT_ID))
     # try to fetch the network for the NATGW
     try:
-      vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NETWORK))
+      vpc_network = network.get_network(
+        project_id=context.project_id,
+        network_name=op.get(flags.NAT_NETWORK),
+        context=context,
+      )
     except googleapiclient.errors.HttpError:
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        network=op.get(flags.NETWORK),
-                                        project_id=op.get(flags.PROJECT_ID)))
+      op.add_skipped(
+        project,
+        reason=op.prep_msg(
+          op.SKIPPED_REASON,
+          network=op.get(flags.NAT_NETWORK),
+          project_id=op.get(flags.PROJECT_ID),
+        ),
+      )
       return
     # try to get the cloud router
     try:
-      routers = network.get_routers(project_id=op.get(flags.PROJECT_ID),
-                                    region=op.get(flags.REGION),
-                                    network=vpc_network)
+      routers = network.get_routers(
+        project_id=op.get(flags.PROJECT_ID),
+        region=op.get(flags.REGION),
+        network=vpc_network,
+      )
     except googleapiclient.errors.HttpError:
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON_ALT1,
-                                        cloud_router=op.get(
-                                            flags.CLOUD_ROUTER_NAME),
-                                        region=op.get(flags.REGION),
-                                        project_id=op.get(flags.PROJECT_ID)))
+      op.add_skipped(
+        project,
+        reason=op.prep_msg(
+          op.SKIPPED_REASON_ALT1,
+          cloud_router=op.get(flags.CLOUD_ROUTER_NAME),
+          region=op.get(flags.REGION),
+          project_id=op.get(flags.PROJECT_ID),
+        ),
+      )
+      return
     if routers:
       # Check that the cloud router name passed is valid.
       router = [r for r in routers if r.name == op.get(flags.CLOUD_ROUTER_NAME)]
       if not router:
-        op.add_skipped(project,
-                       reason=op.prep_msg(op.SKIPPED_REASON_ALT2,
-                                          cloud_router=op.get(
-                                              flags.CLOUD_ROUTER_NAME),
-                                          region=op.get(flags.REGION),
-                                          project_id=op.get(flags.PROJECT_ID)))
+        op.add_skipped(
+          project,
+          reason=op.prep_msg(
+            op.SKIPPED_REASON_ALT2,
+            cloud_router=op.get(flags.CLOUD_ROUTER_NAME),
+            region=op.get(flags.REGION),
+            project_id=op.get(flags.PROJECT_ID),
+          ),
+        )
+        return
       # Check that the natgateway name passed is served by the cloud router.
       nat_router = router[0]
-      if not [
-          n for n in nat_router.nats
-          if n['name'] == op.get(flags.NAT_GATEWAY_NAME)
-      ]:
-        op.add_skipped(project,
-                       reason=op.prep_msg(op.SKIPPED_REASON_ALT3,
-                                          cloud_router=op.get(
-                                              flags.NAT_GATEWAY_NAME),
-                                          region=op.get(flags.REGION),
-                                          project_id=op.get(flags.PROJECT_ID)))
+      if not [n for n in nat_router.nats if n['name'] == op.get(flags.NAT_GATEWAY_NAME)]:
+        op.add_skipped(
+          project,
+          reason=op.prep_msg(
+            op.SKIPPED_REASON_ALT3,
+            cloud_router=op.get(flags.NAT_GATEWAY_NAME),
+            region=op.get(flags.REGION),
+            project_id=op.get(flags.PROJECT_ID),
+          ),
+        )
 
 
 class NatAllocationFailedCheck(runbook.Step):
   """Checks NAT Allocation failed metric for the NATGW.
 
-  This step determines whether Cloud NAT has run into issues due to insufficient NAT IP addresses.
+  This step determines whether Cloud NAT has run into issues due to insufficient
+  NAT IP addresses.
   by checking the NAT Allocation failed metric.
   """
 
@@ -158,69 +179,82 @@ class NatAllocationFailedCheck(runbook.Step):
 
   def execute(self):
     """Checking the nat_allocation_failed metric for NAT IP allocation failure
-      and the NAT router status.
+    and the NAT router status.
     """
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     gw_name = op.get(flags.NAT_GATEWAY_NAME)
     region = op.get(flags.REGION)
+    min_extra_ips_needed = 0
+    vms_with_nat_mappings = 0
     # check the nat router status
     router_status = network.nat_router_status(
-        project_id=op.get(flags.PROJECT_ID),
-        router_name=op.get(flags.CLOUD_ROUTER_NAME),
-        region=op.get(flags.REGION))
+      project_id=op.get(flags.PROJECT_ID),
+      router_name=op.get(flags.CLOUD_ROUTER_NAME),
+      region=op.get(flags.REGION),
+    )
     if not router_status:
-      op.info('unable to fetch router status for the router: %s',
-              op.get(flags.CLOUD_ROUTER_NAME))
+      op.info('unable to fetch router status for the router: %s', op.get(flags.CLOUD_ROUTER_NAME))
     else:
       min_extra_ips_needed = router_status.min_extra_nat_ips_needed
       vms_with_nat_mappings = router_status.num_vms_with_nat_mappings
 
     nat_allocation_failed = monitoring.query(
-        op.get(flags.PROJECT_ID),
-        'fetch nat_gateway::router.googleapis.com/nat/nat_allocation_failed '
-        f'| filter (resource.gateway_name == \'{gw_name}\' && resource.region == \'{region}\')'
-        ' | within 5m')
+      op.get(flags.PROJECT_ID),
+      'fetch nat_gateway::router.googleapis.com/nat/nat_allocation_failed '
+      f"| filter (resource.gateway_name == '{gw_name}' && resource.region == '{region}')"
+      ' | within 5m',
+    )
 
     if nat_allocation_failed:
       values = nat_allocation_failed.values()
       for value in values:
         if value.get('values')[0][0] or min_extra_ips_needed:
-          op.add_failed(project,
-                        reason=op.prep_msg(
-                            op.FAILURE_REASON,
-                            nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
-                            router_name=op.get(flags.CLOUD_ROUTER_NAME),
-                            min_extra_ips_needed=min_extra_ips_needed,
-                            vms_with_nat_mappings=vms_with_nat_mappings),
-                        remediation=op.prep_msg(
-                            op.FAILURE_REMEDIATION,
-                            nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
-                            router_name=op.get(flags.CLOUD_ROUTER_NAME),
-                            min_extra_ips_needed=min_extra_ips_needed,
-                            vms_with_nat_mappings=vms_with_nat_mappings))
+          op.add_failed(
+            project,
+            reason=op.prep_msg(
+              op.FAILURE_REASON,
+              nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
+              router_name=op.get(flags.CLOUD_ROUTER_NAME),
+              min_extra_ips_needed=min_extra_ips_needed,
+              vms_with_nat_mappings=vms_with_nat_mappings,
+            ),
+            remediation=op.prep_msg(
+              op.FAILURE_REMEDIATION,
+              nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
+              router_name=op.get(flags.CLOUD_ROUTER_NAME),
+              min_extra_ips_needed=min_extra_ips_needed,
+              vms_with_nat_mappings=vms_with_nat_mappings,
+            ),
+          )
         else:
-          op.add_ok(project,
-                    reason=op.prep_msg(
-                        op.SUCCESS_REASON,
-                        nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
-                        router_name=op.get(flags.CLOUD_ROUTER_NAME),
-                        min_extra_ips_needed=min_extra_ips_needed,
-                        vms_with_nat_mappings=vms_with_nat_mappings))
-          op.add_skipped(project,
-                         reason=op.prep_msg(
-                             op.SKIPPED_REASON,
-                             nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
-                             router_name=op.get(flags.CLOUD_ROUTER_NAME)))
+          op.add_ok(
+            project,
+            reason=op.prep_msg(
+              op.SUCCESS_REASON,
+              nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
+              router_name=op.get(flags.CLOUD_ROUTER_NAME),
+              min_extra_ips_needed=min_extra_ips_needed,
+              vms_with_nat_mappings=vms_with_nat_mappings,
+            ),
+          )
+          op.add_skipped(
+            project,
+            reason=op.prep_msg(
+              op.SKIPPED_REASON,
+              nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME),
+              router_name=op.get(flags.CLOUD_ROUTER_NAME),
+            ),
+          )
     else:
-      op.add_uncertain(project,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON,
-                                          nat_gateway_name=op.get(
-                                              flags.NAT_GATEWAY_NAME)),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                               nat_gateway_name=op.get(
-                                                   flags.NAT_GATEWAY_NAME)))
+      op.add_uncertain(
+        project,
+        reason=op.prep_msg(op.UNCERTAIN_REASON, nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME)),
+        remediation=op.prep_msg(
+          op.UNCERTAIN_REMEDIATION, nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME)
+        ),
+      )
 
 
 class NatIpAllocationMethodCheck(runbook.Gateway):
@@ -235,45 +269,54 @@ class NatIpAllocationMethodCheck(runbook.Gateway):
     """Checking the NATGW configuration."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    context = models.Context(project_id=op.get(flags.PROJECT_ID))
 
     # try to fetch the network for the NATGW
     try:
-      vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NETWORK))
+      vpc_network = network.get_network(
+        project_id=context.project_id, network_name=op.get(flags.NAT_NETWORK), context=context
+      )
     except googleapiclient.errors.HttpError:
       op.add_skipped(
-          project,
-          reason=
-          ("""Unable to fetch the network {} confirm it exists in the project {}"""
-          ).format(op.get(flags.NETWORK), op.get(flags.PROJECT_ID)))
+        project,
+        reason=("""Unable to fetch the network {} confirm it exists in the project {}""").format(
+          op.get(flags.NAT_NETWORK), op.get(flags.PROJECT_ID)
+        ),
+      )
       return
     # try to get the router
     try:
-      routers = network.get_routers(project_id=op.get(flags.PROJECT_ID),
-                                    region=op.get(flags.REGION),
-                                    network=vpc_network)
+      routers = network.get_routers(
+        project_id=op.get(flags.PROJECT_ID), region=op.get(flags.REGION), network=vpc_network
+      )
     except googleapiclient.errors.HttpError:
-      op.add_skipped(project,
-                     reason=("""Failed to fetch routers in the vpc network {}
-                  does not exist in region {} of project {}""").format(
-                         op.get(flags.NETWORK), op.get(flags.REGION),
-                         op.get(flags.PROJECT_ID)))
-
+      op.add_skipped(
+        project,
+        reason=(
+          """Failed to fetch routers in the vpc network {}
+                  does not exist in region {} of project {}"""
+        ).format(op.get(flags.NAT_NETWORK), op.get(flags.REGION), op.get(flags.PROJECT_ID)),
+      )
+      return
     if routers:
       # filter routers for the cloud router name specified for the gateway.
       router = [r for r in routers if r.name == op.get(flags.CLOUD_ROUTER_NAME)]
       if router:
         nat_router = router[0]
-        if nat_router.get_nat_ip_allocate_option(
-            nat_gateway=op.get(flags.NAT_GATEWAY_NAME)) == 'AUTO_ONLY':
+        if (
+          nat_router.get_nat_ip_allocate_option(nat_gateway=op.get(flags.NAT_GATEWAY_NAME))
+          == 'AUTO_ONLY'
+        ):
           self.add_child(NatIpAllocationAutoOnly())
         else:
           self.add_child(NatIpAllocationManualOnly())
       else:
-        op.add_skipped(project,
-                       reason="""
+        op.add_skipped(
+          project,
+          reason="""
           No Cloud router with the name: {} found.
-          """.format(op.get(flags.CLOUD_ROUTER_NAME)))
+          """.format(op.get(flags.CLOUD_ROUTER_NAME)),
+        )
 
 
 class NatIpAllocationAutoOnly(runbook.Step):
@@ -290,11 +333,11 @@ class NatIpAllocationAutoOnly(runbook.Step):
     """NAT IP allocation is configured as AUTO_ONLY."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
-    op.add_failed(project,
-                  reason=op.prep_msg(op.FAILURE_REASON,
-                                     nat_gateway_name=op.get(
-                                         flags.NAT_GATEWAY_NAME)),
-                  remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    op.add_failed(
+      project,
+      reason=op.prep_msg(op.FAILURE_REASON, nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME)),
+      remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+    )
 
 
 class NatIpAllocationManualOnly(runbook.Step):
@@ -313,93 +356,108 @@ class NatIpAllocationManualOnly(runbook.Step):
     Running diagnostic for NAT Gateway configured as MANUAL_ONLY only
     """
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    context = models.Context(project_id=op.get(flags.PROJECT_ID))
     enable_dynamic_port_allocation = None
     nat_gw_ips_in_use = None
-    min_extra_ips_needed = None
-    vms_with_nat_mappings = None
+    min_extra_ips_needed = 0
+    vms_with_nat_mappings = 0
 
     # try to fetch the network for the NATGW
     try:
-      vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NETWORK))
+      vpc_network = network.get_network(
+        project_id=context.project_id, network_name=op.get(flags.NAT_NETWORK), context=context
+      )
     except googleapiclient.errors.HttpError:
       op.add_skipped(
-          project,
-          reason=
-          ("""Unable to fetch the network {} confirm it exists in the project {}"""
-          ).format(op.get(flags.NETWORK), op.get(flags.PROJECT_ID)))
+        project,
+        reason=("""Unable to fetch the network {} confirm it exists in the project {}""").format(
+          op.get(flags.NAT_NETWORK), op.get(flags.PROJECT_ID)
+        ),
+      )
       return
     # try to get the router
     try:
-      routers = network.get_routers(project_id=op.get(flags.PROJECT_ID),
-                                    region=op.get(flags.REGION),
-                                    network=vpc_network)
+      routers = network.get_routers(
+        project_id=op.get(flags.PROJECT_ID), region=op.get(flags.REGION), network=vpc_network
+      )
     except googleapiclient.errors.HttpError:
-      op.add_skipped(project,
-                     reason=("""Failed to fetch routers in the vpc network {}
-                  does not exist in region {} of project {}""").format(
-                         op.get(flags.NETWORK), op.get(flags.REGION),
-                         op.get(flags.PROJECT_ID)))
+      op.add_skipped(
+        project,
+        reason=(
+          """Failed to fetch routers in the vpc network {}
+                  does not exist in region {} of project {}"""
+        ).format(op.get(flags.NAT_NETWORK), op.get(flags.REGION), op.get(flags.PROJECT_ID)),
+      )
+      return
     if routers:
       # filter for the cloud router name specified.
       router = [r for r in routers if r.name == op.get(flags.CLOUD_ROUTER_NAME)]
       if router:
         nat_router = router[0]
         enable_dynamic_port_allocation = nat_router.get_enable_dynamic_port_allocation(
-            op.get(flags.NAT_GATEWAY_NAME))
+          op.get(flags.NAT_GATEWAY_NAME)
+        )
     else:
-      op.add_skipped(project,
-                     reason=("""
+      op.add_skipped(
+        project,
+        reason=(
+          """
           No Cloud router with the name: {} found.
-          """).format(op.get(flags.CLOUD_ROUTER_NAME)))
+          """
+        ).format(op.get(flags.CLOUD_ROUTER_NAME)),
+      )
+      return
 
     # Check the nat router status for number of additional NAT IP addresses needed
     router_status = network.nat_router_status(
-        project_id=op.get(flags.PROJECT_ID),
-        router_name=op.get(flags.CLOUD_ROUTER_NAME),
-        region=op.get(flags.REGION))
+      project_id=op.get(flags.PROJECT_ID),
+      router_name=op.get(flags.CLOUD_ROUTER_NAME),
+      region=op.get(flags.REGION),
+    )
     if not router_status:
-      op.info('unable to fetch router status for the router: %s',
-              op.get(flags.CLOUD_ROUTER_NAME))
+      op.info('unable to fetch router status for the router: %s', op.get(flags.CLOUD_ROUTER_NAME))
     else:
       min_extra_ips_needed = router_status.min_extra_nat_ips_needed
       vms_with_nat_mappings = router_status.num_vms_with_nat_mappings
 
     # get the NAT IP info mappings for the NAT Gateway
     router_nat_ip_info = network.get_nat_ip_info(
-        project_id=op.get(flags.PROJECT_ID),
-        router_name=op.get(flags.CLOUD_ROUTER_NAME),
-        region=op.get(flags.REGION))
+      project_id=op.get(flags.PROJECT_ID),
+      router_name=op.get(flags.CLOUD_ROUTER_NAME),
+      region=op.get(flags.REGION),
+    )
 
     result = router_nat_ip_info.result
 
     if result and op.get(flags.NAT_GATEWAY_NAME) in str(result):
-      nat_gw_ip_info = [
-          n for n in result if n['natName'] == op.get(flags.NAT_GATEWAY_NAME)
-      ]
+      nat_gw_ip_info = [n for n in result if n['natName'] == op.get(flags.NAT_GATEWAY_NAME)]
       nat_gw_ip_mappings = nat_gw_ip_info[0]['natIpInfoMappings']
-      nat_gw_ips_in_use = len(
-          [ip for ip in nat_gw_ip_mappings if ip['usage'] == 'IN_USE'])
+      nat_gw_ips_in_use = len([ip for ip in nat_gw_ip_mappings if ip['usage'] == 'IN_USE'])
 
-    op.add_ok(project,
-              reason=op.prep_msg(
-                  op.SUCCESS_REASON,
-                  router_name=op.get(flags.CLOUD_ROUTER_NAME),
-                  extra_ips_needed=min_extra_ips_needed,
-                  vms_with_nat_mappings=vms_with_nat_mappings,
-                  enable_dynamic_port_allocation=enable_dynamic_port_allocation,
-                  nat_gw_ips_in_use=nat_gw_ips_in_use))
+    op.add_ok(
+      project,
+      reason=op.prep_msg(
+        op.SUCCESS_REASON,
+        router_name=op.get(flags.CLOUD_ROUTER_NAME),
+        extra_ips_needed=min_extra_ips_needed,
+        vms_with_nat_mappings=vms_with_nat_mappings,
+        enable_dynamic_port_allocation=enable_dynamic_port_allocation,
+        nat_gw_ips_in_use=nat_gw_ips_in_use,
+      ),
+    )
 
     if min_extra_ips_needed > 0 and nat_gw_ips_in_use > 299:
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        project,
+        reason=op.prep_msg(op.FAILURE_REASON),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
     if min_extra_ips_needed > 0 and nat_gw_ips_in_use < 300:
-      op.add_ok(project,
-                reason=op.prep_msg(op.SUCCESS_REASON_ALT1,
-                                   nat_gateway_name=op.get(
-                                       flags.NAT_GATEWAY_NAME)))
+      op.add_ok(
+        project,
+        reason=op.prep_msg(op.SUCCESS_REASON_ALT1, nat_gateway_name=op.get(flags.NAT_GATEWAY_NAME)),
+      )
 
 
 class NatIpAllocationFailedEnd(runbook.EndStep):
@@ -415,8 +473,9 @@ class NatIpAllocationFailedEnd(runbook.EndStep):
     """Finalize NAT allocation failed diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
-          kind=op.CONFIRMATION,
-          message='Does the issue persist after taking remediation steps?',
-          choice_msg='Enter an option: ')
+        kind=op.CONFIRMATION,
+        message='Does the issue persist after taking remediation steps?',
+        choice_msg='Enter an option: ',
+      )
       if response == op.NO:
         op.info(message=op.END_MESSAGE)

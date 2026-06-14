@@ -23,6 +23,7 @@ import re
 import sys
 import textwrap
 import threading
+import traceback
 import types
 from abc import abstractmethod
 from collections import OrderedDict
@@ -30,18 +31,18 @@ from datetime import datetime, timedelta, timezone
 from enum import Enum
 from functools import cached_property
 from string import Formatter
-from typing import (Callable, Deque, Dict, List, Mapping, Optional, Set, Tuple,
-                    final)
+from typing import Callable, Deque, Dict, List, Mapping, Optional, Set, Tuple, Type, final
 
 import googleapiclient.errors
 from jinja2 import TemplateNotFound
 
 from gcpdiag import caching, config, models, utils
+from gcpdiag import context as gcpdiag_context
 from gcpdiag.queries import crm
 from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 
 RunbookRegistry: Dict[str, 'DiagnosticTree'] = {}
-StepRegistry: Dict[str, 'Step'] = {}
+StepRegistry: Dict[str, Type['Step']] = {}
 
 registry_lock = threading.Lock()
 report_lock = threading.Lock()
@@ -58,8 +59,14 @@ class MetaStep(type):
   def __new__(mcs, name, bases, namespace):
     """Register all steps into StepRegistry excluding base classes"""
     new_class = super().__new__(mcs, name, bases, namespace)
-    if name not in ('Step', 'Gateway', 'LintWrapper', 'StartStep', 'EndStep',
-                    'CompositeStep') and bases[0] == Step:
+    if name not in (
+      'Step',
+      'Gateway',
+      'LintWrapper',
+      'StartStep',
+      'EndStep',
+      'CompositeStep',
+    ) and bases[0] in (Step, Gateway, CompositeStep):
       StepRegistry[new_class.id] = new_class
     return new_class
 
@@ -68,15 +75,14 @@ class Step(metaclass=MetaStep):
   """
   Represents a step in a diagnostic or runbook process.
   """
+
   steps: List['Step']
   template: str
   parameters: dict = {}
 
-  def __init__(self,
-               parent: 'Step' = None,
-               step_type=constants.StepType.AUTOMATED,
-               uuid=None,
-               **parameters):
+  def __init__(
+    self, parent: 'Step' = None, step_type=constants.StepType.AUTOMATED, uuid=None, **parameters
+  ):
     """
     Initializes a new instance of the Step class.
     """
@@ -147,15 +153,15 @@ class Step(metaclass=MetaStep):
     if len(name) == 2:
       file_name, block_name = name[0], name[1]
       self.observations.update(
-          util.load_template_block(module_name=self.__module__,
-                                   block_name=block_name,
-                                   file_name=file_name))
+        util.load_template_block(
+          module_name=self.__module__, block_name=block_name, file_name=file_name
+        )
+      )
     if len(name) == 3:
       file_name, block_name = name[1], name[2]
       self.observations.update(
-          util.load_template_block(module_name=name[0],
-                                   block_name=block_name,
-                                   file_name=file_name))
+        util.load_template_block(module_name=name[0], block_name=block_name, file_name=file_name)
+      )
 
   def add_child(self, child):
     """Child steps"""
@@ -184,28 +190,25 @@ class Step(metaclass=MetaStep):
   @cached_property
   def name(self):
     # Get the step name template from observations or execute()'s docstring.
-    step_name = self.observations.get(
-        constants.STEP_NAME) or self.execute.__doc__
+    step_name = self.observations.get(constants.STEP_NAME) or self.execute.__doc__
     if not step_name:
-      raise exceptions.InvalidStepOperation(
-          f'Step {self} does not have an step name. '
-          'Make sure the execute() method has a docstring on the first line '
-          f'or a {self.template}_step_name block has been defined in the step template'
+      raise exceptions.InvalidStepOperationError(
+        f'Step {self} does not have an step name. '
+        'Make sure the execute() method has a docstring on the first line '
+        f'or a {self.template}_step_name block has been defined in the step template'
       )
 
     # Clean up the template
     step_name = ' '.join(step_name.split())
 
     # Extract all field names used in the step_name template.
-    placeholders = {
-        field for _, field, _, _ in Formatter().parse(step_name) if field
-    }
+    placeholders = {field for _, field, _, _ in Formatter().parse(step_name) if field}
 
     # Default variables not found on self.
     defaults = {
-        'universe_domain': config.get('universe_domain'),
-        'start_time': op.get(flags.START_TIME),
-        'end_time': op.get(flags.END_TIME)
+      'universe_domain': config.get('universe_domain'),
+      'start_time': op.get(flags.START_TIME),
+      'end_time': op.get(flags.END_TIME),
     }
 
     attributes = {}
@@ -238,13 +241,10 @@ class Step(metaclass=MetaStep):
         value = ', '.join(str(item) for item in value)
       elif isinstance(value, dict):
         dict_values = list(value.values())
-        if dict_values and not isinstance(dict_values[0],
-                                          (int, str, bool, float)):
+        if dict_values and not isinstance(dict_values[0], (int, str, bool, float)):
           continue
         value = ', '.join(f'{k}={v}' for k, v in value.items())
-      elif isinstance(
-          value,
-          (types.FunctionType, types.MethodType, types.BuiltinFunctionType)):
+      elif isinstance(value, (types.FunctionType, types.MethodType, types.BuiltinFunctionType)):
         continue
       else:
         value = str(value)
@@ -260,9 +260,10 @@ class Step(metaclass=MetaStep):
     if len(doc_lines) >= 3:
       if doc_lines[1]:
         raise ValueError(
-            f'Step {self.__class__.__name__} has a non-empty second line '
-            'in the class docstring. Ensure the step\'s class docstring '
-            'contains a one-line summary followed by an empty second line.')
+          f'Step {self.__class__.__name__} has a non-empty second line '
+          "in the class docstring. Ensure the step's class docstring "
+          'contains a one-line summary followed by an empty second line.'
+        )
       long_desc = '\n'.join(doc_lines[2:])
     return long_desc
 
@@ -290,8 +291,8 @@ class StartStep(Step):
 class CompositeStep(Step):
   """Composite Events of a Diagnostic tree"""
 
-  def __init__(self):
-    super().__init__(step_type=constants.StepType.COMPOSITE)
+  def __init__(self, **parameters):
+    super().__init__(**parameters, step_type=constants.StepType.COMPOSITE)
 
 
 class EndStep(Step):
@@ -303,10 +304,9 @@ class EndStep(Step):
   def execute(self):
     """Finalize runbook investigations."""
     if not config.get(flags.INTERACTIVE_MODE):
-      response = op.operator.interface.prompt(kind=op.CONFIRMATION,
-                                              message='Is your issue resolved?')
+      response = op.prompt(kind=op.CONFIRMATION, message='Is your issue resolved?')
       if response == op.NO:
-        op.operator.interface.info(message=constants.END_MESSAGE)
+        op.info(message=constants.END_MESSAGE)
 
 
 class Gateway(Step):
@@ -314,11 +314,11 @@ class Gateway(Step):
   Represents a decision point in a workflow, determining which path to take based on a condition.
   """
 
-  def __init__(self):
+  def __init__(self, **parameters):
     """
     Initializes a new instance of the Gateway step.
     """
-    super().__init__(step_type=constants.StepType.GATEWAY)
+    super().__init__(**parameters, step_type=constants.StepType.GATEWAY)
 
 
 class RunbookRule(type):
@@ -340,29 +340,29 @@ class RunbookRule(type):
     for now only check deprecated parameters backward compatibility.
     """
     deprecated_params = {
-        param_name: param_config
-        for param_name, param_config in (
-            namespace.get('parameters') or {}).items()
-        if param_config.get('deprecated', False)
+      param_name: param_config
+      for param_name, param_config in (namespace.get('parameters') or {}).items()
+      if param_config.get('deprecated', False)
     }
 
     if deprecated_params:
       # Ensure the child class implements legacy_parameter_handler
       if 'legacy_parameter_handler' not in namespace:
         raise TypeError(
-            f"{namespace.get('__module__')} has deprecated parameters "
-            f"{', '.join(deprecated_params.keys())} but does not implement "
-            'legacy_parameter_handler(). Implement this method to handle '
-            'backward compatibility for deprecated parameters.')
+          f'{namespace.get("__module__")} has deprecated parameters '
+          f'{", ".join(deprecated_params.keys())} but does not implement '
+          'legacy_parameter_handler(). Implement this method to handle '
+          'backward compatibility for deprecated parameters.'
+        )
 
     for param_name, param_config in deprecated_params.items():
       if param_config.get('required', False):
-        raise TypeError(
-            f"deprecated parameter '{param_name}' cannot be marked as required")
+        raise TypeError(f"deprecated parameter '{param_name}' cannot be marked as required")
 
 
 class DiagnosticTree(metaclass=RunbookRule):
   """Represents a diagnostic tree for troubleshooting."""
+
   product: str
   name: str
   start: StartStep
@@ -386,17 +386,18 @@ class DiagnosticTree(metaclass=RunbookRule):
   def add_step(self, parent: Step, child: Step):
     """Adds an intermediate diagnostic step to the tree."""
     if self.start is None:
-      raise ValueError('Start step is empty. Set start step with'
-                       ' builder.add_start() or tree.add_start()')
+      raise ValueError(
+        'Start step is empty. Set start step with builder.add_start() or tree.add_start()'
+      )
     if parent is None:
-      raise ValueError('You can\'t add a child to a `NoneType` parent')
+      raise ValueError("You can't add a child to a `NoneType` parent")
     # to avoid disjoint trees, we first check that the parent is a child of start.
     parent_step = self.start.find_step(parent)
     if parent_step:
       parent_step.add_child(child)
+      setattr(child, '_was_initially_defined', True)
     else:
-      raise ValueError(
-          f'Parent step with {parent.execution_id} not found. Add parent first')
+      raise ValueError(f'Parent step with {parent.execution_id} not found. Add parent first')
 
   def add_start(self, step: StartStep):
     """Adds a diagnostic step to the tree."""
@@ -410,6 +411,7 @@ class DiagnosticTree(metaclass=RunbookRule):
       if self.start.steps[-1].type == constants.StepType.END:
         raise ValueError('end already exist')
     self.start.add_child(child=step)
+    setattr(step, '_was_initially_defined', True)
 
   def find_step(self, step_id):
     return self.start.find_step(step_id)
@@ -420,66 +422,68 @@ class DiagnosticTree(metaclass=RunbookRule):
       self.legacy_parameter_handler(operator.parameters)
     try:
       self.build_tree()
-    except exceptions.InvalidDiagnosticTree as err:
-      logging.warning('%s: %s while constructing runbook rule: %s',
-                      type(err).__name__, err, self)
+    except exceptions.InvalidDiagnosticTreeError as err:
+      logging.warning('%s: %s while constructing runbook rule: %s', type(err).__name__, err, self)
 
     if not self.start:
-      raise exceptions.InvalidDiagnosticTree(
-          'The diagnostic tree is invalid because it contains any Start point')
+      raise exceptions.InvalidDiagnosticTreeError(
+        'The diagnostic tree is invalid because it contains any Start point'
+      )
 
     if not self.start.steps:
-      raise exceptions.InvalidDiagnosticTree(
-          'The diagnostic tree is invalid because it contains only '
-          'a Start method without any intermediate steps. '
-          'Please ensure your tree includes at least one intermediate step '
-          'between the Start method and the end point.')
+      raise exceptions.InvalidDiagnosticTreeError(
+        'The diagnostic tree is invalid because it contains only '
+        'a Start method without any intermediate steps. '
+        'Please ensure your tree includes at least one intermediate step '
+        'between the Start method and the end point.'
+      )
     # if the tree hasn't be concluded with an endstep.
     # Add the default step
     if self.start.steps[-1].type != constants.StepType.END:
       self.start.add_child(EndStep())
+      setattr(self.start.steps[-1], '_was_initially_defined', True)
 
   @abstractmethod
   def legacy_parameter_handler(self, parameters):
     """Handles the translation of deprecated parameters for backward compatibility.
 
-      This method ensures that runbooks using outdated parameters can still function correctly by
-      mapping old parameters to their new counterparts. It allows systems that do not yet know
-      the updated parameters to continue leveraging the runbook while gradually migrating to the
-      new parameter format.
+    This method ensures that runbooks using outdated parameters can still function correctly by
+    mapping old parameters to their new counterparts. It allows systems that do not yet know
+    the updated parameters to continue leveraging the runbook while gradually migrating to the
+    new parameter format.
 
-      Key Features:
-      1. Implement this `legacy_parameter_handler` method in your runbook class.
-      2. Map old parameters to their new equivalents within this method.
-      3. This function is invoked before the runbook is executed at runtime.
-      4. The function is always called before the `build_tree()` method.
-      5. Safely migrate the rest of the runbook logic to utilize the new parameters.
+    Key Features:
+    1. Implement this `legacy_parameter_handler` method in your runbook class.
+    2. Map old parameters to their new equivalents within this method.
+    3. This function is invoked before the runbook is executed at runtime.
+    4. The function is always called before the `build_tree()` method.
+    5. Safely migrate the rest of the runbook logic to utilize the new parameters.
 
-      Usage Example:
-          class Runbook(DiagnosticTree):
-              parameters = {
-                  'deprecated_parameter': {
-                      'type': bool,
-                      'help': 'A deprecated parameter',
-                      'deprecated': True,
-                      'new_parameter': 'currentParameter'
-                  },
-                  'currentParameter': {
-                      'type': bool,
-                      'help': 'A new parameter',
-                  }
-              }
+    Usage Example:
+        class Runbook(DiagnosticTree):
+            parameters = {
+                'deprecated_parameter': {
+                    'type': bool,
+                    'help': 'A deprecated parameter',
+                    'deprecated': True,
+                    'new_parameter': 'currentParameter'
+                },
+                'currentParameter': {
+                    'type': bool,
+                    'help': 'A new parameter',
+                }
+            }
 
-              def legacy_parameter_handler(self, parameters):
-                  # Map deprecated parameters to their new equivalents
-                  if 'deprecated_parameter' in parameters:
-                      parameters['currentParameter'] = parameters.pop('deprecated_parameter', None)
+            def legacy_parameter_handler(self, parameters):
+                # Map deprecated parameters to their new equivalents
+                if 'deprecated_parameter' in parameters:
+                    parameters['currentParameter'] = parameters.pop('deprecated_parameter', None)
 
-      - This method must be implemented if the runbook defines any deprecated parameters
-      in its `parameters` dictionary.
-      - Proper mapping ensures smooth runtime operation while providing backward compatibility
-      for older configurations.
-      """
+    - This method must be implemented if the runbook defines any deprecated parameters
+    in its `parameters` dictionary.
+    - Proper mapping ensures smooth runtime operation while providing backward compatibility
+    for older configurations.
+    """
 
     pass
 
@@ -500,8 +504,9 @@ class DiagnosticTree(metaclass=RunbookRule):
     if len(doc_lines) >= 3:
       if doc_lines[1]:
         raise ValueError(
-            f'Diagnostic Tree {self.__class__.__name__} has a non-empty second '
-            'line in the class docstring')
+          f'Diagnostic Tree {self.__class__.__name__} has a non-empty second '
+          'line in the class docstring'
+        )
       long_desc = '\n'.join(doc_lines[2:])
     return long_desc
 
@@ -517,7 +522,7 @@ class DiagnosticTree(metaclass=RunbookRule):
 
 class Bundle:
   run_id: str
-  steps: List[Step]
+  steps: List[Type['Step']]
   parameter: models.Parameter
 
   def __init__(self) -> None:
@@ -537,12 +542,13 @@ class DiagnosticEngine:
     _dt: Optional[DiagnosticTree] The current diagnostic tree being executed.
   """
 
-  def __init__(self) -> None:
+  def __init__(self, context_provider: Optional[gcpdiag_context.ContextProvider] = None):
     """Initializes the DiagnosticEngine with required managers."""
     self.interface = report.InteractionInterface(kind=config.get('interface'))
     self.finalize = False
     # tuple in the format (DiagnosticTree/Bundle, user_provided_parameter)
     self.task_queue: Deque = Deque()
+    self.context_provider = context_provider
 
   def add_task(self, new_task: Tuple):
     with registry_lock:
@@ -584,18 +590,21 @@ class DiagnosticEngine:
           if m:
             product = m.group(1)
             clazz = util.kebab_case_to_pascal_case(m.group(2))
-            mod_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                    product)
+            mod_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), product)
             message += (
-                '\n\nPlease verify the following:'
-                f"\n1. Ensure that the class `{clazz}` exists in the product's module `{mod_path}`."
-                '\n2. If the class exists, ensure there are no syntax errors '
-                f'in the file containing the class `{clazz}`.\n')
-        raise exceptions.DiagnosticTreeNotFound(message)
+              '\n\nPlease refer to Adding Support for New GCP Products '
+              'instructions at '
+              'https://github.com/GoogleCloudPlatform/gcpdiag/blob/main/'
+              'README.md#adding-support-for-new-gcp-products'
+              '\n\nPlease verify the following:'
+              f"\n1. Ensure that the class `{clazz}` exists in the product's module `{mod_path}`."
+              '\n2. If the class exists, ensure there are no syntax errors '
+              f'in the file containing the class `{clazz}`.\n'
+            )
+        raise exceptions.DiagnosticTreeNotFoundError(message)
       return runbook
 
-  def load_steps(self, parameter: Mapping[str, Mapping],
-                 steps_to_run: List) -> Bundle:
+  def load_steps(self, parameter: Mapping[str, Mapping], steps_to_run: List) -> Bundle:
     """Loads individual steps and prepare a bundle.
 
     Args:
@@ -608,8 +617,7 @@ class DiagnosticEngine:
       for id_ in steps_to_run:
         step_def = StepRegistry.get(id_)
         if not step_def:
-          logging.error('skipping step "%s": no step definition found', id_)
-          continue
+          raise ValueError(f'Step "{id_}" not found in registry')
         bundle.steps.append(step_def)
       return bundle
 
@@ -626,68 +634,63 @@ class DiagnosticEngine:
       return config.get('billing_project')
     return None
 
-  def _check_required_paramaters(self, parameter_def: Dict,
-                                 caller_args: models.Parameter):
+  def _check_required_paramaters(self, parameter_def: Dict, caller_args: models.Parameter):
     missing_parameters = {
-        key: value.get('help', '')
-        for key, value in parameter_def.items()
-        if value.get('required', False) and key not in caller_args
+      key: value.get('help', '')
+      for key, value in parameter_def.items()
+      if value.get('required', False) and key not in caller_args
     }
     if missing_parameters:
       missing_param_str = '\n'.join(
-          f'Parameter Explanation: {value}\n-p {key}=value'
-          for key, value in missing_parameters.items())
+        f'Parameter Explanation: {value}\n-p {key}=value'
+        for key, value in missing_parameters.items()
+      )
 
       error_msg = (
-          f'Missing {len(missing_parameters)} required '
-          f"{'parameter' if len(missing_parameters) == 1 else 'parameters'}. "
-          'Please provide the following:\n\n'
-          f'{missing_param_str}')
+        f'Missing {len(missing_parameters)} required '
+        f'{"parameter" if len(missing_parameters) == 1 else "parameters"}. '
+        'Please provide the following:\n\n'
+        f'{missing_param_str}'
+      )
       # Create the exception instance and pass the list of missing parameters
-      raise exceptions.MissingParameterError(error_msg,
-                                             missing_parameters_list=list(
-                                                 missing_parameters.keys()))
+      raise exceptions.MissingParameterError(
+        error_msg, missing_parameters_list=list(missing_parameters.keys())
+      )
 
   def _set_default_parameters(self, parameter_def: Dict):
     # set default parameters
-    parameter_def.setdefault(flags.START_TIME, {
-        'type': datetime,
-        'help': 'Beginning Timeframe to scope investigation.'
-    })
-    parameter_def.setdefault(flags.END_TIME, {
-        'type': datetime,
-        'help': 'End timeframe'
-    })
+    parameter_def.setdefault(
+      flags.START_TIME, {'type': datetime, 'help': 'Beginning Timeframe to scope investigation.'}
+    )
+    parameter_def.setdefault(flags.END_TIME, {'type': datetime, 'help': 'End timeframe'})
 
-  def _check_deprecated_paramaters(self, parameter_def: Dict,
-                                   caller_args: models.Parameter):
+  def _check_deprecated_paramaters(self, parameter_def: Dict, caller_args: models.Parameter):
     deprecated_parameters = {
-        key: value
-        for key, value in parameter_def.items()
-        if value.get('deprecated', False) and key in caller_args
+      key: value
+      for key, value in parameter_def.items()
+      if value.get('deprecated', False) and key in caller_args
     }
     if deprecated_parameters:
       res = 'Deprecated parameters:\n'
       res += '\n'.join(
-          f"{key}. Use: {value.get('new_parameter')}={value.get('type','value')}"
-          for key, value in deprecated_parameters.items()
-          if value.get('new_parameter'))
+        f'{key}. Use: {value.get("new_parameter")}={value.get("type", "value")}'
+        for key, value in deprecated_parameters.items()
+        if value.get('new_parameter')
+      )
       logging.warning(
-          '%s deprecated/unsupported parameter(s) supplied to runbook. %s',
-          len(deprecated_parameters), res)
+        '%s deprecated/unsupported parameter(s) supplied to runbook. %s',
+        len(deprecated_parameters),
+        res,
+      )
       return res
     return None
 
-  def process_parameters(self, runbook: DiagnosticTree,
-                         caller_args: models.Parameter):
-    self.parse_parameters(parameter_def=runbook.parameters,
-                          caller_args=caller_args)
+  def process_parameters(self, runbook: DiagnosticTree, caller_args: models.Parameter):
+    self.parse_parameters(parameter_def=runbook.parameters, caller_args=caller_args)
     runbook.legacy_parameter_handler(caller_args)
-    self._check_required_paramaters(parameter_def=runbook.parameters,
-                                    caller_args=caller_args)
+    self._check_required_paramaters(parameter_def=runbook.parameters, caller_args=caller_args)
 
-  def parse_parameters(self, parameter_def: Dict,
-                       caller_args: models.Parameter):
+  def parse_parameters(self, parameter_def: Dict, caller_args: models.Parameter):
     """Set to defaults parameters and convert datatypes"""
 
     def is_builtin_type(target_type):
@@ -705,12 +708,12 @@ class DiagnosticEngine:
           The object cast to the target type if the original object's type and the target type are
           built-in types and the cast is possible. Otherwise, returns the original object.
       """
-      if is_builtin_type(target_type) and target_type != bool:
+      if is_builtin_type(target_type) and target_type is not bool:
         try:
           return target_type(param_val)
         except ValueError:
           print(f'Cannot cast {param_val} to type {target_type}.')
-      elif target_type == bool:
+      elif target_type is bool:
         try:
           return constants.BOOL_VALUES[str(param_val).lower()]
         except KeyError:
@@ -755,10 +758,8 @@ class DiagnosticEngine:
           end_time = caller_args.get(flags.END_TIME, datetime.now(timezone.utc))
           caller_args[flags.END_TIME] = cast_to_type(end_time, dt_param['type'])
           parsed_end_time = caller_args[flags.END_TIME]
-          start_time = caller_args.get(flags.START_TIME,
-                                       parsed_end_time - timedelta(hours=8))
-          caller_args[flags.START_TIME] = cast_to_type(start_time,
-                                                       dt_param['type'])
+          start_time = caller_args.get(flags.START_TIME, parsed_end_time - timedelta(hours=8))
+          caller_args[flags.START_TIME] = cast_to_type(start_time, dt_param['type'])
         if k != flags.START_TIME or k == flags.END_TIME:
           date_string = caller_args.get(k)
           if date_string:
@@ -766,8 +767,7 @@ class DiagnosticEngine:
 
       # DT specified a type for the param and it's not a string.
       # cast the parameter to the type specified by the runbook.
-      if (dt_param and dt_param.get('type') and dt_param['type'] != str and
-          user_provided_param):
+      if dt_param and dt_param.get('type') and dt_param['type'] is not str and user_provided_param:
         caller_args[k] = cast_to_type(user_provided_param, dt_param['type'])
 
   def run(self):
@@ -776,16 +776,16 @@ class DiagnosticEngine:
       logging.error('No tasks to execute. Did you call add_task()?')
       return
 
-    for task in self.task_queue:
-      if isinstance(task[0], Bundle):
-        self.run_bundle(task[0])
-        continue
+    bundles = [task[0] for task in self.task_queue if isinstance(task[0], Bundle)]
+    diagnostic_trees = [task for task in self.task_queue if isinstance(task[0], DiagnosticTree)]
 
-      if isinstance(task[0], DiagnosticTree):
-        self.run_diagnostic_tree(tree=task[0], parameter=task[1])
+    if bundles:
+      self.run_bundles(bundles)
 
-  def run_diagnostic_tree(self, tree: DiagnosticTree,
-                          parameter: models.Parameter) -> None:
+    for task in diagnostic_trees:
+      self.run_diagnostic_tree(tree=task[0], parameter=task[1])
+
+  def run_diagnostic_tree(self, tree: DiagnosticTree, parameter: models.Parameter) -> None:
     """Executes a diagnostic tree with a given parameter.
 
     Args:
@@ -794,15 +794,17 @@ class DiagnosticEngine:
     self.interface.output.display_runbook_description(tree)
 
     try:
-      operator = op.Operator(interface=self.interface)
+      operator = op.Operator(interface=self.interface, context_provider=self.context_provider)
       operator.set_tree(tree)
       operator.set_parameters(parameter)
       operator.set_run_id(tree.run_id)
       with report_lock:
         self.interface.rm.reports[tree.run_id] = report.Report(
-            run_id=tree.run_id, parameters=parameter)
+          run_id=tree.run_id, parameters=parameter
+        )
         self.interface.rm.reports[tree.run_id].run_start_time = datetime.now(
-            timezone.utc).isoformat()
+          timezone.utc
+        ).isoformat()
       if operator.tree:
         self.interface.rm.reports[tree.run_id].runbook_name = operator.tree.name
       with op.operator_context(operator):
@@ -810,24 +812,21 @@ class DiagnosticEngine:
         tree.hook_build_tree(operator)
       self.finalize = False
       self.find_path_dfs(
-          step=tree.start,
-          operator=operator,
-          executed_steps=set(),
+        step=tree.start,
+        operator=operator,
+        executed_steps=set(),
       )
 
-    except (RuntimeError, exceptions.InvalidDiagnosticTree) as err:
-      logging.warning('%s: %s while processing runbook rule: %s',
-                      type(err).__name__, err, tree)
-    self.interface.rm.reports[tree.run_id].run_end_time = datetime.now(
-        timezone.utc).isoformat()
+    except (RuntimeError, exceptions.InvalidDiagnosticTreeError) as err:
+      logging.warning('%s: %s while processing runbook rule: %s', type(err).__name__, err, tree)
+    self.interface.rm.reports[tree.run_id].run_end_time = datetime.now(timezone.utc).isoformat()
 
-  def find_path_dfs(self, step: Step, operator: op.Operator,
-                    executed_steps: Set):
+  def find_path_dfs(self, step: Step, operator: op.Operator, executed_steps: Set):
     """Depth-first search to traverse and execute steps in the diagnostic tree.
 
     Args:
       step: The current step to execute.
-      operator: The operator used duing execution.
+      operator: The operator used during execution.
       executed_steps: A set of executed step IDs to avoid cycles.
     """
     if not self.finalize:
@@ -838,14 +837,26 @@ class DiagnosticEngine:
         if outcome == constants.FINALIZE_INVESTIGATION:
           self.finalize = True
           return
-      for child in step.steps:  # Iterate over the children of the current step
-        if child not in executed_steps:
-          self.find_path_dfs(
-              step=child,
-              operator=operator,
-              executed_steps=executed_steps,
-          )
-      return executed_steps
+    # Prioritize processing of dynamically added, unexecuted children
+    for child in step.steps:
+      if child not in executed_steps and not hasattr(child, '_was_initially_defined'):
+        self.find_path_dfs(step=child, operator=operator, executed_steps=executed_steps)
+        if self.finalize:
+          return
+
+    # Process initially defined or already encountered children
+    for child in step.steps:
+      if not self.finalize:
+        if hasattr(child, '_was_initially_defined') and child not in executed_steps:
+          self.find_path_dfs(step=child, operator=operator, executed_steps=executed_steps)
+          if self.finalize:
+            return
+        elif not any(c for c in executed_steps if c == child):
+          self.find_path_dfs(step=child, operator=operator, executed_steps=executed_steps)
+          if self.finalize:
+            return
+
+    return executed_steps
 
   def run_step(self, step: Step, operator: op.Operator):
     """Executes a single step, handling user decisions for step re-evaluation or termination.
@@ -858,8 +869,9 @@ class DiagnosticEngine:
       user_input = self._run(step, operator=operator)
       while True:
         if user_input is constants.RETEST:
-          operator.interface.info(step_type=constants.RETEST,
-                                  message='Re-evaluating recent failed step')
+          operator.interface.info(
+            step_type=constants.RETEST, message='Re-evaluating recent failed step'
+          )
           with caching.bypass_cache():
             user_input = self._run(operator.step, operator=operator)
         elif step.type == constants.StepType.END:
@@ -868,124 +880,141 @@ class DiagnosticEngine:
           logging.info('Finalize Investigation\n')
           return constants.FINALIZE_INVESTIGATION
         elif step.type == constants.StepType.START and (
-          self.interface.rm.reports[operator.run_id]
-          .results.get(step.execution_id) is not None and \
-          self.interface.rm.reports[operator.run_id]
-          .results[step.execution_id].overall_status == 'skipped'):
-          logging.info('Start Step was skipped. Can\'t proceed.\n')
+          self.interface.rm.reports[operator.run_id].results.get(step.execution_id) is not None
+          and self.interface.rm.reports[operator.run_id].results[step.execution_id].overall_status
+          == 'skipped'
+        ):
+          logging.info("Start Step was skipped. Can't proceed.\n")
           return constants.FINALIZE_INVESTIGATION
         elif user_input is constants.CONTINUE:
           break
-        elif (user_input is not constants.RETEST and
-              user_input is not constants.CONTINUE and
-              user_input is not constants.STOP):
+        elif (
+          user_input is not constants.RETEST
+          and user_input is not constants.CONTINUE
+          and user_input is not constants.STOP
+        ):
           return user_input
-    except Exception as err:  # pylint: disable=broad-exception-caught
+    except Exception as err:
       error_msg = str(err)
       end = datetime.now(timezone.utc).isoformat()
       with report_lock:
-        self.interface.rm.reports[operator.run_id].results[
-            step.execution_id].end_time = end
+        self.interface.rm.reports[operator.run_id].results[step.execution_id].end_time = end
       if isinstance(err, TemplateNotFound):
         error_msg = (
-            f'could not load messages linked to step: {step.id}.'
-            'ensure step has a valid template eg: filename::block_prefix')
+          f'could not load messages linked to step: {step.id}.'
+          'ensure step has a valid template eg: filename::block_prefix'
+        )
         logging.error(error_msg)
-      elif isinstance(err, exceptions.InvalidStepOperation):
+      elif isinstance(err, exceptions.InvalidStepOperationError):
         error_msg = f'invalid step operation: %s: {err}'
         logging.error(error_msg)
       elif isinstance(err, (ValueError, KeyError)):
         error_msg = f'`{step.execution_id}`: {err}'
         logging.error(error_msg)
-      elif isinstance(err,
-                      (utils.GcpApiError, googleapiclient.errors.HttpError)):
+      elif isinstance(err, (utils.GcpApiError, googleapiclient.errors.HttpError)):
         if isinstance(err, googleapiclient.errors.HttpError):
           err = utils.GcpApiError(err)
         if err.status == 403:
           logging.error(
-              ('%s: %s user does not sufficient permissions '
-               'to perform operations in step: %s'),
-              type(err).__name__,
-              err,
-              step.execution_id,
+            ('%s: %s user does not sufficient permissions to perform operations in step: %s'),
+            type(err).__name__,
+            err,
+            step.execution_id,
           )
           with report_lock:
-            self.interface.rm.reports[operator.run_id].results[
-                step.execution_id].step_error = err
+            self.interface.rm.reports[operator.run_id].results[step.execution_id].step_error = err
         elif err.status == 401:
           logging.error(
-              '%s: %s request is missing required authentication credential to'
-              ' perform operations in step: %s',
-              type(err).__name__,
-              err,
-              step.execution_id,
+            '%s: %s request is missing required authentication credential to'
+            ' perform operations in step: %s',
+            type(err).__name__,
+            err,
+            step.execution_id,
           )
           with report_lock:
-            self.interface.rm.reports[operator.run_id].results[
-                step.execution_id].step_error = err
+            self.interface.rm.reports[operator.run_id].results[step.execution_id].step_error = err
           return
         logging.error(
-            '%s: %s while processing step: %s',
-            type(err).__name__,
-            err,
-            step.execution_id,
+          '%s: %s while processing step: %s',
+          type(err).__name__,
+          err,
+          step.execution_id,
         )
         with report_lock:
-          self.interface.rm.reports[operator.run_id].results[
-              step.execution_id].step_error = err
+          self.interface.rm.reports[operator.run_id].results[step.execution_id].step_error = err
+      elif isinstance(err, TypeError):
+        trace = traceback.extract_tb(err.__traceback__)
+        if any('google/auth' in frame.filename for frame in trace):
+          logging.exception(
+            'Google Auth (ADC) TypeError encountered during step execution'
+            ' %s\nProbable cause: ADC metadata server returned an unexpected'
+            ' response format. \nLikely Reasons: \n- ADC not configured'
+            ' properly or metadata server issue. \nAborting further Runbook'
+            ' step execution to avoid redundant error messages.\nOriginal'
+            ' error: %s',
+            step.execution_id,
+            err,
+          )
+          raise err
       else:
         logging.error(
-            '%s: %s while processing step: %s',
-            type(err).__name__,
-            err,
-            step.execution_id,
+          '%s: %s while processing step: %s',
+          type(err).__name__,
+          err,
+          step.execution_id,
         )
       with report_lock:
-        self.interface.rm.reports[operator.run_id].results[
-            step.execution_id].step_error = error_msg
+        self.interface.rm.reports[operator.run_id].results[step.execution_id].step_error = error_msg
 
   def _run(self, step: Step, operator: op.Operator):
     start = datetime.now(timezone.utc).isoformat()
     with report_lock:
-      self.interface.rm.reports[operator.run_id].results[
-          step.execution_id] = report.StepResult(step=step)
-    self.interface.rm.reports[operator.run_id].results[
-        step.execution_id].start_time = start
+      self.interface.rm.reports[operator.run_id].results[step.execution_id] = report.StepResult(
+        step=step
+      )
+    self.interface.rm.reports[operator.run_id].results[step.execution_id].start_time = start
     step.execute_hook(operator)
     end = datetime.now(timezone.utc).isoformat()
     with report_lock:
-      self.interface.rm.reports[operator.run_id].results[
-          step.execution_id].end_time = end
-    return self.interface.rm.reports[operator.run_id].results[
-        step.execution_id].prompt_response
+      self.interface.rm.reports[operator.run_id].results[step.execution_id].end_time = end
+    return self.interface.rm.reports[operator.run_id].results[step.execution_id].prompt_response
 
-  def run_bundle(self, bundle: Bundle) -> None:
-    """Executes a list of steps present in a bundle
+  def run_bundles(self, bundles: List[Bundle]) -> None:
+    """Executes a list of bundles under a single report.
 
     Args:
-      bundle: bundle to be executed
+      bundles: list of bundles to be executed
     """
     with registry_lock:
-      operator = op.Operator(interface=self.interface)
-      operator.set_parameters(bundle.parameter)
-      operator.set_run_id(bundle.run_id)
+      # Use a new run_id for the consolidated report
+      run_id = util.generate_uuid()
+      operator = op.Operator(interface=self.interface, context_provider=self.context_provider)
+      operator.set_run_id(run_id)
+
+      # Collect all parameters from all bundles for the report header.
+      all_parameters: models.Parameter = models.Parameter({})
+      for i, bundle in enumerate(bundles):
+        all_parameters[f'bundle_{i + 1}'] = bundle.parameter
       with report_lock:
-        self.interface.rm.reports[bundle.run_id] = report.Report(
-            run_id=bundle.run_id, parameters=bundle.parameter)
-        self.interface.rm.reports[bundle.run_id].run_start_time = datetime.now(
-            timezone.utc).isoformat()
+        self.interface.rm.reports[run_id] = report.Report(run_id=run_id, parameters=all_parameters)
+        self.interface.rm.reports[run_id].run_start_time = datetime.now(timezone.utc).isoformat()
       with op.operator_context(operator):
-        for step in bundle.steps:
-          self._check_required_paramaters(parameter_def=step.parameters,
-                                          caller_args=bundle.parameter)
-          self.parse_parameters(parameter_def=step.parameters,
-                                caller_args=bundle.parameter)
-          if callable(step):
-            step_obj = step(**bundle.parameter)
-            operator.set_step(step_obj)
-            self.run_step(step=step_obj, operator=operator)
-    self.interface.rm.reports[bundle.run_id].run_end_time = datetime.now(
-        timezone.utc).isoformat()
+        for bundle in bundles:
+          operator.set_parameters(bundle.parameter)
+          # Create a root step for the bundle execution
+          root_step = StartStep()
+          for step_class in bundle.steps:
+            self.parse_parameters(parameter_def=step_class.parameters, caller_args=bundle.parameter)
+            self._check_required_paramaters(
+              parameter_def=step_class.parameters, caller_args=bundle.parameter
+            )
+            # Instantiate each step with the provided parameters
+            step_obj = step_class(**bundle.parameter)
+            root_step.add_child(step_obj)
+
+          # Use find_path_dfs to traverse and execute the steps
+          self.find_path_dfs(step=root_step, operator=operator, executed_steps=set())
+    self.interface.rm.reports[run_id].run_end_time = datetime.now(timezone.utc).isoformat()
 
 
 class ExpandTreeFromAst(ast.NodeVisitor):
@@ -1002,8 +1031,7 @@ class ExpandTreeFromAst(ast.NodeVisitor):
     # Track instances to map variable names to their classes
     self.instances = {}
 
-  # pylint: disable=invalid-name
-  def visit_Assign(self, node):
+  def visit_Assign(self, node):  # noqa: N802
     # Track class instances
     if isinstance(node.value, ast.Call) and hasattr(node.value.func, 'id'):
       for target in node.targets:
@@ -1026,11 +1054,13 @@ class ExpandTreeFromAst(ast.NodeVisitor):
           self.instances.setdefault(node.value.func.attr, o)
     self.generic_visit(node)
 
-  # pylint: disable=invalid-name
-  def visit_Call(self, node):
-    if isinstance(node.func,
-                  ast.Attribute) and node.func.attr in ('add_child', 'add_step',
-                                                        'add_start', 'add_end'):
+  def visit_Call(self, node):  # noqa: N802
+    if isinstance(node.func, ast.Attribute) and node.func.attr in (
+      'add_child',
+      'add_step',
+      'add_start',
+      'add_end',
+    ):
       child = None
       if len(node.args) == 1:
         node.keywords.append(ast.keyword('step', node.args[0]))
@@ -1094,7 +1124,7 @@ class ExpandTreeFromAst(ast.NodeVisitor):
         self.tree.add_step(parent=o, child=child)
         self.generic_visit(node)
 
-  def visit_ClassDef(self, node):
+  def visit_ClassDef(self, node):  # noqa: N802
     # Initialize or clear the list of add_child calls for this class
     self.current_class = node.name
     self.generic_visit(node)

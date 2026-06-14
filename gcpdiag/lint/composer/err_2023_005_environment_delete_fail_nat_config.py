@@ -18,6 +18,7 @@ then configuring Cloud NAT for the subnet and these ranges makes it so the
 environment deletion will fail. Verify a Composer environment deletion attempt
 failed due to a Cloud NAT configuration
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -30,11 +31,15 @@ MATCH_STR_4 = 'Composer Backend timed out'
 
 MATCH_METHOD = 'google.cloud.orchestration.airflow.service.v1.Environments.DeleteEnvironment'
 FILTER_1 = [
-    'severity=ERROR',
-    ('protoPayload.methodName="google.cloud.orchestration.airflow.service.'
-     'v1.Environments.DeleteEnvironment"'),
-    (f'protoPayload.status.message:(("{MATCH_STR_1}" AND "{MATCH_STR_2}" AND'
-     f' "{MATCH_STR_3}") OR ("{MATCH_STR_4}"))'),
+  'severity=ERROR',
+  (
+    'protoPayload.methodName="google.cloud.orchestration.airflow.service.'
+    'v1.Environments.DeleteEnvironment"'
+  ),
+  (
+    f'protoPayload.status.message:(("{MATCH_STR_1}" AND "{MATCH_STR_2}" AND'
+    f' "{MATCH_STR_3}") OR ("{MATCH_STR_4}"))'
+  ),
 ]
 
 logs_by_project = {}
@@ -44,15 +49,14 @@ envs_by_project = {}
 def prepare_rule(context: models.Context):
   envs_by_project[context.project_id] = composer.get_environments(context)
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_composer_environment',
-      log_name='log_id("cloudaudit.googleapis.com%2Factivity")',
-      filter_str=' AND '.join(FILTER_1),
+    project_id=context.project_id,
+    resource_type='cloud_composer_environment',
+    log_name='log_id("cloudaudit.googleapis.com%2Factivity")',
+    filter_str=' AND '.join(FILTER_1),
   )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   if not apis.is_enabled(context.project_id, 'composer'):
     report.add_skipped(None, 'composer is disabled')
     return
@@ -69,19 +73,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   env_name_set = set()
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # filter out non -relevant entries
-      logging_check_path = get_path(log_entry,
-                                    ('protoPayload', 'status', 'message'),
-                                    default='')
-      if (log_entry['severity'] != 'ERROR' or
-          log_entry['protoPayload']['methodName'] != MATCH_METHOD or
-          (((MATCH_STR_1 not in logging_check_path) or
-            (MATCH_STR_2 not in logging_check_path) or
-            (MATCH_STR_3 not in logging_check_path)) and
-           (MATCH_STR_4 not in logging_check_path))):
+      logging_check_path = get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
+      if (
+        log_entry['severity'] != 'ERROR'
+        or log_entry['protoPayload']['methodName'] != MATCH_METHOD
+        or (
+          (
+            (MATCH_STR_1 not in logging_check_path)
+            or (MATCH_STR_2 not in logging_check_path)
+            or (MATCH_STR_3 not in logging_check_path)
+          )
+          and (MATCH_STR_4 not in logging_check_path)
+        )
+      ):
         continue
       env_name = get_path(log_entry, ('resource', 'labels', 'environment_name'))
       env_name_set.add(env_name)

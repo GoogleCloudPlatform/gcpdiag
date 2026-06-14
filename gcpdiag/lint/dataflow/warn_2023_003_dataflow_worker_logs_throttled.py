@@ -29,16 +29,17 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = LogsQuery(
-      project_id=context.project_id,
-      resource_type='dataflow_step',
-      log_name='log_id("dataflow.googleapis.com/worker")',
-      search_exprs=[
-          Equals(field='severity', value='WARNING'),
-          REFound(
-              field='jsonPayload.message',
-              re_exp='Throttling logger worker',
-          )
-      ])
+    project_id=context.project_id,
+    resource_type='dataflow_step',
+    log_name='log_id("dataflow.googleapis.com/worker")',
+    search_exprs=[
+      Equals(field='severity', value='WARNING'),
+      REFound(
+        field='jsonPayload.message',
+        re_exp='Throttling logger worker',
+      ),
+    ],
+  )
   logs_by_project[context.project_id].mk_query()
 
 
@@ -57,9 +58,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   logs_query = logs_by_project[context.project_id]
 
   if logs_query.has_matching_entries:
-    unique_jobs = logs_query.get_unique(lambda e: get_path(
-        e, ('resource', 'labels', 'job_name'), default='unknown job'))
-    report.add_failed(project,
-                      f'Dataflow worker logs are throttled: {unique_jobs}')
+    unique_jobs = logs_query.get_unique(
+      lambda e: get_path(e, ('resource', 'labels', 'job_name'), default='unknown job')
+    )
+    report.add_failed(project, f'Dataflow worker logs are throttled: {unique_jobs}')
   else:
     report.add_ok(project)

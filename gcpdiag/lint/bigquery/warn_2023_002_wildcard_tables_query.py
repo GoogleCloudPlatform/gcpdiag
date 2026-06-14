@@ -16,31 +16,33 @@
 
 A query has been used on a wildcard table and the field was not found
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-#String the is unique to this error
+# String the is unique to this error
 MATCH_STR = 'Unrecognized name:'
 
-#Where to look for the error
+# Where to look for the error
 ERROR_IN_LOGGING = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    r'protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.referencedTables.tableId=~"\*$"',
-    f'protoPayload.serviceData.jobCompletedEvent.job.jobStatus.error.message:"{MATCH_STR}"'
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  r'protoPayload.serviceData.jobCompletedEvent.job.jobStatistics.referencedTables.tableId=~"\*$"',
+  f'protoPayload.serviceData.jobCompletedEvent.job.jobStatus.error.message:"{MATCH_STR}"',
 ]
 logs_by_project = {}
 
 
-#Get the logs for the error
+# Get the logs for the error
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com%2Fdata_access")',
-      filter_str=' AND '.join(ERROR_IN_LOGGING))
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com%2Fdata_access")',
+    filter_str=' AND '.join(ERROR_IN_LOGGING),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -53,32 +55,31 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'bigquery api is disabled')
     return
-  #list of all found errors
+  # list of all found errors
   error_entries = []
 
-  #loop through the errors
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  # loop through the errors
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
-      #make sure we found the correct errors
-      if MATCH_STR not in get_path(log_entry,
-                                   ('protoPayload', 'status', 'message'),
-                                   default=''):
+      # make sure we found the correct errors
+      if MATCH_STR not in get_path(log_entry, ('protoPayload', 'status', 'message'), default=''):
         continue
       else:
-        #add the error to the error list
+        # add the error to the error list
         error_entries.append(log_entry['protoPayload']['status']['message'])
 
-    #if there are no errors, report success
+    # if there are no errors, report success
     if len(error_entries) == 0:
       report.add_ok(project)
-    #if there are more than 10 errors, report failure
+    # if there are more than 10 errors, report failure
     elif len(error_entries) >= 1:
       report.add_failed(
-          project,
-          ('There have been errors in your project'
-           ' where a field was not found in a query using a wildcard table'),
-          '  to prevent this, please rewrite your query or change the tables schema'
+        project,
+        (
+          'There have been errors in your project'
+          ' where a field was not found in a query using a wildcard table'
+        ),
+        '  to prevent this, please rewrite your query or change the tables schema',
       )
   else:
     report.add_ok(project)

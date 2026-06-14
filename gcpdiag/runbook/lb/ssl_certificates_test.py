@@ -22,16 +22,21 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'lb/ssl-certificates'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{
+  rule_parameters = [
+    {
       'project_id': 'gcpdiag-lb3-aaaa',
       'certificate_name': 'cert1',
-  }, {
+    },
+    {
       'project_id': 'gcpdiag-lb3-aaaa',
       'certificate_name': 'cert2',
-  }, {
+    },
+    {
       'project_id': 'gcpdiag-lb3-aaaa',
       'certificate_name': 'cert3',
-  }, {
+    },
+    {
       'project_id': 'gcpdiag-lb3-aaaa',
       'certificate_name': 'unused-cert4',
-  }]
+    },
+  ]

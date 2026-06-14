@@ -25,12 +25,12 @@ ROLE = 'roles/owner'
 
 def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
-  iam.get_project_policy(context.project_id)
+  iam.get_project_policy(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
 
   for member in sorted(iam_policy.get_members()):
     if member.startswith('serviceAccount:'):

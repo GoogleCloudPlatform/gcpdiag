@@ -26,15 +26,15 @@ from gcpdiag.queries import apis, crm, logs
 logs_by_project = {}
 
 MATCH_STR1 = (
-    'type.googleapis.com/google.cloud.orchestration.airflow.service.v1.CreateEnvironmentRequest'
+  'type.googleapis.com/google.cloud.orchestration.airflow.service.v1.CreateEnvironmentRequest'
 )
 MATCH_STR2 = (
-    'type.googleapis.com/google.cloud.orchestration.'\
-    'airflow.service.v1beta1.CreateEnvironmentRequest'
+  'type.googleapis.com/google.cloud.orchestration.airflow.service.v1beta1.CreateEnvironmentRequest'
 )
 pattern = (
-    r'(Cluster|Services|GKE master) CIDR range (\d+\.\d+\.\d+\.\d+/\d+) is not'
-    r' within allowed ranges.')
+  r'(Cluster|Services|GKE master) CIDR range (\d+\.\d+\.\d+\.\d+/\d+) is not'
+  r' within allowed ranges.'
+)
 ip_pattern = r'(\d+\.\d+\.\d+\.\d+/\d+)'
 
 FILTER_1 = [f'protoPayload.request.@type={MATCH_STR1} OR {MATCH_STR2}']
@@ -42,15 +42,14 @@ FILTER_1 = [f'protoPayload.request.@type={MATCH_STR1} OR {MATCH_STR2}']
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_composer_environment',
-      log_name='log_id("cloudaudit.googleapis.com%2Factivity")',
-      filter_str=' AND '.join(FILTER_1),
+    project_id=context.project_id,
+    resource_type='cloud_composer_environment',
+    log_name='log_id("cloudaudit.googleapis.com%2Factivity")',
+    filter_str=' AND '.join(FILTER_1),
   )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   project = crm.get_project(context.project_id)
 
   if not apis.is_enabled(context.project_id, 'composer'):
@@ -73,8 +72,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Start Iteration from the latest log entries
   for log_entry in reversed(log_entries.entries):
     # Check for the not allowed IP Range Error Entry
-    if (log_entry['severity'] == 'ERROR' and
-        log_entry['protoPayload']['status']['code'] == 3):
+    if log_entry['severity'] == 'ERROR' and log_entry['protoPayload']['status']['code'] == 3:
       message_body = log_entry['protoPayload']['status']['message']
       match = re.search(pattern, message_body)
       if not match:
@@ -83,9 +81,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         matches = re.findall(ip_pattern, message_body)
         ip_ranges = set(matches)
         report.add_failed(
-            project,
-            f'{ip_ranges} outsides the ALLOWED IP RANGE \n'
-            'Try Creating private IP cluster using ALLOWED IP RANGES',
+          project,
+          f'{ip_ranges} outsides the ALLOWED IP RANGE \n'
+          'Try Creating private IP cluster using ALLOWED IP RANGES',
         )
       project_ok_flag = False
       break

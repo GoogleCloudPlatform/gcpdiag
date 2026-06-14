@@ -43,7 +43,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   cloudsql_peered_networks = {}
 
-  for vpc in network.get_networks(context.project_id):
+  for vpc in network.get_networks(context):
     if any(utils.is_cloudsql_peer_network(peer.url) for peer in vpc.peerings):
       cloudsql_peered_networks[vpc.self_link] = vpc
 
@@ -51,14 +51,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no Cloud SQL peered vpc found')
     return
 
-  for instance in sorted(instances.values(),
-                         key=op.attrgetter('project_id', 'name')):
+  for instance in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
     if instance.network.self_link not in cloudsql_peered_networks:
       continue
 
     if any(_is_docker_bridge_ip(ip) for ip in instance.network_ips):
-      report.add_failed(instance,
-                        f'{instance.name} is inside of Docker bridge network')
+      report.add_failed(instance, f'{instance.name} is inside of Docker bridge network')
     else:
       report.add_ok(instance)
 

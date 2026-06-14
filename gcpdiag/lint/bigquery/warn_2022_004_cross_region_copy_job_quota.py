@@ -17,6 +17,7 @@
 This rule verifies that there are no log entries reporting that
 the number of cross-region copy jobs running in a project exceeded the daily limit.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -26,19 +27,20 @@ MATCH_STR1 = 'Quota exceeded: Your project exceeded quota for cross region copie
 MATCH_STR2 = 'Quota exceeded: Your table exceeded quota for cross region copies per table.'
 
 CROSS_REGION_COPY_QUOTA_EXCEEDED = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR1}" OR "{MATCH_STR2}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR1}" OR "{MATCH_STR2}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(CROSS_REGION_COPY_QUOTA_EXCEEDED))
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(CROSS_REGION_COPY_QUOTA_EXCEEDED),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -51,20 +53,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'bigquery'):
     report.add_skipped(project, 'BigQuery api is disabled')
     return
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       project_ok_flag = True
-      logging_check_path = get_path(log_entry,
-                                    ('protoPayload', 'status', 'message'),
-                                    default='')
+      logging_check_path = get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
       if (MATCH_STR1 and MATCH_STR2) not in logging_check_path:
         continue
       elif (MATCH_STR1 or MATCH_STR2) in logging_check_path:
         error_message = MATCH_STR1 if MATCH_STR1 in logging_check_path else MATCH_STR2
-        report.add_failed(
-            project,
-            logs.format_log_entry(log_entry)[:25] + ' ' + error_message)
+        report.add_failed(project, logs.format_log_entry(log_entry)[:25] + ' ' + error_message)
         project_ok_flag = False
         break
     if project_ok_flag:

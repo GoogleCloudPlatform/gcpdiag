@@ -16,7 +16,7 @@ nat/public-nat-ip-allocation-failed: Troubleshooting for IP Allocation issues fo
 
     - NAT IP and Port calculation: For source nic without an External IP address,
       verify the VM is served by a Public NAT Gateway and check there are no issues on the NATGW.
-    
+  
 [START]: Starting Nat IP Allocation Failed diagnostics
 [AUTOMATED STEP]: Checking the nat_allocation_failed metric for NAT IP allocation failure and the NAT router status.
 

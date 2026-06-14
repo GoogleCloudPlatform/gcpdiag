@@ -35,16 +35,11 @@ class TestComposer:
   def test_service_account(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     environments = composer.get_environments(context)
-    assert ('env1', GCE_SERVICE_ACCOUNT) in [
-        (c.name, c.service_account) for c in environments
-    ]
-    assert ('env2', ENV_SERVICE_ACCOUNT) in [
-        (c.name, c.service_account) for c in environments
-    ]
+    assert ('env1', GCE_SERVICE_ACCOUNT) in [(c.name, c.service_account) for c in environments]
+    assert ('env2', ENV_SERVICE_ACCOUNT) in [(c.name, c.service_account) for c in environments]
 
   def test_is_private_ip(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     environments = composer.get_environments(context)
-    assert ('env1', False) in [(c.name, c.is_private_ip()) for c in environments
-                              ]
+    assert ('env1', False) in [(c.name, c.is_private_ip()) for c in environments]
     assert ('env2', True) in [(c.name, c.is_private_ip()) for c in environments]

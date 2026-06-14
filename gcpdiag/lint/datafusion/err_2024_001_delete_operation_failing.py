@@ -20,6 +20,7 @@ resource (i.e route) in the tenant project might not get deleted due to which
 the process gets stalled in Deleting, and other reasons include missing IAM
 roles in Google managed datafusion serviceAccount.
 """
+
 import re
 
 from gcpdiag import lint, models
@@ -33,9 +34,9 @@ projects_instances = {}
 projects = {}
 IAM_ROLE = 'roles/datafusion.serviceAgent'
 FILTER_1 = [
-    'severity=ERROR',
-    f'protoPayload.serviceName:("{SERVICE_NAME}")',
-    f'protoPayload.methodName:("{METHOD_NAME}")',
+  'severity=ERROR',
+  f'protoPayload.serviceName:("{SERVICE_NAME}")',
+  f'protoPayload.methodName:("{METHOD_NAME}")',
 ]
 
 
@@ -52,10 +53,10 @@ def prefetch_rule(context: models.Context):
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='audited_resource',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=' AND '.join(FILTER_1),
+    project_id=context.project_id,
+    resource_type='audited_resource',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=' AND '.join(FILTER_1),
   )
 
 
@@ -69,9 +70,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   """
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        'Cloud Data Fusion API is not enabled in'
-        f' { projects[context.project_id]}',
+      None,
+      f'Cloud Data Fusion API is not enabled in {projects[context.project_id]}',
     )
     return
 
@@ -79,8 +79,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = projects[context.project_id]
 
   if not datafusion_instances:
-    report.add_skipped(None,
-                       f'Cloud Data Fusion instances were not found {context}')
+    report.add_skipped(None, f'Cloud Data Fusion instances were not found {context}')
     return
 
   instance_full_path_set = set()
@@ -91,15 +90,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if datafusion_instance.is_deleting:
       deleting_instance_flag = True
 
-  if (logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries) or deleting_instance_flag:
-
-    iam_policy = iam.get_project_policy(context.project_id)
+  if (
+    logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries
+  ) or deleting_instance_flag:
+    iam_policy = iam.get_project_policy(context)
     datafusion_sa = (
-        f'serviceAccount:service-{project.number}@gcp-sa-datafusion.iam.gserviceaccount.com'
+      f'serviceAccount:service-{project.number}@gcp-sa-datafusion.iam.gserviceaccount.com'
     )
-    project_iam_policy_result = iam_policy.has_role_permissions(
-        datafusion_sa, IAM_ROLE)
+    project_iam_policy_result = iam_policy.has_role_permissions(datafusion_sa, IAM_ROLE)
     if not project_iam_policy_result:
       report.add_failed(project, f'{datafusion_sa}\nLacks {IAM_ROLE}')
       return
@@ -107,14 +105,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project_ok_flag = True
 
   for log_entry in logs_by_project[context.project_id].entries:
-    if (log_entry['protoPayload']['methodName'] == METHOD_NAME and
-        log_entry['severity'] == 'ERROR' and
-        log_entry['protoPayload']['resourceName'] in instance_full_path_set):
-
+    if (
+      log_entry['protoPayload']['methodName'] == METHOD_NAME
+      and log_entry['severity'] == 'ERROR'
+      and log_entry['protoPayload']['resourceName'] in instance_full_path_set
+    ):
       message = log_entry['protoPayload']['status']['message']
       match = re.search(r'::(.*?):([^:]+)\.', message)
-      instance_name = find_instance(datafusion_instances,
-                                    log_entry['protoPayload']['resourceName'])
+      instance_name = find_instance(datafusion_instances, log_entry['protoPayload']['resourceName'])
       if match:
         message = match.group(2)
       report.add_failed(instance_name, f'{message}')

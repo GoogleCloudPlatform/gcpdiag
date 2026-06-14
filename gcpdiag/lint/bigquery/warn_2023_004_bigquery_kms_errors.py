@@ -26,13 +26,11 @@ from boltons.iterutils import get_path
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = (
-    'Please grant Cloud KMS CryptoKey Encrypter/Decrypter role to BigQuery'
-    ' service account')
+MATCH_STR = 'Please grant Cloud KMS CryptoKey Encrypter/Decrypter role to BigQuery service account'
 
 BQ_KMS_ERROR_FILTER = [
-    'severity=ERROR',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 
 logs_by_project = {}
@@ -40,10 +38,10 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(BQ_KMS_ERROR_FILTER),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(BQ_KMS_ERROR_FILTER),
   )
 
 
@@ -65,21 +63,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       for log_entry in logs_.entries:
         # Filter out non-relevant log entries.
         if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-            log_entry, ('protoPayload', 'status', 'message'), default=''):
+          log_entry, ('protoPayload', 'status', 'message'), default=''
+        ):
           continue
         error_message = get_path(
-            log_entry,
-            ('protoPayload', 'status', 'message'),
+          log_entry,
+          ('protoPayload', 'status', 'message'),
         )
 
         bq_sa = error_message.split(
-            'Please grant Cloud KMS CryptoKey Encrypter/Decrypter role to'
-            ' BigQuery service account: ')[-1]
+          'Please grant Cloud KMS CryptoKey Encrypter/Decrypter role to BigQuery service account: '
+        )[-1]
 
         report.add_failed(
-            project,
-            'BigQuery encryption service account missing Cloud KMS CryptoKey'
-            ' Encrypter/Decrypter IAM role : ' + bq_sa,
+          project,
+          'BigQuery encryption service account missing Cloud KMS CryptoKey'
+          ' Encrypter/Decrypter IAM role : ' + bq_sa,
         )
         return
 

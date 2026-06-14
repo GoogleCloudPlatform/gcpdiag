@@ -40,11 +40,12 @@ metadata_server_errors = {}
 
 def prepare_rule(context: models.Context):
   metadata_server_errors[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='k8s_container',
-      log_name='log_id("stderr")',
-      filter_str='severity=ERROR AND '+\
-      f'resource.labels.container_name="{GKE_METADATA_SERVER_CONTAINER_NAME}"')
+    project_id=context.project_id,
+    resource_type='k8s_container',
+    log_name='log_id("stderr")',
+    filter_str='severity=ERROR AND '
+    + f'resource.labels.container_name="{GKE_METADATA_SERVER_CONTAINER_NAME}"',
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -55,24 +56,26 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Check if GCP Project metadata is configured for legacy agent or fluent-bit
   project_metadata = gce.get_project_metadata(context.project_id)
-  if project_metadata.get(GCE_METADATA_COS_LOGGING_ENABLED) == 'true' and \
-    not project_metadata.get(GCE_METADATA_COS_FLUENT_BIT) == 'true':
-    report.add_failed(crm.get_project(context.project_id),
-                      COS_LEGACY_AGENT_WARNING)
+  if (
+    project_metadata.get(GCE_METADATA_COS_LOGGING_ENABLED) == 'true'
+    and not project_metadata.get(GCE_METADATA_COS_FLUENT_BIT) == 'true'
+  ):
+    report.add_failed(crm.get_project(context.project_id), COS_LEGACY_AGENT_WARNING)
 
   # Search the logs.
   def filter_f(log_entry):
     try:
-      if log_entry['jsonPayload']['message'].endswith(
-          MATCH_STR_END) and MATCH_STR in log_entry['jsonPayload']['message']:
+      if (
+        log_entry['jsonPayload']['message'].endswith(MATCH_STR_END)
+        and MATCH_STR in log_entry['jsonPayload']['message']
+      ):
         return True
     except KeyError:
       return False
 
   clusters_with_errors = util.gke_logs_find_bad_clusters(
-      context=context,
-      logs_by_project=metadata_server_errors,
-      filter_f=filter_f)
+    context=context, logs_by_project=metadata_server_errors, filter_f=filter_f
+  )
 
   for _, c in sorted(clusters.items()):
     if not c.has_workload_identity_enabled():

@@ -1,9 +1,10 @@
-""" Retry strategy: n retries with fixed timeout between them """
+"""Retry strategy: n retries with fixed timeout between them"""
+
 from typing import Iterator
 
 
 class ConstantTimeoutRetryStrategy:
-  """ Retry strategy: n retries with fixed timeout between them """
+  """Retry strategy: n retries with fixed timeout between them"""
 
   _retries: int
   _timeout: int

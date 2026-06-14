@@ -27,24 +27,25 @@ from gcpdiag import lint, models
 from gcpdiag.queries import apis, gke, logs
 
 CREDENTIALS_ERROR_LOG_FILTER = [
-    'severity=ERROR',
-    ('textPayload: "google.auth.exceptions.DefaultCredentialsError: '
-     'Your default credentials were not found."')
+  'severity=ERROR',
+  (
+    'textPayload: "google.auth.exceptions.DefaultCredentialsError: '
+    'Your default credentials were not found."'
+  ),
 ]
 credential_logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-
   credential_logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='k8s_container',
-      log_name='log_id("stderr")',
-      filter_str=' AND '.join(CREDENTIALS_ERROR_LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='k8s_container',
+    log_name='log_id("stderr")',
+    filter_str=' AND '.join(CREDENTIALS_ERROR_LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   # Skip entire rule if logging disabled
   if not apis.is_enabled(context.project_id, 'logging'):
     report.add_skipped(None, 'logging api is disabled')
@@ -63,8 +64,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for log_entry in credential_logs_by_project[context.project_id].entries:
     cluster_name = get_path(log_entry, ('resource', 'labels', 'cluster_name'))
     location = get_path(log_entry, ('resource', 'labels', 'location'))
-    container_name = get_path(log_entry,
-                              ('resource', 'labels', 'container_name'))
+    container_name = get_path(log_entry, ('resource', 'labels', 'container_name'))
 
     # Add container name to report failure
     if container_name:
@@ -74,7 +74,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for _, c in sorted(clusters.items()):
     if (c.name, c.location) in error_clusters:
       report.add_failed(
-          c, 'Failed containers: %s' %
-          ', '.join(error_clusters[(c.name, c.location)]))
+        c, 'Failed containers: %s' % ', '.join(error_clusters[(c.name, c.location)])
+      )
     else:
       report.add_ok(c)

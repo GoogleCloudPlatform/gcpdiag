@@ -35,13 +35,14 @@ MAX_SUBSCRIPTIONS_TO_DISPLAY = 10
 def prefetch_rule(context: models.Context):
   subscription_name = ''
   query_push_request_count = (
-      'fetch pubsub_subscription| metric'
-      ' "pubsub.googleapis.com/subscription/push_request_count"| filter'
-      ' resource.project_id == "{}" &&'
-      ' (resource.subscription_id == "{}") | align rate(1m)|'
-      ' every 1m| group_by'
-      ' [metric.response_class],[value_push_request_count_aggregate:'
-      ' aggregate(value.push_request_count)] | within {}')
+    'fetch pubsub_subscription| metric'
+    ' "pubsub.googleapis.com/subscription/push_request_count"| filter'
+    ' resource.project_id == "{}" &&'
+    ' (resource.subscription_id == "{}") | align rate(1m)|'
+    ' every 1m| group_by'
+    ' [metric.response_class],[value_push_request_count_aggregate:'
+    ' aggregate(value.push_request_count)] | within {}'
+  )
 
   subscriptions = pubsub.get_subscriptions(context)
 
@@ -49,9 +50,8 @@ def prefetch_rule(context: models.Context):
     if subscription.is_push_subscription():
       subscription_name = subscription.name
       push_request_count[subscription_name] = monitoring.query(
-          context.project_id,
-          query_push_request_count.format(context.project_id, subscription_name,
-                                          DURATION),
+        context.project_id,
+        query_push_request_count.format(context.project_id, subscription_name, DURATION),
       )
 
 
@@ -63,15 +63,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   failing_subs = set()
   for subscription_name, push_metric in push_request_count.items():
-    if (not push_metric
-       ):  # empty for subscription without traffic for the duration
+    if not push_metric:  # empty for subscription without traffic for the duration
       continue
     else:
       for metric_values in push_metric.values():
         # one of ['ack', 'deadline_exceeded', 'internal', 'invalid',
         # 'remote_server_4xx', 'remote_server_5xx', 'unreachable']
-        response_class = get_path(metric_values,
-                                  ('labels', 'metric.response_class'))
+        response_class = get_path(metric_values, ('labels', 'metric.response_class'))
 
         if response_class != 'ack':
           failing_subs.add(subscription_name)
@@ -80,17 +78,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if failing_subs:
     extra_subs = ''
     if len(failing_subs) > MAX_SUBSCRIPTIONS_TO_DISPLAY:
-      extra_subs = (', and'
-                    f' {len(failing_subs) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more'
-                    ' subscriptions')
+      extra_subs = f', and {len(failing_subs) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more subscriptions'
 
-  # pylint: disable=line-too-long
     report.add_failed(
-        project,
-        f'{len(failing_subs)} subscriptions have non-ack responses'
-        ' from the endpoint:'
-        f" {', '.join(islice(failing_subs, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subs}",
+      project,
+      f'{len(failing_subs)} subscriptions have non-ack responses'
+      ' from the endpoint:'
+      f' {", ".join(islice(failing_subs, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subs}',
     )
-  # pylint: enable=line-too-long
   else:
     report.add_ok(project)

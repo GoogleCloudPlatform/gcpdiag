@@ -1,6 +1,6 @@
 """
-  Adapter between gcpdiag.async_queries.api.Creds protocol and
-  gcpdiag.queries.apis.get_credentials
+Adapter between gcpdiag.async_queries.api.Creds protocol and
+gcpdiag.queries.apis.get_credentials
 """
 
 from typing import Any, Dict
@@ -17,8 +17,8 @@ def refresh_google_auth_creds(creds: Any) -> None:
 
 class GcpdiagCreds:
   """
-    Adapter between gcpdiag.async_queries.api.Creds protocol and
-    gcpdiag.queries.apis.get_credentials
+  Adapter between gcpdiag.async_queries.api.Creds protocol and
+  gcpdiag.queries.apis.get_credentials
   """
 
   def update_headers(self, headers: Dict[str, str]) -> None:

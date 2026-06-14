@@ -17,6 +17,7 @@
 
 Log entries indicating Cloud Functions exceeding memory limits have been found.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -31,10 +32,11 @@ LOG_FILTER = ['severity=ERROR', f'textPayload:"{MATCH_STR}"']
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='cloud_function',
-      log_name='log_id("cloudfunctions.googleapis.com/cloud-functions")',
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type='cloud_function',
+    log_name='log_id("cloudfunctions.googleapis.com/cloud-functions")',
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -47,20 +49,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   query = logs_by_project[context.project_id]
   for log_entry in query.entries:
-    if MATCH_STR not in get_path(log_entry,
-                                 ('textPayload'), default='') or get_path(
-                                     log_entry,
-                                     ('severity'), default='') != 'ERROR':
+    if (
+      MATCH_STR not in get_path(log_entry, ('textPayload'), default='')
+      or get_path(log_entry, ('severity'), default='') != 'ERROR'
+    ):
       continue
-    function_name = get_path(log_entry, ('resource', 'labels', 'function_name'),
-                             default='')
+    function_name = get_path(log_entry, ('resource', 'labels', 'function_name'), default='')
     if function_name:
       failed_functions.add(function_name)
   for _, cloudfunction in sorted(cloudfunctions.items()):
     if cloudfunction.name in failed_functions:
       available_memory = cloudfunction.memory
       report.add_failed(
-          cloudfunction,
-          f'{cloudfunction.name} exceeded {available_memory} MB memory limit')
+        cloudfunction, f'{cloudfunction.name} exceeded {available_memory} MB memory limit'
+      )
     else:
       report.add_ok(cloudfunction)

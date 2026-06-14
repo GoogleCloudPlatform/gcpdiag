@@ -1,3 +1,66 @@
+
+# Changelog
+
+## 0.79 (2025-05-27)
+
+### New Lints
+
+- lb/bp/2025\_003: new rule: lint rule for best practices for load balancer backend service connection draining setting.
+- lb/bp/2025\_002: new rule: Lint rule for backend service timeout best practice on load balancer.
+- interconnect/warn/2025\_001: interconnect rule: check interconnect MTU mismatch
+
+### New Runbooks
+
+- interconnect/bgp-down-flap: interconnect BGP down flap runbook
+- gce/vm-creation: \[New Runbook\] GCE VM Creation runbook
+- gce/guestos-boot-up: \[New Runbook\] Guest OS boot-up issues
+
+### New Queries
+
+- orgpolicy.\_get\_available\_org\_constraints: list all the org constraints available for a particular resource. Args: resource\_id: The resource ID. resource\_type: The resource type (project or organization). Returns: A list of available org policy constraints. Raises: utils.GcpApiError: on API errors.
+- billing.get\_billing\_info: Get Billing Information for a project, caching the result.
+- orgpolicy.get\_all\_project\_org\_policies: list all the org policies set for a particular resource. Args: project\_id: The project ID. Returns: A dictionary of PolicyConstraint objects, keyed by constraint name. Raises: utils.GcpApiError: on API errors.
+- network.get\_router\_by\_name
+
+### New Features
+
+- Implement \--test-release flag in gcpdiag docker
+- Improved output message quality for all runbooks.
+- Add Bundle execution usage details to internal \+ external docs
+- Adding exceptions in constructing API endpoints for different services.
+- Add markdownlint precommit and graphviz dependencies
+- Add ossf scorecard Github Action and update pre-commit hooks
+
+### Fixes
+
+- Update `job_id` parameter.
+- Update service name parameter.
+- Update output messages for interconnect and dataproc runbooks.
+- Update `cluster_name` parameter.
+- Disambiguate `name` parameter for GKE and GCF runbooks; fix GCF failed deployments template bug.
+- Update dataflow/dataproc jinja templates.
+- \[Bundles\] Fix missing `runbook_name` error.
+- \[gcpdiag runbook cli\] Fix missing json report error.
+- Fix missing import errors.
+- Fix `report.run_start_time` error.
+- Update pipenv to use the latest version to fix import errors.
+- Update Github Actions workflow to use a newer python version to fix tests.
+- Create exception for missing runbook parameters.
+- Update `README.md`.
+- Fix dataproc runbook parameter bug.
+- Improve Runbooks Response handling.
+- Use the diagnostic engines runbook loader for tests.
+- Update ops agent onboarding parameters.
+- Update artifact config.
+- Update artifact upload version.
+- Use scope instead of region wording in the unhealthy backends runbook.
+- Fix ossf scorecard action filename in config; re-enable pylint now that sub dependency setuptools is fixed ([https://github.com/pypa/setuptools/issues/4892\#issuecomment-2740696126](https://github.com/pypa/setuptools/issues/4892#issuecomment-2740696126)).
+- Migrate info logs to debug logs for messages with PII / SPII.
+- Disable py lint.
+- Deprecate unused gh-pages github action ([https://github.com/GoogleCloudPlatform/gcpdiag/actions/runs/13902316282/job/38976483921](https://github.com/GoogleCloudPlatform/gcpdiag/actions/runs/13902316282/job/38976483921)).
+- Improve the message when HC logs are not enabled.
+- github: Bump jinja2 from 3.1.5 to 3.1.6.
+
 ## 0.78 (2025-03-04)
 
 #### New Lints
@@ -6,6 +69,7 @@ gke/warn/2025\_001: new rule: GKE external LB services are successfully created 
 asm/warn/2025\_002: new rule: Upstream connection established successfully with no protocol errors
 asm/warn/2025\_001: new rule: ASM: Envoy doesn't report connection failure
 gke/err/2025\_001: GKE cluster complies with the serial port logging organization policy.
+
 #### New Runbooks
 
 gcf/failed-deployments: Cloud Run Functions runbook to assist users to check reasons for failed deployments of Gen2 cloud functions
@@ -37,7 +101,6 @@ fix runbook functionality to properly detect pod IP exhaustion and node IP exhau
 Explicitly handle HTTP 401 errors - Add step_error for exceptions caused by GcpApiError - Handle edge case where
 Improve error handling for iam.roles()
 
-
 ## 0.77 (2024-11-13)
 
 #### New Lint Rules
@@ -59,6 +122,7 @@ Improve error handling for iam.roles()
 - lb.get\_forwarding\_rule: Returns the specified ForwardingRule resource.
 
 #### Enhancements
+
 - Functionality to auto suggest correct runbook names for misspelled runbooks
 - Updated docker images to ubuntu:24.04 (python 3.12)
 - Updated devcontainer to python 3.12
@@ -73,8 +137,8 @@ Improve error handling for iam.roles()
 - Add functionality to disable query caching for edge cases
 - Improve error handling within gcpdiag library to raise errors for handling rather than exiting.
 
-
 #### Fixes
+
 - lb.get\_backend\_service: Improved calls to fetch global backend
 - Added project_id parameters for the runbook tests without  valid project ids
 
@@ -108,6 +172,7 @@ Improve error handling for iam.roles()
 - Runbook operation (op.add_metadata) to create or retrieve metadata related to steps
 
 #### Fixes
+
 - Enforce explicit parameter configuration in gce generalized steps.
 - dataflow/dataflow-permission: Refactored runbook to `dataflow/job-permission`
 - dataflow/bp/2024\_002: Fixed resource filtering bug for forwarding rule (internal LB)
@@ -183,23 +248,28 @@ Improve error handling for iam.roles()
 ## 0.74 (2024-7-10)
 
 #### Fixes
+
 - Re-roll of v0.72 after correcting pip module issue with the docker image build
 
 #### New Lint Rule
+
 datafusion/warn\_2024\_002 Data Fusion instance is in a running state
 
 #### New Runbook
+
 dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 
 ## 0.73 (2024-7-8)
 
 #### New Feature
+
 - Added search command to scale the docstrings for lint rules or runbooks to
   match keywords
 - added runbook check step outcome: step\_ok, step\_failed, etc.
 - Added a zonal endpoint in osconfig library. It returns inventories for all VMs under a certain zone
 
 #### Fixes
+
 - Create runbook report regardless of the number of failed steps
 - Improve introductory error message for new runbooks
 - Update lint command API return value for display of resources in each rule
@@ -217,6 +287,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - Update and improve runbook error handling
 
 #### New Lint Rule
+
 - gke/err\_2024\_001\_psa\_violations Checking for no Pod Security Admission violations in the project
 - bigquery/warn\_2024\_002\_invalid\_external\_connection BigQuery external
   connection with Cloud SQL does not fail
@@ -227,6 +298,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - bigquery/warn\_2024\_0003 BigQuery job does not fail due to Maximum API requests per user per method exceeded
 
 #### New Runbook
+
 - gce/ops\_agent Ops Agent Onboarding runbook
 - gcp/serial\_log\_analyzer runbook to analyse known issues logged into Serial Console logs
 - vertex/workbench\_instance\_stuck\_in\_provisioning Runbook to Troubleshoot Issue: Vertex AI Workbench Instance Stuck in Provisioning State
@@ -258,13 +330,16 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
   API) does not detect legacy agent packages on the GCE VM.
 
 #### New Features
+
 - added spell check and corrections of existing misspelled words
 
 #### New Runbook
+
 - new runbook: GKE logs
 - new runbook: GKE cluster autoscaler
 
 #### New Lint Rule
+
 - dataflow/err\_2024\_004\_missing\_gce\_permission\_temp\_bucket The Dataflow
   job has the necessary GCS permissions for the temporary bucket
 - gce/err\_2024\_003\_dataflow\_write\_truncate\_unbounded streaming dataflow
@@ -277,10 +352,10 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - gke/warn\_2024\_002\_ksa\_exceeded GKE KSA exceeded 3000 in WI enabled
   clusters.
 
-
 ## 0.71 (2024-4-17)
 
 #### New lint rules
+
 - datafusion/err\_2024\_001\_delete\_operation\_failing datafusion
   deletion operation
 - gce/err\_2024\_003\_vm\_secure\_boot\_failures GCE Lint rule for boot
@@ -298,23 +373,27 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
   exceeds limit for imports or query appends
 
 #### New query
+
 - osconfig
 
   "OS management tools that can be used for patch management, patch compliance,
   and configuration management on VM instances."
-    https://cloud.google.com/compute/docs/osconfig/rest
+    <https://cloud.google.com/compute/docs/osconfig/rest>
 
 #### New runbook
+
 - gce/vm\_termination assist investigating underlying reasons behind
   termination or reboot
 - gke/cluster\_autoscaler GKE Cluster autoscaler error messages check
 
 #### New features
+
 - Add cache bypass option for runbook steps
 - Add runbook starter code generator; updates to code generator
 - Add API for runbook command
 
 #### Fixes
+
 - Add mock data for datafusion API testing
 - Correct runbook documentation generation output
 - Improve runbook operator functions usage
@@ -332,6 +411,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 ## 0.70 (2024-3-27)
 
 #### New lint rules
+
 - pubsub/ERR\_2024\_001 bq subscription table not found
 - composer/WARN\_2024\_001 low scheduler cpu usage
 - datafusion/WARN\_2024\_001 data fusion version
@@ -345,21 +425,24 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - gke/WARN\_2024\_001 cluster nap limits prevent autoscaling
 
 #### New query
+
 - datafusion\_cdap API query implementation - provides CDAP profile metadata
 
 #### Fixes
+
 - Updated pipenv packages, Pipenv.lock dependencies
 - Updated github action workflow versions to stop warnings about node v10 and v10
 - Refactor Runbook: Implemented a modular, class-based design to facilitate a
   more configurable method for tree construction.
 
-
 ## 0.69 (2024-2-21)
 
 #### New feature
+
 - add universe\_domain for Trusted Partner Client (TPC)
 
 #### New rules
+
 - asm/WARN\_2024\_001 Webhook failed
 - lb/BP\_2024\_002 Check if global access is on for the regional iLB
 - pubsub/WARN\_2024\_003 Pub/Sub rule: CMEK - Topic Permissions
@@ -372,14 +455,15 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - pubsub/WARN\_2024\_001 DLQ Subscription has apt permissions
 
 #### Fixes
+
 - Update Pull Request and Merge to only run when an update was committed
 - Creating a github action Workflow to automatically update the gke/eol.yaml file
 - Update gke/eol.yaml file
 
-
 ## 0.68 (2024-1-17)
 
 #### New Rules
+
 - gke/bp\_2023\_002 Gke cluster is a private cluster
 - composer/err\_2023\_002 Use allowed IP ranges to create Private IP Cluster
 - compoer/err\_2023\_004 DAG is detected as zombie
@@ -398,11 +482,12 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - vpc/warn\_2024\_001 Check Unused Reserved IP addresses
 - iam/sec\_2024\_001 Detect unused service accounts
 
-
 #### New module
+
 - Add billing module query and lint rules
 
 #### Fixes
+
 - Skip notebook instances query if API is not enabled
 - Update MD formatting for gke/WARN/2023\_004.md
 - Update conflicting credentials import name
@@ -413,6 +498,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - fixed bug in change id 2113602 - updated condition for check NAT config rule
 
 #### Features and Improvements
+
 - Improved report generation for runbook
 - refactor lint.command.run to return a dict when run from API service
 - Add set\_credentials() method
@@ -423,21 +509,25 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 ## 0.67 (2023-11-17)
 
 #### Fixes
+
 - Updating GKE EOL file and snapshot
 - Rewording message triggering internal leak test
 
 #### New Command and Rules
+
 - Runbook POC with ssh runbook and terraform scripts
 
 #### New rules
+
 - GKE cluster has workload identity enabled
 - Splunk job uses valid certificate
 
 ## 0.66 (2023-10-13)
 
 #### Fixes
+
 - Handle app failure when project policy contains cross-project service accounts
-- Update the version skew for modern versions of Kubernetes. https://kubernetes.io/blog/2023/08/15/kubernetes-v1-28-release/#changes-to-supported-skew-between-control-plane-and-node-versions
+- Update the version skew for modern versions of Kubernetes. <https://kubernetes.io/blog/2023/08/15/kubernetes-v1-28-release/#changes-to-supported-skew-between-control-plane-and-node-versions>
 - Updating working and typos in multiple files
 - Update gke test snapshot.
 - added content in md file for rule apigee\_err\_2023\_003
@@ -455,8 +545,8 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - composer/WARN/2023\_009: Cloud Composer Intermittent Task Failure during Scheduling
 
 #### New module
-- Anthos Service mash
 
+- Anthos Service mash
 
 ## 0.65 (2023-09-18)
 
@@ -485,7 +575,6 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - Add prefetch\_rule to notebooks rules
 - Use more descriptive name for get-subscriptions method and account for deleted topics
 
-
 ## 0.64 (2023-08-14)
 
 #### New rules
@@ -511,12 +600,11 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - gce/bp\_2021\_001\_serial\_logging\_enabled: skip check for dataproc cluster vm instances
 - gke/bp\_2022\_003\_cluster\_eol: end of life version list dates updated
 
-
 ## 0.63 (2023-07-10)
 
 #### Fixes
 
--  Fix futures timeout error.
+- Fix futures timeout error.
 
 ## 0.62 (2023-07-10)
 
@@ -707,8 +795,6 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 
 - gke/ERR/2021\_002: skip if there are no GKE clusters
 
-
-
 ## 0.57 (2022-09-29)
 
 #### Deprecation
@@ -742,8 +828,6 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - gke/ERR/2022\_003: unhandled exception
 - gke/WARN/2022\_005: Incorrectly report missing "nvidia-driver-installer" daemonset
 - iam/SEC/2021\_001: unhandled exception
-
-
 
 ## 0.56 (2022-07-18)
 
@@ -792,7 +876,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - New product: CloudSQL
 - New product: VPC
 - Renamed product "GAES" to "GAE" (Google App Engine)
-- Publish internal API documentation on https://gcpdiag.dev/docs/development/api/
+- Publish internal API documentation on <https://gcpdiag.dev/docs/development/api/>
 - Update Python dependencies
 
 ## 0.55 (2022-04-25)
@@ -841,7 +925,7 @@ to facilitate the transition of binaries to another location.
 - Skip rules using logs if Cloud Logging API is disabled
 - New option: --logs-query-timeout
 - Add support for configuration files
-  (see https://gcpdiag.dev/docs/usage/#configuration-file)
+  (see <https://gcpdiag.dev/docs/usage/#configuration-file>)
 
 #### Fixes
 
@@ -980,10 +1064,9 @@ to facilitate the transition of binaries to another location.
 
 #### Enhancements
 
-- New website! https://gcpdiag.dev
+- New website! <https://gcpdiag.dev>
 - Rule documentation permalinks added to lint output (b/191612825)
 - Added --include and --exclude arguments to filter rules to run (b/183490284)
-
 
 ## 0.45 (2021-10-08)
 

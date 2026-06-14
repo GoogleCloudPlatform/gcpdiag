@@ -19,6 +19,7 @@ of the number of partition modifications permitted per day. Partition
 modifications include the total of all load jobs, copy jobs, and query jobs that
 append or overwrite a destination partition.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -27,20 +28,20 @@ from gcpdiag.queries import apis, crm, logs
 MATCH_STR = 'Your table exceeded quota for Number of partition modifications'
 
 QUOTA_EXCEEDED = [
-    'severity=ERROR',
-    'protoPayload.methodName="jobservice.jobcompleted"',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.methodName="jobservice.jobcompleted"',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(QUOTA_EXCEEDED),
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(QUOTA_EXCEEDED),
   )
 
 
@@ -56,29 +57,30 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'bigquery api is disabled')
     return
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
       if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
-          log_entry, ('protoPayload', 'status', 'message'), default=''):
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         continue
       job_id = get_path(
-          log_entry,
-          (
-              'protoPayload',
-              'serviceData',
-              'jobCompletedEvent',
-              'job',
-              'jobName',
-              'jobId',
-          ),
+        log_entry,
+        (
+          'protoPayload',
+          'serviceData',
+          'jobCompletedEvent',
+          'job',
+          'jobName',
+          'jobId',
+        ),
       )
       report.add_failed(
-          project,
-          'Exceeded quota for number of partition modifications per'
-          ' column-partitioned table per day. Please check failed job ' +
-          job_id + ' for more details.',
+        project,
+        'Exceeded quota for number of partition modifications per'
+        ' column-partitioned table per day. Please check failed job '
+        + job_id
+        + ' for more details.',
       )
       return
   # in case of there is no log or all logs are non-relevant

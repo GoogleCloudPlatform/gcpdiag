@@ -40,6 +40,7 @@ requires "roles/monitoring.metricWriter" and "roles/logging.logWriter".
 3. GCP API Enablement: Ops Agent requires Cloud Monitoring API and Cloud Logging
 API enabled on the project.
 """
+
 import logging
 import operator as op
 from datetime import datetime, timedelta, timezone
@@ -59,18 +60,17 @@ OPS_AGENT_NOT_INSTALLED_TEXT = 'Ops Agent not installed on the VM'
 OPS_AGENT_UNDETECTABLE_TEXT = 'Unable to confirm Ops Agent installation'
 
 UNABLE_TO_DETECT_EXPLANATION = (
-    'VM Manager is needed for the ops agent detection. Please enable it at:'
-    ' https://cloud.google.com/compute/docs/manage-os#automatic and run this'
-    ' check again.')
-OPS_AGENT_OK_TEXT = (
-    'Ops Agent installed on the VM, and is successfully sending logs and'
-    ' metrics.')
+  'VM Manager is needed for the ops agent detection. Please enable it at:'
+  ' https://cloud.google.com/compute/docs/manage-os#automatic and run this'
+  ' check again.'
+)
+OPS_AGENT_OK_TEXT = 'Ops Agent installed on the VM, and is successfully sending logs and metrics.'
 OPS_AGENT_FAILS_TO_SEND_TELEMETRY_TEXT = (
-    "Ops Agent is installed, but it's failing to send both logs and metrics"
-    ' to Google Cloud.')
+  "Ops Agent is installed, but it's failing to send both logs and metrics to Google Cloud."
+)
 
 OPS_AGENT_FAILS_TO_SEND_TELEMETRY_EXPLANATION = (
-    """\tIs Ops Agent sending logs? (%s) \tIs Ops Agent sending metrics? (%s)"""
+  """\tIs Ops Agent sending logs? (%s) \tIs Ops Agent sending metrics? (%s)"""
 )
 
 
@@ -91,7 +91,6 @@ class Instance:
   _has_monitoring_uptime_metrics: bool
 
   def __init__(self, project_id, gce_instance):
-
     self._gce_instance = gce_instance
     self._project_id = project_id
     self._ops_agent_installed = False
@@ -177,8 +176,8 @@ class Instance:
 def prepare_rule(context: models.Context):
   # Fetch agent uptime metrics.
   _query_results_project_id[context.project_id] = monitoring.query(
-      context.project_id,
-      """
+    context.project_id,
+    """
 fetch gce_instance
 | metric 'agent.googleapis.com/agent/uptime'
 | align rate(4m)
@@ -197,27 +196,28 @@ fetch gce_instance
   # We need log entries within the past 20-minute timeframe.
   start_time = now - timedelta(minutes=20)
   time_filter = (
-      f"timestamp>=\"{start_time.isoformat(timespec='seconds')}\" AND timestamp"
-      f" <= \"{now.isoformat(timespec='seconds')}\"")
+    f'timestamp>="{start_time.isoformat(timespec="seconds")}" AND timestamp'
+    f' <= "{now.isoformat(timespec="seconds")}"'
+  )
   _syslog_query[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='gce_instance',
-      log_name=f'projects/{context.project_id}/logs/syslog',
-      filter_str=time_filter,
+    project_id=context.project_id,
+    resource_type='gce_instance',
+    log_name=f'projects/{context.project_id}/logs/syslog',
+    filter_str=time_filter,
   )
 
   _windows_event_log_query[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='gce_instance',
-      log_name=f'projects/{context.project_id}/logs/windows_event_log',
-      filter_str=time_filter,
+    project_id=context.project_id,
+    resource_type='gce_instance',
+    log_name=f'projects/{context.project_id}/logs/windows_event_log',
+    filter_str=time_filter,
   )
   # we retrieve only the 'LogPing' entries from Ops Agent health log.
   _health_log_query[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='gce_instance',
-      log_name=f'projects/{context.project_id}/logs/ops-agent-health',
-      filter_str='"LogPingOpsAgent" AND ' + time_filter,
+    project_id=context.project_id,
+    resource_type='gce_instance',
+    log_name=f'projects/{context.project_id}/logs/ops-agent-health',
+    filter_str='"LogPingOpsAgent" AND ' + time_filter,
   )
 
 
@@ -225,34 +225,32 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Fetch all GCE VM instances from the inspected project.
   instances = list(gce.get_instances(context).values())
   if not instances:
-    report.add_skipped(
-        None, f'No VM instances found in project: {context.project_id}.')
+    report.add_skipped(None, f'No VM instances found in project: {context.project_id}.')
     return
 
   instances = [
-      Instance(context.project_id, i)
-      for i in sorted(instances, key=op.attrgetter('project_id', 'full_path'))
+    Instance(context.project_id, i)
+    for i in sorted(instances, key=op.attrgetter('project_id', 'full_path'))
   ]
 
   confirm_agent_installation_via_os_config(context, report, instances)
   confirm_agent_installation_via_uptime_metrics(context, report, instances)
   log_entries = format_log_entries(
-      _syslog_query[context.project_id].entries,
-      _windows_event_log_query[context.project_id].entries,
-      _health_log_query[context.project_id].entries,
+    _syslog_query[context.project_id].entries,
+    _windows_event_log_query[context.project_id].entries,
+    _health_log_query[context.project_id].entries,
   )
 
-  uptime_metric_entries = format_metric_entries(
-      _query_results_project_id[context.project_id])
+  uptime_metric_entries = format_metric_entries(_query_results_project_id[context.project_id])
   populate_sub_agents_uptime_metrics_status(instances, uptime_metric_entries)
   populate_log_type_status(instances, log_entries)
   confirm_agent_telemetry_transmission(report, instances)
 
 
 def confirm_agent_installation_via_os_config(
-    context: models.Context,
-    report: lint.LintReportRuleInterface,
-    instances: List[Instance],
+  context: models.Context,
+  report: lint.LintReportRuleInterface,
+  instances: List[Instance],
 ):
   unique_zones = set()
   for i in instances:
@@ -278,14 +276,15 @@ def confirm_agent_installation_via_os_config(
         break
     if not i.ops_agent_installed:
       report.add_failed(
-          i.gce_instance,
-          '',
-          OPS_AGENT_NOT_INSTALLED_TEXT,
+        i.gce_instance,
+        '',
+        OPS_AGENT_NOT_INSTALLED_TEXT,
       )
 
 
 def format_metric_entries(
-    query_entry: monitoring.TimeSeriesCollection,) -> Dict[str, List[str]]:
+  query_entry: monitoring.TimeSeriesCollection,
+) -> Dict[str, List[str]]:
   formatted_query_entries: Dict[str, List[str]] = {}
   for e in query_entry.values():
     try:
@@ -297,17 +296,16 @@ def format_metric_entries(
         formatted_query_entries[instance_id] = [metric_version]
     except KeyError:
       logging.warning(
-          'query entry without required label:resource.instance_id,'
-          ' metric.version: %s',
-          e,
+        'query entry without required label:resource.instance_id, metric.version: %s',
+        e,
       )
   return formatted_query_entries
 
 
 def confirm_agent_installation_via_uptime_metrics(
-    context: models.Context,
-    report: lint.LintReportRuleInterface,
-    instances: List[Instance],
+  context: models.Context,
+  report: lint.LintReportRuleInterface,
+  instances: List[Instance],
 ):
   # Fetch Agent Uptime metrics.
   query = _query_results_project_id[context.project_id]
@@ -324,16 +322,16 @@ def confirm_agent_installation_via_uptime_metrics(
     for i in instances:
       if not i.has_os_inventory:
         report.add_skipped(
-            i.gce_instance,
-            UNABLE_TO_DETECT_EXPLANATION,
-            OPS_AGENT_UNDETECTABLE_TEXT,
+          i.gce_instance,
+          UNABLE_TO_DETECT_EXPLANATION,
+          OPS_AGENT_UNDETECTABLE_TEXT,
         )
     return
 
   # Verify Ops Agent installation for VMs that don't have OS Inventory.
   for i in sorted(
-      instances,
-      key=op.attrgetter('project_id', 'name'),
+    instances,
+    key=op.attrgetter('project_id', 'name'),
   ):
     if i.is_gke_node:
       continue
@@ -347,23 +345,24 @@ def confirm_agent_installation_via_uptime_metrics(
           break
       if not i.ops_agent_installed:
         report.add_failed(
-            i.gce_instance,
-            '',
-            OPS_AGENT_NOT_INSTALLED_TEXT,
+          i.gce_instance,
+          '',
+          OPS_AGENT_NOT_INSTALLED_TEXT,
         )
     else:
       report.add_skipped(
-          i.gce_instance,
-          UNABLE_TO_DETECT_EXPLANATION,
-          OPS_AGENT_UNDETECTABLE_TEXT,
+        i.gce_instance,
+        UNABLE_TO_DETECT_EXPLANATION,
+        OPS_AGENT_UNDETECTABLE_TEXT,
       )
 
 
 def populate_sub_agents_uptime_metrics_status(
-    instances: List[Instance], formatted_metrics_entry: Dict[str, List[str]]):
+  instances: List[Instance], formatted_metrics_entry: Dict[str, List[str]]
+):
   for i in sorted(
-      instances,
-      key=op.attrgetter('project_id', 'name'),
+    instances,
+    key=op.attrgetter('project_id', 'name'),
   ):
     if i.is_gke_node:
       continue
@@ -378,11 +377,12 @@ def populate_sub_agents_uptime_metrics_status(
         i.has_monitoring_uptime_metrics = True
 
 
-def populate_log_type_status(instances: List[Instance],
-                             formatted_log_entry: Dict[str, Dict[str, bool]]):
+def populate_log_type_status(
+  instances: List[Instance], formatted_log_entry: Dict[str, Dict[str, bool]]
+):
   for i in sorted(
-      instances,
-      key=op.attrgetter('project_id', 'name'),
+    instances,
+    key=op.attrgetter('project_id', 'name'),
   ):
     if i.id in formatted_log_entry:
       e = formatted_log_entry[i.id]
@@ -394,9 +394,9 @@ def populate_log_type_status(instances: List[Instance],
 
 
 def format_log_entries(
-    syslog_entries: Sequence,
-    windows_event_log_entries: Sequence,
-    agent_health_log_entries: Sequence,
+  syslog_entries: Sequence,
+  windows_event_log_entries: Sequence,
+  agent_health_log_entries: Sequence,
 ) -> Dict[str, Dict[str, bool]]:
   formatted_log_entry: Dict[str, Dict[str, bool]] = {}
   for e in syslog_entries:
@@ -419,9 +419,9 @@ def format_log_entries(
       formatted_log_entry[instance_id]['logPing'] = True
     except KeyError:
       logging.warning(
-          'log entry does not have required keys: jsonPayload.code and'
-          ' resource.labels.instance_id: %s',
-          e,
+        'log entry does not have required keys: jsonPayload.code and'
+        ' resource.labels.instance_id: %s',
+        e,
       )
 
   for e in windows_event_log_entries:
@@ -431,41 +431,42 @@ def format_log_entries(
         formatted_log_entry[instance_id] = {}
       formatted_log_entry[instance_id]['windowsEventLog'] = True
     except KeyError:
-      logging.warning('windows event log entry without instance_id label: %s',
-                      e)
+      logging.warning('windows event log entry without instance_id label: %s', e)
   return formatted_log_entry
 
 
 def confirm_agent_telemetry_transmission(
-    report: lint.LintReportRuleInterface,
-    instances: List[Instance],
+  report: lint.LintReportRuleInterface,
+  instances: List[Instance],
 ):
   # For all VMs with Ops Agent installed, verify both subagents are transmitting
   # telemetry.
   for i in sorted(
-      instances,
-      key=op.attrgetter('project_id', 'name'),
+    instances,
+    key=op.attrgetter('project_id', 'name'),
   ):
     if i.is_gke_node:
       continue
     if not i.ops_agent_installed:
       continue
     logging_subagent_up = (i.has_recent_log_pings) or (
-        i.has_recent_log_entries and i.has_logging_uptime_metrics)
+      i.has_recent_log_entries and i.has_logging_uptime_metrics
+    )
     monitoring_subagent_up = i.has_monitoring_uptime_metrics
     if logging_subagent_up and monitoring_subagent_up:
       report.add_ok(
-          i.gce_instance,
-          OPS_AGENT_OK_TEXT,
+        i.gce_instance,
+        OPS_AGENT_OK_TEXT,
       )
     else:
       logging_subagent_up_text = 'Yes' if logging_subagent_up else 'No'
       monitoring_subagent_up_text = 'Yes' if monitoring_subagent_up else 'No'
       report.add_failed(
-          i.gce_instance,
-          OPS_AGENT_FAILS_TO_SEND_TELEMETRY_EXPLANATION % (
-              logging_subagent_up_text,
-              monitoring_subagent_up_text,
-          ),
-          OPS_AGENT_FAILS_TO_SEND_TELEMETRY_TEXT,
+        i.gce_instance,
+        OPS_AGENT_FAILS_TO_SEND_TELEMETRY_EXPLANATION
+        % (
+          logging_subagent_up_text,
+          monitoring_subagent_up_text,
+        ),
+        OPS_AGENT_FAILS_TO_SEND_TELEMETRY_TEXT,
       )

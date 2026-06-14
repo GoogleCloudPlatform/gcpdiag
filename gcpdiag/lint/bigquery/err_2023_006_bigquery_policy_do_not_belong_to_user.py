@@ -19,29 +19,28 @@ The domain of the user that you are trying to share the BigQuery dataset with
 should be present in the list of "Allowed" fields for the constraint
 constraints/iam.allowedPolicyMemberDomains.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = (
-    'One or more users named in the policy do not belong to a permitted'
-    ' customer')
+MATCH_STR = 'One or more users named in the policy do not belong to a permitted customer'
 
 POLICY_DO_NOT_BELONG_TO_USER_FILTER = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    f'protoPayload.status.message:("{MATCH_STR}")',
+  'severity=ERROR',
+  'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
+  f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_dataset',
-      log_name='log_id("cloudaudit.googleapis.com/activity")',
-      filter_str=' AND '.join(POLICY_DO_NOT_BELONG_TO_USER_FILTER),
+    project_id=context.project_id,
+    resource_type='bigquery_dataset',
+    log_name='log_id("cloudaudit.googleapis.com/activity")',
+    filter_str=' AND '.join(POLICY_DO_NOT_BELONG_TO_USER_FILTER),
   )
 
 
@@ -56,26 +55,26 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
   project_ok_flag = True
   datasets = set()
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
-      if MATCH_STR in get_path(log_entry, ('protoPayload', 'status', 'message'),
-                               default=''):
-        datasets.add(get_path(
+      if MATCH_STR in get_path(log_entry, ('protoPayload', 'status', 'message'), default=''):
+        datasets.add(
+          get_path(
             log_entry,
             (
-                'protoPayload',
-                'resourceName',
+              'protoPayload',
+              'resourceName',
             ),
-        ))
+          )
+        )
         project_ok_flag = False
 
   if project_ok_flag:
     report.add_ok(project)
   else:
     report.add_failed(
-        project,
-        """The following datasets cannot be shared with some users due to
-'Domain restricted sharing' organization policy constraint: \n""" +
-        '\n'.join(str(d) for d in datasets),
+      project,
+      """The following datasets cannot be shared with some users due to
+'Domain restricted sharing' organization policy constraint: \n"""
+      + '\n'.join(str(d) for d in datasets),
     )

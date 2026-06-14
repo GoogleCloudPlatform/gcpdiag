@@ -1,4 +1,18 @@
 {
   "entries": [
+    {
+      "protoPayload": {
+        "methodName": "compute.instances.insert",
+        "status": {
+          "message": "ZONE_RESOURCE_POOL_EXHAUSTED"
+        }
+      },
+      "resource": {
+        "labels": {
+          "zone": "us-central1-a"
+        }
+      },
+      "severity": "ERROR"
+    }
   ]
 }

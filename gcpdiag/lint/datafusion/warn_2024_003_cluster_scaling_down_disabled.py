@@ -19,6 +19,7 @@ Autoscaling is not recommended for scaling down. Decreasing the cluster
 size with autoscaling removes nodes that hold intermediate data, which might
 cause your pipelines to run slowly or fail in datafusion.
 """
+
 import re
 
 from gcpdiag import lint, models
@@ -35,9 +36,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   """Checks if the autoscaling down is enabled for the compute profile."""
   if not apis.is_enabled(context.project_id, 'datafusion'):
     report.add_skipped(
-        None,
-        'Cloud Data Fusion API is not enabled in'
-        f' {crm.get_project(context.project_id)}',
+      None,
+      f'Cloud Data Fusion API is not enabled in {crm.get_project(context.project_id)}',
     )
     return
 
@@ -51,32 +51,28 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     compute_profiles = []
     # fetch compute profiles of the instance
     compute_profiles.extend(
-        datafusion.get_instance_system_compute_profile(context,
-                                                       datafusion_instance))
+      datafusion.get_instance_system_compute_profile(context, datafusion_instance)
+    )
     compute_profiles.extend(
-        datafusion.get_instance_user_compute_profile(context,
-                                                     datafusion_instance))
+      datafusion.get_instance_user_compute_profile(context, datafusion_instance)
+    )
     if not compute_profiles:
       report.add_skipped(None, 'No compute profile found')
 
-    #Check the autoscaling property
+    # Check the autoscaling property
     for profile in compute_profiles:
       if profile.autoscaling_enabled:
         report.add_ok(datafusion_instance, f'\n\t{profile}\n')
       elif profile.auto_scaling_policy != 'No autoScalingPolicy defined':
         uri = profile.auto_scaling_policy
-        match = re.match(
-            r'projects/([^/]+)/regions/([^/]+)/autoscalingPolicies/([^/]+)',
-            uri)
+        match = re.match(r'projects/([^/]+)/regions/([^/]+)/autoscalingPolicies/([^/]+)', uri)
         if match:
           project_id = match.group(1)
           region = match.group(2)
           policy_id = match.group(3)
-          policy = dataproc.get_auto_scaling_policy(project_id, region,
-                                                    policy_id)
+          policy = dataproc.get_auto_scaling_policy(project_id, region, policy_id)
           if policy.scale_down_factor != 0.0:
-            report.add_failed(datafusion_instance,
-                              f'  {profile} : autoscaling down enabled\n')
+            report.add_failed(datafusion_instance, f'  {profile} : autoscaling down enabled\n')
           else:
             report.add_ok(datafusion_instance, f'\n\t{profile}\n')
       else:

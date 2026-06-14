@@ -12,7 +12,8 @@ description: >
 
 ### Description
 
-This step determines whether Cloud NAT has run into issues due to insufficient NAT IP addresses.
+This step determines whether Cloud NAT has run into issues due to insufficient
+  NAT IP addresses.
   by checking the NAT Allocation failed metric.
 
 ### Failure Reason

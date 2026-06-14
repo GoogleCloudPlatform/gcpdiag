@@ -13,10 +13,10 @@ description: >
 ### Description
 
 This is special step in a runbook designed for situations where automated
-    verification is not possible, and human judgment is required. It prompts
-    the operator (a human user) to manually check and confirm whether an issue is occurring.
-    This can involve accessing a system, reviewing configurations, or validating the state
-    of a resource based on provided instructions.
+  verification is not possible, and human judgment is required. It prompts
+  the operator (a human user) to manually check and confirm whether an issue is occurring.
+  This can involve accessing a system, reviewing configurations, or validating the state
+  of a resource based on provided instructions.
 
 
 

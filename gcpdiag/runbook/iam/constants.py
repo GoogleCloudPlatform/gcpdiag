@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """IAM constants"""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.gcp.constants import *
 
 # All users, if the VM has a service account

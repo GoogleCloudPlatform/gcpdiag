@@ -29,6 +29,12 @@
       "members": [
         "projectViewer:gcpdiag-pubsub1-aaaa"
       ]
+    },
+    {
+      "role": "roles/storage.admin",
+      "members": [
+        "serviceAccount:service-12340014@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ]
     }
   ]
 }

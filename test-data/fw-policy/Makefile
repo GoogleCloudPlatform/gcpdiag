@@ -14,7 +14,9 @@ FAKE_FOLDER_ID_2 = 100002
 ORG_POLICY_CONSTRAINTS = \
 	json-dumps/org-constraint-compute.disableSerialPortAccess.json \
 	json-dumps/org-constraint-compute.requireOsLogin.json \
-	json-dumps/org-constraint-compute.requireShieldedVm.json
+	json-dumps/org-constraint-compute.requireShieldedVm.json \
+	json-dumps/org-constraints.json \
+	json-dumps/org-constraint-custom.arEnforceImmutableTags.json
 
 all:	\
 	json-dumps/compute-effective-firewalls-default.json \
@@ -32,6 +34,6 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	$(ORG_POLICY_CONSTRAINTS) \
-	json-dumps/org-policies.json
+	json-dumps/org-policies.json \
 
 include ../Makefile.inc

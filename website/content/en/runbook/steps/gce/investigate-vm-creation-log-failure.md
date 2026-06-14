@@ -13,7 +13,7 @@ description: >
 ### Description
 
 This step queries logs to identify the root cause of VM creation failures,
-    such as quota issues, permission errors, or resource conflicts.
+  such as quota issues, permission errors, or resource conflicts.
 
 ### Failure Reason
 

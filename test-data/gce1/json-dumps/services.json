@@ -420,6 +420,24 @@
       "parent": "projects/12340001"
     },
     {
+      "name": "projects/12340001/services/logging.googleapis.com",
+      "config": {
+        "name": "logging.googleapis.com",
+        "title": "Cloud Logging API",
+        "documentation": {},
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340001"
+    },
+    {
       "name": "projects/12340001/services/monitoring.googleapis.com",
       "config": {
         "name": "monitoring.googleapis.com",

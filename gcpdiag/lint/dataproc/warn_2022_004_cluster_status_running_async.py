@@ -7,8 +7,7 @@ from gcpdiag import lint, models
 from gcpdiag.async_queries.project import get_project
 
 
-async def async_run_rule(context: models.Context,
-                         report: lint.LintReportRuleInterface) -> None:
+async def async_run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   project = get_project.get_project(project_id=context.project_id)
   cluster_names = await project.dataproc.list_clusters()
   for cluster_name in cluster_names:

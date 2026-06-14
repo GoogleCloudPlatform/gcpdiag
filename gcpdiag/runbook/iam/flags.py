@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Contains flags specific to GCP IAM product"""
-# pylint: disable=wildcard-import, unused-wildcard-import
+
 from gcpdiag.runbook.gcp.flags import *
 
 SERVICE_ACCOUNT = 'service_account'

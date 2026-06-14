@@ -13,8 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP Vertex AI Workbench Notebooks
-"""
+"""Queries related to GCP Vertex AI Workbench Notebooks"""
 
 import enum
 import logging
@@ -164,8 +163,7 @@ class Runtime(models.Resource):
 
   @property
   def health_state(self) -> HealthStateEnum:
-    return self._resource_data.get(HEALTH_STATE_KEY,
-                                   HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
+    return self._resource_data.get(HEALTH_STATE_KEY, HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
 
 
 class WorkbenchInstance(Instance):
@@ -191,20 +189,27 @@ class WorkbenchInstance(Instance):
   @property
   def gce_service_account_email(self) -> str:
     gce_setup_service_accounts = self.gce_setup.get('serviceAccounts', [])
-    return gce_setup_service_accounts[0].get(
-        'email', '') if len(gce_setup_service_accounts) > 0 else ''
+    return (
+      gce_setup_service_accounts[0].get('email', '') if len(gce_setup_service_accounts) > 0 else ''
+    )
 
   @property
   def network(self) -> str:
     gce_setup_network_interfaces = self.gce_setup.get('networkInterfaces', [])
-    return gce_setup_network_interfaces[0].get(
-        'network', '') if len(gce_setup_network_interfaces) > 0 else ''
+    return (
+      gce_setup_network_interfaces[0].get('network', '')
+      if len(gce_setup_network_interfaces) > 0
+      else ''
+    )
 
   @property
   def subnet(self) -> str:
     gce_setup_network_interfaces = self.gce_setup.get('networkInterfaces', [])
-    return gce_setup_network_interfaces[0].get(
-        'subnet', '') if len(gce_setup_network_interfaces) > 0 else ''
+    return (
+      gce_setup_network_interfaces[0].get('subnet', '')
+      if len(gce_setup_network_interfaces) > 0
+      else ''
+    )
 
   @property
   def disable_public_ip(self) -> bool:
@@ -245,8 +250,7 @@ class WorkbenchInstance(Instance):
 
   @property
   def health_state(self) -> HealthStateEnum:
-    return self._resource_data.get(HEALTH_STATE_KEY,
-                                   HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
+    return self._resource_data.get(HEALTH_STATE_KEY, HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
 
   @property
   def health_info(self) -> dict:
@@ -287,11 +291,14 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   if not apis.is_enabled(context.project_id, 'notebooks'):
     return instances
   logging.debug(
-      'fetching list of Vertex AI Workbench notebook instances in project %s',
-      context.project_id)
+    'fetching list of Vertex AI Workbench notebook instances in project %s', context.project_id
+  )
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
-  query = notebooks_api.projects().locations().instances().list(
-      parent=f'projects/{context.project_id}/locations/-'
+  query = (
+    notebooks_api.projects()
+    .locations()
+    .instances()
+    .list(parent=f'projects/{context.project_id}/locations/-')
   )  #'-' (wildcard) all regions
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
@@ -300,22 +307,18 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
     for i in resp[INSTANCES_KEY]:
       # verify that we have some minimal data that we expect
       if NAME_KEY not in i:
-        raise RuntimeError(
-            'missing instance name in projects.locations.instances.list response'
-        )
+        raise RuntimeError('missing instance name in projects.locations.instances.list response')
       # projects/{projectId}/locations/{location}/instances/{instanceId}
-      result = re.match(r'projects/[^/]+/locations/([^/]+)/instances/([^/]+)',
-                        i['name'])
+      result = re.match(r'projects/[^/]+/locations/([^/]+)/instances/([^/]+)', i['name'])
       if not result:
         logging.error('invalid notebook instances data: %s', i['name'])
         continue
 
-      if not context.match_project_resource(location=result.group(1),
-                                            resource=result.group(2),
-                                            labels=i.get('labels', {})):
+      if not context.match_project_resource(
+        location=result.group(1), resource=result.group(2), labels=i.get('labels', {})
+      ):
         continue
-      instances[i[NAME_KEY]] = Instance(project_id=context.project_id,
-                                        resource_data=i)
+      instances[i[NAME_KEY]] = Instance(project_id=context.project_id, resource_data=i)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return instances
@@ -324,11 +327,11 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
 @caching.cached_api_call
 def _get_instance_health(context: models.Context, name: str) -> dict:
   logging.debug(
-      'fetching Vertex AI user-managed notebook instance health state in '
-      'project %s', context.project_id)
+    'fetching Vertex AI user-managed notebook instance health state in project %s',
+    context.project_id,
+  )
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
-  query = notebooks_api.projects().locations().instances().getInstanceHealth(
-      name=name)
+  query = notebooks_api.projects().locations().instances().getInstanceHealth(name=name)
   return query.execute(num_retries=config.API_RETRIES)
 
 
@@ -339,15 +342,14 @@ def get_instance_health_info(context: models.Context, name: str) -> dict:
     raise utils.GcpApiError(err) from err
 
 
-def get_instance_health_state(context: models.Context,
-                              name: str) -> HealthStateEnum:
+def get_instance_health_state(context: models.Context, name: str) -> HealthStateEnum:
   instance_health_state = HealthStateEnum('HEALTH_STATE_UNSPECIFIED')
 
   try:
     resp = _get_instance_health(context, name)
     if HEALTH_STATE_KEY not in resp:
       raise RuntimeError(
-          'missing instance health state in projects.locations.instances:getInstanceHealth response'
+        'missing instance health state in projects.locations.instances:getInstanceHealth response'
       )
     instance_health_state = HealthStateEnum(resp[HEALTH_STATE_KEY])
     return instance_health_state
@@ -358,8 +360,8 @@ def get_instance_health_state(context: models.Context,
 
 @caching.cached_api_call
 def instance_is_upgradeable(
-    context: models.Context,
-    notebook_instance: str) -> Dict[str, Union[str, bool]]:
+  context: models.Context, notebook_instance: str
+) -> Dict[str, Union[str, bool]]:
   is_upgradeable: Dict[str, Union[str, bool]] = {}
   if not apis.is_enabled(context.project_id, 'notebooks'):
     logging.error('Notebooks API is not enabled')
@@ -368,16 +370,21 @@ def instance_is_upgradeable(
     logging.error('notebookInstance not provided')
     return is_upgradeable
   logging.debug(
-      'fetching Vertex AI user-managed notebook instance is upgradeable in project %s',
-      context.project_id)
+    'fetching Vertex AI user-managed notebook instance is upgradeable in project %s',
+    context.project_id,
+  )
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
-  query = notebooks_api.projects().locations().instances().isUpgradeable(
-      notebookInstance=notebook_instance)
+  query = (
+    notebooks_api.projects()
+    .locations()
+    .instances()
+    .isUpgradeable(notebookInstance=notebook_instance)
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'upgradeable' not in resp:
       raise RuntimeError(
-          'missing instance upgradeable data in projects.locations.instances:isUpgradeable response'
+        'missing instance upgradeable data in projects.locations.instances:isUpgradeable response'
       )
     is_upgradeable = resp
     return is_upgradeable
@@ -392,11 +399,15 @@ def get_runtimes(context: models.Context) -> Mapping[str, Runtime]:
   if not apis.is_enabled(context.project_id, 'notebooks'):
     return runtimes
   logging.debug(
-      'fetching list of Vertex AI Workbench managed notebook runtimes in project %s',
-      context.project_id)
+    'fetching list of Vertex AI Workbench managed notebook runtimes in project %s',
+    context.project_id,
+  )
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
-  query = notebooks_api.projects().locations().runtimes().list(
-      parent=f'projects/{context.project_id}/locations/-'
+  query = (
+    notebooks_api.projects()
+    .locations()
+    .runtimes()
+    .list(parent=f'projects/{context.project_id}/locations/-')
   )  #'-' (wildcard) all regions
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
@@ -405,34 +416,29 @@ def get_runtimes(context: models.Context) -> Mapping[str, Runtime]:
     for i in resp[RUNTIMES_KEY]:
       # verify that we have some minimal data that we expect
       if NAME_KEY not in i:
-        raise RuntimeError(
-            'missing runtime name in projects.locations.runtimes.list response')
+        raise RuntimeError('missing runtime name in projects.locations.runtimes.list response')
       # projects/{projectId}/locations/{location}/runtimes/{runtimeId}
-      result = re.match(r'projects/[^/]+/locations/([^/]+)/runtimes/([^/]+)',
-                        i['name'])
+      result = re.match(r'projects/[^/]+/locations/([^/]+)/runtimes/([^/]+)', i['name'])
       if not result:
         logging.error('invalid notebook runtimes data: %s', i['name'])
         continue
 
-      if not context.match_project_resource(location=result.group(1),
-                                            resource=result.group(2),
-                                            labels=i.get('labels', {})):
+      if not context.match_project_resource(
+        location=result.group(1), resource=result.group(2), labels=i.get('labels', {})
+      ):
         continue
-      runtimes[i[NAME_KEY]] = Runtime(project_id=context.project_id,
-                                      resource_data=i)
+      runtimes[i[NAME_KEY]] = Runtime(project_id=context.project_id, resource_data=i)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return runtimes
 
 
 @caching.cached_api_call
-def get_workbench_instance(project_id: str, zone: str,
-                           instance_name: str) -> Instance:
+def get_workbench_instance(project_id: str, zone: str, instance_name: str) -> Instance:
   """Returns workbench instance object matching instance name and zone
   https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v2/projects.locations.instances/get
   """
-  workbench_instance: WorkbenchInstance = WorkbenchInstance(
-      project_id=project_id, resource_data={})
+  workbench_instance: WorkbenchInstance = WorkbenchInstance(project_id=project_id, resource_data={})
   if not apis.is_enabled(project_id, 'notebooks'):
     return workbench_instance
   notebooks_api = apis.get_api('notebooks', 'v2', project_id)
@@ -440,8 +446,7 @@ def get_workbench_instance(project_id: str, zone: str,
   query = notebooks_api.projects().locations().instances().get(name=name)
   try:
     response = query.execute(num_retries=config.API_RETRIES)
-    workbench_instance = WorkbenchInstance(project_id=project_id,
-                                           resource_data=response)
+    workbench_instance = WorkbenchInstance(project_id=project_id, resource_data=response)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return workbench_instance
@@ -449,8 +454,8 @@ def get_workbench_instance(project_id: str, zone: str,
 
 @caching.cached_api_call
 def workbench_instance_check_upgradability(
-    project_id: str,
-    workbench_instance_name: str) -> Dict[str, Union[str, bool]]:
+  project_id: str, workbench_instance_name: str
+) -> Dict[str, Union[str, bool]]:
   """Returns if workbench instance is upgradable and upgrade details
   https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v2/projects.locations.instances/checkUpgradability"""
   check_upgradability: Dict[str, Union[str, bool]] = {}
@@ -460,12 +465,14 @@ def workbench_instance_check_upgradability(
   if not workbench_instance_name:
     logging.error('Workbench Instance name not provided')
     return check_upgradability
-  logging.debug(
-      'fetching Vertex AI Workbench Instance is upgradeable in project %s',
-      project_id)
+  logging.debug('fetching Vertex AI Workbench Instance is upgradeable in project %s', project_id)
   notebooks_api = apis.get_api('notebooks', 'v2', project_id)
-  query = notebooks_api.projects().locations().instances().checkUpgradability(
-      notebookInstance=workbench_instance_name)
+  query = (
+    notebooks_api.projects()
+    .locations()
+    .instances()
+    .checkUpgradability(notebookInstance=workbench_instance_name)
+  )
   try:
     response = query.execute(num_retries=config.API_RETRIES)
     return response

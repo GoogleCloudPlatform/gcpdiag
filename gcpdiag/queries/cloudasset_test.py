@@ -30,14 +30,9 @@ class TestCloudAsset:
 
   def test_search_all_resources(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    asset_resources = cloudasset.search_all_resources(context.project_id,
-                                                      query=DUMMY_QUERY)
+    asset_resources = cloudasset.search_all_resources(context.project_id, query=DUMMY_QUERY)
     assert len(asset_resources) == 4
 
-    assert ASSET_TYPE1 in [
-        resource.asset_type for resource in asset_resources.values()
-    ]
+    assert ASSET_TYPE1 in [resource.asset_type for resource in asset_resources.values()]
 
-    assert ASSET_TYPE2 in [
-        resource.asset_type for resource in asset_resources.values()
-    ]
+    assert ASSET_TYPE2 in [resource.asset_type for resource in asset_resources.values()]

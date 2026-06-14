@@ -26,7 +26,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no zones found')
     return
   for c in zones:
-    if (c.is_public and not c.dnssec_config_state):
+    if c.is_public and not c.dnssec_config_state:
       report.add_failed(c, None, ' DNSSEC is disabled for this public zone')
     else:
       report.add_ok(c)

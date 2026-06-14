@@ -21,9 +21,6 @@ import re
 
 from gcpdiag.queries import apis_stub
 
-#pylint: disable=unused-argument
-#pylint: disable=invalid-name
-
 
 class DataprocApiStub(apis_stub.ApiStub):
   """Mock object to simulate dataproc api calls."""
@@ -50,14 +47,13 @@ class DataprocApiStub(apis_stub.ApiStub):
 
   def get(self, name='', clusterName='', region='', projectId='', jobId=''):
     if self.mock_state == 'autoscalingPolicies':
-      m = re.match(
-          r'projects/([^/]+)/regions/([^/]+)/autoscalingPolicies/([^/]+)', name)
+      m = re.match(r'projects/([^/]+)/regions/([^/]+)/autoscalingPolicies/([^/]+)', name)
       project_id = m.group(1)
       return apis_stub.RestCallStub(project_id, 'autoscaling-policy')
     if self.mock_state == 'clusters':
-      stub = DataprocApiStub(project_id=projectId,
-                             json_basename=f'dataproc-clusters-{region}',
-                             mock_state='clusters')
+      stub = DataprocApiStub(
+        project_id=projectId, json_basename=f'dataproc-clusters-{region}', mock_state='clusters'
+      )
       stub.cluster_name = clusterName
       stub.region = region
       return stub
@@ -75,16 +71,13 @@ class DataprocApiStub(apis_stub.ApiStub):
 
   def list(self, projectId, region):
     if self.mock_state == 'clusters':
-      return apis_stub.RestCallStub(projectId,
-                                    f'dataproc-clusters-{region}',
-                                    default={})
+      return apis_stub.RestCallStub(projectId, f'dataproc-clusters-{region}', default={})
     # Implement other list mocked states here
 
   def execute(self, num_retries=0):
     self._maybe_raise_api_exception()
     json_dir = apis_stub.get_json_dir(self.project_id)
-    with open(json_dir / f'{self.json_basename}.json',
-              encoding='utf-8') as json_file:
+    with open(json_dir / f'{self.json_basename}.json', encoding='utf-8') as json_file:
       data = json.load(json_file)
       if self.mock_state == 'clusters':
         for cluster in data.get('clusters', []):

@@ -16,6 +16,7 @@
 There should be a VPC peering connection between customer's network and the Apigee X
 instance runs in a Google managed tenant project
 """
+
 import re
 
 from gcpdiag import lint, models
@@ -39,8 +40,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for peer in apigee_org.network.peerings:
     match = re.match(
-        r'https://www.googleapis.com/compute/([^/]+)/'
-        'projects/([^/]+)/([^/]+)/networks/(?P<network>[^/]+)$', peer.url)
+      r'https://www.googleapis.com/compute/([^/]+)/'
+      'projects/([^/]+)/([^/]+)/networks/(?P<network>[^/]+)$',
+      peer.url,
+    )
 
     if not match:
       raise ValueError(f"can't parse peering network url: {peer.url!r}")
@@ -54,13 +57,21 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
       else:
         report.add_failed(
-            apigee_org, (f'peered connection to Apigee {peer.name} in network '
-                         f'{apigee_org.network.short_path} is not active.'))
+          apigee_org,
+          (
+            f'peered connection to Apigee {peer.name} in network '
+            f'{apigee_org.network.short_path} is not active.'
+          ),
+        )
         return
 
   if is_peered_to_apigee:
     report.add_ok(apigee_org)
   else:
     report.add_failed(
-        apigee_org, (f'Customer VPC network {apigee_org.network.short_path} is '
-                     'not correctly peered to Apigee\'s network'))
+      apigee_org,
+      (
+        f'Customer VPC network {apigee_org.network.short_path} is '
+        "not correctly peered to Apigee's network"
+      ),
+    )

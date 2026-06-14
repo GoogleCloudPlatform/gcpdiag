@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Search command to look up gcpdiag rules"""
+
 import argparse
 import heapq
 import json
 import logging
 from typing import Any, Dict, Iterable, List, Tuple
 
-from blessings import Terminal
+from rich.console import Console
 
 from gcpdiag import config, lint, runbook
 from gcpdiag.lint import LintRule
@@ -31,60 +32,62 @@ from gcpdiag.runbook.output import terminal_output
 def _init_search_args_parser() -> argparse.ArgumentParser:
   """Initialize and return the argument parser for the search command."""
   parser = argparse.ArgumentParser(
-      description=
-      'Find gcpdiag rules like runbook and lint rules related to search terms',
-      prog='gcpdiag search')
+    description='Find gcpdiag rules like runbook and lint rules related to search terms',
+    prog='gcpdiag search',
+  )
 
   parser.add_argument(
-      'search',
-      metavar='SEARCH_TERMS',
-      type=str,
-      nargs='+',
-      help='Search terms to discover gcpdiag rules related to them')
+    'search',
+    metavar='SEARCH_TERMS',
+    type=str,
+    nargs='+',
+    help='Search terms to discover gcpdiag rules related to them',
+  )
 
-  parser.add_argument('-l',
-                      '--limit-per-type',
-                      metavar='L',
-                      type=int,
-                      default=10,
-                      help='Limit output rules for each rule type')
+  parser.add_argument(
+    '-l',
+    '--limit-per-type',
+    metavar='L',
+    type=int,
+    default=10,
+    help='Limit output rules for each rule type',
+  )
 
-  parser.add_argument('-t',
-                      '--rule-type',
-                      choices=['lint', 'runbook'],
-                      default=['lint', 'runbook'],
-                      help='Specify the type of rules to search and display')
+  parser.add_argument(
+    '-t',
+    '--rule-type',
+    choices=['lint', 'runbook'],
+    default=['lint', 'runbook'],
+    help='Specify the type of rules to search and display',
+  )
 
-  parser.add_argument('-p',
-                      '--product',
-                      metavar='PRODUCT',
-                      type=str,
-                      default=[],
-                      action='append',
-                      help='Search only rules in these products')
+  parser.add_argument(
+    '-p',
+    '--product',
+    metavar='PRODUCT',
+    type=str,
+    default=[],
+    action='append',
+    help='Search only rules in these products',
+  )
 
-  parser.add_argument('-f',
-                      '--format',
-                      choices=['table', 'json'],
-                      default='table',
-                      help='Output format')
+  parser.add_argument(
+    '-f', '--format', choices=['table', 'json'], default='table', help='Output format'
+  )
 
   return parser
 
 
 def _load_lint_rules(args) -> Iterable[LintRule]:
   """Load and return all lint rules from the repository."""
-  #pylint:disable=protected-access
-  product_patterns = lint_command._parse_rule_patterns(args.product)
+  product_patterns = lint_command._parse_rule_pattern(args.product)
   repo = lint.LintRuleRepository(load_extended=True, include=product_patterns)
-  #pylint:disable=protected-access
   lint_command._load_repository_rules(repo)
   return repo.rules_to_run
 
 
 def _load_runbook_rules() -> Dict[str, DiagnosticTree]:
-  """Load and return all runbook rules. """
-  #pylint:disable=protected-access
+  """Load and return all runbook rules."""
   runbook_command._load_runbook_rules(runbook.__name__)
   return runbook.RunbookRegistry
 
@@ -109,8 +112,7 @@ def run(argv=None):
   _search_rules(args)
 
 
-def _rank_runbook_rules(rules: Dict,
-                        args) -> List[Tuple[int, str, DiagnosticTree]]:
+def _rank_runbook_rules(rules: Dict, args) -> List[Tuple[int, str, DiagnosticTree]]:
   """Rank runbook rules based on the keywords and return a sorted list."""
   ranked_rules: List[Tuple[int, str, DiagnosticTree]] = []
   keywords = args.search
@@ -122,8 +124,7 @@ def _rank_runbook_rules(rules: Dict,
       continue
     rule_name = rule.id.lower()
     description = rule.__doc__.lower()
-    kw_count = sum(rule.keywords.count(kw) for kw in keywords) if hasattr(
-        rule, 'keywords') else 0
+    kw_count = sum(rule.keywords.count(kw) for kw in keywords) if hasattr(rule, 'keywords') else 0
     name_count = sum(rule_name.count(keyword) for keyword in keywords)
     description_count = sum(description.count(keyword) for keyword in keywords)
     score = (kw_count * 3) + (name_count * 2) + description_count
@@ -132,17 +133,11 @@ def _rank_runbook_rules(rules: Dict,
       # Use negative score to achieve a max-heap
       heapq.heappush(ranked_rules, (-score, name, rule))
 
-  return [
-      heapq.heappop(ranked_rules)
-      for _ in range(min(len(ranked_rules), args.limit_per_type))
-  ]
+  return [heapq.heappop(ranked_rules) for _ in range(min(len(ranked_rules), args.limit_per_type))]
 
 
-def _rank_lint_rules(rules: Iterable[LintRule],
-                     args) -> List[Tuple[int, str, LintRule]]:
-  """Rank lint rules based on the keywords and return a sorted list
-
-  """
+def _rank_lint_rules(rules: Iterable[LintRule], args) -> List[Tuple[int, str, LintRule]]:
+  """Rank lint rules based on the keywords and return a sorted list"""
   ranked_rules: List[Tuple[int, str, LintRule]] = []
   keywords = args.search
   keywords = [kw.lower() for kw in keywords]
@@ -151,8 +146,7 @@ def _rank_lint_rules(rules: Iterable[LintRule],
     name = f'{rule.product}/{rule.rule_class}/{rule.rule_id}'.lower()
     short_desc = rule.short_desc.lower()
     long_desc = rule.long_desc.lower()
-    kw_count = sum(rule.keywords.count(keyword)
-                   for keyword in keywords) if rule.keywords else 0
+    kw_count = sum(rule.keywords.count(keyword) for keyword in keywords) if rule.keywords else 0
     short_desc_count = sum(short_desc.count(keyword) for keyword in keywords)
     long_desc_count = sum(long_desc.count(keyword) for keyword in keywords)
     score = (kw_count * 3) + (short_desc_count + long_desc_count) * 2
@@ -161,10 +155,7 @@ def _rank_lint_rules(rules: Iterable[LintRule],
       # Use negative score to achieve a max-heap
       heapq.heappush(ranked_rules, (-score, name, rule))
 
-  return [
-      heapq.heappop(ranked_rules)
-      for _ in range(min(len(ranked_rules), args.limit_per_type))
-  ]
+  return [heapq.heappop(ranked_rules) for _ in range(min(len(ranked_rules), args.limit_per_type))]
 
 
 def _search_rules(args) -> None:
@@ -183,13 +174,16 @@ def _search_rules(args) -> None:
 
   all_rules: Dict[str, Any] = {}
   if matched_lint_rules:
-    all_rules['lint'] = [{
+    all_rules['lint'] = [
+      {
         'id': r[1],
         'type': 'lint',
         'description': r[2].short_desc,
         'full_description': r[2].__doc__,
-        'doc_url': r[2].doc_url
-    } for r in matched_lint_rules]
+        'doc_url': r[2].doc_url,
+      }
+      for r in matched_lint_rules
+    ]
   if matched_runbook_rules:
     all_rules['runbook'] = []
     for r in matched_runbook_rules:
@@ -197,14 +191,16 @@ def _search_rules(args) -> None:
       for value in r[2].parameters.values():
         value['type'] = value['type'].__name__
 
-      all_rules['runbook'].append({
+      all_rules['runbook'].append(
+        {
           'id': r[1],
           'type': 'runbook',
           'description': r[2].short_desc,
           'full_description': r[2].__doc__,
           'doc_url': r[2].doc_url,
-          'parameters': r[2].parameters
-      })
+          'parameters': r[2].parameters,
+        }
+      )
 
   if args.format == 'json':
     print(json.dumps(all_rules, indent=2))
@@ -213,10 +209,10 @@ def _search_rules(args) -> None:
 
 
 def _print(all_rules: dict) -> None:
-  """Print the rules in a formatted table using native Python API and blessings for styling."""
-  term = Terminal()
+  """Print the rules in a formatted table using native Python API and rich for styling."""
+  console = Console()
   # Print headings
-  print(term.bold + 'Filtered Rules' + term.normal)
+  console.print('Filtered Rules', style='bold')
   print('=' * 14)
 
   # Print rules
@@ -229,13 +225,11 @@ def _print(all_rules: dict) -> None:
       params = ''
 
       print(
-          f'Execution ID: {id_}\nRule Type: {type_}\nShort Description: {desc}\nDoc URL: {doc_url}'
+        f'Execution ID: {id_}\nRule Type: {type_}\nShort Description: {desc}\nDoc URL: {doc_url}'
       )
       if rule['type'] == 'runbook':
-        params = ', '.join(k for k, v in rule['parameters'].items()
-                           if v.get('required', False))
+        params = ', '.join(k for k, v in rule['parameters'].items() if v.get('required', False))
         print(f'Required Parameters: {params}')
-        params = ', '.join(k for k, v in rule['parameters'].items()
-                           if not v.get('required', False))
+        params = ', '.join(k for k, v in rule['parameters'].items() if not v.get('required', False))
         print(f'Optional Parameters: {params}')
       print('')

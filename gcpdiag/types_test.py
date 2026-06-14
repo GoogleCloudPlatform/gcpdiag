@@ -15,8 +15,7 @@
 
 import unittest
 
-from gcpdiag.queries.iam import (DEFAULT_SERVICE_ACCOUNT_DOMAINS,
-                                 SERVICE_AGENT_DOMAINS)
+from gcpdiag.queries.iam import DEFAULT_SERVICE_ACCOUNT_DOMAINS, SERVICE_AGENT_DOMAINS
 from gcpdiag.types import Email  # Import the Email class
 
 REGULAR_EMAIL = ('example.com', 'example.com.gh', 'example.engineer')

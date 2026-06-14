@@ -2,11 +2,11 @@ instance_name=existing-instance,project_id=gcpdiag-gce6-aaaa,zone=us-central1-c
 
 gce/vm-creation: Runbook for diagnosing VM creation issues.
 
-    This runbook helps identify and resolve issues related to VM creation in Google Cloud.
+  This runbook helps identify and resolve issues related to VM creation in Google Cloud.
 
-    - Checks for quota-related issues.
-    - Checks for permission-related issues.
-    - Checks for conflicts such as resource already existing.
+  - Checks for quota-related issues.
+  - Checks for permission-related issues.
+  - Checks for conflicts such as resource already existing.
   
 [START]: Executing default start step for runbooks.
 [GATEWAY]: Query logs to determine the cause of VM creation failure.
@@ -27,11 +27,11 @@ instance_name=non-existing-gpu-instance,project_id=gcpdiag-gce6-aaaa,zone=us-cen
 
 gce/vm-creation: Runbook for diagnosing VM creation issues.
 
-    This runbook helps identify and resolve issues related to VM creation in Google Cloud.
+  This runbook helps identify and resolve issues related to VM creation in Google Cloud.
 
-    - Checks for quota-related issues.
-    - Checks for permission-related issues.
-    - Checks for conflicts such as resource already existing.
+  - Checks for quota-related issues.
+  - Checks for permission-related issues.
+  - Checks for conflicts such as resource already existing.
   
 [START]: Executing default start step for runbooks.
 [GATEWAY]: Query logs to determine the cause of VM creation failure.

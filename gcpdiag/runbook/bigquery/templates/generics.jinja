@@ -1,0 +1,56 @@
+{% block job_exists_step_name %}
+Verify that the BigQuery Job exists
+{% endblock job_exists_step_name %}
+{% block job_exists_success_reason %}
+Job {job_id} was successfully located.
+{% endblock job_exists_success_reason %}
+{% block job_exists_failure_reason %}
+Job {job_id} does not exist.
+{% endblock job_exists_failure_reason %}
+{% block job_exists_failure_remediation %}
+Please check the corresponding job Region and make sure to provide the correct Job and Project identifiers.
+{% endblock job_exists_failure_remediation %}
+{% block job_is_done_step_name %}
+Confirm the BigQuery job has finished execution
+{% endblock job_is_done_step_name %}
+{% block job_is_done_success_reason %}
+Job {job_id} has finished execution.
+{% endblock job_is_done_success_reason %}
+{% block job_is_done_failure_reason %}
+Job {job_id} is currently in the {job_state} state and has not yet completed.
+{% endblock job_is_done_failure_reason %}
+{% block job_is_done_failure_remediation %}
+Wait for the job to finish execution and restart the investigation.
+{% endblock job_is_done_failure_remediation %}
+{% block job_has_failed_step_name %}
+Verify the BigQuery job failed
+{% endblock job_has_failed_step_name %}
+{% block job_has_failed_success_reason %}
+Job finished execution with an error. Continuing the investigation.
+{% endblock job_has_failed_success_reason %}
+{% block job_has_failed_failure_reason %}
+Job successfully finished execution without any errors.
+{% endblock job_has_failed_failure_reason %}
+{% block job_has_failed_failure_remediation %}
+Only failed BigQuery jobs can be analyzed for failure reasons. Restart the investigation and provide a job that failed during execution.
+{% endblock job_has_failed_failure_remediation %}
+{% block error_identification_step_name %}
+Analyze BigQuery job errors for known mitigations
+{% endblock error_identification_step_name %}
+{% block error_identification_failure_reason %}
+Job failed with error: {error_message}
+
+Job failure cause: {cause}
+{% endblock error_identification_failure_reason %}
+{% block error_identification_failure_remediation %}
+Suggested mitigation: {remediation}
+{% endblock error_identification_failure_remediation %}
+{% block error_identification_uncertain_reason %}
+Job {job_id} failed with an error that does not have a publicly documented mitigation and root cause.
+Full error message(s) reported:
+"{error_message}"
+{% endblock error_identification_uncertain_reason %}
+{% block error_identification_uncertain_remediation %}
+Please retry the job to confirm whether the error is transient and can be mitigated through a retry with exponential backoff. See <https://cloud.google.com/bigquery/docs/error-messages>.
+If the issue persists, contact Google Cloud Support at <https://cloud.google.com/support> and provide this report with the full BigQuery Job Id.
+{% endblock error_identification_uncertain_remediation %}

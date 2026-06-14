@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Runbook to Troubleshoot Issue: Vertex AI Workbench Instance Stuck in Provisioning State"""
+
 from datetime import datetime
 
 from gcpdiag import runbook
@@ -22,8 +23,9 @@ from gcpdiag.runbook.vertex import flags
 from gcpdiag.runbook.vertex import generalized_steps as vertex_gs
 
 PROVISIONING_STATES = [
-    notebooks.StateEnum.PROVISIONING, notebooks.StateEnum.STARTING,
-    notebooks.StateEnum.INITIALIZING
+  notebooks.StateEnum.PROVISIONING,
+  notebooks.StateEnum.STARTING,
+  notebooks.StateEnum.INITIALIZING,
 ]
 
 
@@ -65,68 +67,65 @@ class WorkbenchInstanceStuckInProvisioning(runbook.DiagnosticTree):
   - Workbench Instance External IP Disabled: Checks if the external IP disabled. Wrong networking
     configurations may cause the instance to be stuck in provisioning state.
   """
+
   parameters = {
-      flags.PROJECT_ID: {
-          'type': str,
-          'help': 'The Project ID of the resource under investigation',
-          'required': True
-      },
-      flags.INSTANCE_NAME: {
-          'type': str,
-          'help': 'Name of the Workbench Instance',
-          'default': '',
-          'required': True
-      },
-      flags.ZONE: {
-          'type': str,
-          'help': 'Zone of the Workbench Instance. e.g. us-central1-a',
-          'default': 'us-central1-a',
-          'required': True
-      },
-      flags.START_TIME: {
-          'type': datetime,
-          'help': 'Start time of the issue',
-      },
-      flags.END_TIME: {
-          'type': datetime,
-          'help': 'End time of the issue',
-      }
+    flags.PROJECT_ID: {
+      'type': str,
+      'help': 'The Project ID of the resource under investigation',
+      'required': True,
+    },
+    flags.INSTANCE_NAME: {
+      'type': str,
+      'help': 'Name of the Workbench Instance',
+      'default': '',
+      'required': True,
+    },
+    flags.ZONE: {
+      'type': str,
+      'help': 'Zone of the Workbench Instance. e.g. us-central1-a',
+      'default': 'us-central1-a',
+      'required': True,
+    },
+    flags.START_TIME: {
+      'type': datetime,
+      'help': 'Start time of the issue',
+    },
+    flags.END_TIME: {
+      'type': datetime,
+      'help': 'End time of the issue',
+    },
   }
 
   def build_tree(self):
     """Describes step relationships"""
     start = WorkbenchInstanceStuckInProvisioningStart()
     check_custom_container = CheckWorkbenchInstanceUsingCustomContainer()
-    check_workbench_instance_image = vertex_gs.CheckWorkbenchInstanceUsingOfficialImage(
-    )
-    check_workbench_instance_custom_scripts = vertex_gs.CheckWorkbenchInstanceCustomScripts(
-    )
-    check_workbench_instance_version = vertex_gs.CheckWorkbenchInstanceIsUsingLatestEnvVersion(
-    )
-    check_workbench_instance_performance = vertex_gs.CheckWorkbenchInstancePerformance(
-    )
-    check_workbench_instance_logging = DecisionCheckWorkbenchInstanceSystemLogging(
-    )
-    check_workbench_instance_compute_vm_ssh = CheckWorkbenchInstanceComputeEngineSSH(
-    )
-    check_workbench_instance_ip_disabled = vertex_gs.CheckWorkbenchInstanceExternalIpDisabled(
-    )
+    check_workbench_instance_image = vertex_gs.CheckWorkbenchInstanceUsingOfficialImage()
+    check_workbench_instance_custom_scripts = vertex_gs.CheckWorkbenchInstanceCustomScripts()
+    check_workbench_instance_version = vertex_gs.CheckWorkbenchInstanceIsUsingLatestEnvVersion()
+    check_workbench_instance_performance = vertex_gs.CheckWorkbenchInstancePerformance()
+    check_workbench_instance_logging = DecisionCheckWorkbenchInstanceSystemLogging()
+    check_workbench_instance_compute_vm_ssh = CheckWorkbenchInstanceComputeEngineSSH()
+    check_workbench_instance_ip_disabled = vertex_gs.CheckWorkbenchInstanceExternalIpDisabled()
     self.add_start(start)
     self.add_step(parent=start, child=check_custom_container)
-    self.add_step(parent=check_custom_container,
-                  child=check_workbench_instance_image)
-    self.add_step(parent=check_workbench_instance_image,
-                  child=check_workbench_instance_custom_scripts)
-    self.add_step(parent=check_workbench_instance_custom_scripts,
-                  child=check_workbench_instance_version)
-    self.add_step(parent=check_workbench_instance_version,
-                  child=check_workbench_instance_performance)
-    self.add_step(parent=check_workbench_instance_version,
-                  child=check_workbench_instance_logging)
-    self.add_step(parent=check_workbench_instance_version,
-                  child=check_workbench_instance_compute_vm_ssh)
-    self.add_step(parent=check_workbench_instance_version,
-                  child=check_workbench_instance_ip_disabled)
+    self.add_step(parent=check_custom_container, child=check_workbench_instance_image)
+    self.add_step(
+      parent=check_workbench_instance_image, child=check_workbench_instance_custom_scripts
+    )
+    self.add_step(
+      parent=check_workbench_instance_custom_scripts, child=check_workbench_instance_version
+    )
+    self.add_step(
+      parent=check_workbench_instance_version, child=check_workbench_instance_performance
+    )
+    self.add_step(parent=check_workbench_instance_version, child=check_workbench_instance_logging)
+    self.add_step(
+      parent=check_workbench_instance_version, child=check_workbench_instance_compute_vm_ssh
+    )
+    self.add_step(
+      parent=check_workbench_instance_version, child=check_workbench_instance_ip_disabled
+    )
     self.add_end(WorkbenchInstanceStuckInProvisioningEnd())
 
 
@@ -152,23 +151,25 @@ class WorkbenchInstanceStuckInProvisioningStart(runbook.StartStep):
     op.info(f'instance zone parameter: {zone}')
     op.info('--- Workbench Instance ---')
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project.id, zone=zone, instance_name=instance_name)
-    gce_instance: gce.Instance = gce.get_instance(project_id=project.id,
-                                                  zone=zone,
-                                                  instance_name=instance_name)
+      project_id=project.id, zone=zone, instance_name=instance_name
+    )
+    gce_instance: gce.Instance = gce.get_instance(
+      project_id=project.id, zone=zone, instance_name=instance_name
+    )
     self.print_workbench_instance_data(workbench_instance=workbench_instance)
     op.info(f'instance compute engine vm name: {gce_instance.name}')
     op.info(f'instance compute engine vm is running: {gce_instance.is_running}')
     workbench_instance_upgradability: dict = notebooks.workbench_instance_check_upgradability(
-        project_id=project.id, workbench_instance_name=workbench_instance.name)
+      project_id=project.id, workbench_instance_name=workbench_instance.name
+    )
     workbench_instance_upgradeable: bool = workbench_instance_upgradability.get(
-        'upgradeable', False)
+      'upgradeable', False
+    )
     workbench_instance_upgrade_version: str = workbench_instance_upgradability.get(
-        'upgradeVersion', '').upper()
-    workbench_instance_upgrade_info: str = workbench_instance_upgradability.get(
-        'upgradeInfo', '')
-    workbench_instance_upgrade_image: str = workbench_instance_upgradability.get(
-        'upgradeImage', '')
+      'upgradeVersion', ''
+    ).upper()
+    workbench_instance_upgrade_info: str = workbench_instance_upgradability.get('upgradeInfo', '')
+    workbench_instance_upgrade_image: str = workbench_instance_upgradability.get('upgradeImage', '')
     op.info(f'instance is upgradeable: {workbench_instance_upgradeable}')
     op.info(f'instance upgrade info: {workbench_instance_upgrade_info}')
     if workbench_instance_upgradeable:
@@ -176,70 +177,66 @@ class WorkbenchInstanceStuckInProvisioningStart(runbook.StartStep):
       op.info(f'instance upgrade image: {workbench_instance_upgrade_image}')
     if workbench_instance.report_event_health:
       op.info('--- Workbench Instance Health State ---')
-      self.print_workbench_instance_health_data(
-          workbench_instance=workbench_instance)
+      self.print_workbench_instance_health_data(workbench_instance=workbench_instance)
     op.info(f'instance state: {workbench_instance.state}')
 
     if workbench_instance.state == notebooks.StateEnum.ACTIVE:
-      op.add_ok(resource=workbench_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   instance_name=instance_name))
+      op.add_ok(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name),
+      )
     elif workbench_instance.state not in PROVISIONING_STATES:
-      op.add_failed(resource=workbench_instance,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       instance_name=instance_name),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.FAILURE_REASON, instance_name=instance_name),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(resource=workbench_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON_ALT1,
-                                   instance_name=instance_name))
+      op.add_ok(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.SUCCESS_REASON_ALT1, instance_name=instance_name),
+      )
 
-  def print_workbench_instance_data(
-      self, workbench_instance: notebooks.WorkbenchInstance):
+  def print_workbench_instance_data(self, workbench_instance: notebooks.WorkbenchInstance):
     op.info(f'instance name: {workbench_instance.name}')
     op.info(f'instance state: {workbench_instance.state}')
-    op.info(
-        f'instance environment version: {workbench_instance.environment_version}'
-    )
-    op.info(
-        f'instance compute account: {workbench_instance.gce_service_account_email}'
-    )
+    op.info(f'instance environment version: {workbench_instance.environment_version}')
+    op.info(f'instance compute account: {workbench_instance.gce_service_account_email}')
     op.info(f'instance network: {workbench_instance.network}')
     op.info(f'instance subnetwork: {workbench_instance.subnet}')
+    op.info(f'instance public ip disabled: {workbench_instance.disable_public_ip}')
+    op.info(f'instance metadata disable-mixer: {workbench_instance.disable_mixer}')
     op.info(
-        f'instance public ip disabled: {workbench_instance.disable_public_ip}')
-    op.info(
-        f'instance metadata disable-mixer: {workbench_instance.disable_mixer}')
-    op.info('instance metadata serial-port-logging-enable:'
-            f'{workbench_instance.serial_port_logging_enabled}')
-    op.info(
-        f'instance metadata post-startup-script: {workbench_instance.post_startup_script}'
+      'instance metadata serial-port-logging-enable:'
+      f'{workbench_instance.serial_port_logging_enabled}'
     )
-    op.info(
-        f'instance metadata startup-script: {workbench_instance.startup_script}'
-    )
-    op.info(
-        f'instance metadata startup-script-url: {workbench_instance.startup_script_url}'
-    )
-    op.info(
-        f'instance metadata report-event-health: {workbench_instance.report_event_health}'
-    )
+    op.info(f'instance metadata post-startup-script: {workbench_instance.post_startup_script}')
+    op.info(f'instance metadata startup-script: {workbench_instance.startup_script}')
+    op.info(f'instance metadata startup-script-url: {workbench_instance.startup_script_url}')
+    op.info(f'instance metadata report-event-health: {workbench_instance.report_event_health}')
 
-  def print_workbench_instance_health_data(
-      self, workbench_instance: notebooks.WorkbenchInstance):
+  def print_workbench_instance_health_data(self, workbench_instance: notebooks.WorkbenchInstance):
     op.info(f'instance health - state: {workbench_instance.health_state}')
-    op.info('instance health - jupyterlab status healthy:'
-            f'{workbench_instance.is_jupyterlab_status_healthy}')
-    op.info('instance health - jupyterlab api status healthy:'
-            f'{workbench_instance.is_jupyterlab_api_status_healthy}')
-    op.info('instance health - notebooks api dns healthy:'
-            f'{workbench_instance.is_notebooks_api_dns_healthy}')
-    op.info('instance health - proxy registration dns healthy:'
-            f'{workbench_instance.is_proxy_registration_dns_healthy}')
-    op.info('instance health - system healthy:'
-            f'{workbench_instance.is_system_healthy}')
-    op.info('instance health - docker status healthy:'
-            f'{workbench_instance.is_docker_status_healthy}')
+    op.info(
+      'instance health - jupyterlab status healthy:'
+      f'{workbench_instance.is_jupyterlab_status_healthy}'
+    )
+    op.info(
+      'instance health - jupyterlab api status healthy:'
+      f'{workbench_instance.is_jupyterlab_api_status_healthy}'
+    )
+    op.info(
+      'instance health - notebooks api dns healthy:'
+      f'{workbench_instance.is_notebooks_api_dns_healthy}'
+    )
+    op.info(
+      'instance health - proxy registration dns healthy:'
+      f'{workbench_instance.is_proxy_registration_dns_healthy}'
+    )
+    op.info(f'instance health - system healthy:{workbench_instance.is_system_healthy}')
+    op.info(
+      f'instance health - docker status healthy:{workbench_instance.is_docker_status_healthy}'
+    )
 
 
 class CheckWorkbenchInstanceUsingCustomContainer(runbook.Step):
@@ -257,18 +254,22 @@ class CheckWorkbenchInstanceUsingCustomContainer(runbook.Step):
     instance_name: str = op.get(flags.INSTANCE_NAME)
     zone: str = op.get(flags.ZONE)
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project_id, zone=zone, instance_name=instance_name)
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
     response = op.prompt(
-        kind=op.CONFIRMATION,
-        message='Is your Workbench Instance using a custom container?')
+      kind=op.CONFIRMATION, message='Is your Workbench Instance using a custom container?'
+    )
     if response == op.YES:
-      op.add_uncertain(resource=workbench_instance,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.UNCERTAIN_REASON),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+      )
     else:
-      op.add_ok(resource=workbench_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   instance_name=instance_name))
+      op.add_ok(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name),
+      )
 
 
 class DecisionCheckWorkbenchInstanceSystemLogging(runbook.Gateway):
@@ -286,40 +287,47 @@ class DecisionCheckWorkbenchInstanceSystemLogging(runbook.Gateway):
     instance_name: str = op.get(flags.INSTANCE_NAME)
     zone: str = op.get(flags.ZONE)
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project_id, zone=zone, instance_name=instance_name)
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
     constraint_name: str = 'constraints/compute.disableSerialPortLogging'
     constraint = orgpolicy.get_effective_org_policy(project_id, constraint_name)
     metadata_name = 'serial-port-logging-enabled'
     if constraint.is_enforced():
-      op.add_uncertain(resource=workbench_instance,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON,
-                                          instance_name=instance_name,
-                                          constraint=constraint_name),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                               constraint=constraint_name))
+      op.add_uncertain(
+        resource=workbench_instance,
+        reason=op.prep_msg(
+          op.UNCERTAIN_REASON, instance_name=instance_name, constraint=constraint_name
+        ),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION, constraint=constraint_name),
+      )
     elif not workbench_instance.serial_port_logging_enabled:
       op.add_uncertain(
-          resource=workbench_instance,
-          reason=op.prep_msg(
-              op.UNCERTAIN_REASON_ALT1,
-              instance_name=instance_name,
-              metadata=metadata_name,
-              metadata_value=workbench_instance.serial_port_logging_enabled),
-          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT1,
-                                  metadata=metadata_name))
-    elif (workbench_instance.state not in PROVISIONING_STATES and
-          workbench_instance != notebooks.StateEnum.ACTIVE):
-      op.add_uncertain(resource=workbench_instance,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON_ALT2,
-                                          instance_name=instance_name,
-                                          state=workbench_instance.state),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT2))
+        resource=workbench_instance,
+        reason=op.prep_msg(
+          op.UNCERTAIN_REASON_ALT1,
+          instance_name=instance_name,
+          metadata=metadata_name,
+          metadata_value=workbench_instance.serial_port_logging_enabled,
+        ),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT1, metadata=metadata_name),
+      )
+    elif (
+      workbench_instance.state not in PROVISIONING_STATES
+      and workbench_instance != notebooks.StateEnum.ACTIVE
+    ):
+      op.add_uncertain(
+        resource=workbench_instance,
+        reason=op.prep_msg(
+          op.UNCERTAIN_REASON_ALT2, instance_name=instance_name, state=workbench_instance.state
+        ),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT2),
+      )
     else:
-      self.add_child(
-          vertex_gs.CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080())
-      op.add_ok(resource=workbench_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   instance_name=instance_name))
+      self.add_child(vertex_gs.CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080())
+      op.add_ok(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name),
+      )
 
 
 class CheckWorkbenchInstanceComputeEngineSSH(runbook.CompositeStep):
@@ -333,36 +341,41 @@ class CheckWorkbenchInstanceComputeEngineSSH(runbook.CompositeStep):
 
   def execute(self):
     """Check if user is able to SSH to the Workbench Instance Compute Engine VM"""
-    #TO-DO change this to use the GCE SSH runbook or steps
+    # TO-DO change this to use the GCE SSH runbook or steps
     project_id = op.get(flags.PROJECT_ID)
     instance_name: str = op.get(flags.INSTANCE_NAME)
     zone: str = op.get(flags.ZONE)
-    gce_instance: gce.Instance = gce.get_instance(project_id=project_id,
-                                                  zone=zone,
-                                                  instance_name=instance_name)
+    gce_instance: gce.Instance = gce.get_instance(
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
     if not gce_instance.is_running:
-      op.add_uncertain(resource=gce_instance,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON,
-                                          instance_name=instance_name,
-                                          status=gce_instance.status),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(
+        resource=gce_instance,
+        reason=op.prep_msg(
+          op.UNCERTAIN_REASON, instance_name=instance_name, status=gce_instance.status
+        ),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+      )
     else:
       op.info('Workbench Instance Compute Engine VM is Running!')
       response = op.prompt(
-          kind=op.CONFIRMATION,
-          message=
-          ('Try to SSH to the instance via Compute Engine and open a terminal. '
-           'Are you able to SSH and open a terminal?'))
+        kind=op.CONFIRMATION,
+        message=(
+          'Try to SSH to the instance via Compute Engine and open a terminal. '
+          'Are you able to SSH and open a terminal?'
+        ),
+      )
       if response == op.NO:
-        op.add_uncertain(resource=gce_instance,
-                         reason=op.prep_msg(op.UNCERTAIN_REASON_ALT1,
-                                            instance_name=instance_name),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT1))
+        op.add_uncertain(
+          resource=gce_instance,
+          reason=op.prep_msg(op.UNCERTAIN_REASON_ALT1, instance_name=instance_name),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION_ALT1),
+        )
       else:
         self.add_child(CheckWorkbenchInstanceJupyterSpace())
-        op.add_ok(resource=gce_instance,
-                  reason=op.prep_msg(op.SUCCESS_REASON,
-                                     instance_name=instance_name))
+        op.add_ok(
+          resource=gce_instance, reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name)
+        )
 
 
 class CheckWorkbenchInstanceJupyterSpace(runbook.Step):
@@ -379,22 +392,26 @@ class CheckWorkbenchInstanceJupyterSpace(runbook.Step):
     project_id = op.get(flags.PROJECT_ID)
     instance_name: str = op.get(flags.INSTANCE_NAME)
     zone: str = op.get(flags.ZONE)
-    gce_instance: gce.Instance = gce.get_instance(project_id=project_id,
-                                                  zone=zone,
-                                                  instance_name=instance_name)
-    op.info('In the Workbench Instance Compute Engine VM terminal run "df". '
-            'Verify "home/jupyter" used space is below 85%')
-    response = op.prompt(kind=op.CONFIRMATION,
-                         message='Is "home/jupyter" space usage more than 85%?')
+    gce_instance: gce.Instance = gce.get_instance(
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
+    op.info(
+      'In the Workbench Instance Compute Engine VM terminal run "df". '
+      'Verify "home/jupyter" used space is below 85%'
+    )
+    response = op.prompt(
+      kind=op.CONFIRMATION, message='Is "home/jupyter" space usage more than 85%?'
+    )
     if response == op.YES:
-      op.add_failed(resource=gce_instance,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       instance_name=instance_name),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+        resource=gce_instance,
+        reason=op.prep_msg(op.FAILURE_REASON, instance_name=instance_name),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
     else:
-      op.add_ok(resource=gce_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON,
-                                   instance_name=instance_name))
+      op.add_ok(
+        resource=gce_instance, reason=op.prep_msg(op.SUCCESS_REASON, instance_name=instance_name)
+      )
 
 
 class WorkbenchInstanceStuckInProvisioningEnd(runbook.EndStep):
@@ -412,20 +429,24 @@ class WorkbenchInstanceStuckInProvisioningEnd(runbook.EndStep):
     instance_name: str = op.get(flags.INSTANCE_NAME)
     zone: str = op.get(flags.ZONE)
     workbench_instance: notebooks.WorkbenchInstance = notebooks.get_workbench_instance(
-        project_id=project_id, zone=zone, instance_name=instance_name)
+      project_id=project_id, zone=zone, instance_name=instance_name
+    )
     op.info(f'instance state: {workbench_instance.state}')
     if workbench_instance.state == notebooks.StateEnum.ACTIVE:
-      op.add_ok(resource=workbench_instance,
-                reason=op.prep_msg(op.SUCCESS_REASON_ALT2,
-                                   instance_name=instance_name))
+      op.add_ok(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.SUCCESS_REASON_ALT2, instance_name=instance_name),
+      )
     elif workbench_instance.state not in PROVISIONING_STATES:
-      op.add_uncertain(resource=workbench_instance,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON,
-                                          instance_name=instance_name),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.UNCERTAIN_REASON, instance_name=instance_name),
+        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+      )
     else:
-      op.add_failed(resource=workbench_instance,
-                    reason=op.prep_msg(op.FAILURE_REASON_ALT1,
-                                       instance_name=instance_name),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1))
+      op.add_failed(
+        resource=workbench_instance,
+        reason=op.prep_msg(op.FAILURE_REASON_ALT1, instance_name=instance_name),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1),
+      )
       op.info(message=op.END_MESSAGE)

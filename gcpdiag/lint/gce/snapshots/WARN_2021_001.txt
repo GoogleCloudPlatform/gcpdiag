@@ -1,8 +1,13 @@
 *  gce/WARN/2021_001: GCE VM Instance Access Scope, GCE VM Attached Service Account Permissions and APIs Required for Logging.
-   - projects/gcpdiag-gce1-aaaa                                           [FAIL] Cloud Logging API Not Enabled on project gcpdiag-gce1-aaaa
-     Please enable Cloud Logging API on the project with the command: 
-     gcloud services enable logging.googleapis.com --project=gcpdiag-gce1-aaaa
-     Ops Agent requires the API to collect logs from GCE VMs and display on Logs Explorer
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [FAIL] VM does not have a Service Account attached
+     Follow https://cloud.google.com/compute/docs/instances/change-service-account
+     to attach a Service Account to the VM mig-bzvx.
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [FAIL] VM does not have a Service Account attached
+     Follow https://cloud.google.com/compute/docs/instances/change-service-account
+     to attach a Service Account to the VM mig-l40g.
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [ OK ]
 
    A GCP project should have Cloud Logging API enabled. The service account
    attached to the GCE VM instances should have the logging.logWriter IAM role

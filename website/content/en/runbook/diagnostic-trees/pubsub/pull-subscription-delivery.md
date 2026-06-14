@@ -13,7 +13,7 @@ description: >
 ### Description
 
 Provides a DiagnosticTree to check for issues related to delivery issues
-  for resources in Cloud Pub/Sub. Particularly this runbook focuses on common issues
+  for subscriptions in Cloud Pub/Sub. Particularly this runbook focuses on common issues
   experienced while using Pub/Sub pull subscriptions.
 
   - Areas:

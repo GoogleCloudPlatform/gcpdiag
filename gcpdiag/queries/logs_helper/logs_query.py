@@ -1,4 +1,5 @@
-""" Helper to work with gcpdiag.queries.logs module """
+"""Helper to work with gcpdiag.queries.logs module"""
+
 from functools import cached_property
 
 
@@ -63,8 +64,7 @@ class LogsQuery:
 
   """
 
-  def __init__(self, project_id, resource_type, log_name, search_exprs,
-               logs_query_fn):
+  def __init__(self, project_id, resource_type, log_name, search_exprs, logs_query_fn):
     self._project_id = project_id
     self._resource_type = resource_type
     self._log_name = log_name
@@ -74,10 +74,12 @@ class LogsQuery:
     self._result = None
 
   def mk_query(self):
-    self._result = self._logs_query_fn(project_id=self._project_id,
-                                       resource_type=self._resource_type,
-                                       log_name=self._log_name,
-                                       filter_str=self._stackdriver_expr)
+    self._result = self._logs_query_fn(
+      project_id=self._project_id,
+      resource_type=self._resource_type,
+      log_name=self._log_name,
+      filter_str=self._stackdriver_expr,
+    )
 
   @cached_property
   def has_matching_entries(self):
@@ -88,9 +90,7 @@ class LogsQuery:
   def get_unique(self, fn):
     if not self._result or not self._result.entries:
       return set()
-    return {
-        fn(e) for e in self._result.entries if self._is_log_entry_matches(e)
-    }
+    return {fn(e) for e in self._result.entries if self._is_log_entry_matches(e)}
 
   @property
   def _stackdriver_expr(self):

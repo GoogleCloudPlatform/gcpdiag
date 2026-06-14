@@ -34,19 +34,20 @@ contains_required_pattern2 = re.compile(MATCH_STR2)
 
 # Criteria to filter for logs
 LOG_FILTER = [
-    'severity>=WARNING',
-    f'textPayload=~"{MATCH_STR1}" OR "{MATCH_STR2}"',
+  'severity>=WARNING',
+  f'textPayload=~"{MATCH_STR1}" OR "{MATCH_STR2}"',
 ]
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='dataflow_step',
-      log_name=('log_id("dataflow.googleapis.com/worker") OR'
-                ' log_id("dataflow.googleapis.com/harness")'),
-      filter_str=' AND '.join(LOG_FILTER),
+    project_id=context.project_id,
+    resource_type='dataflow_step',
+    log_name=(
+      'log_id("dataflow.googleapis.com/worker") OR log_id("dataflow.googleapis.com/harness")'
+    ),
+    filter_str=' AND '.join(LOG_FILTER),
   )
 
 
@@ -62,8 +63,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'dataflow api is disabled')
     return
 
-  if (logs_by_project.get(context.project_id) and
-      logs_by_project[context.project_id].entries):
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     failed_jobs = set()
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
@@ -73,22 +73,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       contains_required1 = contains_required_pattern1.search(msg)
       contains_required2 = contains_required_pattern2.search(msg)
 
-      if not (log_entry['severity'] >= 'WARNING' and
-              (contains_required1 or contains_required2)):
+      if not (log_entry['severity'] >= 'WARNING' and (contains_required1 or contains_required2)):
         continue
 
       job_id = get_path(
-          log_entry,
-          ('resource', 'labels', 'job_id'),
+        log_entry,
+        ('resource', 'labels', 'job_id'),
       )
 
       failed_jobs.add(job_id)
 
     if failed_jobs:
       report.add_failed(
-          project,
-          'Some Dataflow jobs having hot key are: ' +
-          ', '.join(itertools.islice(failed_jobs, 20)),
+        project,
+        'Some Dataflow jobs having hot key are: ' + ', '.join(itertools.islice(failed_jobs, 20)),
       )
     else:
       report.add_ok(project)

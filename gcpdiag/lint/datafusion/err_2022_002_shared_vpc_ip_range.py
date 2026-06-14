@@ -44,23 +44,25 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           if instance.tp_ipv4_cidr is not None:
             if instance.tp_ipv4_cidr.prefixlen > 22:
               report.add_failed(
-                  instance,
-                  'Allocated IP range %s in host VPC network %s is too small.' %
-                  (instance.tp_ipv4_cidr, instance.network.short_path))
+                instance,
+                'Allocated IP range %s in host VPC network %s is too small.'
+                % (instance.tp_ipv4_cidr, instance.network.short_path),
+              )
           else:
             report.add_failed(
-                instance,
-                'Host VPC network %s has no Data Fusion allocated IP range.' %
-                (instance.network.short_path))
+              instance,
+              'Host VPC network %s has no Data Fusion allocated IP range.'
+              % (instance.network.short_path),
+            )
 
         else:
           report.add_failed(
-              instance,
-              'Service Networking API disabled in host VPC project %s.' %
-              (host_project))
+            instance, 'Service Networking API disabled in host VPC project %s.' % (host_project)
+          )
       else:
         report.add_failed(
-            instance, 'failed to extract project id from network path %s.' %
-            (instance.network.short_path))
+          instance,
+          'failed to extract project id from network path %s.' % (instance.network.short_path),
+        )
 
     report.add_ok(instance)

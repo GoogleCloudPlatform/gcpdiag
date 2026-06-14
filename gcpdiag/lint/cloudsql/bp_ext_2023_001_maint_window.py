@@ -36,8 +36,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for instance in instances:
     if instance.has_maint_window == 0:
-      report.add_failed(
-          instance,
-          f'{instance.name} is defined with Maintenance Window as Any')
+      report.add_failed(instance, f'{instance.name} is defined with Maintenance Window as Any')
     else:
       report.add_ok(instance)

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Constants applicable relevant to only gcf implementation"""
-# pylint: disable=unused-wildcard-import, wildcard-import
+
 from gcpdiag.runbook.iam.constants import *
 
 SERVICE_AGENT_ROLE = 'roles/cloudfunctions.serviceAgent'

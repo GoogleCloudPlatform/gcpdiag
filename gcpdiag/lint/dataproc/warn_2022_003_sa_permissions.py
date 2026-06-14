@@ -29,36 +29,31 @@ policies_by_project = {}
 
 def prefetch_rule(context: models.Context):
   clusters_by_project[context.project_id] = dataproc.get_clusters(context)
-  policies_by_project[context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policies_by_project[context.project_id] = iam.get_project_policy(context)
 
 
-def run_rule(context: models.Context,
-             report: lint.LintReportRuleInterface) -> None:
-
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface) -> None:
   clusters = clusters_by_project[context.project_id]
   if not clusters:
     report.add_skipped(None, 'no dataproc clusters found')
 
   for cluster in clusters:
     sa_email = cluster.vm_service_account_email
-    sa_exists = iam.is_service_account_existing(
-        email=sa_email, billing_project_id=context.project_id)
+    sa_exists = iam.is_service_account_existing(email=sa_email, context=context)
     if not sa_exists:
       # Non-existent SA is also a non-normal situation, however our intent was to
       # have a separate rule for that, so that one rule has more-or-less one
       # reason to fail
       report.add_skipped(
-          cluster,
-          'VM Service Account associated with Dataproc cluster was not found')
+        cluster, 'VM Service Account associated with Dataproc cluster was not found'
+      )
       continue
 
     sa_has_role = policies_by_project[context.project_id].has_role_permissions(
-        member=f'serviceAccount:{sa_email}', role=WORKER_ROLE)
+      member=f'serviceAccount:{sa_email}', role=WORKER_ROLE
+    )
 
     if sa_has_role:
       report.add_ok(cluster)
     else:
-      report.add_failed(
-          cluster,
-          f'Service account {sa_email} does not have enough permissions')
+      report.add_failed(cluster, f'Service account {sa_email} does not have enough permissions')

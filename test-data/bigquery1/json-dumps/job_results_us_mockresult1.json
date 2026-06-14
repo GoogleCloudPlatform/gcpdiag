@@ -1,0 +1,49 @@
+{
+  "kind": "bigquery#getQueryResultsResponse",
+  "etag": "\"some_etag_results\"",
+  "schema": {
+    "fields": [
+      {
+        "name": "col1",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "col2",
+        "type": "INTEGER",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "jobReference": {
+    "projectId": "gcpdiag-bigquery1-aaaa",
+    "jobId": "gcpdiag_query_mockresult1",
+    "location": "us"
+  },
+  "totalRows": "2",
+  "rows": [
+    {
+      "f": [
+        {
+          "v": "value1"
+        },
+        {
+          "v": "100"
+        }
+      ]
+    },
+    {
+      "f": [
+        {
+          "v": "value2"
+        },
+        {
+          "v": "200"
+        }
+      ]
+    }
+  ],
+  "totalBytesProcessed": "0",
+  "jobComplete": true,
+  "cacheHit": false
+}

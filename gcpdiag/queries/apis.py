@@ -34,9 +34,9 @@ from gcpdiag import caching, config, hooks, utils
 _credentials = None
 
 AUTH_SCOPES = [
-    'openid',
-    'https://www.googleapis.com/auth/cloud-platform',
-    'https://www.googleapis.com/auth/userinfo.email',
+  'openid',
+  'https://www.googleapis.com/auth/cloud-platform',
+  'https://www.googleapis.com/auth/userinfo.email',
 ]
 
 
@@ -70,12 +70,11 @@ def _get_credentials_adc():
 
 def _get_credentials_key():
   filename = config.get('auth_key')
-  logging.debug('auth: using service account key %s', filename)
+  logging.debug('auth: using service account key')
 
   global _credentials
   if not _credentials:
-    _credentials, _ = google.auth.load_credentials_from_file(filename=filename,
-                                                             scopes=AUTH_SCOPES)
+    _credentials, _ = google.auth.load_credentials_from_file(filename=filename, scopes=AUTH_SCOPES)
   return _credentials
 
 
@@ -84,8 +83,7 @@ def set_credentials(cred_json):
   if not cred_json:
     _credentials = None
   else:
-    _credentials = oauth2_credentials.Credentials.from_authorized_user_info(
-        json.loads(cred_json))
+    _credentials = oauth2_credentials.Credentials.from_authorized_user_info(json.loads(cred_json))
 
 
 def get_credentials():
@@ -95,9 +93,10 @@ def get_credentials():
     return _get_credentials_key()
   else:
     raise AssertionError(
-        'BUG: AUTH_METHOD method should be one of `adc` or `key`, '
-        f'but got `{_auth_method()}` instead.'
-        ' Please report at https://gcpdiag.dev/issues/')
+      'BUG: AUTH_METHOD method should be one of `adc` or `key`, '
+      f'but got `{_auth_method()}` instead.'
+      ' Please report at https://gcpdiag.dev/issues/'
+    )
 
 
 def _get_project_or_billing_id(project_id: str) -> str:
@@ -127,10 +126,9 @@ def get_user_email() -> str:
 
 
 @caching.cached_api_call(in_memory=True)
-def get_api(service_name: str,
-            version: str,
-            project_id: Optional[str] = None,
-            region: Optional[str] = None):
+def get_api(
+  service_name: str, version: str, project_id: Optional[str] = None, region: Optional[str] = None
+):
   """Get an API object, as returned by googleapiclient.discovery.build.
 
   If project_id is specified, this will be used as the billed project, and usually
@@ -153,15 +151,13 @@ def get_api(service_name: str,
 
     # thread safety: create a new AuthorizedHttp object for every request
     # https://github.com/googleapis/google-api-python-client/blob/master/docs/thread_safety.md
-    new_http = google_auth_httplib2.AuthorizedHttp(credentials,
-                                                   http=httplib2.Http())
+    new_http = google_auth_httplib2.AuthorizedHttp(credentials, http=httplib2.Http())
     return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
 
   universe_domain = config.get('universe_domain')
   cred_universe = getattr(credentials, 'universe_domain', 'googleapis.com')
   if cred_universe != universe_domain:
-    raise ValueError('credential universe_domain mismatch '
-                     f'{cred_universe} != {universe_domain}')
+    raise ValueError(f'credential universe_domain mismatch {cred_universe} != {universe_domain}')
   client_options = ClientOptions()
   if universe_domain != 'googleapis.com':
     client_options.universe_domain = universe_domain
@@ -171,12 +167,14 @@ def get_api(service_name: str,
     client_options.api_endpoint = f'https://{service_name}.{universe_domain}'
   if service_name in ['compute', 'bigquery', 'storage', 'dns']:
     client_options.api_endpoint += f'/{service_name}/{version}'
-  api = discovery.build(service_name,
-                        version,
-                        cache_discovery=False,
-                        credentials=credentials,
-                        requestBuilder=_request_builder,
-                        client_options=client_options)
+  api = discovery.build(
+    service_name,
+    version,
+    cache_discovery=False,
+    credentials=credentials,
+    requestBuilder=_request_builder,
+    client_options=client_options,
+  )
   return api
 
 
@@ -185,20 +183,17 @@ def _list_enabled_apis(project_id: str) -> Set[str]:
   """List all enabled services available to the specified project"""
   logging.debug('listing enabled APIs')
   serviceusage = get_api('serviceusage', 'v1', project_id)
-  request = serviceusage.services().list(parent=f'projects/{project_id}',
-                                         filter='state:ENABLED')
+  request = serviceusage.services().list(parent=f'projects/{project_id}', filter='state:ENABLED')
   enabled_apis: Set[str] = set()
   try:
     while request is not None:
       response = request.execute(num_retries=config.API_RETRIES)
       if not response:
-        logging.debug("No 'services' found in the response for project: %s",
-                      project_id)
+        logging.debug("No 'services' found in the response for project: %s", project_id)
         break
       services = response.get('services', [])
       if services is None:
-        logging.debug("No 'services' found in the response for project: %s",
-                      project_id)
+        logging.debug("No 'services' found in the response for project: %s", project_id)
         break
       for service in services:
         if 'config' in service and 'name' in service['config']:
@@ -246,47 +241,44 @@ def verify_access(project_id: str):
 
   try:
     if not is_enabled(project_id, 'cloudresourcemanager'):
-      service = f"cloudresourcemanager.{config.get('universe_domain')}"
+      service = f'cloudresourcemanager.{config.get("universe_domain")}'
       error_msg = (
-          'Cloud Resource Manager API must be enabled. To enable, execute:\n'
-          f'gcloud services enable {service} --project={project_id}')
-      raise utils.GcpApiError(response=error_msg,
-                              service=service,
-                              reason='SERVICE_DISABLED')
+        'Cloud Resource Manager API must be enabled. To enable, execute:\n'
+        f'gcloud services enable {service} --project={project_id}'
+      )
+      raise utils.GcpApiError(response=error_msg, service=service, reason='SERVICE_DISABLED')
     if not is_enabled(project_id, 'iam'):
-      service = f"iam.{config.get('universe_domain')}"
+      service = f'iam.{config.get("universe_domain")}'
       error_msg = (
-          'Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
-          f"gcloud services enable iam.{config.get('universe_domain')} --project={project_id}"
+        'Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
+        f'gcloud services enable iam.{config.get("universe_domain")} --project={project_id}'
       )
-      raise utils.GcpApiError(response=error_msg,
-                              service=service,
-                              reason='SERVICE_DISABLED')
+      raise utils.GcpApiError(response=error_msg, service=service, reason='SERVICE_DISABLED')
     if not is_enabled(project_id, 'logging'):
-      service = f"logging.{config.get('universe_domain')}"
+      service = f'logging.{config.get("universe_domain")}'
       warning_msg = (
-          'Cloud Logging API is not enabled (related rules will be skipped).'
-          ' To enable, execute:\n'
-          f"gcloud services enable logging.{config.get('universe_domain')} --project={project_id}\n"
+        'Cloud Logging API is not enabled (related rules will be skipped).'
+        ' To enable, execute:\n'
+        f'gcloud services enable logging.{config.get("universe_domain")} --project={project_id}\n'
       )
-      raise utils.GcpApiError(response=warning_msg,
-                              service=service,
-                              reason='SERVICE_DISABLED')
+      raise utils.GcpApiError(response=warning_msg, service=service, reason='SERVICE_DISABLED')
   except utils.GcpApiError as err:
     if 'SERVICE_DISABLED' == err.reason:
-      if f"serviceusage.{config.get('universe_domain')}" == err.service:
+      if f'serviceusage.{config.get("universe_domain")}' == err.service:
         err.response += (
-            '\nService Usage API must be enabled. To enable, execute:\n'
-            f"gcloud services enable serviceusage.{config.get('universe_domain')} "
-            f'--project={project_id}')
+          '\nService Usage API must be enabled. To enable, execute:\n'
+          f'gcloud services enable serviceusage.{config.get("universe_domain")} '
+          f'--project={project_id}'
+        )
     else:
-      logging.error('can\'t access project %s: %s', project_id, err.message)
+      logging.error("can't access project %s: %s", project_id, err.message)
     raise err
   except exceptions.GoogleAuthError as err:
     logging.error(err)
     if _auth_method() == 'adc':
-      logging.error('Error using application default credentials. '
-                    'Try running: gcloud auth login --update-adc')
+      logging.error(
+        'Error using application default credentials. Try running: gcloud auth login --update-adc'
+      )
     raise err
   # Plug-in additional authorization verifications
   hooks.verify_access_hook(project_id)

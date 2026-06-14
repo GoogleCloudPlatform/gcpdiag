@@ -28,8 +28,7 @@ dataflow_jobs_by_project = {}
 
 
 def prefetch_rule(context: models.Context):
-  dataflow_jobs_by_project[context.project_id] = dataflow.get_all_dataflow_jobs(
-      context)
+  dataflow_jobs_by_project[context.project_id] = dataflow.get_all_dataflow_jobs(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -53,9 +52,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   if failed_jobs:
     report.add_failed(
-        project,
-        'Some Dataflow jobs stuck in the cancelling state for more than 30 minutes: '
-        + ', '.join(itertools.islice(failed_jobs, 20)),
+      project,
+      'Some Dataflow jobs stuck in the cancelling state for more than 30 minutes: '
+      + ', '.join(itertools.islice(failed_jobs, 20)),
     )
   else:
     report.add_ok(project)

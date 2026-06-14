@@ -18,7 +18,8 @@ all:	\
 	json-dumps/versions.json \
 	json-dumps/project.json \
 	json-dumps/services.json \
-	json-dumps/appengine_services.json
+	json-dumps/appengine_services.json \
+	json-dumps/logging-entries-1.json
 
 json-dumps/project.json:
 	$(CURL) -fsS \

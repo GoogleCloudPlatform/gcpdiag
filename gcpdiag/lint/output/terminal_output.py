@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-""" Output implementation that prints result in human-readable format. """
+"""Output implementation that prints result in human-readable format."""
 
 import functools
 import logging
@@ -22,9 +22,9 @@ import sys
 import textwrap
 from typing import Any, Dict, List, Optional, TextIO
 
-import blessings
+from rich.console import Console
+from rich.markup import escape
 
-# pylint: disable=unused-import (lint is used in type hints)
 from gcpdiag import config, lint, models
 from gcpdiag.lint.output import base_output
 
@@ -44,15 +44,14 @@ def emoji_wrap(char):
 
 
 class OutputOrderer:
-  """ Helper to maintain sorting order of the rules """
+  """Helper to maintain sorting order of the rules"""
 
   _result_handler: 'lint.LintResultsHandler'
   _output_order: List[str]
   _next_rule_idx: int
   _rule_reports_ready: Dict[str, 'lint.LintReportRuleInterface']
 
-  def __init__(self, result_handler: 'lint.LintResultsHandler',
-               output_order: List[str]) -> None:
+  def __init__(self, result_handler: 'lint.LintResultsHandler', output_order: List[str]) -> None:
     self._result_handler = result_handler
     self._output_order = output_order
     self._next_rule_idx = 0
@@ -83,21 +82,25 @@ class OutputOrderer:
 
 
 class TerminalOutput(base_output.BaseOutput):
-  """ Output implementation that prints result in human-readable format. """
+  """Output implementation that prints result in human-readable format."""
+
   _output_order: Optional[List[str]]
   line_unfinished: bool
-  term: blessings.Terminal
+  console: Console
 
-  def __init__(self,
-               file: TextIO = sys.stdout,
-               log_info_for_progress_only: bool = True,
-               show_ok: bool = True,
-               show_skipped: bool = False,
-               output_order: Optional[List[str]] = None):
+  def __init__(
+    self,
+    file: Optional[TextIO] = None,
+    log_info_for_progress_only: bool = True,
+    show_ok: bool = True,
+    show_skipped: bool = False,
+    output_order: Optional[List[str]] = None,
+  ):
     super().__init__(file, log_info_for_progress_only, show_ok, show_skipped)
     self._output_order = output_order
     self.line_unfinished = False
-    self.term = blessings.Terminal()
+    self.file = file or sys.stdout
+    self.console = Console(file=self.file, highlight=False, soft_wrap=True)
 
   @functools.cached_property
   def result_handler(self) -> 'lint.LintResultsHandler':
@@ -105,17 +108,14 @@ class TerminalOutput(base_output.BaseOutput):
     if self._output_order is None:
       return default_handler
     else:
-      return OutputOrderer(result_handler=default_handler,
-                           output_order=self._output_order)
+      return OutputOrderer(result_handler=default_handler, output_order=self._output_order)
 
-  def process_rule_report(self,
-                          rule_report: 'lint.LintReportRuleInterface') -> None:
+  def process_rule_report(self, rule_report: 'lint.LintReportRuleInterface') -> None:
     if not self._should_rule_be_skipped(rule_report):
       with self.lock:
         self._print_rule_report(rule_report)
 
-  def _print_rule_report(self,
-                         rule_report: 'lint.LintReportRuleInterface') -> None:
+  def _print_rule_report(self, rule_report: 'lint.LintReportRuleInterface') -> None:
     self._print_rule_header(rule=rule_report.rule)
     for check_result in rule_report.results:
       self._handle_rule_report_result(check_result)
@@ -123,41 +123,37 @@ class TerminalOutput(base_output.BaseOutput):
       self._print_long_desc(rule=rule_report.rule)
     self.terminal_print_line()
 
-  def _handle_rule_report_result(self,
-                                 check_result: 'lint.LintRuleResult') -> None:
+  def _handle_rule_report_result(self, check_result: 'lint.LintRuleResult') -> None:
     if check_result.status == 'failed':
-      self._print_failed(resource=check_result.resource,
-                         reason=check_result.reason,
-                         short_info=check_result.short_info)
+      self._print_failed(
+        resource=check_result.resource,
+        reason=check_result.reason,
+        short_info=check_result.short_info,
+      )
     elif check_result.status == 'skipped':
-      self._print_skipped(resource=check_result.resource,
-                          reason=check_result.reason,
-                          short_info=check_result.short_info)
+      self._print_skipped(
+        resource=check_result.resource,
+        reason=check_result.reason,
+        short_info=check_result.short_info,
+      )
     elif check_result.status == 'ok':
-      self._print_ok(resource=check_result.resource,
-                     short_info=check_result.short_info)
+      self._print_ok(resource=check_result.resource, short_info=check_result.short_info)
     else:
       raise RuntimeError('Unknown rule report status')
 
   def _wrap_indent(self, text: str, prefix: str) -> str:
-    width = self.term.width or 80
+    width = self.console.width if self.console.is_terminal else 80
     width = min(width, 80)
     return textwrap.indent(textwrap.fill(text, width - len(prefix)), prefix)
 
   def _italic(self, text: str) -> str:
-    if is_cloud_shell():
-      # TODO(b/201958597): Cloud Shell with tmux doesn't format italic properly at the moment
-      return text
-    else:
-      return self.term.italic(text)
+    return f'[italic]{escape(text)}[/italic]'
 
   def terminal_update_line(self, text: str) -> None:
     """Update the current line on the terminal."""
-    if self.term.width:
-      print(self.term.move_x(0) + self.term.clear_eol() + text,
-            end='',
-            flush=True,
-            file=self.file)
+    if self.console.is_terminal:
+      self.file.write('\r\033[K' + text)
+      self.file.flush()
       self.line_unfinished = True
     else:
       # If it's a stream, do not output anything, assuming that the
@@ -166,92 +162,99 @@ class TerminalOutput(base_output.BaseOutput):
 
   def terminal_erase_line(self) -> None:
     """Remove the current content on the line."""
-    if self.line_unfinished and self.term.width:
-      print(self.term.move_x(0) + self.term.clear_eol(),
-            flush=True,
-            end='',
-            file=self.file)
+    if self.line_unfinished and self.console.is_terminal:
+      self.file.write('\r\033[K')
+      self.file.flush()
     self.line_unfinished = False
 
   def terminal_print_line(self, text: str = '') -> None:
     """Write a line to the terminal, replacing any current line content, and add a line feed."""
-    if self.line_unfinished and self.term.width:
-      self.terminal_update_line(text)
-      print(file=self.file)
+    text = text.expandtabs()
+    if self.line_unfinished and self.console.is_terminal:
+      self.file.write('\r\033[K')
+      self.file.flush()
+      self.console.print(text)
     else:
-      print(text, file=self.file)
-      # flush the output, so that we can more easily grep, tee, etc.
-      sys.stdout.flush()
+      self.console.print(text)
+    # flush the output, so that we can more easily grep, tee, etc.
+    self.file.flush()
     self.line_unfinished = False
 
   def display_banner(self) -> None:
-    if self.term.does_styling:
-      print(self.term.bold(f"gcpdiag {emoji_wrap('🩺')} {config.VERSION}\n"))
-    else:
-      print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
+    self.console.print(f'gcpdiag {emoji_wrap("🩺")} {config.VERSION}\n', style='bold')
 
   def _print_rule_header(self, rule: 'lint.LintRule') -> None:
     bullet = ''
-    if self.term.does_styling:
+    if self.console.is_terminal:
       bullet = emoji_wrap('🔎') + ' '
     else:
       bullet = '*  '
     self.terminal_print_line(
-        bullet +
-        self.term.yellow(f'{rule.product}/{rule.rule_class}/{rule.rule_id}') +
-        ': ' + f'{rule.short_desc}')
+      bullet + f'[yellow]{escape(str(rule.product))}/{escape(str(rule.rule_class))}/'
+      f'{escape(str(rule.rule_id))}[/yellow]: ' + escape(rule.short_desc)
+    )
 
   def _print_long_desc(self, rule: 'lint.LintRule') -> None:
     self.terminal_print_line()
     long_desc = rule.long_desc or ''
     self.terminal_print_line(self._italic(self._wrap_indent(long_desc, '   ')))
     self.terminal_print_line()
-    self.terminal_print_line('   ' + rule.doc_url)
+    self.terminal_print_line('   ' + escape(rule.doc_url))
 
-  def _print_skipped(self, resource: Optional[models.Resource],
-                     reason: Optional[str], short_info: Optional[str]) -> None:
+  def _print_skipped(
+    self, resource: Optional[models.Resource], reason: Optional[str], short_info: Optional[str]
+  ) -> None:
     if not self.show_skipped:
       return
     if short_info:
-      short_info = ' ' + short_info
+      short_info = ' ' + escape(short_info)
     else:
       short_info = ''
     reason = reason or ''
     if resource:
-      self.terminal_print_line('   - ' +
-                               resource.full_path.ljust(OUTPUT_WIDTH) +
-                               ' [SKIP]' + short_info)
-      self.terminal_print_line(textwrap.indent(reason, '     '))
+      self.terminal_print_line(
+        '   - ' + escape(resource.full_path.ljust(OUTPUT_WIDTH)) + ' [SKIP]' + short_info
+      )
+      self.terminal_print_line(textwrap.indent(escape(reason), '     '))
     else:
-      self.terminal_print_line('   ' +
-                               ('(' + reason + ')').ljust(OUTPUT_WIDTH + 2) +
-                               ' [SKIP]' + short_info)
+      self.terminal_print_line(
+        '   ' + escape(('(' + reason + ')').ljust(OUTPUT_WIDTH + 2)) + ' [SKIP]' + short_info
+      )
 
-  def _print_ok(self, resource: Optional[models.Resource],
-                short_info: Optional[str]) -> None:
+  def _print_ok(self, resource: Optional[models.Resource], short_info: Optional[str]) -> None:
     if not self.show_ok:
       return
     if short_info:
-      short_info = ' ' + str(short_info)
+      short_info = ' ' + escape(str(short_info))
     else:
       short_info = ''
-    full_path = resource.full_path if resource is not None \
-                 and resource.full_path is not None else ''
-    self.terminal_print_line('   - ' + full_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.green(' OK ') + ']' + short_info)
+    full_path = (
+      resource.full_path if resource is not None and resource.full_path is not None else ''
+    )
+    self.terminal_print_line(
+      '   - '
+      + escape(full_path.ljust(OUTPUT_WIDTH))
+      + ' ['
+      + '[green] OK [/green]'
+      + ']'
+      + short_info
+    )
 
-  def _print_failed(self, resource: Optional[models.Resource],
-                    reason: Optional[str], short_info: Optional[str]) -> None:
+  def _print_failed(
+    self, resource: Optional[models.Resource], reason: Optional[str], short_info: Optional[str]
+  ) -> None:
     if short_info:
-      short_info = ' ' + short_info
+      short_info = ' ' + escape(short_info)
     else:
       short_info = ''
-    full_path = resource.full_path if resource is not None \
-                 and resource.full_path is not None else ''
-    self.terminal_print_line('   - ' + full_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.red('FAIL') + ']' + short_info)
+    full_path = (
+      resource.full_path if resource is not None and resource.full_path is not None else ''
+    )
+    self.terminal_print_line(
+      '   - ' + escape(full_path.ljust(OUTPUT_WIDTH)) + ' [' + '[red]FAIL[/red]' + ']' + short_info
+    )
     if reason:
-      self.terminal_print_line(textwrap.indent(reason, '     '))
+      self.terminal_print_line(textwrap.indent(escape(reason), '     '))
 
   def get_logging_handler(self) -> logging.Handler:
     return _LoggingHandler(self)
@@ -259,6 +262,7 @@ class TerminalOutput(base_output.BaseOutput):
 
 class _LoggingHandler(logging.Handler):
   """logging.Handler implementation used when producing a lint report."""
+
   output: TerminalOutput
 
   def __init__(self, output: TerminalOutput) -> None:
@@ -272,8 +276,8 @@ class _LoggingHandler(logging.Handler):
     if record.levelno == logging.INFO and self.output.log_info_for_progress_only:
       msg = '   ... ' + self.format(record)
       # make sure we don't go beyond the terminal width
-      if self.output.term.width:
-        term_overflow = len(msg) - self.output.term.width
+      if self.output.console.is_terminal:
+        term_overflow = len(msg) - self.output.console.width
         if term_overflow > 0:
           msg = msg[:-term_overflow]
       with self.output.lock:
@@ -285,4 +289,4 @@ class _LoggingHandler(logging.Handler):
       if 'Invalid JSON content from response' in msg:
         return
       with self.output.lock:
-        self.output.terminal_print_line(msg)
+        self.output.terminal_print_line(escape(msg))

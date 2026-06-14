@@ -28,13 +28,13 @@ def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
   project_ids = {c.project_id for c in gke.get_clusters(context).values()}
   for pid in project_ids:
-    iam.get_project_policy(pid)
+    iam.get_project_policy(context.copy_with(project_id=pid))
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Find all clusters with logging and metrics enabled.
   clusters = gke.get_clusters(context)
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):

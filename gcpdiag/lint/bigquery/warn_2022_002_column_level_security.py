@@ -20,27 +20,29 @@ Using BigQuery column-level security, you can create policies that check, at
 query time, whether a user has proper access.
 
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = ('Access Denied: BigQuery BigQuery: User does not have permission '
-             'to access data protected by policy tag')
+MATCH_STR = (
+  'Access Denied: BigQuery BigQuery: User does not have permission '
+  'to access data protected by policy tag'
+)
 
-COLUMN_LEVEL_SECURITY_FILTER = [
-    'severity=ERROR', f'protoPayload.status.message:"{MATCH_STR}"'
-]
+COLUMN_LEVEL_SECURITY_FILTER = ['severity=ERROR', f'protoPayload.status.message:"{MATCH_STR}"']
 
 logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type='bigquery_resource',
-      log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(COLUMN_LEVEL_SECURITY_FILTER))
+    project_id=context.project_id,
+    resource_type='bigquery_resource',
+    log_name='log_id("cloudaudit.googleapis.com/data_access")',
+    filter_str=' AND '.join(COLUMN_LEVEL_SECURITY_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -55,16 +57,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'bigquery api is disabled')
     return
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'ERROR' or \
-         MATCH_STR not in get_path(log_entry,
-                     ('protoPayload', 'status', 'message'), default=''):
+      if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
+        log_entry, ('protoPayload', 'status', 'message'), default=''
+      ):
         continue
-      report.add_failed(project,
-                        'found viloations on BigQuery column level security')
+      report.add_failed(project, 'found viloations on BigQuery column level security')
       return
 
   # in case of there is no log or all logs are non-relevant

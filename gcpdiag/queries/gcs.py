@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP Cloud Storage
-
-"""
+"""Queries related to GCP Cloud Storage"""
 
 import dataclasses
 import logging
@@ -32,6 +30,7 @@ from gcpdiag.queries import apis, iam
 @dataclasses.dataclass(frozen=True)
 class RetentionPolicy:
   """Bucket's retention policy."""
+
   retention_period: int
 
 
@@ -53,6 +52,7 @@ class RetentionPolicyBuilder:
 
 class Bucket(models.Resource):
   """Represents a GCS Bucket."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -69,14 +69,17 @@ class Bucket(models.Resource):
     return self._resource_data['name']
 
   def is_uniform_access(self) -> bool:
-    return get_path(self._resource_data,
-                    ('iamConfiguration', 'uniformBucketLevelAccess', 'enabled'),
-                    default=False)
+    return get_path(
+      self._resource_data,
+      ('iamConfiguration', 'uniformBucketLevelAccess', 'enabled'),
+      default=False,
+    )
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/storage/v1/(.*)',
-                      self._resource_data['selfLink'])
+    result = re.match(
+      r'https://www.googleapis.com/storage/v1/(.*)', self._resource_data['selfLink']
+    )
     if result:
       return result.group(1)
     else:
@@ -92,22 +95,21 @@ class Bucket(models.Resource):
 
   @property
   def retention_policy(self) -> RetentionPolicy:
-    return RetentionPolicyBuilder(self._resource_data.get(
-        'retentionPolicy', {})).build()
+    return RetentionPolicyBuilder(self._resource_data.get('retentionPolicy', {})).build()
 
 
 class BucketIAMPolicy(iam.BaseIAMPolicy):
-
   def _is_resource_permission(self, permission):
     return True
 
 
 @caching.cached_api_call(in_memory=True)
-def get_bucket_iam_policy(project_id: str, bucket: str) -> BucketIAMPolicy:
+def get_bucket_iam_policy(context: models.Context, bucket: str) -> BucketIAMPolicy:
+  project_id = context.project_id
   gcs_api = apis.get_api('storage', 'v1', project_id)
   request = gcs_api.buckets().getIamPolicy(bucket=bucket)
 
-  return iam.fetch_iam_policy(request, BucketIAMPolicy, project_id, bucket)
+  return iam.fetch_iam_policy(request, BucketIAMPolicy, project_id, bucket, context)
 
 
 @caching.cached_api_call(in_memory=True)
@@ -132,8 +134,7 @@ def get_buckets(context: models.Context) -> Mapping[str, Bucket]:
   if not apis.is_enabled(context.project_id, 'storage'):
     return buckets
   gcs_api = apis.get_api('storage', 'v1', context.project_id)
-  logging.debug('fetching list of GCS buckets in project %s',
-                context.project_id)
+  logging.debug('fetching list of GCS buckets in project %s', context.project_id)
   query = gcs_api.buckets().list(project=context.project_id)
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
@@ -146,13 +147,12 @@ def get_buckets(context: models.Context) -> Mapping[str, Bucket]:
       # Does not support matching for location for buckets
       # names are globally unique and should suffice
       if not context.match_project_resource(
-          resource=b.get('name'),
-          labels=b.get('labels', {}),
+        resource=b.get('name'),
+        labels=b.get('labels', {}),
       ):
         continue
 
-      buckets[b['name']] = Bucket(project_id=context.project_id,
-                                  resource_data=b)
+      buckets[b['name']] = Bucket(project_id=context.project_id, resource_data=b)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return buckets

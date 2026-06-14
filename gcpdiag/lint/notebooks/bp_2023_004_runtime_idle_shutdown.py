@@ -16,6 +16,7 @@
 To help manage costs, you can set your managed notebooks instance to shut down
 after being idle for a specific time period. You can change the amount of time.
 """
+
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, notebooks
 

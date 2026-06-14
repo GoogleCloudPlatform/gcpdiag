@@ -17,6 +17,7 @@
 
 Organizational policy is preventing the creation of a Serverless VPC Access Connector.
 """
+
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
@@ -29,9 +30,9 @@ LOG_ID = 'log_id("cloudaudit.googleapis.com/activity")'
 RESOURCE_TYPE = 'audited_resource'
 
 LOG_FILTER = [
-    f'severity={SEVERITY}',
-    f'protoPayload.methodName="{METHOD_NAME}"',
-    f'protoPayload.status.message:"{MESSAGE}"',
+  f'severity={SEVERITY}',
+  f'protoPayload.methodName="{METHOD_NAME}"',
+  f'protoPayload.status.message:"{MESSAGE}"',
 ]
 
 logs_by_project = {}
@@ -39,10 +40,11 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = logs.query(
-      project_id=context.project_id,
-      resource_type=RESOURCE_TYPE,
-      log_name=LOG_ID,
-      filter_str=' AND '.join(LOG_FILTER))
+    project_id=context.project_id,
+    resource_type=RESOURCE_TYPE,
+    log_name=LOG_ID,
+    filter_str=' AND '.join(LOG_FILTER),
+  )
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -58,19 +60,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'vpc access api is disabled')
     return
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if logs_by_project.get(context.project_id) and logs_by_project[context.project_id].entries:
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'ERROR' or \
-          METHOD_NAME not in get_path(log_entry,
-                     ('protoPayload', 'methodName'), default='') or \
-          MESSAGE not in get_path(log_entry,
-                     ('protoPayload', 'status', 'message'), default=''):
+      if (
+        log_entry['severity'] != 'ERROR'
+        or METHOD_NAME not in get_path(log_entry, ('protoPayload', 'methodName'), default='')
+        or MESSAGE not in get_path(log_entry, ('protoPayload', 'status', 'message'), default='')
+      ):
         continue
       report.add_failed(
-          project, 'There may have been a failed VPC \
-        connector creation issue on App Engine due to the org policy')
+        project,
+        'There may have been a failed VPC \
+        connector creation issue on App Engine due to the org policy',
+      )
       return
 
   # in case of there is no log or all logs are non-relevant

@@ -25,8 +25,9 @@ DEFAULT_MTU = 1440
 
 class Interconnect(models.Resource):
   """Represents an Interconnect.
- https://cloud.google.com/compute/docs/reference/rest/v1/interconnects
- """
+  https://cloud.google.com/compute/docs/reference/rest/v1/interconnects
+  """
+
   _resource_data: dict
   _ead: str
   _attachments: List[str]
@@ -51,8 +52,7 @@ class Interconnect(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -70,10 +70,7 @@ class Interconnect(models.Resource):
   @property
   def attachments(self) -> List[str]:
     if not self._attachments:
-      self._attachments = [
-          x.split('/')[-1]
-          for x in self._resource_data['interconnectAttachments']
-      ]
+      self._attachments = [x.split('/')[-1] for x in self._resource_data['interconnectAttachments']]
     return self._attachments
 
   @property
@@ -91,8 +88,7 @@ class Interconnect(models.Resource):
 def get_interconnect(project_id: str, interconnect_name: str) -> Interconnect:
   logging.debug('fetching interconnect: %s', interconnect_name)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.interconnects().get(project=project_id,
-                                        interconnect=interconnect_name)
+  request = compute.interconnects().get(project=project_id, interconnect=interconnect_name)
   response = request.execute(num_retries=config.API_RETRIES)
   return Interconnect(project_id, response)
 
@@ -115,9 +111,7 @@ def get_links(project_id: str) -> List[Interconnect]:
   links = []
   if isinstance(response, dict):
     # Handle the case when 'response' is a dictionary
-    links = [
-        Interconnect(project_id, name) for name in response.get('items', [])
-    ]
+    links = [Interconnect(project_id, name) for name in response.get('items', [])]
   elif isinstance(response, list):
     # Handle the case when 'response' is a list
     links = [Interconnect(project_id, name) for name in response]
@@ -130,8 +124,9 @@ def _metro(ead: str) -> str:
 
 class VlanAttachment(models.Resource):
   """Represents an Interconnect.
- https://cloud.google.com/compute/docs/reference/rest/v1/interconnectAttachments
- """
+  https://cloud.google.com/compute/docs/reference/rest/v1/interconnectAttachments
+  """
+
   _resource_data: dict
   _type: str
   _interconnect: str
@@ -154,8 +149,7 @@ class VlanAttachment(models.Resource):
 
   @property
   def full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self.self_link)
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', self.self_link)
     if result:
       return result.group(1)
     else:
@@ -200,6 +194,10 @@ class VlanAttachment(models.Resource):
     return self._resource_data['cloudRouterIpAddress'].split('/')[0]
 
   @property
+  def remoteip(self) -> str:
+    return self._resource_data['customerRouterIpAddress'].split('/')[0]
+
+  @property
   def ead(self) -> str:
     if not self._ead:
       interconnect_obj = get_interconnect(self.project_id, self.interconnect)
@@ -223,12 +221,12 @@ class VlanAttachment(models.Resource):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_vlan_attachment(project_id: str, region: str,
-                        vlan_attachment: str) -> VlanAttachment:
+def get_vlan_attachment(project_id: str, region: str, vlan_attachment: str) -> VlanAttachment:
   logging.debug('fetching vlan attachment: %s', vlan_attachment)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnectAttachments().get(
-      project=project_id, region=region, interconnectAttachment=vlan_attachment)
+    project=project_id, region=region, interconnectAttachment=vlan_attachment
+  )
   response = request.execute(num_retries=config.API_RETRIES)
   return VlanAttachment(project_id, response)
 
@@ -244,8 +242,5 @@ def get_vlan_attachments(project_id: str) -> List[VlanAttachment]:
   for _, data_ in attachments_by_regions.items():
     if 'interconnectAttachments' not in data_:
       continue
-    attachments.extend([
-        VlanAttachment(project_id, va)
-        for va in data_['interconnectAttachments']
-    ])
+    attachments.extend([VlanAttachment(project_id, va) for va in data_['interconnectAttachments']])
   return attachments

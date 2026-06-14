@@ -23,6 +23,7 @@ Private Data Fusion instances and Data Fusion versions below 6.2.0
 require a firewall rule allowing incoming connections on TCP port 22
 from the Data Fusion service to Dataproc VMs in the configured network.
 """
+
 import ipaddress
 
 from gcpdiag import lint, models
@@ -36,43 +37,47 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
 
   for instance in instances.values():
-
     if instance.is_private:
       # Private INGRESS i.network (Dataproc) <-- i.tp_ipv4_cidr:22 (Data Fusion TP)
       result = instance.network.firewall.check_connectivity_ingress(
-          src_ip=instance.tp_ipv4_cidr, ip_protocol='tcp', port=22)
+        src_ip=instance.tp_ipv4_cidr, ip_protocol='tcp', port=22
+      )
 
       if result.action == 'deny':
         if result.matched_by_str is None:
           report.add_failed(
-              instance,
-              'network %s is missing firewall rule allowing connections from %s over port %s.'
-              % (instance.network.short_path, instance.tp_ipv4_cidr, 22))
+            instance,
+            'network %s is missing firewall rule allowing connections from %s over port %s.'
+            % (instance.network.short_path, instance.tp_ipv4_cidr, 22),
+          )
         else:
           report.add_failed(
-              instance,
-              'connections from %s over port %s blocked by %s in network %s' %
-              (instance.tp_ipv4_cidr, 22, result.matched_by_str,
-               instance.network.short_path))
+            instance,
+            'connections from %s over port %s blocked by %s in network %s'
+            % (instance.tp_ipv4_cidr, 22, result.matched_by_str, instance.network.short_path),
+          )
 
         continue
 
     elif instance.version < Version('6.2.0'):
       # Public INGRESS i.network (Dataproc) <-- 0.0.0.0/0:22 (Data Fusion TP)
       result = instance.network.firewall.check_connectivity_ingress(
-          src_ip=ipaddress.ip_network('0.0.0.0/0'), ip_protocol='tcp', port=22)
+        src_ip=ipaddress.ip_network('0.0.0.0/0'), ip_protocol='tcp', port=22
+      )
 
       if result.action == 'deny':
         if result.matched_by_str is None:
           report.add_failed(
-              instance,
-              'network %s is missing firewall rule allowing connections from 0.0.0.0/0 over port %s'
-              % (instance.network.short_path, 22))
+            instance,
+            'network %s is missing firewall rule allowing connections from 0.0.0.0/0 over port %s'
+            % (instance.network.short_path, 22),
+          )
         else:
           report.add_failed(
-              instance,
-              'connections from 0.0.0.0/0 over port %s blocked by %s in network %s'
-              % (22, result.matched_by_str, instance.network.short_path))
+            instance,
+            'connections from 0.0.0.0/0 over port %s blocked by %s in network %s'
+            % (22, result.matched_by_str, instance.network.short_path),
+          )
 
         continue
 

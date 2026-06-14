@@ -1,0 +1,54 @@
+{% block project_monitoring_configuration_check_failure_reason %}
+The Monitoring health check failed because the Cloud Monitoring API is not enabled for the project.
+{% endblock project_monitoring_configuration_check_failure_reason %}
+
+{% block project_monitoring_configuration_check_failure_remediation %}
+Enable the Cloud Monitoring API for the project through the Google Cloud Console or relevant API calls. See instructions:
+<https://cloud.google.com/monitoring/api/enable-api#enabling-api-v3>
+{% endblock project_monitoring_configuration_check_failure_remediation %}
+
+{% block project_monitoring_configuration_check_success_reason %}
+The Cloud Monitoring API is enabled for the project.
+{% endblock project_monitoring_configuration_check_success_reason %}
+
+{% block cluster_monitoring_configuration_check_failure_reason %}
+The monitoring health check failed because cluster-level monitoring is not enabled.
+{% endblock cluster_monitoring_configuration_check_failure_reason %}
+
+{% block cluster_monitoring_configuration_check_failure_remediation %}
+Enable cluster-level monitoring for the Kubernetes cluster. This can be done through the Google Cloud Console or
+GKE-specific tools. See instructions:
+<https://cloud.google.com/kubernetes-engine/docs/concepts/observability>
+{% endblock cluster_monitoring_configuration_check_failure_remediation %}
+
+{% block cluster_monitoring_configuration_check_success_reason %}
+Cluster-level monitoring is enabled for the cluster.
+{% endblock cluster_monitoring_configuration_check_success_reason %}
+
+
+{% block node_pool_access_scope_configuration_check_failure_reason %}
+The monitoring health check failed because node pools have insufficient access scope for Cloud Monitoring.
+{% endblock node_pool_access_scope_configuration_check_failure_reason %}
+
+{% block node_pool_access_scope_configuration_check_failure_remediation %}
+Adjust node pool access scope to grant necessary monitoring permissions. See instructions:
+<https://cloud.google.com/kubernetes-engine/docs/how-to/access-scopes#default_access_scopes>
+{% endblock node_pool_access_scope_configuration_check_failure_remediation %}
+
+{% block node_pool_access_scope_configuration_check_success_reason %}
+Node pools have sufficient access scope for Cloud Monitoring.
+{% endblock node_pool_access_scope_configuration_check_success_reason %}
+
+
+{% block service_account_permissions_configuration_check_failure_reason %}
+The monitoring health check failed because the service account lacks necessary permissions to write metrics.
+{% endblock service_account_permissions_configuration_check_failure_reason %}
+
+{% block service_account_permissions_configuration_check_failure_remediation %}
+Grant the service account the 'roles/monitoring.metricWriter' role or equivalent permissions. See instructions:
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/dashboards#write_permissions>
+{% endblock service_account_permissions_configuration_check_failure_remediation %}
+
+{% block service_account_permissions_configuration_check_success_reason %}
+The service account has necessary permissions to write metrics.
+{% endblock service_account_permissions_configuration_check_success_reason %}

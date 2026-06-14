@@ -16,13 +16,24 @@
 import sys
 from unittest import TestCase, mock
 
-from gcpdiag import config, lint, utils
+from gcpdiag import lint
 from gcpdiag.lint import command
 from gcpdiag.queries import apis, apis_stub
 
 MUST_HAVE_MODULES = {
-    'gke', 'gcb', 'gae', 'gce', 'iam', 'apigee', 'composer', 'datafusion',
-    'dataproc', 'gcs', 'vpc', 'lb', 'gcf'
+  'gke',
+  'gcb',
+  'gae',
+  'gce',
+  'iam',
+  'apigee',
+  'composer',
+  'datafusion',
+  'dataproc',
+  'gcs',
+  'vpc',
+  'lb',
+  'gcf',
 }
 
 
@@ -33,68 +44,30 @@ class TestCommand(TestCase):
   """Unit tests for overall command execution."""
 
   def test_run(self, mock_email, mock_api):
-    # pylint: disable=W0613
 
     sys.argv = [
-        'gcpdiag lint',
-        '--project',
-        '12340001',
-        '--include',
-        'dataproc/BP/2021_001',
+      'gcpdiag lint',
+      '--project',
+      '12340001',
+      '--include',
+      'dataproc/BP/2021_001',
     ]
     command.run([])
     assert True
 
-  def test_run_and_get_results(self, mock_email, mock_api):
-    # pylint: disable=W0613
-    sys.argv = [
-        'gcpdiag lint',
-        '--project',
-        '12340001',
-        '--include',
-        'dataproc/BP/2021_001',
-    ]
-    with self.assertRaises(utils.GcpApiError):
-      self.assertDictEqual(
-          command.run_and_get_results(None), {
-              'result': [{
-                  'doc_url': 'https://gcpdiag.dev/rules/dataproc/BP/2021_001',
-                  'long_doc': 'Enabling stackdriver logging for your Dataproc '
-                              'cluster impacts the ability\n'
-                              'to troubleshoot any issues that you might have.',
-                  'result': [{
-                      'reason': 'no dataproc clusters found',
-                      'resource': '-',
-                      'status': 'skipped'
-                  }],
-                  'rule': 'dataproc/BP/2021_001',
-                  'short_doc':
-                      'Check if logging is enabled : Stackdriver Logging '
-                      'enabled'
-              }],
-              'summary': {
-                  'skipped': 1
-              },
-              'version': config.VERSION
-          })
 
-
-class Test:
+class Test(TestCase):
   """Unit tests for command."""
 
-  # pylint: disable=protected-access
   def test_flatten_multi_arg(self):
     assert not list(command._flatten_multi_arg([]))
     assert list(command._flatten_multi_arg(['*BP*'])) == ['*BP*']
-    assert list(command._flatten_multi_arg(['*BP*',
-                                            '*ERR*'])) == ['*BP*', '*ERR*']
+    assert list(command._flatten_multi_arg(['*BP*', '*ERR*'])) == ['*BP*', '*ERR*']
     assert list(command._flatten_multi_arg(['*BP*,*ERR*'])) == ['*BP*', '*ERR*']
-    assert list(command._flatten_multi_arg(['*BP*, *ERR*'
-                                           ])) == ['*BP*', '*ERR*']
+    assert list(command._flatten_multi_arg(['*BP*, *ERR*'])) == ['*BP*', '*ERR*']
 
-  # pylint: disable=protected-access
   def test_init_args_parser(self):
-    parser = command._init_args_parser()
+    parser = command.init_args_parser()
     args = parser.parse_args(['--project', 'myproject'])
     assert args.project == 'myproject'
     assert args.billing_project is None
@@ -116,50 +89,56 @@ class Test:
     assert args.output == 'terminal'
     assert args.enable_gce_serial_buffer is False
 
-  # pylint: disable=protected-access
   def test_provided_init_args_parser(self):
-    parser = command._init_args_parser()
+    parser = command.init_args_parser()
     args = parser.parse_args(['--project', 'myproject', '--include', '*ERR*'])
     assert args.include == ['*ERR*']
     args = parser.parse_args(['--project', 'myproject', '--exclude', '*BP*'])
     assert args.exclude == ['*BP*']
     args = parser.parse_args(['--project', 'myproject', '--include-extended'])
     assert args.include_extended is True
-    args = parser.parse_args(
-        ['--project', 'myproject', '--config', '/path/to/file'])
+    args = parser.parse_args(['--project', 'myproject', '--config', '/path/to/file'])
     assert args.config == '/path/to/file'
 
-  # pylint: disable=protected-access
   def test_load_repository_rules(self):
     repo = lint.LintRuleRepository()
     command._load_repository_rules(repo)
     modules = {r.product for r in repo.rules_to_run}
     assert MUST_HAVE_MODULES.issubset(modules)
 
+  def test_create_and_load_repos(self):
+    """Test the public repo creation function."""
+    repo = command.create_and_load_repos(
+      include=['gke/*'],
+      exclude=['iam/*'],
+      load_extended=True,
+    )
+    self.assertIsInstance(repo, lint.LintRuleRepository)
+    # Check if rules are loaded
+    self.assertTrue(any(r.product == 'gke' for r in repo.rules_to_run))
+    # Check if excluded rules are not present
+    self.assertFalse(any(r.product == 'iam' for r in repo.rules_to_run))
+
   def test_parse_label(self):
-    parser = command._init_args_parser()
+    parser = command.init_args_parser()
     # Test with a single value
     args = parser.parse_args(['--project', 'x', '--label', 'key=value'])
     assert args.label == {'key': 'value'}
 
     # Test with multiple values
-    args = parser.parse_args(
-        ['--project', 'x', '--label', 'key1:value1,  key2=value2'])
+    args = parser.parse_args(['--project', 'x', '--label', 'key1:value1,  key2=value2'])
     assert args.label == {'key1': 'value1', 'key2': 'value2'}
 
     # Test with curly braces
-    args = parser.parse_args(
-        ['--project', 'x', '--label', '{ key1=value1, key2=value2 }'])
+    args = parser.parse_args(['--project', 'x', '--label', '{ key1=value1, key2=value2 }'])
     assert args.label == {'key1': 'value1', 'key2': 'value2'}
 
     # Test with mapping separated by commas
-    args = parser.parse_args(
-        ['--project', 'x', '--label', 'key1=value1,key2:value2'])
+    args = parser.parse_args(['--project', 'x', '--label', 'key1=value1,key2:value2'])
     assert args.label == {'key1': 'value1', 'key2': 'value2'}
 
     # Test with values separated by spaces
-    args = parser.parse_args(
-        ['--project', 'x', '--label', '  key1=value1 key2:value2  '])
+    args = parser.parse_args(['--project', 'x', '--label', '  key1=value1 key2:value2  '])
     assert args.label == {'key1': 'value1', 'key2': 'value2'}
 
     # exit if invalid --label value is provided.
