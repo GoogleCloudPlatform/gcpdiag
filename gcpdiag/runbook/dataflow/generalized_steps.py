@@ -234,20 +234,18 @@ class JobLogErrors(runbook.Step):
 
     for log_entry in job_logs[project_id].entries:
       log_error = log_entry.get('textPayload', '')
-      if log_entry['severity'] >= 'ERROR':
-        message_err = self.fatal_errors(log_error)
-        op.info(message=message_err)
 
-        failure_reason = op.prep_msg(op.FAILURE_REASON, job_id=op.get(flags.DATAFLOW_JOB_ID))
-        failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION)
+      message_err = self.fatal_errors(log_error)
+      op.info(message=message_err)
 
-        op.add_failed(
-          resource=job,
-          reason=failure_reason,
-          remediation=failure_remediation,
-        )
-      elif constants.BATCH_WORKER_STARTUP_CONFIRMATION in log_error:
-        op.info('Workers successfully started.')
+      failure_reason = op.prep_msg(op.FAILURE_REASON, job_id=op.get(flags.DATAFLOW_JOB_ID))
+      failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION)
+
+      op.add_failed(
+        resource=job,
+        reason=failure_reason,
+        remediation=failure_remediation,
+      )
 
   def fatal_errors(self, log_error: str) -> str:
     """Specifies actionable fatal job errors."""
@@ -312,21 +310,38 @@ class SlowJobLogs(runbook.Step):
       filter_str=' AND '.join(log_filter),
     )
 
+    found_errors = set()
+    fail_count = 0
+    max_failures_to_report = 10
+
     for log_entry in job_logs[project_id].entries:
       log_error = log_entry.get('textPayload', '')
 
       message_err = self.errors(log_error)
-      op.info(message=message_err)
 
       if message_err != constants.GENERIC_WARNING:
-        failure_reason = op.prep_msg(op.FAILURE_REASON, job_error=message_err[0])
-        failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION, remediation_hint=message_err[1])
+        if message_err not in found_errors:
+          found_errors.add(message_err)
+          if fail_count < max_failures_to_report:
+            op.info(message=f'Detected: {message_err[0]} - {message_err[1]}')
 
-        op.add_failed(
-          resource=job,
-          reason=failure_reason,
-          remediation=failure_remediation,
+            failure_reason = op.prep_msg(op.FAILURE_REASON, job_error=message_err[0])
+            failure_remediation = op.prep_msg(
+              op.FAILURE_REMEDIATION, remediation_hint=message_err[1]
+            )
+
+            op.add_failed(
+              resource=job,
+              reason=failure_reason,
+              remediation=failure_remediation,
+            )
+
+            fail_count += 1
+      if fail_count >= max_failures_to_report:
+        op.info(
+          f'More than {max_failures_to_report} unique slow job issues found. Reporting stopped after {max_failures_to_report}.'
         )
+        return
 
   def errors(self, log_error: str) -> Tuple[str, str]:
     """Specifies actionable job error/warnings.
