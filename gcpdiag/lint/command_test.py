@@ -100,6 +100,23 @@ class Test(TestCase):
     args = parser.parse_args(['--project', 'myproject', '--config', '/path/to/file'])
     assert args.config == '/path/to/file'
 
+  def test_output_casing_and_validation(self):
+    parser = command.init_args_parser()
+    # Test valid outputs in different casing
+    args = parser.parse_args(['--project', 'myproject', '--output', 'JSON'])
+    assert args.output == 'json'
+    args = parser.parse_args(['--project', 'myproject', '--output', 'json'])
+    assert args.output == 'json'
+    args = parser.parse_args(['--project', 'myproject', '--output', 'CSV'])
+    assert args.output == 'csv'
+    args = parser.parse_args(['--project', 'myproject', '--output', 'terminal'])
+    assert args.output == 'terminal'
+
+    # Test invalid output causes argparse to exit with error
+    with self.assertRaises(SystemExit) as cm:
+      parser.parse_args(['--project', 'myproject', '--output', 'invalid'])
+    assert cm.exception.code == 2
+
   def test_load_repository_rules(self):
     repo = lint.LintRuleRepository()
     command._load_repository_rules(repo)

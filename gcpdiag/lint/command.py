@@ -57,6 +57,12 @@ def _flatten_multi_arg(arg_list):
     yield from re.split(r'\s*,\s*', arg)
 
 
+def _output_format_type(val: str) -> str:
+  if val is None:
+    return 'terminal'
+  return val.lower()
+
+
 def init_args_parser():
   parser = argparse.ArgumentParser(
     description='Run diagnostics in GCP projects.', prog='gcpdiag lint'
@@ -234,7 +240,8 @@ def init_args_parser():
     '--output',
     metavar='FORMATTER',
     default='terminal',
-    type=str,
+    type=_output_format_type,
+    choices=['terminal', 'json', 'csv'],
     help=('Format output as one of [terminal, json, csv] (default: terminal)'),
   )
 
@@ -285,11 +292,18 @@ def _load_repository_rules(repo: lint.LintRuleRepository):
 def _get_output_constructor(output_parameter_value, interface):
   if interface == 'api':
     return api_output.APIOutput
-  elif output_parameter_value == 'json':
+
+  fmt = (output_parameter_value or '').lower()
+  if fmt == 'json':
     return json_output.JSONOutput
-  elif output_parameter_value == 'csv':
+  elif fmt == 'csv':
     return csv_output.CSVOutput
   else:
+    if fmt not in ['terminal', '']:
+      logging.warning(
+        "invalid output format config: '%s'. Falling back to terminal output.",
+        output_parameter_value,
+      )
     return terminal_output.TerminalOutput
 
 
