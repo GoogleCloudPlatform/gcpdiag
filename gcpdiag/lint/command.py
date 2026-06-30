@@ -411,7 +411,7 @@ def run(argv) -> int:
       # Only print the warning if GCE is enabled in the first place
       if apis.is_enabled(context.project_id, 'compute'):
         logger.warning(
-          """Serial output to cloud logging maybe disabled for certain GCE instances.
+          """Serial output to cloud logging may be disabled for certain GCE instances.
             Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n"""
         )
 
