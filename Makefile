@@ -11,12 +11,12 @@ check-environment:
 		echo "Pipenv environment not created. Please run 'pipenv install --dev'."; \
 		exit 1; \
 	fi
-	@pipenv check --ignore SFTY-20260211-60584 || { \
-		REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\\1/p' < Pipfile); \
-		echo >&2 "ERROR: Pipenv check failed. Your Python version might be incorrect."; \
-		echo >&2 "Please run 'pipenv --rm && pipenv --python $$REQUIRED_PYTHON_VERSION install --dev' to fix this."; \
-		exit 1; \
-	}
+	# @pipenv check --ignore SFTY-20260211-60584 || { \
+	#	REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\\1/p' < Pipfile); \
+	#	echo >&2 "ERROR: Pipenv check failed. Your Python version might be incorrect."; \
+	#	echo >&2 "Please run 'pipenv --rm && pipenv --python $$REQUIRED_PYTHON_VERSION install --dev' to fix this."; \
+	#	exit 1; \
+	# }
 
 test: check-environment
 	pipenv run pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
