@@ -18,10 +18,9 @@ permanent failed state, and permanently deletes the Composer tenant project.
 Make sure that all Cloud Composer environments in your project are deleted.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR1 = 'google.api.serviceusage.v1.ServiceUsage.DisableService'
 MATCH_STR2 = 'google.api.serviceusage.v1.ServiceUsage.EnableService'

@@ -19,10 +19,9 @@ Log entries indicate a Cloud Functions deployment failure at a region due to a
 Resource Location restriction not allowing the region.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'The request has violated one or more Org Policies. \
 Please refer to the respective violations for more information.'

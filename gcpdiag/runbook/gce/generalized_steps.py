@@ -21,7 +21,6 @@ from datetime import datetime
 from typing import Any, List, Optional, Set
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import runbook, utils
 from gcpdiag.queries import crm, gce, logs, monitoring
@@ -33,6 +32,7 @@ from gcpdiag.runbook.gcp import flags
 from gcpdiag.runbook.iam import flags as iam_flags
 from gcpdiag.runbook.iam import generalized_steps as iam_gs
 from gcpdiag.runbook.logs import generalized_steps as logs_gs
+from gcpdiag.utils import get_path
 
 UTILIZATION_THRESHOLD = 0.95
 

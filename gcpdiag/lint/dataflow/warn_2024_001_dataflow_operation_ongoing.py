@@ -22,10 +22,9 @@ might be stuck, deadlocked, or abnormally slow to finish processing.
 
 from itertools import islice
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STRINGS = [
   'Operation ongoing',

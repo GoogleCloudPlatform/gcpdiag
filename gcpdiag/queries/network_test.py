@@ -17,10 +17,9 @@ import ipaddress
 import re
 from unittest import mock
 
-from boltons.iterutils import get_path
-
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, network
+from gcpdiag.utils import get_path
 
 DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
 DUMMY_DEFAULT_NETWORK = 'default'

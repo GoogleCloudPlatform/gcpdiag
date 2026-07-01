@@ -18,10 +18,9 @@ task execution could be interrupted abruptly due to resource pressure. In this
 case, the task would be failed without emitting logs.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Celery command failed on host'
 LOG_FILTER = ['severity=ERROR', f'textPayload:"{MATCH_STR}"']

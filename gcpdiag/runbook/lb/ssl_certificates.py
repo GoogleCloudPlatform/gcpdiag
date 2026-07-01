@@ -17,12 +17,12 @@ from datetime import datetime, timedelta
 from typing import List, Union
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import config, runbook
 from gcpdiag.queries import apis, crm, dns, lb, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.lb import flags
+from gcpdiag.utils import get_path
 
 TargetProxy = Union[lb.TargetHttpsProxy, lb.TargetSslProxy]
 

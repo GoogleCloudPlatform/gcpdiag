@@ -19,10 +19,9 @@ Drive access scope or the user/service account is not granted at least the Viewe
 role on the Drive file.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Permission denied while getting Drive credentials'
 

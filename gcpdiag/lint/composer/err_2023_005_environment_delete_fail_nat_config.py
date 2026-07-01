@@ -19,10 +19,9 @@ environment deletion will fail. Verify a Composer environment deletion attempt
 failed due to a Cloud NAT configuration
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR_1 = 'Google Compute Engine: The subnetwork resource'
 MATCH_STR_2 = 'is already being used by'

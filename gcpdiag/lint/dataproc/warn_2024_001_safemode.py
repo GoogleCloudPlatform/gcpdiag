@@ -21,10 +21,9 @@ the HDFS filesystem is in read-only mode and no changes are allowed.
 
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, dataproc, logs
+from gcpdiag.utils import get_path
 
 RE_PATTERN = '.*SafeModeException.* Name node is in safe mode.*'
 

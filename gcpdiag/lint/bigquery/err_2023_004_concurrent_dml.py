@@ -21,10 +21,9 @@ queries that run at roughly the same time, it's possible that one of them
 failed.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Could not serialize access to'
 

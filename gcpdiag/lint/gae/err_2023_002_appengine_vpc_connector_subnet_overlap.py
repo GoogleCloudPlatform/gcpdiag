@@ -19,10 +19,9 @@ When creating a VPC connector it fails to create a subnet overlapping with
 the auto subnet networks in the range 10.128.0.0/9
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 SEVERITY = 'ERROR'
 METHOD_NAME = 'v1.compute.subnetworks.insert'

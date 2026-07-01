@@ -20,10 +20,9 @@ should be present in the list of "Allowed" fields for the constraint
 constraints/iam.allowedPolicyMemberDomains.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'One or more users named in the policy do not belong to a permitted customer'
 

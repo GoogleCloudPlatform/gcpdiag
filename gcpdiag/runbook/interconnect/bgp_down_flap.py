@@ -18,12 +18,12 @@ import re
 from datetime import datetime, timezone
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import runbook
 from gcpdiag.queries import crm, interconnect, logs, network
 from gcpdiag.runbook import op
 from gcpdiag.runbook.interconnect import flags
+from gcpdiag.utils import get_path
 
 # GRACEFUL_RESTART_TIMER is set to 120 seconds, which is current Cloud Router default.
 # However, this value can vary based on GCP Cloud Router configuration.

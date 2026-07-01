@@ -20,10 +20,9 @@ due to violation of organization policies. This is by design in VPC-SC setup.
 
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = "Request is prohibited by organization's policy"
 

@@ -15,10 +15,9 @@
 """Number of expensive Looker Studio bigquery job.
 Checking BigQuery jobs associated with Looker Studio which are billed over 1 GB"""
 
-from boltons.iterutils import get_path  # type: ignore
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 HIGHLY_EXTENSIVE_FILTER = [
   'protoPayload.methodName="jobservice.jobcompleted"',

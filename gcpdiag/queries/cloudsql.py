@@ -16,10 +16,9 @@
 import ipaddress
 from typing import Iterable, List
 
-from boltons.iterutils import get_path
-
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, network
+from gcpdiag.utils import get_path
 
 
 class Instance(models.Resource):

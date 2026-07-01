@@ -22,10 +22,9 @@ in all override files where the environment is used.
 import re
 from typing import Dict
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apigee, apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'INTERNAL: NOT_FOUND: failed to create ApigeeRoute'
 

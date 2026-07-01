@@ -23,10 +23,9 @@ flow-controlled when delivery is begun at a high backlog.
 from itertools import islice
 from typing import Dict
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import crm, monitoring, pubsub
+from gcpdiag.utils import get_path
 
 # ouma == oldest_unacked_message_age
 ouma_tracker: Dict[str, monitoring.TimeSeriesCollection] = {}

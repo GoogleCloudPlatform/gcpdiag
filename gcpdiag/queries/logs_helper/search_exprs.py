@@ -3,7 +3,7 @@
 import re
 from functools import cached_property
 
-from boltons.iterutils import get_path
+from gcpdiag.utils import get_path
 
 
 class Equals:

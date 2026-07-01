@@ -20,10 +20,9 @@ of the timeout period. If the initialization has not completed then dataproc can
 the initialization action and fails with time out error. The default timeout value is 10 minutes.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, dataproc, logs
+from gcpdiag.utils import get_path
 
 CLASS_NAME = 'com.google.cloud.hadoop.services.agent.AgentMain'
 MATCH_STR = 'Initialization action timed out'

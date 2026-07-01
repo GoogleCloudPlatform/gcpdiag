@@ -24,11 +24,11 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, executor, models, utils
 from gcpdiag.queries import apis, apis_utils, crm
 from gcpdiag.queries import network as network_q
+from gcpdiag.utils import get_path
 
 POSITIVE_BOOL_VALUES = {'Y', 'YES', 'TRUE', '1'}
 

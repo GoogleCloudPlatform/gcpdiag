@@ -20,10 +20,9 @@ threshold to ensure system stability. To avoid overloading the system,
 BigQuery restricts the number of concurrent operations.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'too many concurrent queries with remote functions for this project'
 

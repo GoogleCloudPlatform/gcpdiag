@@ -18,10 +18,9 @@
 import re
 from typing import Dict, Iterable, Optional
 
-from boltons.iterutils import get_path
-
 from gcpdiag import config, models
 from gcpdiag.queries import apis, gce, logs
+from gcpdiag.utils import get_path
 
 
 class SerialOutputSearch:

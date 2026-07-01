@@ -22,10 +22,9 @@ to process elements in parallel, which increases execution time.
 import itertools
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR1 = r'A hot key(\s' '.*' ')? was detected in step'
 MATCH_STR2 = 'A hot key was detected'

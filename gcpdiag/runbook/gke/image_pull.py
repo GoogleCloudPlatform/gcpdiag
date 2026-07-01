@@ -15,13 +15,11 @@
 
 from datetime import datetime
 
-from boltons.iterutils import get_path
-
 from gcpdiag import runbook
 from gcpdiag.queries import apis, crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
-from gcpdiag.utils import GcpApiError
+from gcpdiag.utils import GcpApiError, get_path
 
 
 def local_realtime_query(filter_list):

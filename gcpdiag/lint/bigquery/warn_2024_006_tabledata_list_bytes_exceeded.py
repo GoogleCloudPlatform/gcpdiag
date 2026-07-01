@@ -19,10 +19,9 @@ message reaches the maximum size of data that can be read through the
 tabledata.list API call in a project per second.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'tabledata.list bytes per second per project'
 LOG_FILTER = [

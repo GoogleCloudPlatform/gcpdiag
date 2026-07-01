@@ -23,10 +23,9 @@ a different VM hardware configuration or at a later time.
 For more information, see the troubleshooting documentation.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 METHOD_NAME_MATCH = 'compute.instances.'
 STOCKOUT_MESSAGE = 'ZONE_RESOURCE_POOL_EXHAUSTED'

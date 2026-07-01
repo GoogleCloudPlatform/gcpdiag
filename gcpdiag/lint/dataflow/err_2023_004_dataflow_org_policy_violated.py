@@ -21,10 +21,9 @@ that might limit VM instance creation in their project
 import itertools
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Constraint constraints/.* violated for project'
 contains_required_pattern = re.compile(MATCH_STR)

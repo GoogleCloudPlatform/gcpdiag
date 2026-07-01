@@ -20,10 +20,9 @@ error shouldnot occur as it is a cause of scheduler resource constraint and
 complex DAGparsing implementation.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'has timed out, killing it.'
 LOG_FILTER = ['severity=ERROR', f'textPayload:"{MATCH_STR}"']

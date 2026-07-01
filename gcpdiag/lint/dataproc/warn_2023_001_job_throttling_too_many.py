@@ -19,10 +19,9 @@ If Dataproc agent is already running more than allowed concurrent job,
 Dataproc job scheduling delays can be observed
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, dataproc, logs
+from gcpdiag.utils import get_path
 
 CLASS_NAME = 'com.google.cloud.hadoop.services.agent.JobSubmissionLimiterImpl'
 MATCH_STR = 'Too many running jobs'

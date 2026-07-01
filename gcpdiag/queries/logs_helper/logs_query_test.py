@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from boltons.iterutils import get_path
+from gcpdiag.utils import get_path
 
 from .logs_query import LogsQuery
 from .search_exprs import Equals

@@ -19,10 +19,9 @@ missing IAM permissions, misconfigured firewall rules or
 insufficient/incompatible IP ranges used in GKE clusters.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'but no error was surfaced'
 

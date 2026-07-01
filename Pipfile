@@ -9,7 +9,6 @@ python_version = "3.12"
 [packages]
 aiohttp = "*"
 platformdirs = "*"
-boltons = "*"
 rich = "*"
 dnspython = "*"
 google-api-python-client = "*"

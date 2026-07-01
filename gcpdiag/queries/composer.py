@@ -17,12 +17,12 @@ import logging
 import re
 from typing import Iterable, List, Tuple
 
-from boltons.iterutils import get_path
 from packaging import version
 
 from gcpdiag import caching, models
 from gcpdiag.lint import get_executor
 from gcpdiag.queries import apis, crm
+from gcpdiag.utils import get_path
 
 
 class Environment(models.Resource):

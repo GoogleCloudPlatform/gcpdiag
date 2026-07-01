@@ -20,10 +20,9 @@ modifications include the total of all load jobs, copy jobs, and query jobs that
 append or overwrite a destination partition.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Your table exceeded quota for Number of partition modifications'
 

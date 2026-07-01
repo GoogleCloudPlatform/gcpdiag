@@ -18,10 +18,9 @@ Running a notebook code execution requires user to explicitly set client
 libraries with the user's project to avoid 40X errors with the executor project
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 ERROR_CODE = '40'
 ERROR_MESSAGE = 'permission'

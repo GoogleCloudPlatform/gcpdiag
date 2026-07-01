@@ -13,13 +13,12 @@
 # limitations under the License.
 """Module containing Pub/Sub Pull Delivery diagnostic tree and custom steps."""
 
-from boltons.iterutils import get_path
-
 from gcpdiag import runbook, utils
 from gcpdiag.queries import apis, crm, monitoring, pubsub
 from gcpdiag.runbook import op
 from gcpdiag.runbook.pubsub import flags
 from gcpdiag.runbook.pubsub import generalized_steps as pubsub_gs
+from gcpdiag.utils import get_path
 
 DELIVERY_RATE = (
   'fetch pubsub_subscription | metric'

@@ -18,10 +18,9 @@ terminated tasks - if they're missing for extended period of time, a task will
 be detected as a zombie and the similar message will be written in logs.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Detected zombie job'
 LOG_FILTER = ['severity=ERROR', f'textPayload:"{MATCH_STR}"']

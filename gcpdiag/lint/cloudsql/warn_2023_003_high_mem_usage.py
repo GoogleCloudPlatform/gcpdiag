@@ -19,10 +19,9 @@ database/memory/components.free combined, the risk of an OOM event is high.
 
 from typing import Dict
 
-from boltons.iterutils import get_path
-
 from gcpdiag import config, lint, models
 from gcpdiag.queries import apis, cloudsql, monitoring
+from gcpdiag.utils import get_path
 
 MEM_USAGE_THRESHOLD = 90  # 0 ~ 100 scale
 

@@ -22,11 +22,9 @@ Rule will start failing if scheduled end of life is in less than 30 days.
 from datetime import date, timedelta
 from typing import Dict
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import gke
-from gcpdiag.utils import Version
+from gcpdiag.utils import Version, get_path
 
 # how many days before eol rule will start to failing
 NOTIFY_PERIOD_IN_DAYS = 30

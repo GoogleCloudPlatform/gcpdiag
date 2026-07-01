@@ -21,10 +21,9 @@ Failed requests may return something like 'DefaultCredentialsError'.
 
 from collections import defaultdict
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, gke, logs
+from gcpdiag.utils import get_path
 
 CREDENTIALS_ERROR_LOG_FILTER = [
   'severity=ERROR',

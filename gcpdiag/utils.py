@@ -27,6 +27,8 @@ REGION_NAME_MATCH = r'^\w+-\w+$'
 ZONE_NAME_MATCH = r'^(\w+-\w+)-\w+$'
 FULL_RES_NAME_MATCH = DOMAIN_RES_NAME_MATCH + REL_RES_NAME_MATCH
 
+UNSET = object()
+
 
 class VersionComponentsParser:
   """Simple helper class to parse version string to components"""
@@ -210,3 +212,38 @@ def iter_dictlist(dictlist: Dict[Any, List[Any]]):
 
 def format_fault_list(fault_list) -> str:
   return '\n'.join(fault_list)
+
+
+def get_path(root: Any, path: Any, default: Any = UNSET) -> Any:
+  """Retrieve a value from a nested dict/list/object via path.
+
+  Args:
+    root: The nested object (dict, list, tuple) to query.
+    path: A dot-separated string (e.g. "a.b.c") or any iterable sequence
+          of keys/indices (e.g. ("a", "b", "c")).
+    default: The fallback value returned if the path is not found.
+
+  Returns:
+    The retrieved nested value, or the default value if path is missing.
+
+  Raises:
+    KeyError, IndexError, TypeError, ValueError: If the path does not exist
+    and no default value is defined.
+  """
+  if isinstance(path, str):
+    path = path.split('.')
+  cur = root
+  try:
+    for seg in path:
+      if isinstance(cur, (list, tuple)):
+        try:
+          cur = cur[int(seg)]
+        except (ValueError, TypeError, KeyError, IndexError):
+          raise IndexError(f'Index {seg} out of bounds or invalid for list/tuple.')
+      else:
+        cur = cur[seg]
+  except (KeyError, IndexError, TypeError, ValueError) as e:
+    if default is UNSET:
+      raise e
+    return default
+  return cur

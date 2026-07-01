@@ -17,10 +17,9 @@
 Multiple DML queries running concurrently are conflicting with each other.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR_1 = 'Could not serialize access to table'
 MATCH_STR_2 = 'due to concurrent update'

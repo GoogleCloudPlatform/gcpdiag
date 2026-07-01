@@ -22,10 +22,9 @@ to manage subscriptions. Without the correct permissions, Dataflow jobs will fai
 resulting in `GETTING_PUBSUB_SUBSCRIPTION_FAILED` errors and disrupting your data pipelines.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR1 = 'GETTING_PUBSUB_SUBSCRIPTION_FAILED'
 MATCH_STR2 = 'User not authorized to perform this action'

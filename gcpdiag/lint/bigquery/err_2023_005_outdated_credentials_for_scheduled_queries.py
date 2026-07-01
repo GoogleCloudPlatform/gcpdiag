@@ -19,10 +19,9 @@ update the user credentials on the query. Credentials are automatically up to
 date for new scheduled queries.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Error code 5 : Authentication failure: User Id not found. Error code: INVALID_USERID'
 

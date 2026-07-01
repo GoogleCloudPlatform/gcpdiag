@@ -19,10 +19,9 @@ issue more than six burst snapshot requests in 60 minutes, you will encounter
 rate exceeded error. Follow best practices for disk snapshots.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 ERROR_MSG = 'RESOURCE_OPERATION_RATE_EXCEEDED'
 METHOD_NAME_MATCH = 'v1.compute.snapshots.insert'

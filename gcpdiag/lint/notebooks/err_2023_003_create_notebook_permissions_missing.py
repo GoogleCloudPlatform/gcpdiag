@@ -18,10 +18,9 @@ Creating and using a notebook requires service-*@gcp-sa-notebooks.iam.gserviceac
 to have "AI Platform Notebooks Service Agent" role and for user to have "Service Account User" role
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STRING = 'permission'
 

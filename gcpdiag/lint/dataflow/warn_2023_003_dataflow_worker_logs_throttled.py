@@ -18,11 +18,10 @@
 Check that worker logs are not throttled in Dataflow jobs.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm
 from gcpdiag.queries.logs_helper import Equals, LogsQuery, REFound
+from gcpdiag.utils import get_path
 
 logs_by_project = {}
 

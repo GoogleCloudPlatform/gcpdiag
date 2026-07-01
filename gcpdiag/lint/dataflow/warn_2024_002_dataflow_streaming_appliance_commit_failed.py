@@ -23,10 +23,9 @@ with side inputs should come before any flatten operations.
 
 from itertools import islice
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STRINGS = ['Commit failed: computation', 'have the state family']
 LOG_FILTER = [

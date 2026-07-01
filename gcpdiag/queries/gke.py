@@ -25,11 +25,10 @@ from typing import Dict, Iterable, List, Mapping, Optional, Union
 import bs4
 import googleapiclient.errors
 import requests
-from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, gce, network, web
-from gcpdiag.utils import Version
+from gcpdiag.utils import Version, get_path
 
 # To avoid name conflict with L342
 IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net

@@ -18,11 +18,10 @@ configurations or if there are Secure boot related fail events in
 cloud logging.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.lint.gce import utils
 from gcpdiag.queries import gce
+from gcpdiag.utils import get_path
 
 shutdown_logs: utils.QueryCloudLogs
 boot_fail_event: utils.SerialOutputSearch

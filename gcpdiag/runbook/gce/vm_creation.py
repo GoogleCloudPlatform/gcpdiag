@@ -15,13 +15,12 @@
 
 from datetime import datetime
 
-from boltons.iterutils import get_path
-
 from gcpdiag import runbook
 from gcpdiag.queries import crm, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.crm import generalized_steps as crm_gs
 from gcpdiag.runbook.gce import flags
+from gcpdiag.utils import get_path
 
 VM_CREATION_FAILURE_FILTER = """
     resource.type="gce_instance"

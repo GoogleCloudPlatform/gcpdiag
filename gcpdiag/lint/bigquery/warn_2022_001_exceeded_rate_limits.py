@@ -20,10 +20,9 @@ requests. These quotas exist both to protect the backend systems, and to help
 guard against unexpected billing if you submit large jobs.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'xceeded rate limits'
 

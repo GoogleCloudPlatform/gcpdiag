@@ -21,10 +21,10 @@ import re
 from typing import Dict, Mapping
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, iam
+from gcpdiag.utils import get_path
 
 
 @dataclasses.dataclass(frozen=True)

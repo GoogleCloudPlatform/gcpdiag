@@ -21,10 +21,9 @@ has the following role: roles/dataflow.worker role
 
 import itertools
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, iam, logs
+from gcpdiag.utils import get_path
 
 # Criteria to filter for logs
 LOG_FILTER = [

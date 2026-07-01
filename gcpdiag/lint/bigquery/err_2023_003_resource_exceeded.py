@@ -18,10 +18,9 @@
 A BigQuery query sometimes could not be executed in the allotted memory
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = (
   'Resources exceeded during query execution: The query could not be executed'

@@ -20,10 +20,9 @@ SQL client. If the role doesn't exists, query over the associated data source
 connection fails.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Invalid table-valued function EXTERNAL_QUERY\nFailed to connect to'
 

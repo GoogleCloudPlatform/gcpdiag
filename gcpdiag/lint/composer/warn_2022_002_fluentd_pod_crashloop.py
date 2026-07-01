@@ -21,10 +21,9 @@ environment could be stuck in a CrashLoopBackOff state after upgrading the
 environment and no logs appear in the Cloud Logging.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'unexpected error error_class=NoMethodError'
 MATCH_STR2 = "undefined method `subscription' for nil:NilClass"
