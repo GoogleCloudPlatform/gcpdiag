@@ -54,18 +54,29 @@ repos:
       '--implicit-optional', '--no-namespace-packages', '--install-types',
       '--non-interactive']
 
-- repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.15.12
+- repo: local
   hooks:
-    - id: ruff-check
-      args: [--fix, --exit-non-zero-on-fix]
-    - id: ruff-format
+  - id: ruff-check
+    name: ruff-check
+    entry: ruff check
+    language: system
+    types: [python]
+    args: [--fix, --exit-non-zero-on-fix, --no-cache, --force-exclude]
+    require_serial: true
+  - id: ruff-format
+    name: ruff-format
+    entry: ruff format
+    language: system
+    types: [python]
+    args: [--no-cache, --force-exclude]
+    require_serial: true
 
 - repo: https://github.com/antonbabenko/pre-commit-terraform
   rev: v1.96.1
   hooks:
   - id: terraform_fmt
   - id: terraform_validate
+
 
 - repo: local
   hooks:

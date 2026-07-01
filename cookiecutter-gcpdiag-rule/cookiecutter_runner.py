@@ -31,11 +31,8 @@ from cookiecutter.main import cookiecutter
 SCRIPT_DIR = path.dirname(path.abspath('./gcpdiag/gcpdiag'))
 sys.path.append(path.dirname(SCRIPT_DIR))
 
-# pylint: disable=wrong-import-position
-from gcpdiag.product_list import get_product_list
-from gcpdiag.rule_classes import get_rule_classes
-
-# pylint: enable=wrong-import-position
+from gcpdiag.product_list import get_product_list  # noqa: E402
+from gcpdiag.rule_classes import get_rule_classes  # noqa: E402
 
 # Initialize rule numbers dictionary
 # {"product": {"year": {"severity": "rule_number"}}}
@@ -74,11 +71,13 @@ for product, rule in rule_numbers.items():
       rule.setdefault(year, {})[severity] = next_rule_number
 
 # Use cookiecutter with the generated rule numbers
-cookiecutter('./cookiecutter-gcpdiag-rule',
-             extra_context={
-                 '__products': get_product_list(),
-                 '__rule_classes': get_rule_classes(),
-                 '__rule_numbers': rule_numbers,
-                 'severity': list(get_rule_classes().keys()),
-                 'product': list(get_product_list().keys())
-             })
+cookiecutter(
+  './cookiecutter-gcpdiag-rule',
+  extra_context={
+    '__products': get_product_list(),
+    '__rule_classes': get_rule_classes(),
+    '__rule_numbers': rule_numbers,
+    'severity': list(get_rule_classes().keys()),
+    'product': list(get_product_list().keys()),
+  },
+)
