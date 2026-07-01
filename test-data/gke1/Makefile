@@ -51,7 +51,11 @@ all:	\
 	json-dumps/compute-instances-aggregated.json \
 	json-dumps/compute-migs-aggregated.json \
 	json-dumps/org-constraints.json \
-	json-dumps/org-constraint-custom.arEnforceImmutableTags.json
+	json-dumps/org-constraint-custom.arEnforceImmutableTags.json\
+	json-dumps/compute-network-routes.json \
+	json-dumps/compute-igs-aggregated.json \
+	json-dumps/compute-aggregated-backendServices.json \
+	json-dumps/compute-aggregated-forwardingRules.json
 
 include ../Makefile.inc
 
@@ -247,4 +251,10 @@ json-dumps/logging-entries-1.json:
 		'https://logging.googleapis.com/v2/entries:list' \
 		--header "Content-Type:text/json" \
 		-d "$$LOGGING_ENTRIES_BODY" \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-network-routes.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/routes' \
+		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@

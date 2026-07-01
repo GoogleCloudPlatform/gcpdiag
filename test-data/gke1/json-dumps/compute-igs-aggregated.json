@@ -1,0 +1,3769 @@
+{
+  "id": "projects/gcpdiag-gke1-aaaa/aggregated/instanceGroups",
+  "items": {
+    "regions/africa-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/africa-south1"
+          }
+        ],
+        "message": "No results for the scope 'regions/africa-south1'."
+      }
+    },
+    "regions/asia-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-east1"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-east1'."
+      }
+    },
+    "regions/asia-east2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-east2"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-east2'."
+      }
+    },
+    "regions/asia-northeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-northeast1"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-northeast1'."
+      }
+    },
+    "regions/asia-northeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-northeast2"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-northeast2'."
+      }
+    },
+    "regions/asia-northeast3": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-northeast3"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-northeast3'."
+      }
+    },
+    "regions/asia-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-south1"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-south1'."
+      }
+    },
+    "regions/asia-south2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-south2"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-south2'."
+      }
+    },
+    "regions/asia-southeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-southeast1"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-southeast1'."
+      }
+    },
+    "regions/asia-southeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-southeast2"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-southeast2'."
+      }
+    },
+    "regions/asia-southeast3": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-southeast3"
+          }
+        ],
+        "message": "No results for the scope 'regions/asia-southeast3'."
+      }
+    },
+    "regions/australia-southeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/australia-southeast1"
+          }
+        ],
+        "message": "No results for the scope 'regions/australia-southeast1'."
+      }
+    },
+    "regions/australia-southeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/australia-southeast2"
+          }
+        ],
+        "message": "No results for the scope 'regions/australia-southeast2'."
+      }
+    },
+    "regions/europe-central2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-central2"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-central2'."
+      }
+    },
+    "regions/europe-north1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-north1"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-north1'."
+      }
+    },
+    "regions/europe-north2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-north2"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-north2'."
+      }
+    },
+    "regions/europe-southwest1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-southwest1"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-southwest1'."
+      }
+    },
+    "regions/europe-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west1"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west1'."
+      }
+    },
+    "regions/europe-west10": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west10"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west10'."
+      }
+    },
+    "regions/europe-west12": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west12"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west12'."
+      }
+    },
+    "regions/europe-west15": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west15"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west15'."
+      }
+    },
+    "regions/europe-west2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west2"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west2'."
+      }
+    },
+    "regions/europe-west3": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west3"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west3'."
+      }
+    },
+    "regions/europe-west4": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west4"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west4'."
+      }
+    },
+    "regions/europe-west6": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west6"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west6'."
+      }
+    },
+    "regions/europe-west8": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west8"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west8'."
+      }
+    },
+    "regions/europe-west9": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west9"
+          }
+        ],
+        "message": "No results for the scope 'regions/europe-west9'."
+      }
+    },
+    "regions/me-central1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/me-central1"
+          }
+        ],
+        "message": "No results for the scope 'regions/me-central1'."
+      }
+    },
+    "regions/me-central2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/me-central2"
+          }
+        ],
+        "message": "No results for the scope 'regions/me-central2'."
+      }
+    },
+    "regions/me-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/me-west1"
+          }
+        ],
+        "message": "No results for the scope 'regions/me-west1'."
+      }
+    },
+    "regions/northamerica-northeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/northamerica-northeast1"
+          }
+        ],
+        "message": "No results for the scope 'regions/northamerica-northeast1'."
+      }
+    },
+    "regions/northamerica-northeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/northamerica-northeast2"
+          }
+        ],
+        "message": "No results for the scope 'regions/northamerica-northeast2'."
+      }
+    },
+    "regions/northamerica-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/northamerica-south1"
+          }
+        ],
+        "message": "No results for the scope 'regions/northamerica-south1'."
+      }
+    },
+    "regions/southamerica-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/southamerica-east1"
+          }
+        ],
+        "message": "No results for the scope 'regions/southamerica-east1'."
+      }
+    },
+    "regions/southamerica-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/southamerica-west1"
+          }
+        ],
+        "message": "No results for the scope 'regions/southamerica-west1'."
+      }
+    },
+    "regions/us-central1": {
+      "instanceGroups": [
+        {
+          "creationTimestamp": "2025-04-10T04:37:56.722-07:00",
+          "description": "This instance group is controlled by Regional Instance Group Manager 'dataproc-goog-reserved-auto-secondary-5m36ak5ec6i7g'. To modify instances in this group, use the Regional Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/regionInstanceGroupManagers",
+          "fingerprint": "zajlN0Z5hSM=",
+          "id": "5177849113006969723",
+          "kind": "compute#instanceGroup",
+          "name": "dataproc-goog-reserved-auto-secondary-5m36ak5ec6i7g",
+          "namedPorts": [
+            {
+              "name": "http",
+              "port": 18000
+            }
+          ],
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/instanceGroups/dataproc-goog-reserved-auto-secondary-5m36ak5ec6i7g",
+          "size": 0
+        },
+        {
+          "creationTimestamp": "2025-10-09T02:28:55.725-07:00",
+          "description": "This instance group is controlled by Regional Instance Group Manager 'dataproc-goog-reserved-auto-secondary-msnuoyfwunxqo'. To modify instances in this group, use the Regional Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/regionInstanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3678640557234208440",
+          "kind": "compute#instanceGroup",
+          "name": "dataproc-goog-reserved-auto-secondary-msnuoyfwunxqo",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/instanceGroups/dataproc-goog-reserved-auto-secondary-msnuoyfwunxqo",
+          "size": 0
+        }
+      ]
+    },
+    "regions/us-central2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-central2"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-central2'."
+      }
+    },
+    "regions/us-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east1"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-east1'."
+      }
+    },
+    "regions/us-east4": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east4"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-east4'."
+      }
+    },
+    "regions/us-east5": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east5"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-east5'."
+      }
+    },
+    "regions/us-east7": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east7"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-east7'."
+      }
+    },
+    "regions/us-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-south1"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-south1'."
+      }
+    },
+    "regions/us-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west1"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-west1'."
+      }
+    },
+    "regions/us-west2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west2"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-west2'."
+      }
+    },
+    "regions/us-west3": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west3"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-west3'."
+      }
+    },
+    "regions/us-west4": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west4"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-west4'."
+      }
+    },
+    "regions/us-west8": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west8"
+          }
+        ],
+        "message": "No results for the scope 'regions/us-west8'."
+      }
+    },
+    "zones/africa-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/africa-south1-a'."
+      }
+    },
+    "zones/africa-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/africa-south1-b'."
+      }
+    },
+    "zones/africa-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/africa-south1-c'."
+      }
+    },
+    "zones/asia-east1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-east1-a'."
+      }
+    },
+    "zones/asia-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-east1-b'."
+      }
+    },
+    "zones/asia-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-east1-c'."
+      }
+    },
+    "zones/asia-east2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-east2-a'."
+      }
+    },
+    "zones/asia-east2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-east2-b'."
+      }
+    },
+    "zones/asia-east2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-east2-c'."
+      }
+    },
+    "zones/asia-northeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast1-a'."
+      }
+    },
+    "zones/asia-northeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast1-b'."
+      }
+    },
+    "zones/asia-northeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast1-c'."
+      }
+    },
+    "zones/asia-northeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast2-a'."
+      }
+    },
+    "zones/asia-northeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast2-b'."
+      }
+    },
+    "zones/asia-northeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast2-c'."
+      }
+    },
+    "zones/asia-northeast3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast3-a'."
+      }
+    },
+    "zones/asia-northeast3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast3-b'."
+      }
+    },
+    "zones/asia-northeast3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-northeast3-c'."
+      }
+    },
+    "zones/asia-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-south1-a'."
+      }
+    },
+    "zones/asia-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-south1-b'."
+      }
+    },
+    "zones/asia-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-south1-c'."
+      }
+    },
+    "zones/asia-south2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-south2-a'."
+      }
+    },
+    "zones/asia-south2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-south2-b'."
+      }
+    },
+    "zones/asia-south2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-south2-c'."
+      }
+    },
+    "zones/asia-southeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast1-a'."
+      }
+    },
+    "zones/asia-southeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast1-b'."
+      }
+    },
+    "zones/asia-southeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast1-c'."
+      }
+    },
+    "zones/asia-southeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast2-a'."
+      }
+    },
+    "zones/asia-southeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast2-b'."
+      }
+    },
+    "zones/asia-southeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast2-c'."
+      }
+    },
+    "zones/asia-southeast3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast3-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast3-a'."
+      }
+    },
+    "zones/asia-southeast3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast3-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast3-b'."
+      }
+    },
+    "zones/asia-southeast3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast3-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/asia-southeast3-c'."
+      }
+    },
+    "zones/australia-southeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/australia-southeast1-a'."
+      }
+    },
+    "zones/australia-southeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/australia-southeast1-b'."
+      }
+    },
+    "zones/australia-southeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/australia-southeast1-c'."
+      }
+    },
+    "zones/australia-southeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/australia-southeast2-a'."
+      }
+    },
+    "zones/australia-southeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/australia-southeast2-b'."
+      }
+    },
+    "zones/australia-southeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/australia-southeast2-c'."
+      }
+    },
+    "zones/europe-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-central2-a'."
+      }
+    },
+    "zones/europe-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-central2-b'."
+      }
+    },
+    "zones/europe-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-central2-c'."
+      }
+    },
+    "zones/europe-north1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-north1-a'."
+      }
+    },
+    "zones/europe-north1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-north1-b'."
+      }
+    },
+    "zones/europe-north1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-north1-c'."
+      }
+    },
+    "zones/europe-north2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-north2-a'."
+      }
+    },
+    "zones/europe-north2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-north2-b'."
+      }
+    },
+    "zones/europe-north2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-north2-c'."
+      }
+    },
+    "zones/europe-southwest1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-southwest1-a'."
+      }
+    },
+    "zones/europe-southwest1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-southwest1-b'."
+      }
+    },
+    "zones/europe-southwest1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-southwest1-c'."
+      }
+    },
+    "zones/europe-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west1-b'."
+      }
+    },
+    "zones/europe-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west1-c'."
+      }
+    },
+    "zones/europe-west1-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-d"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west1-d'."
+      }
+    },
+    "zones/europe-west10-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west10-a'."
+      }
+    },
+    "zones/europe-west10-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west10-b'."
+      }
+    },
+    "zones/europe-west10-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west10-c'."
+      }
+    },
+    "zones/europe-west12-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west12-a'."
+      }
+    },
+    "zones/europe-west12-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west12-b'."
+      }
+    },
+    "zones/europe-west12-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west12-c'."
+      }
+    },
+    "zones/europe-west15-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west15-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west15-a'."
+      }
+    },
+    "zones/europe-west15-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west15-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west15-b'."
+      }
+    },
+    "zones/europe-west15-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west15-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west15-c'."
+      }
+    },
+    "zones/europe-west2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west2-a'."
+      }
+    },
+    "zones/europe-west2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west2-b'."
+      }
+    },
+    "zones/europe-west2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west2-c'."
+      }
+    },
+    "zones/europe-west3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west3-a'."
+      }
+    },
+    "zones/europe-west3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west3-b'."
+      }
+    },
+    "zones/europe-west3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west3-c'."
+      }
+    },
+    "zones/europe-west4-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west4-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west4-a'."
+      }
+    },
+    "zones/europe-west4-ai1a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west4-ai1a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west4-ai1a'."
+      }
+    },
+    "zones/europe-west4-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west4-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west4-b'."
+      }
+    },
+    "zones/europe-west4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west4-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west4-c'."
+      }
+    },
+    "zones/europe-west6-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west6-a'."
+      }
+    },
+    "zones/europe-west6-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west6-b'."
+      }
+    },
+    "zones/europe-west6-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west6-c'."
+      }
+    },
+    "zones/europe-west8-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west8-a'."
+      }
+    },
+    "zones/europe-west8-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west8-b'."
+      }
+    },
+    "zones/europe-west8-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west8-c'."
+      }
+    },
+    "zones/europe-west9-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west9-a'."
+      }
+    },
+    "zones/europe-west9-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west9-b'."
+      }
+    },
+    "zones/europe-west9-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/europe-west9-c'."
+      }
+    },
+    "zones/me-central1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-central1-a'."
+      }
+    },
+    "zones/me-central1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-central1-b'."
+      }
+    },
+    "zones/me-central1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-central1-c'."
+      }
+    },
+    "zones/me-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-central2-a'."
+      }
+    },
+    "zones/me-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-central2-b'."
+      }
+    },
+    "zones/me-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-central2-c'."
+      }
+    },
+    "zones/me-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-west1-a'."
+      }
+    },
+    "zones/me-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-west1-b'."
+      }
+    },
+    "zones/me-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/me-west1-c'."
+      }
+    },
+    "zones/northamerica-northeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-northeast1-a'."
+      }
+    },
+    "zones/northamerica-northeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-northeast1-b'."
+      }
+    },
+    "zones/northamerica-northeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-northeast1-c'."
+      }
+    },
+    "zones/northamerica-northeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-northeast2-a'."
+      }
+    },
+    "zones/northamerica-northeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-northeast2-b'."
+      }
+    },
+    "zones/northamerica-northeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-northeast2-c'."
+      }
+    },
+    "zones/northamerica-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-south1-a'."
+      }
+    },
+    "zones/northamerica-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-south1-b'."
+      }
+    },
+    "zones/northamerica-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/northamerica-south1-c'."
+      }
+    },
+    "zones/southamerica-east1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/southamerica-east1-a'."
+      }
+    },
+    "zones/southamerica-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/southamerica-east1-b'."
+      }
+    },
+    "zones/southamerica-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/southamerica-east1-c'."
+      }
+    },
+    "zones/southamerica-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/southamerica-west1-a'."
+      }
+    },
+    "zones/southamerica-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/southamerica-west1-b'."
+      }
+    },
+    "zones/southamerica-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/southamerica-west1-c'."
+      }
+    },
+    "zones/us-central1-a": {
+      "instanceGroups": [
+        {
+          "creationTimestamp": "2025-07-17T04:25:11.861-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-nap-1kaohsqz-081d4fc6-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1356321508021330808",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-nap-1kaohsqz-081d4fc6-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-1-nap-1kaohsqz-081d4fc6-grp",
+          "size": 0,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:50.802-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-1-37c0824a-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7742742344492781597",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-1-37c0824a-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-1-pool-1-37c0824a-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:05:49.361-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-2-50eaba98-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4066096162675757506",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-2-50eaba98-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-1-pool-2-50eaba98-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:50.826-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-3-c89775cd-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3810355483246465053",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-3-c89775cd-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-1-pool-3-c89775cd-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:50.742-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-4-bcb9c51a-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6013654911317577757",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-4-bcb9c51a-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-1-pool-4-bcb9c51a-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:05:20.865-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-5-971d68dc-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5221681994410103295",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-5-971d68dc-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-1-pool-5-971d68dc-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:59.828-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-6-2603aae3-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2797382425668096020",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-6-2603aae3-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-1-pool-6-2603aae3-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:28.437-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-1-e1e2556d-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8394229711530983271",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-1-e1e2556d-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-2-pool-1-e1e2556d-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:34.541-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-2-f6c8b389-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5039981036425281377",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-2-f6c8b389-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-2-pool-2-f6c8b389-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:34.734-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-3-80596bf3-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5168079041618870113",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-3-80596bf3-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-2-pool-3-80596bf3-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:26:00.840-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-4-1879048f-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5979161586581208903",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-4-1879048f-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-2-pool-4-1879048f-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:34.672-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-5-8b321ca1-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3923722064146825057",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-5-8b321ca1-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-2-pool-5-8b321ca1-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:36.067-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-6-0ce2feb5-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7392676198898564991",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-6-0ce2feb5-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-2-pool-6-0ce2feb5-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:33:28.564-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-nap-1mhpogm7-46d646b8-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6993901172798353303",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-nap-1mhpogm7-46d646b8-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-3-nap-1mhpogm7-46d646b8-grp",
+          "size": 1,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:51.419-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-1-46ffc5cc-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3021713730088301612",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-1-46ffc5cc-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-3-pool-1-46ffc5cc-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:05:15.328-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-2-6c0facd5-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1707341342513132596",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-2-6c0facd5-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-3-pool-2-6c0facd5-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:46.659-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-3-31a5e23c-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "878645463087412305",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-3-31a5e23c-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-3-pool-3-31a5e23c-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:40.439-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-4-25b24610-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4417563395320280151",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-4-25b24610-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-3-pool-4-25b24610-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:53.230-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-5-c6926ac4-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7062189095515419690",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-5-c6926ac4-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-3-pool-5-c6926ac4-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:47.052-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-6-436e14ac-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4475318580758803536",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-6-436e14ac-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-autopilot-cluster-3-pool-6-436e14ac-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:59.255-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-1-0e128b1a-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3926277097241724244",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-1-0e128b1a-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-aaaacluster1-pool-1-0e128b1a-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:55.840-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-2-25aca0fb-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7835207922313872728",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-2-25aca0fb-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-aaaacluster1-pool-2-25aca0fb-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:59.360-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-3-c262b0a4-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6148813043881493844",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-3-c262b0a4-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-aaaacluster1-pool-3-c262b0a4-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:14.265-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-4-2a902b15-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1809410243870344485",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-4-2a902b15-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-aaaacluster1-pool-4-2a902b15-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:56.421-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-5-64ac3ebc-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2154256032809370967",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-5-64ac3ebc-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-aaaacluster1-pool-5-64ac3ebc-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:58.040-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-6-ee5c4fae-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4823476644181722453",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-6-ee5c4fae-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gk3-aaaacluster1-pool-6-ee5c4fae-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:09:48.300-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-2-default-pool-cb3f8e62-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5054949310974699731",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-2-default-pool-cb3f8e62-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gke-cluster-2-default-pool-cb3f8e62-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:09:54.386-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-2-pool-1-5f04bf1a-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5913764047995578541",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-2-pool-1-5f04bf1a-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a/instanceGroups/gke-cluster-2-pool-1-5f04bf1a-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a"
+        }
+      ]
+    },
+    "zones/us-central1-ai1a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-ai1a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-central1-ai1a'."
+      }
+    },
+    "zones/us-central1-b": {
+      "instanceGroups": [
+        {
+          "creationTimestamp": "2025-07-17T04:25:06.736-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-nap-1kaohsqz-f6643bb7-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5278946853496644477",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-nap-1kaohsqz-f6643bb7-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-1-nap-1kaohsqz-f6643bb7-grp",
+          "size": 1,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:51.952-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-1-73e1882c-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4571641047802581020",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-1-73e1882c-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-1-pool-1-73e1882c-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:52.057-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-2-3572667b-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6854567885346312219",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-2-3572667b-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-1-pool-2-3572667b-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:59.623-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-3-88d800d1-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4361802092614914068",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-3-88d800d1-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-1-pool-3-88d800d1-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:05:39.336-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-4-d551a1d2-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1708271705444454860",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-4-d551a1d2-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-1-pool-4-d551a1d2-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:05:24.346-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-5-04583bbb-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "195694312394985979",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-5-04583bbb-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-1-pool-5-04583bbb-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:58.538-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-6-55ced0d8-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "243076121021517845",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-6-55ced0d8-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-1-pool-6-55ced0d8-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:33.454-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-1-e4972383-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7627917149747904354",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-1-e4972383-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-2-pool-1-e4972383-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:53.343-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-2-9b4daaed-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4179432833423867726",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-2-9b4daaed-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-2-pool-2-9b4daaed-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:50.854-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-3-2ec29c03-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4463581066499030897",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-3-2ec29c03-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-2-pool-3-2ec29c03-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:27.942-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-4-c5122349-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2990644748417859432",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-4-c5122349-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-2-pool-4-c5122349-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:26:18.853-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-5-3f718037-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6730637733596069717",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-5-3f718037-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-2-pool-5-3f718037-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:29.722-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-6-1a633867-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7067095618909732710",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-6-1a633867-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-2-pool-6-1a633867-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:33:38.936-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-nap-1mhpogm7-7d984eff-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2493015530967232365",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-nap-1mhpogm7-7d984eff-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-3-nap-1mhpogm7-7d984eff-grp",
+          "size": 1,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:38.026-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-1-585dbac6-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "387896761770144857",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-1-585dbac6-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-3-pool-1-585dbac6-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:46.561-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-2-dd4a77e3-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8343686227154007121",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-2-dd4a77e3-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-3-pool-2-dd4a77e3-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:05:16.467-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-3-a0b6e786-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5245260703439615027",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-3-a0b6e786-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-3-pool-3-a0b6e786-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:46.450-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-4-4262ad4b-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1689139125083796561",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-4-4262ad4b-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-3-pool-4-4262ad4b-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:46.556-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-5-41b1a04e-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6053067730248365137",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-5-41b1a04e-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-3-pool-5-41b1a04e-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:05:32.843-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-6-48cc22f3-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "9055066492228695043",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-6-48cc22f3-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-autopilot-cluster-3-pool-6-48cc22f3-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:49.948-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-default-pool-a2c982f7-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7335341735571637598",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-default-pool-a2c982f7-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-aaaacluster1-default-pool-a2c982f7-grp",
+          "size": 0,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:12.547-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-1-ac2dce0e-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "827835832472192295",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-1-ac2dce0e-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-aaaacluster1-pool-1-ac2dce0e-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:13.937-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-2-a1b99e83-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8142823740730262822",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-2-a1b99e83-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-aaaacluster1-pool-2-a1b99e83-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:15.506-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-3-f1ae98ad-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2521296438912632100",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-3-f1ae98ad-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-aaaacluster1-pool-3-f1ae98ad-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:06.348-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-4-f2915921-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5131997283358360877",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-4-f2915921-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-aaaacluster1-pool-4-f2915921-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:05.846-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-5-15549411-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1963206103547790638",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-5-15549411-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-aaaacluster1-pool-5-15549411-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:54.041-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-6-c2dff664-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2173766948248634713",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-6-c2dff664-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gk3-aaaacluster1-pool-6-c2dff664-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:04:16.942-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-1-default-pool-ca2b3ddb-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4495558296303872543",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-1-default-pool-ca2b3ddb-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gke-cluster-1-default-pool-ca2b3ddb-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:09:49.097-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-2-default-pool-b6bd2d32-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7217055424242034898",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-2-default-pool-b6bd2d32-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gke-cluster-2-default-pool-b6bd2d32-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:10:02.002-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-2-pool-1-39c0e047-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4553884536299104422",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-2-pool-1-39c0e047-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/gke-cluster-2-pool-1-39c0e047-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        },
+        {
+          "creationTimestamp": "2025-06-20T04:12:06.048-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'lb-backend-example'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "l9ccw0jwP90=",
+          "id": "3971841705207463145",
+          "kind": "compute#instanceGroup",
+          "name": "lb-backend-example",
+          "namedPorts": [
+            {
+              "name": "http",
+              "port": 80
+            }
+          ],
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b/instanceGroups/lb-backend-example",
+          "size": 2,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b"
+        }
+      ]
+    },
+    "zones/us-central1-c": {
+      "instanceGroups": [
+        {
+          "creationTimestamp": "2025-07-13T06:04:52.832-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-default-pool-bd53a3f8-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8649916381747089435",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-default-pool-bd53a3f8-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-default-pool-bd53a3f8-grp",
+          "size": 0,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T04:25:12.653-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-nap-1kaohsqz-c3b88c58-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1931285670380528503",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-nap-1kaohsqz-c3b88c58-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-nap-1kaohsqz-c3b88c58-grp",
+          "size": 1,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:53.742-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-1-507b9c5f-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2727390530510917658",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-1-507b9c5f-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-pool-1-507b9c5f-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:58.557-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-2-e21fccbf-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "459085904831451157",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-2-e21fccbf-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-pool-2-e21fccbf-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:50.572-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-3-18b7ead6-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6610751710167961629",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-3-18b7ead6-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-pool-3-18b7ead6-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:59.644-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-4-81073c57-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6536866397092188180",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-4-81073c57-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-pool-4-81073c57-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:50.945-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-5-71cdbfa5-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3229596117219807261",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-5-71cdbfa5-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-pool-5-71cdbfa5-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:52.056-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-6-b31860d6-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7050026375198937115",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-6-b31860d6-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-1-pool-6-b31860d6-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:39.329-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-default-pool-ac4bb45e-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2848954301308829564",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-default-pool-ac4bb45e-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-2-default-pool-ac4bb45e-grp",
+          "size": 0,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:24.946-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-1-0727fd5e-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3589368906081730411",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-1-0727fd5e-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-2-pool-1-0727fd5e-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:48.527-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-2-62489654-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7089174679978868595",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-2-62489654-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-2-pool-2-62489654-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:30.036-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-3-85f72eb8-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3618852370510085989",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-3-85f72eb8-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-2-pool-3-85f72eb8-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:35.737-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-4-552af671-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1090613240290180960",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-4-552af671-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-2-pool-4-552af671-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:28.071-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-5-26db69fa-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7480172284810198887",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-5-26db69fa-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-2-pool-5-26db69fa-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:25.723-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-6-4f6a0bd5-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5304757996332875626",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-6-4f6a0bd5-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-2-pool-6-4f6a0bd5-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:33:37.430-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-nap-1mhpogm7-83657f73-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1892241883629186926",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-nap-1mhpogm7-83657f73-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-3-nap-1mhpogm7-83657f73-grp",
+          "size": 1,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:51.709-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-1-e79cc3bc-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1358187881764844588",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-1-e79cc3bc-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-3-pool-1-e79cc3bc-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:05:25.941-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-2-3497976e-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6640897514387371018",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-2-3497976e-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-3-pool-2-3497976e-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:05:03.538-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-3-1ff0d5d4-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7066478208770995232",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-3-1ff0d5d4-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-3-pool-3-1ff0d5d4-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:38.650-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-4-bbd3581d-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3949660793281541209",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-4-bbd3581d-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-3-pool-4-bbd3581d-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:39.336-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-5-ec3c5b0f-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "147957142468785240",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-5-ec3c5b0f-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-3-pool-5-ec3c5b0f-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:54.935-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-6-2b02b73f-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8683402158694298665",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-6-2b02b73f-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-autopilot-cluster-3-pool-6-2b02b73f-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:57.950-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-1-be971ad8-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7123891733856273750",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-1-be971ad8-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-aaaacluster1-pool-1-be971ad8-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:05.438-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-2-2a0d0a94-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "767132319488689454",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-2-2a0d0a94-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-aaaacluster1-pool-2-2a0d0a94-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:53.042-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-3-e924475e-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6279193407581078874",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-3-e924475e-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-aaaacluster1-pool-3-e924475e-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:53.046-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-4-5727038b-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4895713196621972826",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-4-5727038b-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-aaaacluster1-pool-4-5727038b-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:04.058-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-5-b8989388-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7633675150408828207",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-5-b8989388-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-aaaacluster1-pool-5-b8989388-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:52.127-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-6-ea6e5bf7-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5983136419900048731",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-6-ea6e5bf7-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gk3-aaaacluster1-pool-6-ea6e5bf7-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:04:08.336-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-1-default-pool-408094ef-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1043729441701800455",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-1-default-pool-408094ef-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c/instanceGroups/gke-cluster-1-default-pool-408094ef-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c"
+        }
+      ]
+    },
+    "zones/us-central1-f": {
+      "instanceGroups": [
+        {
+          "creationTimestamp": "2025-07-17T04:25:04.451-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-nap-1kaohsqz-c1feb566-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1460956201366152063",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-nap-1kaohsqz-c1feb566-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-1-nap-1kaohsqz-c1feb566-grp",
+          "size": 1,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:53.941-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-1-efde56fe-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1462415661318672410",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-1-efde56fe-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-1-pool-1-efde56fe-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:51.924-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-2-54423445-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2408187410020962332",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-2-54423445-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-1-pool-2-54423445-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:54.142-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-3-d9b7a586-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6107599839084548121",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-3-d9b7a586-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-1-pool-3-d9b7a586-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:51.971-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-4-f186cc8d-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6902835801560584220",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-4-f186cc8d-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-1-pool-4-f186cc8d-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:58.143-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-5-16aedac2-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2813005523826118677",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-5-16aedac2-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-1-pool-5-16aedac2-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-13T06:04:51.987-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-1-pool-6-214aa10d-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1605716673919062044",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-1-pool-6-214aa10d-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-1-pool-6-214aa10d-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:33.128-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-1-4fa88f36-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "3009926248179007330",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-1-4fa88f36-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-2-pool-1-4fa88f36-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:25.736-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-2-23792ef8-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "560779950032256874",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-2-23792ef8-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-2-pool-2-23792ef8-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:29.029-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-3-fbeef5af-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8353382751479889766",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-3-fbeef5af-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-2-pool-3-fbeef5af-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:42.619-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-4-2fa79dd7-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2761489963795447673",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-4-2fa79dd7-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-2-pool-4-2fa79dd7-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:34.150-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-5-1e1a7080-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8013906277251252065",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-5-1e1a7080-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-2-pool-5-1e1a7080-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T02:25:30.624-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-2-pool-6-7e48399e-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7517701240891211621",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-2-pool-6-7e48399e-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-2-pool-6-7e48399e-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:46.255-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-default-pool-6996186b-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "2750372917691118673",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-default-pool-6996186b-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-default-pool-6996186b-grp",
+          "size": 0,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:33:32.125-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-nap-1mhpogm7-0846b80c-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8685240335977508755",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-nap-1mhpogm7-0846b80c-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-nap-1mhpogm7-0846b80c-grp",
+          "size": 0,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:37.622-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-1-119cd9b4-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1670318917695140954",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-1-119cd9b4-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-pool-1-119cd9b4-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:40.557-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-2-77ebcda4-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1280151366833370199",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-2-77ebcda4-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-pool-2-77ebcda4-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:05:02.746-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-3-7c9cd870-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4699260275811251233",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-3-7c9cd870-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-pool-3-7c9cd870-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:45.446-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-4-fe8b9ceb-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4876735462717617234",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-4-fe8b9ceb-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-pool-4-fe8b9ceb-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:52.839-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-5-674e8362-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8076761096403645483",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-5-674e8362-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-pool-5-674e8362-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-17T03:04:40.623-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-autopilot-cluster-3-pool-6-4f1e3fac-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "6657360841292477527",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-autopilot-cluster-3-pool-6-4f1e3fac-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-autopilot-cluster-3-pool-6-4f1e3fac-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:59.532-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-1-71b48a2c-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7729861179225949524",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-1-71b48a2c-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-aaaacluster1-pool-1-71b48a2c-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:53.147-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-2-096a0fb6-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "604859534398735706",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-2-096a0fb6-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-aaaacluster1-pool-2-096a0fb6-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:56:52.031-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-3-3c9cf62d-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1483603641227560283",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-3-3c9cf62d-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-aaaacluster1-pool-3-3c9cf62d-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:16.542-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-4-4fea62a1-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "1148169671822296355",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-4-4fea62a1-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-aaaacluster1-pool-4-4fea62a1-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:06.828-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-5-5f65f226-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "5900501094506186029",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-5-5f65f226-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-aaaacluster1-pool-5-5f65f226-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-07-14T23:57:05.446-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gk3-aaaacluster1-pool-6-0c789878-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "8753485781468202286",
+          "kind": "compute#instanceGroup",
+          "name": "gk3-aaaacluster1-pool-6-0c789878-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gk3-aaaacluster1-pool-6-0c789878-grp",
+          "size": 0,
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:04:10.067-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-1-default-pool-e62e7066-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4524582581483645445",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-1-default-pool-e62e7066-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gke-cluster-1-default-pool-e62e7066-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:09:54.246-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-2-default-pool-e2b3f08a-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "4516746241853401261",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-2-default-pool-e2b3f08a-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gke-cluster-2-default-pool-e2b3f08a-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        },
+        {
+          "creationTimestamp": "2025-10-13T08:09:45.338-07:00",
+          "description": "This instance group is controlled by Instance Group Manager 'gke-cluster-2-pool-1-c76360c2-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+          "fingerprint": "42WmSpB8rSM=",
+          "id": "7828613420927723734",
+          "kind": "compute#instanceGroup",
+          "name": "gke-cluster-2-pool-1-c76360c2-grp",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f/instanceGroups/gke-cluster-2-pool-1-c76360c2-grp",
+          "size": 3,
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1/subnetworks/default",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
+        }
+      ]
+    },
+    "zones/us-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-central2-a'."
+      }
+    },
+    "zones/us-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-central2-b'."
+      }
+    },
+    "zones/us-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-central2-c'."
+      }
+    },
+    "zones/us-central2-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-d"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-central2-d'."
+      }
+    },
+    "zones/us-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east1-b'."
+      }
+    },
+    "zones/us-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east1-c'."
+      }
+    },
+    "zones/us-east1-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-d"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east1-d'."
+      }
+    },
+    "zones/us-east4-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east4-a'."
+      }
+    },
+    "zones/us-east4-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east4-b'."
+      }
+    },
+    "zones/us-east4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east4-c'."
+      }
+    },
+    "zones/us-east5-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east5-a'."
+      }
+    },
+    "zones/us-east5-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east5-b'."
+      }
+    },
+    "zones/us-east5-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east5-c'."
+      }
+    },
+    "zones/us-east7-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east7-a'."
+      }
+    },
+    "zones/us-east7-ai1b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-ai1b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east7-ai1b'."
+      }
+    },
+    "zones/us-east7-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east7-b'."
+      }
+    },
+    "zones/us-east7-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-east7-c'."
+      }
+    },
+    "zones/us-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-south1-a'."
+      }
+    },
+    "zones/us-south1-ai1b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-ai1b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-south1-ai1b'."
+      }
+    },
+    "zones/us-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-south1-b'."
+      }
+    },
+    "zones/us-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-south1-c'."
+      }
+    },
+    "zones/us-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west1-a'."
+      }
+    },
+    "zones/us-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west1-b'."
+      }
+    },
+    "zones/us-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west1-c'."
+      }
+    },
+    "zones/us-west2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west2-a'."
+      }
+    },
+    "zones/us-west2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west2-b'."
+      }
+    },
+    "zones/us-west2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west2-c'."
+      }
+    },
+    "zones/us-west3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west3-a'."
+      }
+    },
+    "zones/us-west3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west3-b'."
+      }
+    },
+    "zones/us-west3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west3-c'."
+      }
+    },
+    "zones/us-west4-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west4-a'."
+      }
+    },
+    "zones/us-west4-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west4-b'."
+      }
+    },
+    "zones/us-west4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west4-c'."
+      }
+    },
+    "zones/us-west8-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-a"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west8-a'."
+      }
+    },
+    "zones/us-west8-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-b"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west8-b'."
+      }
+    },
+    "zones/us-west8-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-c"
+          }
+        ],
+        "message": "No results for the scope 'zones/us-west8-c'."
+      }
+    }
+  },
+  "kind": "compute#instanceGroupAggregatedList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/aggregated/instanceGroups"
+}

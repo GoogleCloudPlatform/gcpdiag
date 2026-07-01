@@ -255,13 +255,13 @@ def verify_access(project_id: str):
       )
       raise utils.GcpApiError(response=error_msg, service=service, reason='SERVICE_DISABLED')
     if not is_enabled(project_id, 'logging'):
-      service = f'logging.{config.get("universe_domain")}'
-      warning_msg = (
+      logging.warning(
         'Cloud Logging API is not enabled (related rules will be skipped).'
-        ' To enable, execute:\n'
-        f'gcloud services enable logging.{config.get("universe_domain")} --project={project_id}\n'
+        ' To enable, execute:\ngcloud services enable'
+        ' logging.%s --project=%s',
+        config.get('universe_domain'),
+        project_id,
       )
-      raise utils.GcpApiError(response=warning_msg, service=service, reason='SERVICE_DISABLED')
   except utils.GcpApiError as err:
     if 'SERVICE_DISABLED' == err.reason:
       if f'serviceusage.{config.get("universe_domain")}' == err.service:
