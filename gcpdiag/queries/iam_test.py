@@ -15,19 +15,24 @@
 # Lint as: python3
 """Test code in iam.py."""
 
+import tempfile
 from unittest import mock
 
-import diskcache
 import pytest
 
-from gcpdiag import models
+from gcpdiag import caching, models
 from gcpdiag.queries import apis_stub, iam
 
 
 def get_cache_stub():
   """Use a temporary directory instead of the user cache for testing.
   This is used to avoid using the cached IAM roles from the disk cache."""
-  return diskcache.Cache()
+  temp_dir = tempfile.TemporaryDirectory()
+  cache = caching.SQLiteCache(temp_dir.name)
+  # Attach the context manager to the cache object to keep it alive
+  # and ensure cleanup when the cache is garbage collected.
+  cache._temp_dir = temp_dir
+  return cache
 
 
 TEST_PROJECT_ID = 'gcpdiag-gke1-aaaa'

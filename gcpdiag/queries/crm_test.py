@@ -13,10 +13,10 @@
 # limitations under the License.
 """Test code in crm.py."""
 
+import tempfile
 from unittest import mock
 
-import diskcache
-
+from gcpdiag import caching
 from gcpdiag.queries import apis_stub, crm
 
 DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
@@ -27,7 +27,12 @@ DUMMY_PROJECT_PARENT = 'folders/422810093603'
 
 def get_cache_stub():
   """Use a temporary directory instead of the user cache for testing."""
-  return diskcache.Cache()
+  temp_dir = tempfile.TemporaryDirectory()
+  cache = caching.SQLiteCache(temp_dir.name)
+  # Attach the context manager to the cache object to keep it alive
+  # and ensure cleanup when the cache is garbage collected.
+  cache._temp_dir = temp_dir
+  return cache
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
