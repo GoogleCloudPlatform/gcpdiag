@@ -309,6 +309,22 @@ class Cluster(models.Resource):
   def enabled_monitoring_components(self) -> List[str]:
     return self._resource_data['monitoringConfig']['componentConfig']['enableComponents']
 
+  def has_control_plane_logging_enabled(self) -> bool:
+    if not self.has_logging_enabled():
+      return False
+    components = get_path(
+      self._resource_data, ('loggingConfig', 'componentConfig', 'enableComponents'), default=[]
+    )
+    return all(c in components for c in ['API_SERVER', 'SCHEDULER', 'CONTROLLER_MANAGER'])
+
+  def has_control_plane_monitoring_enabled(self) -> bool:
+    if not self.has_monitoring_enabled():
+      return False
+    components = get_path(
+      self._resource_data, ('monitoringConfig', 'componentConfig', 'enableComponents'), default=[]
+    )
+    return all(c in components for c in ['API_SERVER', 'SCHEDULER', 'CONTROLLER_MANAGER'])
+
   def has_authenticator_group_enabled(self) -> bool:
     return len(self._resource_data.get('authenticatorGroupsConfig', {})) > 0
 

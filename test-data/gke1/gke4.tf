@@ -17,6 +17,23 @@ resource "google_container_cluster" "gke4" {
   workload_identity_config {
     workload_pool = "${google_project.project.project_id}.svc.id.goog"
   }
+  logging_config {
+    enable_components = [
+      "SYSTEM_COMPONENTS",
+      "WORKLOADS",
+      "APISERVER",
+      "SCHEDULER",
+      "CONTROLLER_MANAGER"
+    ]
+  }
+  monitoring_config {
+    enable_components = [
+      "SYSTEM_COMPONENTS",
+      "APISERVER",
+      "SCHEDULER",
+      "CONTROLLER_MANAGER"
+    ]
+  }
 }
 
 # configure cloud nat

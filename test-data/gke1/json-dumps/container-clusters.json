@@ -1004,7 +1004,10 @@
         "componentConfig": {
           "enableComponents": [
             "SYSTEM_COMPONENTS",
-            "WORKLOADS"
+            "WORKLOADS",
+            "API_SERVER",
+            "SCHEDULER",
+            "CONTROLLER_MANAGER"
           ]
         }
       },
@@ -1019,7 +1022,10 @@
       "monitoringConfig": {
         "componentConfig": {
           "enableComponents": [
-            "SYSTEM_COMPONENTS"
+            "SYSTEM_COMPONENTS",
+            "API_SERVER",
+            "SCHEDULER",
+            "CONTROLLER_MANAGER"
           ]
         }
       },
