@@ -35,6 +35,10 @@ class Instance(models.Resource):
     return self._resource_data['name']
 
   @property
+  def master_instance_name(self) -> str:
+    return self._resource_data.get('masterInstanceName', '')
+
+  @property
   def state(self) -> str:
     return self._resource_data['state']
 
@@ -87,6 +91,18 @@ class Instance(models.Resource):
   @property
   def is_automated_backup_enabled(self) -> bool:
     return get_path(self._resource_data, ('settings', 'backupConfiguration', 'enabled'))
+
+  @property
+  def is_pitr_enabled(self) -> bool:
+    return get_path(
+      self._resource_data, ('settings', 'backupConfiguration', 'pointInTimeRecoveryEnabled'), False
+    )
+
+  @property
+  def is_binary_log_enabled(self) -> bool:
+    return get_path(
+      self._resource_data, ('settings', 'backupConfiguration', 'binaryLogEnabled'), False
+    )
 
   @property
   def is_suspended_state(self) -> bool:

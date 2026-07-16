@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,14 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Cloud SQL instance has Point-in-Time Recovery (PITR) enabled
 
-# Lint as: python3
-"""Cloud SQL is configured with automated backup
-
-Backups help you restore lost data to your Cloud SQL instance. Additionally,
-if an instance is having a problem, you can restore it to a previous state by
-using the backup to overwrite it. Enable automated backups for any instance that
-contains necessary data. Backups protect your data from loss or damage.
+Point-in-Time Recovery (PITR) allows you to restore a Cloud SQL instance to a
+specific point in time, providing protection against accidental data loss or
+corruption. This rule checks if PITR is enabled.
 """
 
 from gcpdiag import lint, models
@@ -54,21 +51,40 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       master_instance = instance_map.get(master_name)
 
       if master_instance:
-        # Check if master has automated backup enabled
-        if master_instance.is_automated_backup_enabled:
-          report.add_ok(instance, f'Replica of {master_name} which has automated backup enabled')
-        else:
-          report.add_failed(
-            instance, f'Replica of {master_name} which lacks automated backup enabled'
+        # Check if master has PITR enabled
+        master_pitr_enabled = False
+        if 'MYSQL' in master_instance.version:
+          # MySQL requires both backups and bin log
+          master_pitr_enabled = (
+            master_instance.is_automated_backup_enabled and master_instance.is_binary_log_enabled
           )
+        else:
+          # Postgres/SQLServer require pointInTimeRecoveryEnabled
+          master_pitr_enabled = master_instance.is_pitr_enabled
+
+        if master_pitr_enabled:
+          report.add_ok(instance, f'Replica of {master_name} which has PITR enabled')
+        else:
+          report.add_failed(instance, f'Replica of {master_name} which lacks PITR enabled')
       else:
+        # Master not found in the list (could be cross-project or filtered out)
+        # Note: Cross-project replicas will be skipped as we cannot verify the
+        # master status across projects by default in the current context.
         report.add_skipped(
           instance, f'Replica of {master_name} (Master instance not found in current context)'
         )
       continue
 
     # This is a primary instance (or standalone)
-    if not instance.is_automated_backup_enabled:
+    pitr_enabled = False
+    if 'MYSQL' in instance.version:
+      # For MySQL, check both backups and binaryLogEnabled
+      pitr_enabled = instance.is_automated_backup_enabled and instance.is_binary_log_enabled
+    else:
+      # For PostgreSQL and SQL Server, check pointInTimeRecoveryEnabled
+      pitr_enabled = instance.is_pitr_enabled
+
+    if not pitr_enabled:
       report.add_failed(instance)
     else:
       report.add_ok(instance)

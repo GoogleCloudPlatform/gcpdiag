@@ -1,5 +1,10 @@
 *  cloudsql/BP/2023_002: Cloud SQL is configured with automated backup
-   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql1 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql2 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql3 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql4 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql5 [ OK ] Replica of sql3 which has automated backup enabled
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql6 [ OK ] Replica of sql3 which has automated backup enabled
 
    Backups help you restore lost data to your Cloud SQL instance. Additionally,
    if an instance is having a problem, you can restore it to a previous state by

@@ -1,0 +1,16 @@
+*  cloudsql/BP/2026_003: Cloud SQL instance has Point-in-Time Recovery (PITR) enabled
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql1 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql2 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql3 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql4 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql5 [FAIL]
+     Replica of sql3 which lacks PITR enabled
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql6 [FAIL]
+     Replica of sql3 which lacks PITR enabled
+
+   Point-in-Time Recovery (PITR) allows you to restore a Cloud SQL instance to a
+   specific point in time, providing protection against accidental data loss or
+   corruption. This rule checks if PITR is enabled.
+
+   https://gcpdiag.dev/rules/cloudsql/BP/2026_003
+
