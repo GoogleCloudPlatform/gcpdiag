@@ -251,16 +251,16 @@
           "name": "dummy-attachment7",
           "operationalStatus": "OS_ACTIVE",
           "privateInterconnectInfo": {
-            "tag8021q": 1104
+            "tag8021q": 1107
           },
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment7",
           "stackType": "IPV4_ONLY",
           "state": "ACTIVE",
           "type": "DEDICATED",
-          "vlanTag8021q": 1104
+          "vlanTag8021q": 1107
         },
         {
           "adminEnabled": true,
@@ -280,16 +280,16 @@
           "name": "dummy-attachment8",
           "operationalStatus": "OS_ACTIVE",
           "privateInterconnectInfo": {
-            "tag8021q": 1104
+            "tag8021q": 1108
           },
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment8",
           "stackType": "IPV4_ONLY",
           "state": "ACTIVE",
           "type": "DEDICATED",
-          "vlanTag8021q": 1104
+          "vlanTag8021q": 1108
         },
         {
           "adminEnabled": true,
@@ -309,16 +309,16 @@
           "name": "dummy-attachment9",
           "operationalStatus": "OS_ACTIVE",
           "privateInterconnectInfo": {
-            "tag8021q": 1104
+            "tag8021q": 1109
           },
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment9",
           "stackType": "IPV4_ONLY",
           "state": "ACTIVE",
           "type": "DEDICATED",
-          "vlanTag8021q": 1104
+          "vlanTag8021q": 1109
         },
         {
           "adminEnabled": true,
@@ -338,16 +338,16 @@
           "name": "dummy-attachment10",
           "operationalStatus": "OS_ACTIVE",
           "privateInterconnectInfo": {
-            "tag8021q": 1104
+            "tag8021q": 1110
           },
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2",
           "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/routers/dummy-router3",
           "satisfiesPzs": false,
-          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment10",
           "stackType": "IPV4_ONLY",
           "state": "DEFUNCT",
           "type": "DEDICATED",
-          "vlanTag8021q": 1104
+          "vlanTag8021q": 1110
         }
       ]
     }

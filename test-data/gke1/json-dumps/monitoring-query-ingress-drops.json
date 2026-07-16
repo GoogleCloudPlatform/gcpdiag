@@ -1,0 +1,44 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.attachment"
+      },
+      {
+        "key": "resource.region"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_dropped_aggregate",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "dummy-attachment2"
+        },
+        {
+          "stringValue": "us-east4"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 2.0
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        }
+      ]
+    }
+  ]
+}

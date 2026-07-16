@@ -67,9 +67,15 @@ class MonitoringApiStub:
     )
 
   def query(self, name, body):
-    del body
+    query_str = body.get('query', '')
     m = re.match(r'projects/([^/]+)', name)
     project_id = m.group(1)
+    if 'egress_dropped_packets_count' in query_str:
+      return apis_stub.RestCallStub(project_id, 'monitoring-query-egress-drops')
+    if 'ingress_dropped_packets_count' in query_str:
+      return apis_stub.RestCallStub(project_id, 'monitoring-query-ingress-drops')
+    if 'sent_packets_count' in query_str and 'exceeds_mtu' in query_str:
+      return apis_stub.RestCallStub(project_id, 'monitoring-query-vpn-drops')
     return apis_stub.RestCallStub(project_id, 'monitoring-query')
 
   def query_next(self, previous_request, previous_response):

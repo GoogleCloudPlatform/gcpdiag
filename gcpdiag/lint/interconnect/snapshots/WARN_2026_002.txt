@@ -1,0 +1,28 @@
+*  interconnect/WARN/2026_002: Detect potential packet loss due to MTU mismatches in hybrid connectivity.
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment1 [FAIL]
+     Potential MTU issue: Resource is experiencing packet drops: Interconnect egress EXCEEDS_MTU. Verify MTU settings across the entire path (VPC, Attachment/VPN, on-premises) and ensure PMTUD is functional by allowing necessary ICMP messages.
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment2 [FAIL]
+     Potential MTU issue: Resource is experiencing packet drops: Interconnect ingress EXCEEDS_MTU. Verify MTU settings across the entire path (VPC, Attachment/VPN, on-premises) and ensure PMTUD is functional by allowing necessary ICMP messages.
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5 [FAIL]
+     Potential MTU issue: Resource is experiencing packet drops: Interconnect egress EXCEEDS_MTU. Verify MTU settings across the entire path (VPC, Attachment/VPN, on-premises) and ensure PMTUD is functional by allowing necessary ICMP messages.
+   - dummy-vpn-gateway                                                    [FAIL]
+     Potential MTU issue: Resource is experiencing packet drops: VPN egress exceeds_mtu. Verify MTU settings across the entire path (VPC, Attachment/VPN, on-premises) and ensure PMTUD is functional by allowing necessary ICMP messages.
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment3 [ OK ] VLAN Attachment and VPC default MTU match (1460).
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment4 [ OK ] VLAN Attachment and VPC default MTU match (1460).
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5 [FAIL] MTU mismatch: VLAN Attachment MTU is 1450, but VPC default MTU is 1460.
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL] MTU mismatch: VLAN Attachment MTU is 1440, but VPC default MTU is 1460.
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment7 [FAIL] MTU mismatch: VLAN Attachment MTU is 1440, but VPC default MTU is 1460.
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment8 [FAIL] MTU mismatch: VLAN Attachment MTU is 1440, but VPC default MTU is 1460.
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment9 [FAIL] MTU mismatch: VLAN Attachment MTU is 1440, but VPC default MTU is 1460.
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment10 [FAIL] MTU mismatch: VLAN Attachment MTU is 1440, but VPC default MTU is 1460.
+
+   This rule checks for two conditions: 1.  Evidence of packet drops due to
+   exceeding MTU on Cloud Interconnect     attachments or Cloud VPN gateways, by
+   querying Cloud Monitoring metrics. 2.  Mismatched MTU settings between Cloud
+   Interconnect VLAN attachments and     their associated VPC networks.
+   Mismatched MTUs can lead to silent packet drops, especially for UDP traffic
+   or when Path MTU Discovery (PMTUD) is not functioning end-to-end. This often
+   occurs in hybrid setups with asymmetric routing.
+
+   https://gcpdiag.dev/rules/interconnect/WARN/2026_002
+
