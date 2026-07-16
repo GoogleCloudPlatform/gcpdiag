@@ -18,7 +18,8 @@ build:
 	rm -rf dist
 	mkdir dist
 	cd dist && tar -xf ../../../dist/gcpdiag-$(VERSION).tar.gz --strip 1
-	cd dist && gcloud storage cp gs://check-gke-ingress-push/kubectl-check_gke_ingress ./ && chmod +x kubectl-check_gke_ingress
+	# Safety net: ignore download failure to prevent blocking the build
+	cd dist && (gcloud storage cp gs://check-gke-ingress-push/kubectl-check_gke_ingress ./ || echo "WARNING: Failed to download kubectl-check_gke_ingress plugin") && ([ -f kubectl-check_gke_ingress ] && chmod +x kubectl-check_gke_ingress || true)
 	chmod -R a+rX dist
 	docker build --pull -t $(IMAGE):$(VERSION) .
 	rm -rf dist
