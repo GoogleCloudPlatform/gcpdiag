@@ -369,6 +369,7 @@ class DiagnosticTree(metaclass=RunbookRule):
   parameters: Dict[str, Dict]
   steps: List[Step]
   keywords: List[str]
+  tags: List[str]
 
   def __init__(self, uuid=None):
     self.id = f'{self.__module__}.{self.__class__.__name__}'
@@ -378,6 +379,7 @@ class DiagnosticTree(metaclass=RunbookRule):
     self.dt_name = util.runbook_name_parser(self.__class__.__name__)
     self.name = f'{self.product}/{self.dt_name}'
     self.steps = []
+    self.tags = getattr(self, 'tags', [])
 
   @property
   def run_id(self):

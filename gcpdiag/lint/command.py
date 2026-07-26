@@ -160,6 +160,26 @@ def init_args_parser():
   )
 
   parser.add_argument(
+    '--tag',
+    help=(
+      'Include rule tags (e.g.: `slow`, `performance`). '
+      'Multiple tags can be specified (comma separated, '
+      'or with multiple arguments)'
+    ),
+    action='append',
+  )
+
+  parser.add_argument(
+    '--exclude-tag',
+    help=(
+      'Exclude rule tags (e.g.: `slow`, `performance`). '
+      'Multiple tags can be specified (comma separated, '
+      'or with multiple arguments)'
+    ),
+    action='append',
+  )
+
+  parser.add_argument(
     '--include-extended',
     help=(
       'Include extended rules. Additional rules might generate false positives (default: False)'
@@ -274,6 +294,14 @@ def _parse_rule_pattern(
   return None
 
 
+def _parse_tag_pattern(
+  tags: Optional[List[str]],
+) -> Optional[List[str]]:
+  if tags:
+    return [t.lower() for t in _flatten_multi_arg(tags)]
+  return None
+
+
 def _load_repository_rules(repo: lint.LintRuleRepository):
   """Find and load all lint rule modules dynamically"""
   for module in pkgutil.walk_packages(
@@ -326,16 +354,22 @@ def create_and_load_repos(
   include: Optional[List[str]],
   exclude: Optional[List[str]],
   load_extended: bool,
+  include_tags: Optional[List[str]] = None,
+  exclude_tags: Optional[List[str]] = None,
 ) -> lint.LintRuleRepository:
   """Helper function to initialize the repository and load rules."""
   include_patterns = _parse_rule_pattern(include)
   exclude_patterns = _parse_rule_pattern(exclude)
+  parsed_include_tags = _parse_tag_pattern(include_tags)
+  parsed_exclude_tags = _parse_tag_pattern(exclude_tags)
 
   repo = lint.LintRuleRepository(
     load_extended=load_extended,
     run_async=config.get('experimental_enable_async_rules'),
     exclude=exclude_patterns,
     include=include_patterns,
+    include_tags=parsed_include_tags,
+    exclude_tags=parsed_exclude_tags,
   )
   _load_repository_rules(repo)
   return repo
@@ -388,6 +422,8 @@ def run(argv) -> int:
       include=config.get('include'),
       exclude=config.get('exclude'),
       load_extended=config.get('include_extended'),
+      include_tags=config.get('tag'),
+      exclude_tags=config.get('exclude_tag'),
     )
 
     # 5. Set up logging and output for the terminal

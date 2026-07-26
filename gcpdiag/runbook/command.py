@@ -203,6 +203,16 @@ def _init_runbook_args_parser():
   )
 
   parser.add_argument(
+    '--tag',
+    help=(
+      'Include runbooks targeting these tags. '
+      'Multiple tags can be specified (comma separated, '
+      'or with multiple arguments)'
+    ),
+    action='append',
+  )
+
+  parser.add_argument(
     '--report-dir',
     metavar='FILE',
     default=config.get('report_dir'),
@@ -359,6 +369,32 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
     tree = dt_engine.load_tree(runbook_name)
     if callable(tree):
       dt_engine.add_task((tree(), args.parameter))
+  elif args.tag:
+    if args.interface == runbook.constants.CLI:
+      output_.display_header()
+      output_.display_banner()
+    # Flatten the tags
+    target_tags = []
+    for arg in args.tag:
+      target_tags.extend(re.split(r'\s*,\s*', arg))
+    target_tags = [t.lower() for t in target_tags]
+
+    # Find runbooks that have at least one matching tag
+    matched_runbooks = []
+    for _, runbook_class in runbook.RunbookRegistry.items():
+      # Inspect tags class attribute statically
+      tags_attr = getattr(runbook_class, 'tags', [])
+      rb_tags = [t.lower() for t in tags_attr]
+      if any(tag in rb_tags for tag in target_tags):
+        rb = runbook_class()  # type: ignore[operator]
+        matched_runbooks.append(rb)
+
+    if not matched_runbooks:
+      print(f'ERROR: No runbooks found matching tags: {", ".join(target_tags)}', file=sys.stderr)
+      sys.exit(1)
+
+    for rb in sorted(matched_runbooks, key=lambda r: r.name):
+      dt_engine.add_task((rb, args.parameter))
   elif args.bundle_spec:
     for bundle in args.bundle_spec:
       bundle = dt_engine.load_steps(parameter=bundle['parameter'], steps_to_run=bundle['steps'])

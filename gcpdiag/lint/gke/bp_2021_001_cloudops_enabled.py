@@ -21,6 +21,8 @@ ability to effectively and efficiently troubleshoot cluster issues.
 from gcpdiag import lint, models
 from gcpdiag.queries import gke
 
+tags = ['gke', 'cloudops', 'test-tag']
+
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)

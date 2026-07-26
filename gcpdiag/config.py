@@ -117,6 +117,8 @@ _defaults: Dict[str, Any] = {
   'hide_ok': False,
   'include': None,
   'exclude': None,
+  'tag': None,
+  'exclude_tag': None,
   'include_extended': False,
   'verbose': 0,
   'within_days': 3,

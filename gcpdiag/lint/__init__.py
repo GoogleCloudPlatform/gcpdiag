@@ -70,11 +70,16 @@ class LintRule:
   short_desc: str
   long_desc: str
   keywords: List[str]
+  tags: List[str] = dataclasses.field(default_factory=list)
   run_rule_f: Optional[Callable] = None
   async_run_rule_f: Optional[Callable] = None
   prepare_rule_f: Optional[Callable] = None
   prefetch_rule_f: Optional[Callable] = None
   prefetch_rule_future: Optional[concurrent.futures.Future] = None
+
+  def __post_init__(self):
+    if self.tags:
+      self.tags = [t.lower() for t in self.tags]
 
   def __hash__(self):
     return str(self.product + self.rule_class.value + self.rule_id).__hash__()
@@ -385,9 +390,13 @@ class LintRuleRepository:
     modules_gateway: Optional[PythonModulesGateway] = None,
     include: Iterable[LintRulesPattern] = None,
     exclude: Iterable[LintRulesPattern] = None,
+    include_tags: Iterable[str] = None,
+    exclude_tags: Iterable[str] = None,
   ) -> None:
     self._exclude = exclude
     self._include = include
+    self._include_tags = [t.lower() for t in include_tags] if include_tags else None
+    self._exclude_tags = [t.lower() for t in exclude_tags] if exclude_tags else None
     self._loaded_rules = []
     self.load_extended = load_extended
     self.execution_strategy = execution_strategy or pick_default_execution_strategy(run_async)
@@ -402,12 +411,20 @@ class LintRuleRepository:
   def _rules_filtered(self) -> Iterator[LintRule]:
     exclude = self._exclude
     include = self._include
+    include_tags = self._include_tags
+    exclude_tags = self._exclude_tags
     for rule in self._loaded_rules:
       if include:
         if not any(x.match_rule(rule) for x in include):
           continue
       if exclude:
         if any(x.match_rule(rule) for x in exclude):
+          continue
+      if include_tags:
+        if not any(tag in rule.tags for tag in include_tags):
+          continue
+      if exclude_tags:
+        if any(tag in rule.tags for tag in exclude_tags):
           continue
       yield rule
 
@@ -455,6 +472,9 @@ class LintRuleRepository:
     # Get a reference to the keywords list.
     keywords: List = module.get_attr('keywords') or []
 
+    # Get a reference to the tags list.
+    tags: List = module.get_attr('tags') or []
+
     # Get module docstring.
     doc = module.get_module_doc()
     if not doc:
@@ -480,6 +500,7 @@ class LintRuleRepository:
       short_desc=short_desc,
       long_desc=long_desc,
       keywords=keywords,
+      tags=tags,
     )
     return rule
 

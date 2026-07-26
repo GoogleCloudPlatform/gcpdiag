@@ -46,6 +46,8 @@ class ImagePull(runbook.DiagnosticTree):
   - Stackdriver logs
   """
 
+  tags = ['gke', 'image', 'slow', 'common-tag']
+
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
     flags.PROJECT_ID: {

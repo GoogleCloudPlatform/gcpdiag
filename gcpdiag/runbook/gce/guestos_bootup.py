@@ -54,6 +54,8 @@ class GuestosBootup(runbook.DiagnosticTree):
       - Check if there are logs related to successful startup of Google Guest Agent.
   """
 
+  tags = ['gce', 'bootup', 'slow', 'common-tag']
+
   parameters = {
     flags.PROJECT_ID: {
       'type': str,
