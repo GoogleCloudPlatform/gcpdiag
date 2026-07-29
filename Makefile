@@ -2,10 +2,25 @@ VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
 DIST_NAME=gcpdiag-$(VERSION)
 SHELL=/bin/bash
 
-.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code
+.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code setup-git
 
-# Comprehensive environment check.
-check-environment:
+setup-git:
+	@if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then \
+		git config submodule.recurse true; \
+		HOOKS_DIR=$$(git rev-parse --git-path hooks); \
+		for hook in post-rewrite post-merge post-checkout; do \
+			if [ ! -f $$HOOKS_DIR/$$hook ]; then \
+				echo '#!/bin/bash' > $$HOOKS_DIR/$$hook; \
+				echo 'git submodule update --init --recursive' >> $$HOOKS_DIR/$$hook; \
+				chmod +x $$HOOKS_DIR/$$hook; \
+				echo "Installed $$hook hook."; \
+			fi; \
+		done; \
+	fi
+
+
+# Comprehensive environment Check.
+check-environment: setup-git
 	@command -v pipenv >/dev/null 2>&1 || { echo >&2 "ERROR: pipenv is not installed. Please run 'pip install pipenv' and try again."; exit 1; }
 	@if [ -z "$$(pipenv --venv)" ]; then \
 		echo "Pipenv environment not created. Please run 'pipenv install --dev'."; \
