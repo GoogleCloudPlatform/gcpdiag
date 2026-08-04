@@ -1,0 +1,63 @@
+end_time=2026-05-19T15:07:02.016681,name=env2,project_id=gcpdiag-
+composer1-aaaa,start_time=2026-05-17T15:07:02.016586
+
+composer/scheduler-issues: Runbook for diagnosing Airflow Scheduler health issues.
+
+  This runbook investigates common causes for unhealthy Airflow schedulers:
+  - High CPU utilization.
+  - Missing deployments or deleted resources.
+  - Service account issues.
+  - Organization policy constraints.
+  - Liveness probe failures.
+  
+[START]: Validate environment existence and extract GKE metadata. Extracts environment name, GKE cluster name and service account from the Composer environment.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Found environment : env2 and GKE cluster : us-central1-env2-941355a9-gke
+[AUTOMATED STEP]: Check the scheduler health via Monitoring.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Scheduler health is healthy.
+
+[AUTOMATED STEP]: Checks the liveness probe logs for the scheduler.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No Liveness probe failed logs found in Cluster.
+
+[AUTOMATED STEP]: Checks the scheduler CPU utilization.
+[AUTOMATED STEP]: Checks the scheduler exceeded 5,000 runs.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Scheduler exceeded 5,000 runs not found in Cluster Logs.
+
+[AUTOMATED STEP]: Checks the deleted airflow-scheduler deployment.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No deleted airflow-scheduler deployment found in Cluster Logs.
+
+[AUTOMATED STEP]: Checks if the environment service account is disabled or deleted.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Environment service account is not disabled.
+
+[AUTOMATED STEP]: Checks the deleted environment service account.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Environment service account is not deleted.
+
+[AUTOMATED STEP]: Checks the shared VPC org policy constraint.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No Org Policy constraint violated logs found in Cluster.
+
+[END]: Finalize runbook investigations.
+
+

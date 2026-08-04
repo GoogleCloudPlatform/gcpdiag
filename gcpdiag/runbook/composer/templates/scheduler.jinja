@@ -1,0 +1,103 @@
+{% block check_scheduler_health_success_reason %}
+Scheduler health is healthy.
+{% endblock %}
+
+{% block check_scheduler_health_failure_reason %}
+Scheduler health is unhealthy.
+{% endblock %}
+
+{% block check_scheduler_health_failure_remediation %}
+Run the following checks to identify the issue.
+{% endblock %}
+
+{% block check_liveness_probe_success_reason %}
+No Liveness probe failed logs found in Cluster.
+{% endblock %}
+
+{% block check_liveness_probe_failure_reason %}
+Liveness probe logs failed found in Cluster.
+{% endblock %}
+
+{% block check_liveness_probe_failure_remediation %}
+Running the following checks.
+- Check the scheduler CPU utilization.
+- Check the scheduler exceeded runs.
+{% endblock %}
+
+{% block check_scheduler_cpu_utilization_success_reason %}
+Scheduler CPU utilization below the threshold.
+{% endblock %}
+
+{% block check_scheduler_cpu_utilization_failure_reason %}
+Scheduler CPU utilization above the threshold.
+{% endblock %}
+
+{% block check_scheduler_cpu_utilization_failure_remediation %}
+Increase the number of schedulers or the CPUs allocated to the scheduler.
+{% endblock %}
+
+{% block check_scheduler_exceeded_5000_runs_success_reason %}
+Scheduler exceeded 5,000 runs not found in Cluster Logs.
+{% endblock %}
+
+{% block check_scheduler_exceeded_5000_runs_failure_reason %}
+Scheduler exceeded 5,000 runs found in Cluster Logs.
+{% endblock %}
+
+{% block check_scheduler_exceeded_5000_runs_failure_remediation %}
+This is a normal operation in Airflow Scheduler.
+See <https://docs.cloud.google.com/composer/docs/composer-3/troubleshooting-scheduling#min-file-process-interval> for more details.
+{% endblock %}
+
+{% block check_deleted_airflow_scheduler_deployment_success_reason %}
+No deleted airflow-scheduler deployment found in Cluster Logs.
+{% endblock %}
+
+{% block check_deleted_airflow_scheduler_deployment_failure_reason %}
+Deleted airflow-scheduler deployment found in Cluster Logs.
+{% endblock %}
+
+{% block check_deleted_airflow_scheduler_deployment_failure_remediation %}
+Create a new Managed Airflow environment and move DAGs to the new environment or contact Google Cloud Support.
+{% endblock %}
+
+{% block check_disabled_deleted_environment_service_account_success_reason %}
+Environment service account is not disabled.
+{% endblock %}
+
+{% block check_disabled_deleted_environment_service_account_failure_reason %}
+Environment service account is disabled.
+{% endblock %}
+
+{% block check_disabled_deleted_environment_service_account_failure_remediation %}
+If the SA was disabled, re-enable the service account in the
+IAM console. Then add a dummy environment variable to the environment's
+Environment Variables (e.g. "restart=dummy") or Contact Google Cloud Support.
+{% endblock %}
+
+{% block check_deleted_environment_service_account_success_reason %}
+Environment service account is not deleted.
+{% endblock %}
+
+{% block check_deleted_environment_service_account_failure_reason %}
+Environment service account is deleted.
+{% endblock %}
+
+{% block check_deleted_environment_service_account_failure_remediation %}
+If the SA was deleted and deletion occurred within the past 30 days,
+follow the instructions in [link](https://docs.cloud.google.com/iam/docs/service-accounts-delete-undelete#undeleting)
+to undelete the SA.
+{% endblock %}
+
+{% block check_shared_vpc_org_policy_constraint_success_reason %}
+No Org Policy constraint violated logs found in Cluster.
+{% endblock %}
+
+{% block check_shared_vpc_org_policy_constraint_failure_reason %}
+Org Policy constraint violated logs found in Cluster.
+{% endblock %}
+
+{% block check_shared_vpc_org_policy_constraint_failure_remediation %}
+Update Policy: Add the Managed Airflow subnet to the allow list in the
+Organization Policies console.
+{% endblock %}

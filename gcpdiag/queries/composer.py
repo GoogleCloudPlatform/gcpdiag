@@ -37,22 +37,28 @@ class Environment(models.Resource):
     self.version_pattern = re.compile(r'composer-(.*)-airflow-(.*)')
 
   @property
-  def num_schedulers(self) -> int:
+  def worker_cpu(self) -> float:
     return get_path(
-      self._resource_data, ('config', 'workloadsConfig', 'scheduler', 'count'), default=1
+      self._resource_data,
+      ('config', 'workloadsConfig', 'worker', 'cpu'),
+      default=None,
     )
 
   @property
-  def worker_cpu(self) -> float:
-    return get_path(self._resource_data, ('config', 'workloadsConfig', 'worker', 'cpu'))
-
-  @property
   def worker_memory_gb(self) -> float:
-    return get_path(self._resource_data, ('config', 'workloadsConfig', 'worker', 'memoryGb'))
+    return get_path(
+      self._resource_data,
+      ('config', 'workloadsConfig', 'worker', 'memoryGb'),
+      default=None,
+    )
 
   @property
   def worker_max_count(self) -> int:
-    return get_path(self._resource_data, ('config', 'workloadsConfig', 'worker', 'maxCount'))
+    return get_path(
+      self._resource_data,
+      ('config', 'workloadsConfig', 'worker', 'maxCount'),
+      default=None,
+    )
 
   @property
   def worker_concurrency(self) -> float:
@@ -133,6 +139,30 @@ class Environment(models.Resource):
   @property
   def gke_cluster(self) -> str:
     return self._resource_data['config']['gkeCluster']
+
+  @property
+  def num_schedulers(self) -> int:
+    return get_path(
+      self._resource_data,
+      ('config', 'workloadsConfig', 'scheduler', 'count'),
+      default=1,
+    )
+
+  @property
+  def scheduler_cpu(self) -> float:
+    return get_path(
+      self._resource_data,
+      ('config', 'workloadsConfig', 'scheduler', 'cpu'),
+      default=None,
+    )
+
+  @property
+  def scheduler_memory_gb(self) -> float:
+    return get_path(
+      self._resource_data,
+      ('config', 'workloadsConfig', 'scheduler', 'memoryGb'),
+      default=None,
+    )
 
 
 COMPOSER_REGIONS = [
