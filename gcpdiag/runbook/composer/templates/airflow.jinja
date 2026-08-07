@@ -1,0 +1,83 @@
+{% block check_worker_oom_success_reason %}
+No OOMKilled Events found in Cluster Logs.
+{% endblock %}
+
+{% block check_worker_oom_failure_reason %}
+OOMKilled events found in Cluster Logs.
+{% endblock %}
+
+{% block check_worker_oom_failure_remediation %}
+Follow documentation : <https://docs.cloud.google.com/composer/docs/composer-2/troubleshooting-dags#task-fails-pod-eviction>
+{% endblock %}
+
+{% block check_zombie_tasks_success_reason %}
+No Zombie Tasks found in Logs.
+{% endblock %}
+
+{% block check_zombie_tasks_failure_reason %}
+Zombie Tasks found in Logs.
+{% endblock %}
+
+{% block check_zombie_tasks_failure_remediation %}
+Follow documentation : <https://docs.cloud.google.com/composer/docs/composer-2/troubleshooting-dags#sigterm>
+{% endblock %}
+
+{% block check_ephemeral_storage_success_reason %}
+No Ephemeral Storage Exhaustion found in Logs.
+{% endblock %}
+
+{% block check_ephemeral_storage_failure_reason %}
+Ephemeral Storage Exhaustion found in Logs.
+{% endblock %}
+
+{% block check_ephemeral_storage_failure_remediation %}
+Follow documentation : <https://docs.cloud.google.com/composer/docs/composer-2/troubleshooting-dags#task-fails-pod-eviction>
+{% endblock %}
+
+{% block check_gcs_syncd_limit_success_reason %}
+No gcs-syncd container hitting its ephemeral limit found in Logs.
+{% endblock %}
+
+{% block check_gcs_syncd_limit_failure_reason %}
+gcs-syncd container hitting its ephemeral limit found in Logs.
+{% endblock %}
+
+{% block check_gcs_syncd_limit_failure_remediation %}
+Remediation: Please contact Google Cloud Support.
+{% endblock %}
+
+{% block check_liveness_probes_success_reason %}
+No Liveness Probes issue found in airflow-worker Logs.
+{% endblock %}
+
+{% block check_liveness_probes_failure_reason %}
+Liveness Probes found in airflow-worker Logs.
+{% endblock %}
+
+{% block check_liveness_probes_failure_remediation %}
+Follow documentation : <https://docs.cloud.google.com/composer/docs/composer-2/troubleshooting-dags#airflow-worker-load> OR Please contact Google Cloud Support.
+{% endblock %}
+
+{% block check_scheduling_failures_success_reason %}
+No worker pods failing to schedule found in Logs.
+{% endblock %}
+
+{% block check_scheduling_failures_failure_reason %}
+Worker pods failing to schedule found in Logs.
+{% endblock %}
+
+{% block check_scheduling_failures_failure_remediation %}
+Follow documentation : <https://docs.cloud.google.com/docs/quotas/troubleshoot#exceeding_quota_values_during_a_service_rollout> OR Please contact Google Cloud Support.
+{% endblock %}
+
+{% block check_gke_preemption_success_reason %}
+No GKE Preemption found in Logs.
+{% endblock %}
+
+{% block check_gke_preemption_failure_reason %}
+GKE Preemption found in Logs.
+{% endblock %}
+
+{% block check_gke_preemption_failure_remediation %}
+Enable task retries in the DAG OR contact Google Cloud Support.
+{% endblock %}
