@@ -22,7 +22,6 @@ import logging
 import re
 from typing import Dict, Iterable, List, Mapping, Optional, Union
 
-import bs4
 import googleapiclient.errors
 import requests
 
@@ -91,7 +90,8 @@ class NodePool(models.Resource):
     # https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/
     #   locations/europe-west1/clusters/gke2/nodePools/default-pool
     m = re.match(
-      r'https://container.googleapis.com/v1/(.*)', self._resource_data.get('selfLink', '')
+      r'https://container.googleapis.com/v1/(.*)',
+      self._resource_data.get('selfLink', ''),
     )
     if not m:
       raise RuntimeError("can't parse selfLink of nodepool resource")
@@ -130,12 +130,25 @@ class NodePool(models.Resource):
     # Empty ({}) workloadMetadataConfig means that 'Metadata concealment'
     # (predecessor of Workload Identity) is enabled.
     # https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#concealment
-    return get_path(self._resource_data, ('config', 'workloadMetadataConfig'), default=None) == {}
+    return (
+      get_path(
+        self._resource_data,
+        ('config', 'workloadMetadataConfig'),
+        default=None,
+      )
+      == {}
+    )
 
   def has_workload_identity_enabled(self) -> bool:
     # 'Metadata concealment' (workloadMetadataConfig == {}) doesn't protect the
     # default SA's token
-    return bool(get_path(self._resource_data, ('config', 'workloadMetadataConfig'), default=None))
+    return bool(
+      get_path(
+        self._resource_data,
+        ('config', 'workloadMetadataConfig'),
+        default=None,
+      )
+    )
 
   @property
   def service_account(self) -> str:
@@ -206,9 +219,11 @@ class NodePool(models.Resource):
 
 
 class UndefinedClusterPropertyError(Exception):
-  """Thrown when a property of a cluster can't be determined for
-  some reason. For example, the cluster_hash can't be determined
-  because there are no nodepools defined."""
+  """Thrown when a property of a cluster can't be determined for some reason.
+
+  For example, the cluster_hash can't be determined because there are no
+  nodepools defined.
+  """
 
   pass
 
@@ -334,7 +349,11 @@ class Cluster(models.Resource):
   def has_http_load_balancing_enabled(self) -> bool:
     # HTTP load balancing needs to be enabled to use GKE ingress
     return (
-      get_path(self._resource_data, ('addonsConfig', 'httpLoadBalancing', 'disabled'), default=None)
+      get_path(
+        self._resource_data,
+        ('addonsConfig', 'httpLoadBalancing', 'disabled'),
+        default=None,
+      )
       is not True
     )
 
@@ -342,7 +361,9 @@ class Cluster(models.Resource):
     # Network policy enforcement
     return (
       get_path(
-        self._resource_data, ('addonsConfig', 'networkPolicyConfig', 'disabled'), default=False
+        self._resource_data,
+        ('addonsConfig', 'networkPolicyConfig', 'disabled'),
+        default=False,
       )
       is not True
     )
@@ -350,7 +371,11 @@ class Cluster(models.Resource):
   def has_dpv2_enabled(self) -> bool:
     # Checks whether dataplane V2 is enabled in clusters
     return (
-      get_path(self._resource_data, ('networkConfig', 'datapathProvider'), default=None)
+      get_path(
+        self._resource_data,
+        ('networkConfig', 'datapathProvider'),
+        default=None,
+      )
       == 'ADVANCED_DATAPATH'
     )
 
@@ -369,8 +394,8 @@ class Cluster(models.Resource):
     return self._resource_data['maintenancePolicy']['resourceVersion'] != 'e3b0c442'
 
   def has_image_streaming_enabled(self) -> bool:
-    """
-    Check if cluster has Image Streaming (aka  Google Container File System)
+    """Check if cluster has Image Streaming (aka  Google Container File System)
+
     enabled
     """
     global_gcsfs = get_path(
@@ -411,7 +436,10 @@ class Cluster(models.Resource):
       return None
 
     subnetwork_string = self._resource_data['networkConfig']['subnetwork']
-    m = re.match(r'projects/([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$', subnetwork_string)
+    m = re.match(
+      r'projects/([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$',
+      subnetwork_string,
+    )
     if not m:
       raise RuntimeError("can't parse network string: %s" % subnetwork_string)
     return network.get_subnetwork(m.group(1), m.group(2), m.group(3))
@@ -445,7 +473,11 @@ class Cluster(models.Resource):
 
   @property
   def is_vpc_native(self) -> bool:
-    return get_path(self._resource_data, ('ipAllocationPolicy', 'useIpAliases'), default=False)
+    return get_path(
+      self._resource_data,
+      ('ipAllocationPolicy', 'useIpAliases'),
+      default=False,
+    )
 
   @property
   def is_regional(self) -> bool:
@@ -469,7 +501,11 @@ class Cluster(models.Resource):
 
   @property
   def masters_cidr_list(self) -> Iterable[IPv4NetOrIPv6Net]:
-    if get_path(self._resource_data, ('privateClusterConfig', 'masterIpv4CidrBlock'), default=None):
+    if get_path(
+      self._resource_data,
+      ('privateClusterConfig', 'masterIpv4CidrBlock'),
+      default=None,
+    ):
       return [
         ipaddress.ip_network(self._resource_data['privateClusterConfig']['masterIpv4CidrBlock'])
       ]
@@ -487,8 +523,9 @@ class Cluster(models.Resource):
   @property
   def cluster_hash(self) -> Optional[str]:
     """Returns the "cluster hash" as used in automatic firewall rules for GKE clusters.
-    Cluster hash is the first 8 characters of cluster id.
-    See also: https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
+
+    Cluster hash is the first 8 characters of cluster id. See also:
+    https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
     """
     if 'id' in self._resource_data:
       return self._resource_data['id'][:8]
@@ -561,7 +598,9 @@ def get_cluster(
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return Cluster(
-    project_id=project_id, resource_data=resp, context=models.Context(project_id=project_id)
+    project_id=project_id,
+    resource_data=resp,
+    context=models.Context(project_id=project_id),
   )
 
 
@@ -612,7 +651,8 @@ class Node(models.Resource):
   """Represents a GKE node.
 
   This class useful for example to determine the GKE cluster when you only have
-  an GCE instance id (like from a metrics label)."""
+  an GCE instance id (like from a metrics label).
+  """
 
   instance: gce.Instance
   nodepool: NodePool
@@ -642,7 +682,8 @@ class Node(models.Resource):
 def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
   """Get a gke.Node instance by instance id.
 
-  Throws a KeyError in case this instance is not found or isn't part of a GKE cluster.
+  Throws a KeyError in case this instance is not found or isn't part of a GKE
+  cluster.
   """
   # This will throw a KeyError if the instance is not found, which is also
   # the behavior that we want for this function.
@@ -679,10 +720,16 @@ def get_release_schedule() -> Dict:
   # estimate first month of the quarter
   quarter_dates = {'Q1': '1', 'Q2': '4', 'Q3': '7', 'Q4': '10'}
   try:
-    table = web.fetch_and_extract_table(page_url, tag='table', class_name='gke-release-schedule')
+    rows = web.fetch_and_extract_table_data(
+      page_url, tag='table', class_name='gke-release-schedule'
+    )
 
     # Function to parse a date string or return None for 'N/A'
-    def parse_date(date_str) -> Optional[datetime.date]:
+    def parse_date(date_str) -> Optional[Union[datetime.date, str]]:
+      if not date_str:
+        return None
+      if 'already reached EOL' in date_str:
+        return 'already reached EOL'
       p = r'(?P<year>\d{4})-(?:(?P<quarter>Q[1-4])|(?P<month>[0-9]{1,2}))(?:-(?P<day>[0-9]{1,2}))?'
       match = re.search(p, date_str)
       # Handle incomplete dates in 'YYYY-MM' form
@@ -698,30 +745,19 @@ def get_release_schedule() -> Dict:
       # anything less like N/A return None
       return None
 
-    def find_date_str_in_td(e):
-      """recursively find a date string in a td"""
-      if isinstance(e, str):
-        return e
-      if isinstance(e, bs4.element.Tag):
-        return find_date_str_in_td(e.next)
-      return None
-
-    # Find all table rows within tbody
-    rows = table.find('tbody').find_all('tr')
-
     # Iterate over each row and extract the data
-    for row in rows:
-      # Extract all the columns (td elements)
-      cols = row.find_all('td')
-
-      # Extract relevant data
-
-      minor_version = cols[0].next.strip()
-      rapid_avail = parse_date(find_date_str_in_td(cols[1].next))
-      regular_avail = parse_date(find_date_str_in_td(cols[3].next))
-      stable_avail = parse_date(find_date_str_in_td(cols[5].next))
-      extended_avail = parse_date(find_date_str_in_td(cols[7].next))
-      end_of_standard_support = parse_date(find_date_str_in_td(cols[9].next))
+    for cols in rows:
+      if not cols:
+        continue
+      if len(cols) < 10:
+        continue
+      minor_version = cols[0]
+      rapid_avail = parse_date(cols[1])
+      regular_avail = parse_date(cols[3])
+      stable_avail = parse_date(cols[5])
+      extended_avail = parse_date(cols[7])
+      end_of_standard_support = parse_date(cols[9])
+      end_of_extended_support = parse_date(cols[10]) if len(cols) > 10 else None
 
       # Add the extracted data into the dictionary in the desired format
       release_data[minor_version] = {
@@ -730,6 +766,7 @@ def get_release_schedule() -> Dict:
         'stable_avail': stable_avail,
         'extended_avail': extended_avail,
         'eol': end_of_standard_support,
+        'extended_eol': end_of_extended_support,
       }
     return release_data
   except (

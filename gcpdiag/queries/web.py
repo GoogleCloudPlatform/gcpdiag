@@ -14,9 +14,41 @@
 """Fetch the html content from the given page url."""
 
 import logging
+from typing import Any, List, Optional
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
+
+
+def extract_cell_text(element: Any) -> Optional[str]:
+  """Recursively extract text from a table cell element."""
+  if isinstance(element, str):
+    return element
+  if isinstance(element, Tag):
+    return extract_cell_text(element.next)
+  return None
+
+
+def fetch_and_extract_table_data(
+  page_url: str, tag: str = None, tag_id: str = None, class_name: str = None
+) -> List[List[str]]:
+  """Fetch table from URL and return row data as list of lists of cell text strings."""
+  table = fetch_and_extract_table(page_url, tag=tag, tag_id=tag_id, class_name=class_name)
+  if not table:
+    return []
+  rows_data = []
+  tbody = table.find('tbody')
+  rows = tbody.find_all('tr') if tbody else table.find_all('tr')
+  for row in rows:
+    cols = row.find_all('td')
+    if not cols:
+      continue
+    row_cells = []
+    for col in cols:
+      val = extract_cell_text(col.next) or ''
+      row_cells.append(val.strip())
+    rows_data.append(row_cells)
+  return rows_data
 
 
 def fetch_and_extract_table(

@@ -13,9 +13,19 @@
 # limitations under the License.
 """Generalize rule snapshot testing"""
 
+import datetime
+from unittest import mock
+
 from gcpdiag.lint import gke, snapshot_test_base
 
 
+class MockDate(datetime.date):
+  @classmethod
+  def today(cls):
+    return datetime.date(2026, 6, 1)
+
+
+@mock.patch('gcpdiag.lint.gke.err_2026_001_gke_version_support.date', new=MockDate)
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   project_id = 'gcpdiag-gke1-aaaa'
