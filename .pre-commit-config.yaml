@@ -68,8 +68,11 @@ repos:
     entry: ruff format
     language: system
     types: [python]
-    args: [--no-cache, --force-exclude]
+    args: [--no-cache, --force-exclude, .]
     require_serial: true
+    pass_filenames: false
+    always_run: true
+
 
 - repo: https://github.com/antonbabenko/pre-commit-terraform
   rev: v1.96.1
