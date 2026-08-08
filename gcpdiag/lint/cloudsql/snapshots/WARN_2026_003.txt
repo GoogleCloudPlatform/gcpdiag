@@ -1,0 +1,11 @@
+*  cloudsql/WARN/2026_003: Cloud SQL replica instances do not have high replication lag
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql5 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql6 [FAIL]
+     Cloud SQL replica instance sql6 has a replication lag exceeding 600 seconds.
+
+   Cloud SQL read replicas with high replication lag might serve stale data or
+   stop replicating from the primary database. Ensure the replica has sufficient
+   resources to keep up with the workload.
+
+   https://gcpdiag.dev/rules/cloudsql/WARN/2026_003
+

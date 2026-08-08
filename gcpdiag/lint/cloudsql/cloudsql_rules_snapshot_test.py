@@ -40,6 +40,7 @@ class TestCloudSql1(snapshot_test_base.RulesSnapshotTestBase):
         'BP_2023_002',
         'BP_2026_003',
         'BP_2026_001',
+        'WARN_2026_003',
       )
     ]
 
@@ -57,6 +58,7 @@ class TestCloudsql2(snapshot_test_base.RulesSnapshotTestBase):
       in (
         'BP_2023_002',
         'BP_2026_003',
+        'WARN_2026_003',
       )
     ]
 
