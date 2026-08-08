@@ -128,3 +128,59 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     assert test_table is not None
     assert len(test_table.find_all('tr')) == 3
     assert test_table.find_all('tr')[2].find_all('td')[1].text.strip() == 'Value4'
+
+  def test_fetch_all_tables(self, mock_get):
+    mock_get.return_value.content = """
+      <html>
+        <body>
+          <table>
+            <tr><td>Table 1</td></tr>
+          </table>
+          <table>
+            <tr><td>Table 2</td></tr>
+          </table>
+        </body>
+      </html>
+    """
+    mock_get.return_value.status_code = 200
+
+    tables = web.fetch_all_tables(page_url='https://example.com')
+    assert tables is not None
+    assert len(tables) == 2
+    assert tables[0].find('td').text.strip() == 'Table 1'
+    assert tables[1].find('td').text.strip() == 'Table 2'
+
+  def test_fetch_and_parse_all_tables(self, mock_get):
+    mock_get.return_value.content = """
+      <html>
+        <body>
+          <table>
+            <thead>
+              <tr><th>Header 1</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Table 1 Row 1</td></tr>
+              <tr><td>Table 1 Row 2</td></tr>
+            </tbody>
+          </table>
+          <table>
+            <tr><td>Table 2 Row 1</td></tr>
+          </table>
+          <table>
+            <tr><th>Table 3 Header 1</th><th>Table 3 Header 2</th></tr>
+            <tr><td>Table 3 Row 1 Col 1</td><td>Table 3 Row 1 Col 2</td></tr>
+          </table>
+        </body>
+      </html>
+    """
+    mock_get.return_value.status_code = 200
+
+    parsed_tables = web.fetch_and_parse_all_tables(page_url='https://example.com')
+    assert parsed_tables is not None
+    assert len(parsed_tables) == 3
+    assert parsed_tables[0] == [['Table 1 Row 1'], ['Table 1 Row 2']]
+    assert parsed_tables[1] == [['Table 2 Row 1']]
+    assert parsed_tables[2] == [
+      ['Table 3 Header 1', 'Table 3 Header 2'],
+      ['Table 3 Row 1 Col 1', 'Table 3 Row 1 Col 2'],
+    ]

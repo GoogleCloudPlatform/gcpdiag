@@ -1,5 +1,6 @@
 *  cloudsql/BP_EXT/2023_004: Cloud SQL instance is covered by the SLA
    - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [FAIL]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql4 [ OK ]
 
    Only Cloud SQL instances configured for high availability with at least one
    dedicated CPU are covered by the Cloud SQL SLA. Shared-core instances and

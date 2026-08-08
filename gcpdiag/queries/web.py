@@ -81,6 +81,14 @@ def fetch_and_extract_table(
   return table
 
 
+def fetch_all_tables(page_url: str) -> list:
+  """Fetch all tables from the given page url."""
+  response = get(url=page_url, timeout=10)
+  response.raise_for_status()
+  soup = BeautifulSoup(response.content, 'html.parser')
+  return soup.find_all('table')
+
+
 def get(
   url,
   params=None,
@@ -91,3 +99,20 @@ def get(
 ) -> requests.Response:
   """A wrapper around requests.get for http calls which can't use the google discovery api"""
   return requests.get(url=url, params=params, timeout=timeout, data=data, headers=headers)
+
+
+def parse_table(table) -> list:
+  """Parse a BeautifulSoup table into a list of rows, where each row is a list of cell texts."""
+  tbody = table.find('tbody')
+  rows = tbody.find_all('tr') if tbody else table.find_all('tr')
+  parsed_rows = []
+  for row in rows:
+    cols = row.find_all(['td', 'th'])
+    parsed_rows.append([col.text.strip() for col in cols])
+  return parsed_rows
+
+
+def fetch_and_parse_all_tables(page_url: str) -> list:
+  """Fetch all tables from the given page url and parse them."""
+  tables = fetch_all_tables(page_url)
+  return [parse_table(t) for t in tables]

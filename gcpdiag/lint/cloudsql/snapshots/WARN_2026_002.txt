@@ -1,0 +1,10 @@
+*  cloudsql/WARN/2026_002: Cloud SQL instances are not running on EOL versions
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql4 [FAIL]
+     Instance is running on MYSQL_5_7 which has reached End of Regular Support on 2025-02-01. It is in Extended Support.
+
+   Check if any Cloud SQL instance is running on a major version that has
+   reached its end of support or deprecation date.
+
+   https://gcpdiag.dev/rules/cloudsql/WARN/2026_002
+

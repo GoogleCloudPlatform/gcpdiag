@@ -13,9 +13,19 @@
 # limitations under the License.
 """Generalize rule snapshot testing"""
 
+import datetime
+from unittest import mock
+
 from gcpdiag.lint import cloudsql, snapshot_test_base
 
 
+class MockDate(datetime.date):
+  @classmethod
+  def today(cls):
+    return cls(2026, 1, 1)
+
+
+@mock.patch('gcpdiag.lint.cloudsql.warn_2026_002_eol_version.date', MockDate)
 class TestCloudSql1(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = cloudsql
   project_id = 'gcpdiag-cloudsql1-aaaa'
