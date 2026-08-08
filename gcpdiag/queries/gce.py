@@ -825,7 +825,9 @@ def get_instance_by_id(project_id: str, instance_id: str) -> Optional[Instance]:
   gce_api = apis.get_api('compute', 'v1', project_id)
   # Use aggregatedList with filter to efficiently find the instance by ID.
   request = gce_api.instances().aggregatedList(
-    project=project_id, filter=f'id eq {instance_id}', returnPartialSuccess=True
+    project=project_id,
+    filter=f'id eq {instance_id}',
+    returnPartialSuccess=True,
   )
 
   while request:
@@ -855,7 +857,9 @@ def get_global_operations(
   """Returns global operations object matching project id."""
   compute = apis.get_api('compute', 'v1', project)
   logging.debug(
-    ('searching compute global operationslogs in project %s with filter %s'), project, filter_str
+    'searching compute global operationslogs in project %s with filter %s',
+    project,
+    filter_str,
   )
   operations: List[Dict[str, Any]] = []
   request = compute.globalOperations().aggregatedList(
@@ -906,7 +910,9 @@ def get_instance_group_manager(
   """
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.instanceGroupManagers().get(
-    project=project_id, zone=zone, instanceGroupManager=instance_group_manager_name
+    project=project_id,
+    zone=zone,
+    instanceGroupManager=instance_group_manager_name,
   )
   try:
     response = request.execute(num_retries=config.API_RETRIES)
@@ -1124,7 +1130,7 @@ def get_region_managed_instance_groups(
     requests=requests,
     next_function=gce_api.regionInstanceGroupManagers().list_next,
     context=context,
-    log_text=f'listing regional managed instance groups of project {context.project_id}',
+    log_text=(f'listing regional managed instance groups of project {context.project_id}'),
   )
   for i in items:
     result = re.match(
@@ -1429,7 +1435,7 @@ def get_all_disks_of_instance(context: models.Context, zone: str, instance_name:
       requests=requests,
       next_function=gce_api.disks().list_next,
       context=context,
-      log_text=f'listing gce disks attached to instance {instance_name} in project {project_id}',
+      log_text=(f'listing gce disks attached to instance {instance_name} in project {project_id}'),
     )
     all_disk_list = {Disk(project_id, item) for item in items}
     disk_list = {}
@@ -1522,7 +1528,9 @@ class SerialOutputQuery:
 jobs_todo: Dict[models.Context, _SerialOutputJob] = {}
 
 
-def execute_fetch_serial_port_outputs(query_executor: executor.ContextAwareExecutor):
+def execute_fetch_serial_port_outputs(
+  query_executor: executor.ContextAwareExecutor,
+):
   # start a thread to fetch serial log; processing logs can be large
   # depending on he number of instances in the project which aren't
   # logging to cloud logging. currently expects only one job but
@@ -1735,3 +1743,89 @@ def get_zonal_network_endpoint_groups(
     data = NetworkEndpointGroup(context.project_id, i)
     groups[data.full_path] = data
   return groups
+
+
+class TargetVpnGateway(models.Resource):
+  """Represents a GCE Target VPN Gateway (Classic VPN)."""
+
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(
+      r'https://www.googleapis.com/compute/v1/(.*)',
+      self._resource_data['selfLink'],
+    )
+    if result:
+      return result.group(1)
+    else:
+      return '>> ' + self._resource_data['selfLink']
+
+  @property
+  def short_path(self) -> str:
+    return self.project_id + '/' + self.name
+
+  @property
+  def region(self) -> str:
+    m = re.search(r'/regions/([^/]+)$', self._resource_data['region'])
+    if not m:
+      raise RuntimeError(
+        "can't determine region of target VPN gateway %s (%s)"
+        % (self.name, self._resource_data['region'])
+      )
+    return m.group(1)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_target_vpn_gateways(
+  context: models.Context,
+) -> Mapping[str, TargetVpnGateway]:
+  """Get a list of Classic VPN Target VPN Gateways matching the given context."""
+
+  gateways: Dict[str, TargetVpnGateway] = {}
+  if not apis.is_enabled(context.project_id, 'compute'):
+    return gateways
+  gce_api = apis.get_api('compute', 'v1', context.project_id)
+  request = gce_api.targetVpnGateways().aggregatedList(
+    project=context.project_id, returnPartialSuccess=True
+  )
+  logging.debug('listing GCE Target VPN Gateways of project %s', context.project_id)
+  while request:  # Continue as long as there are pages
+    try:
+      response = request.execute(num_retries=config.API_RETRIES)
+      gateways_by_regions = response.get('items', {})
+      for _, data_ in gateways_by_regions.items():
+        if 'targetVpnGateways' not in data_:
+          continue
+        for gateway in data_['targetVpnGateways']:
+          m = re.search(r'/regions/([^/]+)$', gateway['region'])
+          if not m:
+            continue
+          region = m.group(1)
+          if not context.match_project_resource(
+            resource=gateway.get('name'), location=region
+          ) and not context.match_project_resource(resource=gateway.get('id'), location=region):
+            continue
+          gateways[gateway['selfLink']] = TargetVpnGateway(context.project_id, gateway)
+      request = gce_api.targetVpnGateways().aggregatedList_next(
+        previous_request=request, previous_response=response
+      )
+    except googleapiclient.errors.HttpError as err:
+      raise utils.GcpApiError(err) from err
+  return gateways

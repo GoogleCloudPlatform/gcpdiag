@@ -1,0 +1,11 @@
+*  vpc/WARN/2026_001: VPC networks only use HA VPN for hybrid connectivity.
+   - projects/gcpdiag-vpc1-aaaa/regions/us-central1/targetVpnGateways/classic-vpn-gw1 [FAIL]
+     Classic VPN Gateway 'classic-vpn-gw1' in region 'us-central1' (https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/targetVpnGateways/classic-vpn-gw1) found. Classic VPN is susceptible to being a single point of failure and lacks an HA SLA. Consider migrating to HA VPN.
+
+   Classic VPN (target-vpn-gateways) does not offer a high availability SLA and
+   lacks automatic failover. This poses a risk of complete connectivity loss
+   between GCP and the peer network during maintenance or other issues. It is
+   recommended to migrate to HA VPN for critical workloads.
+
+   https://gcpdiag.dev/rules/vpc/WARN/2026_001
+

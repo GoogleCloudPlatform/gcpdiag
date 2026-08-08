@@ -71,7 +71,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def aggregatedList(
     self,
     project,
-    filter=None,
+    filter=None,  # pylint:disable=redefined-builtin
     returnPartialSuccess=None,
     orderBy=None,
     maxResults=None,
@@ -81,6 +81,8 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
       return apis_stub.RestCallStub(project, 'compute-project')
     elif self.mock_state == 'globalOperations':
       return apis_stub.RestCallStub(project, 'global-operations')
+    elif self.mock_state == 'targetVpnGateways':
+      return apis_stub.RestCallStub(project, 'targetVpnGateways', default={'items': {}})
     else:
       return apis_stub.RestCallStub(project, f'compute-{self.mock_state}-aggregated')
 
@@ -260,6 +262,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     self.zone = zone
     self.network_interface = networkInterface
     return self
+
+  def targetVpnGateways(self):
+    return ComputeEngineApiStub('targetVpnGateways')
 
 
 class InstanceGroupManagersApiStub(ComputeEngineApiStub):

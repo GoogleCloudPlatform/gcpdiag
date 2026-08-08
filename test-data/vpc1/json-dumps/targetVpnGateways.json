@@ -1,0 +1,26 @@
+{
+  "items": {
+    "regions/us-central1": {
+      "targetVpnGateways": [
+        {
+          "id": "1234567890123456789",
+          "creationTimestamp": "2025-01-15T10:00:00.000-08:00",
+          "name": "classic-vpn-gw1",
+          "description": "Test Classic VPN Gateway",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/global/networks/default",
+          "tunnels": [],
+          "status": "READY",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/targetVpnGateways/classic-vpn-gw1",
+          "kind": "compute#targetVpnGateway"
+        }
+      ]
+    },
+    "regions/europe-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "There are no results for scope 'regions/europe-west1' on this page."
+      }
+    }
+  }
+}
