@@ -1,0 +1,55 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:gke2sa@gcpdiag-gke5-aaaa.iam.gserviceaccount.com"
+      ],
+      "role": "projects/gcpdiag-gke5-aaaa/roles/gke2_custom_role"
+    },
+    {
+      "members": [
+        "serviceAccount:gke3sa@gcpdiag-gke5-aaaa.iam.gserviceaccount.com"
+      ],
+      "role": "projects/gcpdiag-gke5-aaaa/roles/gke3_custom_role"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340002@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340002@container-engine-robot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/container.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340002@containerregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerregistry.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12340002-compute@developer.gserviceaccount.com",
+        "serviceAccount:12340002@cloudservices.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340002@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ],
+      "role": "roles/pubsub.serviceAgent"
+    }
+  ],
+  "etag": "BwXSd+CQHPE=",
+  "version": 1
+}

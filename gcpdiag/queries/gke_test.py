@@ -58,6 +58,13 @@ class TestCluster(unittest.TestCase):
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 7
 
+  def test_get_clusters_by_region_gke5(self):
+    """get_clusters returns the right cluster matched by region for gke5."""
+    context = models.Context(project_id='gcpdiag-gke5-aaaa', locations=['europe-west4'])
+    clusters = gke.get_clusters(context)
+    expected_cluster_name = 'projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/clusters/gke1'
+    assert expected_cluster_name in clusters and len(clusters) == 9
+
   def test_cluster_properties(self):
     """verify cluster property methods."""
     context = models.Context(project_id=DUMMY_PROJECT_NAME)

@@ -33,6 +33,7 @@ JSON_PROJECT_DIR = {
   '123456270': pathlib.Path(__file__).parents[2] / 'test-data/gce4/json-dumps',
   'gcpdiag-bigquery1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/bigquery1/json-dumps',
   'gcpdiag-gke1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
+  'gcpdiag-gke5-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gke5/json-dumps',
   '12340002': pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
   'gcpdiag-gcf1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
   '12340003': pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',

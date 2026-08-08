@@ -35,7 +35,8 @@ class TestCloudSQL:
   def test_docker_bridge_ip_addresses(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = cloudsql.get_instances(context)
-    assert INSTANCE_IP in instances[0].ip_addresses
+    sql1 = next(i for i in instances if i.name == 'sql1')
+    assert INSTANCE_IP in sql1.ip_addresses
 
   def test_get_instances_cloudsql3(self):
     context = models.Context(project_id='gcpdiag-cloudsql3-aaaa')

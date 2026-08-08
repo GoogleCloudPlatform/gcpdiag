@@ -1,0 +1,317 @@
+{
+  "id": "projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroupManagers",
+  "items": [
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "5811787561528926004",
+      "creationTimestamp": "2023-05-09T12:41:15.699-07:00",
+      "name": "gke-gke1-default-pool-671518f6-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke1-default-pool-671518f6",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke1-default-pool-671518f6",
+          "targetSize": {
+            "calculated": 1
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroups/gke-gke1-default-pool-671518f6-grp",
+      "baseInstanceName": "gke-gke1-default-pool-671518f6",
+      "fingerprint": "nKHmN1fIGTM=",
+      "currentActions": {
+        "none": 1,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 1,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-671518f6-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      }
+    },
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "772940322250560176",
+      "creationTimestamp": "2022-08-19T08:29:36.070-07:00",
+      "name": "gke-gke2-default-pool-dabb2ff4-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke2-default-pool-913244b5",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke2-default-pool-913244b5",
+          "targetSize": {
+            "calculated": 1
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroups/gke-gke2-default-pool-dabb2ff4-grp",
+      "baseInstanceName": "gke-gke2-default-pool-dabb2ff4",
+      "fingerprint": "CYbKDiBjjD4=",
+      "currentActions": {
+        "none": 1,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 1,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke2-default-pool-dabb2ff4-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      }
+    },
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "2694980432485980228",
+      "creationTimestamp": "2023-05-08T09:43:23.174-07:00",
+      "name": "gke-gke3-default-pool-bf4b1ef1-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke3-default-pool-bf4b1ef1",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke3-default-pool-bf4b1ef1",
+          "targetSize": {
+            "calculated": 5
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroups/gke-gke3-default-pool-bf4b1ef1-grp",
+      "baseInstanceName": "gke-gke3-default-pool-bf4b1ef1",
+      "fingerprint": "z-Jjdtcpm70=",
+      "currentActions": {
+        "none": 5,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 5,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke3-default-pool-bf4b1ef1-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      }
+    },
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "7086373352076612579",
+      "creationTimestamp": "2022-08-19T08:32:28.378-07:00",
+      "name": "gke-gke4-default-pool-4c934268-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke4-default-pool-bcb6be97",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke4-default-pool-bcb6be97",
+          "targetSize": {
+            "calculated": 1
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroups/gke-gke4-default-pool-4c934268-grp",
+      "baseInstanceName": "gke-gke4-default-pool-4c934268",
+      "fingerprint": "m475O9ssRrI=",
+      "currentActions": {
+        "none": 1,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 1,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke4-default-pool-4c934268-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      }
+    },
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "2397452774988358258",
+      "creationTimestamp": "2023-05-08T09:00:29.110-07:00",
+      "name": "gke-gke6-default-pool-d8412db4-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke6-default-pool-d8412db4",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/global/instanceTemplates/gke-gke6-default-pool-d8412db4",
+          "targetSize": {
+            "calculated": 1
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroups/gke-gke6-default-pool-d8412db4-grp",
+      "baseInstanceName": "gke-gke6-default-pool-d8412db4",
+      "fingerprint": "NlFeJvFiNII=",
+      "currentActions": {
+        "none": 1,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 1,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke6-default-pool-d8412db4-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      }
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/instanceGroupManagers",
+  "kind": "compute#instanceGroupManagerList"
+}

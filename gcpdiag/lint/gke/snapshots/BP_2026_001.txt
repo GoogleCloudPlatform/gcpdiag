@@ -1,0 +1,24 @@
+*  gke/BP/2026_001: GKE maintenance policy is valid and sufficient.
+   - projects/gcpdiag-gke5-aaaa/locations/europe-west4/clusters/autopilot-gke1 [FAIL]
+     does not have maintenance window configured
+   - projects/gcpdiag-gke5-aaaa/locations/europe-west4/clusters/autopilot-gke2 [FAIL]
+     does not have maintenance window configured
+   - projects/gcpdiag-gke5-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
+     does not have maintenance window configured
+   - projects/gcpdiag-gke5-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
+     does not have maintenance window configured
+   - projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/clusters/gke-expired [FAIL]
+     maintenance window expired on 2023-01-01 00:00:00+00:00
+   - projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/clusters/gke-short   [FAIL]
+     maintenance window availability is too short: 24.00 hours in 32 days (required >= 48h)
+   - projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/clusters/gke1        [FAIL]
+     does not have maintenance window configured
+   - projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/clusters/gke4        [FAIL]
+     does not have maintenance window configured
+   - projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
+
+   Check that the maintenance window is configured, not expired, and has a
+   reasonable duration.
+
+   https://gcpdiag.dev/rules/gke/BP/2026_001
+
