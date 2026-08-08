@@ -1,0 +1,21 @@
+*  lb/BP/2026_001: Backend Services with Session Affinity should not use UTILIZATION balancing mode.
+   - projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service [ OK ]
+   - projects/gcpdiag-lb2-aaaa/global/backendServices/failed-backend-service [FAIL]
+     Backend Service [failed-backend-service] has session affinity 'CLIENT_IP' and uses UTILIZATION balancing mode in one or more of its backend groups. This can break session affinity. Consider using RATE or CONNECTION mode instead.
+   - projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2 [ OK ]
+
+   Description: Session affinity aims to send requests from the same client to
+   the same backend. Misconfiguration with balancing modes (especially using
+   UTILIZATION with session affinity) can lead to some backends being overloaded
+   while others are underutilized, or cause sessions to break unexpectedly. This
+   can negatively impact application performance and user experience.  When
+   Session Affinity is enabled (e.g., CLIENT_IP, GENERATED_COOKIE, HTTP_COOKIE),
+   the load balancer attempts to direct requests from the same client to the
+   same backend. However, UTILIZATION mode distributes traffic based on the
+   current utilization of backends. This can conflict, causing the load balancer
+   to prioritize utilization targets over session affinity.  It is recommended
+   to use RATE (for HTTP/S) or CONNECTION (for TCP/SSL) balancing modes when
+   Session Affinity is required.
+
+   https://gcpdiag.dev/rules/lb/BP/2026_001
+

@@ -167,6 +167,24 @@ resource "google_compute_backend_service" "default" {
 }
 # [END cloudloadbalancing_ext_http_gce_instance_backend_service]
 
+resource "google_compute_backend_service" "failed" {
+  name                            = "failed-backend-service"
+  project                         = google_project.project.project_id
+  connection_draining_timeout_sec = 0
+  health_checks                   = [google_compute_health_check.default.id]
+  load_balancing_scheme           = "EXTERNAL"
+  locality_lb_policy              = "MAGLEV"
+  port_name                       = "http"
+  protocol                        = "HTTP"
+  session_affinity                = "CLIENT_IP"
+  timeout_sec                     = 30
+  backend {
+    group           = google_compute_instance_group_manager.default.instance_group
+    balancing_mode  = "UTILIZATION"
+    capacity_scaler = 1.0
+  }
+}
+
 # [START cloudloadbalancing_ext_http_gce_instance_url_map]
 resource "google_compute_url_map" "default" {
   project         = google_project.project.project_id
