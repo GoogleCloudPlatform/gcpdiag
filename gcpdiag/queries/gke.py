@@ -15,6 +15,7 @@
 # Lint as: python3
 """Queries related to GCP Kubernetes Engine clusters."""
 
+import base64
 import datetime
 import functools
 import ipaddress
@@ -24,6 +25,8 @@ from typing import Dict, Iterable, List, Mapping, Optional, Union
 
 import googleapiclient.errors
 import requests
+from cryptography import x509
+from cryptography.hazmat.primitives import serialization
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, gce, network, web
@@ -499,6 +502,69 @@ class Cluster(models.Resource):
   @property
   def cluster_ca_certificate(self) -> str:
     return self._resource_data['masterAuth']['clusterCaCertificate']
+
+  @property
+  def cluster_ca_certificate_info(self) -> Optional[Dict]:
+    """Parses and returns details about the cluster CA certificates.
+
+    Returns:
+      A dictionary containing raw certs, parsed certificate list, and a summary
+      of validity dates. Returns None if no certificate is available or if
+      parsing fails.
+    """
+    cert_str = self.cluster_ca_certificate
+    if not cert_str:
+      return None
+
+    try:
+      if '-----BEGIN CERTIFICATE-----' in cert_str:
+        pem_str = cert_str
+      else:
+        decoded_bytes = base64.b64decode(cert_str)
+        try:
+          pem_str = decoded_bytes.decode('utf-8')
+        except UnicodeDecodeError:
+          cert = x509.load_der_x509_certificate(decoded_bytes)
+          certs = [cert]
+          pem_str = None
+
+      if pem_str is not None:
+        certs = []
+        for block in pem_str.split('-----BEGIN CERTIFICATE-----'):
+          if '-----END CERTIFICATE-----' in block:
+            pem_block = f'-----BEGIN CERTIFICATE-----{block}'
+            certs.append(x509.load_pem_x509_certificate(pem_block.encode('utf-8')))
+
+      if not certs:
+        return None
+
+      parsed_certs = []
+      for cert in certs:
+        pem_bytes = cert.public_bytes(serialization.Encoding.PEM)
+        parsed_certs.append(
+          {
+            'pem': pem_bytes.decode('utf-8'),
+            'subject': cert.subject.rfc4514_string(),
+            'issuer': cert.issuer.rfc4514_string(),
+            'notBefore': cert.not_valid_before_utc.isoformat(),
+            'notAfter': cert.not_valid_after_utc.isoformat(),
+          }
+        )
+
+      earliest_not_before = min(certs, key=lambda c: c.not_valid_before_utc).not_valid_before_utc
+      latest_not_after = max(certs, key=lambda c: c.not_valid_after_utc).not_valid_after_utc
+
+      return {
+        'raw_certs': cert_str,
+        'certificates': parsed_certs,
+        'summary': {
+          'earliestNotBefore': earliest_not_before.isoformat(),
+          'latestNotAfter': latest_not_after.isoformat(),
+        },
+      }
+    except Exception as e:  # pylint: disable=broad-exception-caught
+      logging.warning('Failed to parse CA certificate for cluster %s: %s', self.name, e)
+      return None
 
   @property
   def endpoint(self) -> Optional[str]:

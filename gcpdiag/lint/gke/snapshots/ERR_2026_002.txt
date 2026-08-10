@@ -1,0 +1,20 @@
+*  gke/ERR/2026_002: GKE credentials and certificate authority are fully rotated and valid.
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [FAIL] Certificate is valid for 15 more days (expires on 2026-05-29)
+     Certificate rotation is incomplete or certificate expires within 30 days
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [FAIL] Rotation incomplete; oldest cert valid for 15 more days (expires on 2026-05-29)
+     Credential rotation has been initiated but is not fully completed (multiple CA certificates found in trust bundle).
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL] Rotation incomplete; oldest cert valid for 15 more days (expires on 2026-05-29)
+     Credential rotation has been initiated but is not fully completed (multiple CA certificates found in trust bundle).
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [ OK ] Certificate is valid for 300 more days (expires on 2027-03-10)
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [FAIL] Certificate is valid for 15 more days (expires on 2026-05-29)
+     Certificate rotation is incomplete or certificate expires within 30 days
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ] Certificate is valid for 300 more days (expires on 2027-03-10)
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ] Certificate is valid for 300 more days (expires on 2027-03-10)
+
+   GKE clusters require periodic credential rotation to ensure the Certificate
+   Authority certificates are rotated before they expire. Running clusters with
+   old certificates (older than 30 days) or incomplete rotations increases
+   security risks and could lead to cluster unrecoverability if they expire.
+
+   https://gcpdiag.dev/rules/gke/ERR/2026_002
+
