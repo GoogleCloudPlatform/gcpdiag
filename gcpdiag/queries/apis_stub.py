@@ -111,6 +111,8 @@ JSON_PROJECT_DIR = {
   'gcpdiag-gce6-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gce6/json-dumps',
   '1234560123456': pathlib.Path(__file__).parents[2] / 'test-data/gce6/json-dumps',
   'gcpdiag-vpn1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/vpn/json-dumps',
+  'gcpdiag-managedkafka1-aaaa': pathlib.Path(__file__).parents[2]
+  / 'test-data/managedkafka1/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -387,5 +389,9 @@ def get_api_stub(
     from gcpdiag.queries import looker_stub
 
     return looker_stub.LookerApiStub()
+  elif service_name == 'managedkafka':
+    from gcpdiag.queries import managedkafka_stub
+
+    return managedkafka_stub.ManagedKafkaApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
