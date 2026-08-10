@@ -1,0 +1,25 @@
+*  cloudsql/BP/2026_002: Cloud SQL instances should have a maintenance window configured.
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql1 [FAIL]
+     sql1 (edition: N/A) is defined with Maintenance Window as Any
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql2 [FAIL]
+     sql2 (edition: N/A) is defined with Maintenance Window as Any
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql3 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql4 [FAIL]
+     sql4 (edition: N/A) is defined with Maintenance Window as Any
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql5 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql6 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql7 [SKIP]
+     master instance not found in current context (cross-project verification is not supported)
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql8 [SKIP]
+     master instance not found in current context (cross-project verification is not supported)
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql9 [FAIL]
+     Cloud SQL replica sql9 (edition: N/A) is defined with Maintenance Window as Any because its primary (sql1) has no window configured
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql10 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql11 [FAIL]
+     Cloud SQL replica sql11 (edition: N/A) is defined with Maintenance Window as Any because its primary (sql1) has no window configured
+
+   Configure a maintenance window for Cloud SQL instances to control when
+   disruptive updates can occur.
+
+   https://gcpdiag.dev/rules/cloudsql/BP/2026_002
+

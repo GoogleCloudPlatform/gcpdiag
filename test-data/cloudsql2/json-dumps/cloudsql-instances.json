@@ -148,7 +148,11 @@
         "settingsVersion": "1",
         "storageAutoResizeLimit": "0",
         "storageAutoResize": true,
-        "dataDiskSizeGb": "10"
+        "dataDiskSizeGb": "10",
+        "maintenanceWindow": {
+          "day": 1,
+          "hour": 2
+        }
       },
       "instanceType": "CLOUD_SQL_INSTANCE",
       "project": "gcpdiag-cloudsql2-aaaa",
@@ -245,6 +249,121 @@
       "project": "gcpdiag-cloudsql2-aaaa",
       "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql6",
       "name": "sql6",
+      "region": "us-central1",
+      "gceZone": "us-central1-a"
+    },
+    {
+      "kind": "sql#instance",
+      "state": "RUNNABLE",
+      "databaseVersion": "MYSQL_8_0",
+      "settings": {
+        "tier": "db-n1-standard-1",
+        "availabilityType": "ZONAL",
+        "ipConfiguration": {
+          "ipv4Enabled": false
+        },
+        "storageAutoResize": true,
+        "backupConfiguration": {
+          "enabled": true
+        }
+      },
+      "masterInstanceName": "cross-project-prod:master-sql",
+      "instanceType": "READ_REPLICA_INSTANCE",
+      "project": "gcpdiag-cloudsql2-aaaa",
+      "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql7",
+      "name": "sql7",
+      "region": "us-central1",
+      "gceZone": "us-central1-a"
+    },
+    {
+      "kind": "sql#instance",
+      "state": "RUNNABLE",
+      "databaseVersion": "MYSQL_8_0",
+      "settings": {
+        "tier": "db-n1-standard-1",
+        "availabilityType": "ZONAL",
+        "ipConfiguration": {
+          "ipv4Enabled": false
+        },
+        "storageAutoResize": true,
+        "backupConfiguration": {
+          "enabled": true
+        }
+      },
+      "masterInstanceName": "cross-project-prod:sql3",
+      "instanceType": "READ_REPLICA_INSTANCE",
+      "project": "gcpdiag-cloudsql2-aaaa",
+      "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql8",
+      "name": "sql8",
+      "region": "us-central1",
+      "gceZone": "us-central1-a"
+    },
+    {
+      "kind": "sql#instance",
+      "state": "RUNNABLE",
+      "databaseVersion": "MYSQL_8_0",
+      "settings": {
+        "tier": "db-n1-standard-1",
+        "availabilityType": "ZONAL",
+        "ipConfiguration": {
+          "ipv4Enabled": false
+        },
+        "storageAutoResize": true,
+        "backupConfiguration": {
+          "enabled": true
+        }
+      },
+      "masterInstanceName": "sql1",
+      "instanceType": "READ_REPLICA_INSTANCE",
+      "project": "gcpdiag-cloudsql2-aaaa",
+      "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql9",
+      "name": "sql9",
+      "region": "us-central1",
+      "gceZone": "us-central1-a"
+    },
+    {
+      "kind": "sql#instance",
+      "state": "RUNNABLE",
+      "databaseVersion": "MYSQL_8_0",
+      "settings": {
+        "tier": "db-n1-standard-1",
+        "availabilityType": "ZONAL",
+        "ipConfiguration": {
+          "ipv4Enabled": false
+        },
+        "storageAutoResize": true,
+        "backupConfiguration": {
+          "enabled": true
+        }
+      },
+      "masterInstanceName": "gcpdiag-cloudsql2-aaaa:sql3",
+      "instanceType": "READ_REPLICA_INSTANCE",
+      "project": "gcpdiag-cloudsql2-aaaa",
+      "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql10",
+      "name": "sql10",
+      "region": "us-central1",
+      "gceZone": "us-central1-a"
+    },
+    {
+      "kind": "sql#instance",
+      "state": "RUNNABLE",
+      "databaseVersion": "MYSQL_8_0",
+      "settings": {
+        "tier": "db-n1-standard-1",
+        "availabilityType": "ZONAL",
+        "ipConfiguration": {
+          "ipv4Enabled": false
+        },
+        "storageAutoResize": true,
+        "backupConfiguration": {
+          "enabled": true
+        }
+      },
+      "masterInstanceName": "gcpdiag-cloudsql2-aaaa:sql1",
+      "instanceType": "READ_REPLICA_INSTANCE",
+      "project": "gcpdiag-cloudsql2-aaaa",
+      "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql11",
+      "name": "sql11",
       "region": "us-central1",
       "gceZone": "us-central1-a"
     }

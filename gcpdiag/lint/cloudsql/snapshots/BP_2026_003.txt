@@ -7,6 +7,16 @@
      Replica of sql3 which lacks PITR enabled
    - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql6 [FAIL]
      Replica of sql3 which lacks PITR enabled
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql7 [SKIP]
+     Replica of master-sql (Master instance not found in current context)
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql8 [FAIL]
+     Replica of sql3 which lacks PITR enabled
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql9 [FAIL]
+     Replica of sql1 which lacks PITR enabled
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql10 [FAIL]
+     Replica of sql3 which lacks PITR enabled
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql11 [FAIL]
+     Replica of sql1 which lacks PITR enabled
 
    Point-in-Time Recovery (PITR) allows you to restore a Cloud SQL instance to a
    specific point in time, providing protection against accidental data loss or

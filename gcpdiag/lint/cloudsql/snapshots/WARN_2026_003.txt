@@ -2,6 +2,11 @@
    - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql5 [ OK ]
    - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql6 [FAIL]
      Cloud SQL replica instance sql6 has a replication lag exceeding 600 seconds.
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql7 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql8 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql9 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql10 [ OK ]
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql2-aaaa/instances/sql11 [ OK ]
 
    Cloud SQL read replicas with high replication lag might serve stale data or
    stop replicating from the primary database. Ensure the replica has sufficient

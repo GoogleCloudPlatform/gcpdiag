@@ -39,6 +39,8 @@ class Instance(models.Resource):
 
   @property
   def master_instance_name(self) -> str:
+    """The name of the master instance, if this is a replica."""
+    # API returns 'masterInstanceName' for replicas.
     return self._resource_data.get('masterInstanceName', '')
 
   @property
@@ -126,6 +128,10 @@ class Instance(models.Resource):
   @property
   def tier(self) -> str:
     return get_path(self._resource_data, ('settings', 'tier'), default='')
+
+  @property
+  def edition(self) -> str:
+    return get_path(self._resource_data, ('settings', 'edition'), default='N/A')
 
   @property
   def is_high_available(self) -> bool:
