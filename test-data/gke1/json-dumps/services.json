@@ -738,6 +738,24 @@
       },
       "state": "ENABLED",
       "parent": "projects/12340002"
+    },
+    {
+      "name": "projects/12340002/services/recommender.googleapis.com",
+      "config": {
+        "name": "recommender.googleapis.com",
+        "title": "Recommender API",
+        "documentation": {},
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340002"
     }
   ]
 }

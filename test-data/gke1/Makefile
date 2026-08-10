@@ -48,6 +48,7 @@ all:	\
 	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
 	json-dumps/services.json \
+	json-dumps/gke-recommendations-$(REGION_1).json \
 	json-dumps/compute-instances-aggregated.json \
 	json-dumps/compute-migs-aggregated.json \
 	json-dumps/org-constraints.json \
@@ -228,6 +229,15 @@ json-dumps/services.json:
 	$(CURL) -fsS \
 	        'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' \
 		| $(SED_SUBST_FAKE) >$@
+
+# recommender.googleapis.com
+
+json-dumps/gke-recommendations-$(REGION_1).json:
+	$(CURL) -fsS \
+		'https://recommender.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(REGION_1)/recommenders/google.container.DiagnosisRecommender/recommendations' \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
+
 
 
 # If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
