@@ -551,6 +551,25 @@ class Cluster(models.Resource):
     dns_cache_config = addons_config.get('dnsCacheConfig', {})
     return dns_cache_config.get('enabled', False)
 
+  @property
+  def dns_provider(self) -> str:
+    """Returns GKE DNS provider ('CLOUD_DNS', 'KUBE_DNS', etc.)."""
+    dns_config = self._resource_data.get('networkConfig', {}).get('dnsConfig', {})
+    cluster_dns = dns_config.get('clusterDns')
+    if cluster_dns:
+      return cluster_dns
+
+    if self.is_autopilot:
+      version_tuple = (
+        self.master_version.major,
+        self.master_version.minor,
+        self.master_version.patch,
+      )
+      if version_tuple >= (1, 25, 9):
+        return 'CLOUD_DNS'
+
+    return 'KUBE_DNS'
+
 
 @caching.cached_api_call
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:

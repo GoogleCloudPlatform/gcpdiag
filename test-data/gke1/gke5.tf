@@ -10,6 +10,11 @@ resource "google_container_cluster" "autopilot-gke1" {
 
   # https://github.com/hashicorp/terraform-provider-google/issues/10782
   ip_allocation_policy {}
+
+  dns_config {
+    cluster_dns       = "CLOUD_DNS"
+    cluster_dns_scope = "CLUSTER_SCOPE"
+  }
 }
 
 # private autopilot cluster

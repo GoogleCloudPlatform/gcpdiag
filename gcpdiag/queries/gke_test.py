@@ -39,6 +39,9 @@ DUMMY_CLUSTER6_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clust
 DUMMY_AUTOPILOT_CLUSTER1_NAME = (
   f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/autopilot-gke1'
 )
+DUMMY_AUTOPILOT_CLUSTER2_NAME = (
+  f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/autopilot-gke2'
+)
 DUMMY_DEFAULT_NAME = 'default'
 
 
@@ -121,7 +124,9 @@ class TestCluster(unittest.TestCase):
 
   def test_has_authenticator_group_enabled(self):
     """ ""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
-    enabled."""
+
+    enabled.
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER3_NAME in clusters.keys()
@@ -133,7 +138,9 @@ class TestCluster(unittest.TestCase):
 
   def test_cluster_has_workload_identity_enabled(self):
     """has_workload_identity_enabled should return true for GKE cluster with
-    workload identity enabled."""
+
+    workload identity enabled.
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -143,7 +150,9 @@ class TestCluster(unittest.TestCase):
 
   def test_has_http_load_balancing_enabled(self):
     """has_http_load_balancing_enabled should return true if the GKE cluster has
-    http load balancing enabled"""
+
+    http load balancing enabled
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -153,7 +162,9 @@ class TestCluster(unittest.TestCase):
 
   def test_has_default_service_account(self):
     """has_default_service_account should return true for GKE node-pools with
-    the default GCE SA."""
+
+    the default GCE SA.
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # 'default-pool' has the default SA
@@ -404,6 +415,20 @@ class TestCluster(unittest.TestCase):
 
     c_autopilot = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
     assert c_autopilot.is_nodelocal_dnscache_enabled
+
+  def test_dns_provider(self):
+    """Test the dns_provider property."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+
+    c1 = clusters[DUMMY_CLUSTER1_NAME]
+    assert c1.dns_provider == 'KUBE_DNS'
+
+    c_autopilot = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
+    assert c_autopilot.dns_provider == 'CLOUD_DNS'
+
+    c_autopilot2 = clusters[DUMMY_AUTOPILOT_CLUSTER2_NAME]
+    assert c_autopilot2.dns_provider == 'KUBE_DNS'
 
 
 class TestVersion:

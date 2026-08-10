@@ -17,6 +17,9 @@ NodeLocal DNSCache improves DNS reliability and performance within the cluster
 by running a local DNS cache on each node. This reduces latency and load on
 kube-dns. It is a recommended best practice for most Standard clusters.
 Autopilot clusters have this enabled by default.
+
+NodeLocal DNSCache is also fully supported and recommended when using Cloud DNS
+for GKE to improve performance and avoid connection tracking limits.
 """
 
 from gcpdiag import lint, models
@@ -40,15 +43,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_skipped(cluster, 'NodeLocal DNSCache is default in Autopilot')
       continue
 
+    dns_provider = cluster.dns_provider
     if cluster.is_nodelocal_dnscache_enabled:
       report.add_ok(cluster)
     else:
-      reason = (
-        'NodeLocal DNSCache is not enabled.\n'
-        'Enable it to improve DNS performance and reliability.\n'
-        'You can enable it with the command:\n'
-        f'  gcloud container clusters update {cluster.name} --location={cluster.location}'
-        ' --update-addons=NodeLocalDNS=ENABLED\n'
-        'See also: https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache'
-      )
+      reason = f'NodeLocal DNSCache is not enabled (DNS provider: {dns_provider})'
       report.add_failed(cluster, reason=reason)
