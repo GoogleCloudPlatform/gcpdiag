@@ -51,6 +51,14 @@ class NodeConfig:
     return self._resource_data['machineType']
 
   @property
+  def preemptible(self) -> bool:
+    return self._resource_data.get('preemptible', False)
+
+  @property
+  def spot(self) -> bool:
+    return self._resource_data.get('spot', False)
+
+  @property
   def image_type(self) -> str:
     return self._resource_data['imageType']
 
