@@ -14,60 +14,55 @@
 """GKE ingresses are well configured.
 
 Verify that the Google Kubernetes Engine ingresses are well configured.
-This rule will run a command line tool check-gke-ingress to inspect the ingresses.
+This rule inspects cluster events for ingress configuration errors.
 """
 
-import json
-import logging
+from gcpdiag.queries import gke, logs
 
-from gcpdiag import lint, models
-from gcpdiag.queries import gke, kubectl
-
-executor_dict = {}
+logs_by_project = {}
 
 
-def prepare_rule(context: models.Context):
+def prepare_rule(context):
+  """Query Cloud Logging for ingress errors."""
   clusters = gke.get_clusters(context)
-  for _, c in sorted(clusters.items()):
-    executor = kubectl.get_kubectl_executor(c)
-    if executor is None:
-      continue
-    executor_dict[c] = executor
+
+  # Ask Cloud Logging for the GKE Ingress error diaries (events)
+  for project_id in {c.project_id for c in clusters.values()}:
+    logs_by_project[project_id] = logs.query(
+      project_id=project_id,
+      resource_type='k8s_cluster',
+      log_name='log_id("events")',
+      filter_str=(
+        '(jsonPayload.source.component="l7-lb-controller" OR '
+        'jsonPayload.source.component="loadbalancer-controller") '
+        'severity>=WARNING'
+      ),
+    )
 
 
-def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+def run_rule(context, report):
+  """Check cluster events against query results."""
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
     return
+
   for _, c in sorted(clusters.items()):
-    if c not in executor_dict:
-      report.add_skipped(c, 'failed to access k8s cluster')
-      continue
-    try:
-      stdout, stderr = kubectl.check_gke_ingress(executor_dict[c])
-    except FileNotFoundError as err:
-      logging.warning('Can not inspect Kubernetes resources: %s: %s', type(err).__name__, err)
-      report.add_skipped(c, 'failed to access k8s cluster')
-      continue
-
-    if stderr:
-      report.add_skipped(c, 'failed to run kubectl check-gke-ingress: ' + stderr)
-      continue
-    result = json.loads(stdout)
-
     failed = False
     message = ''
-    for resource in result['resources']:
-      for check in resource['checks']:
-        if check['result'] == 'FAILED':
+
+    # Look through logs to see if this specific cluster had errors
+    if c.project_id in logs_by_project:
+      for log_entry in logs_by_project[c.project_id].entries:
+        # Ensure the log entry belongs to the cluster we are currently checking
+        if log_entry['resource']['labels'].get('cluster_name') == c.name:
           failed = True
-          message += kubectl.error_message(
-            check['name'],
-            resource['kind'],
-            resource['namespace'],
-            resource['name'],
-            check['message'],
+          # Extract the exact complaint from the GKE Ingress Controller
+          message += (
+            log_entry.get('jsonPayload', {}).get(
+              'message', 'Ingress configuration error detected in logs.'
+            )
+            + '\n'
           )
     if not failed:
       report.add_ok(c)

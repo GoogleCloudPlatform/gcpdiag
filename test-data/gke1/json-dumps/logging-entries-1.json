@@ -1,6 +1,24 @@
 {
   "entries": [
     {
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "autopilot-gke1",
+          "project_id": "gcpdiag-gke1-aaaa",
+          "location": "europe-west1-b"
+        }
+      },
+      "jsonPayload": {
+        "source": {
+          "component": "l7-lb-controller"
+        },
+        "message": "Translation failed: invalid ingress spec: Orphaned Load Balancer found."
+      },
+      "severity": "WARNING",
+      "logName": "projects/gcpdiag-gke1-aaaa/logs/events"
+    },
+    {
       "protoPayload": {
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "authenticationInfo": {

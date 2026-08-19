@@ -1,22 +1,15 @@
 *  gke/ERR/2023_004: GKE ingresses are well configured.
    - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [FAIL]
-     Check rule BackendConfigExistenceCheck on Ingress default/ingress-1 failed: BackendConfig default/my-backendconfig in service default/svc-1 does not exist
-     Check rule ServiceExistenceCheck on Ingress default/ingress-2 failed: Service default/svc-2 does not exist
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
-     failed to access k8s cluster
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [SKIP]
-     failed to access k8s cluster
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [SKIP]
-     failed to access k8s cluster
-   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [SKIP]
-     failed to access k8s cluster
-   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [SKIP]
-     failed to access k8s cluster
-   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [SKIP]
-     failed to access k8s cluster
+     Translation failed: invalid ingress spec: Orphaned Load Balancer found.
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
 
    Verify that the Google Kubernetes Engine ingresses are well configured. This
-   rule will run a command line tool check-gke-ingress to inspect the ingresses.
+   rule inspects cluster events for ingress configuration errors.
 
    https://gcpdiag.dev/rules/gke/ERR/2023_004
 
