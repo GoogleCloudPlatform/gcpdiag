@@ -1,0 +1,60 @@
+{% block redis_oom_success_reason %}
+No Redis OOM events detected in container logs.
+{% endblock %}
+
+{% block redis_oom_failure_reason %}
+Detected Redis OOM events in container logs.
+{% endblock %}
+
+{% block redis_oom_failure_remediation %}
+Consider increasing the environment size or contact Google Cloud Support.
+{% endblock %}
+
+{% block redis_oom_node_success_reason %}
+No Redis OOM events detected in node logs.
+{% endblock %}
+
+{% block redis_oom_node_failure_reason %}
+Detected Redis OOM events in node logs.
+{% endblock %}
+
+{% block redis_oom_node_failure_remediation %}
+Consider increasing the environment size or contact Google Cloud Support.
+{% endblock %}
+
+{% block redis_auth_success_reason %}
+No Redis authentication failures detected in logs.
+{% endblock %}
+
+{% block redis_auth_failure_reason %}
+Detected Redis authentication errors. Check if REDIS_USER or REDIS_PASSWORD are being used in environment variables.
+{% endblock %}
+
+{% block redis_auth_failure_remediation %}
+Remove the REDIS_USER and REDIS_PASSWORD environment variable overrides from the Composer environment settings, if set. These variables must remain at their
+default values or contact Google Cloud Support.
+{% endblock %}
+
+{% block redis_firewall_success_reason %}
+No firewall issues detected.
+{% endblock %}
+
+{% block redis_firewall_failure_reason %}
+Detected firewall denials on port 6379.
+{% endblock %}
+
+{% block redis_firewall_failure_remediation %}
+Verify VPC firewall rules to allow ingress traffic from GKE secondary pod IP range to Redis service.
+{% endblock %}
+
+{% block redis_celery_broker_publishing_timeouts_success_reason %}
+No Celery broker publishing timeouts detected.
+{% endblock %}
+
+{% block redis_celery_broker_publishing_timeouts_failure_reason %}
+Detected Celery broker publishing timeouts.
+{% endblock %}
+
+{% block redis_celery_broker_publishing_timeouts_failure_remediation %}
+Plan DAG schedules to distribute the task scheduling load and prevent sudden spikes.
+{% endblock %}

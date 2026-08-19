@@ -1,14 +1,14 @@
 ---
-title: "composer/Log Check Step"
-linkTitle: "Log Check Step"
+title: "composer/Redis End"
+linkTitle: "Redis End"
 weight: 3
 type: docs
 description: >
-  Base class for performing a log query and reporting results.
+  End step for Redis troubleshooting.
 ---
 
 **Product**: [Cloud Composer](https://cloud.google.com/composer)\
-**Step Type**: AUTOMATED STEP
+**Step Type**: END
 
 ### Description
 

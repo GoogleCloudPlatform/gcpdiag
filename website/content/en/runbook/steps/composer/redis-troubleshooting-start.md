@@ -1,14 +1,14 @@
 ---
-title: "composer/Log Check Step"
-linkTitle: "Log Check Step"
+title: "composer/Redis Troubleshooting Start"
+linkTitle: "Redis Troubleshooting Start"
 weight: 3
 type: docs
 description: >
-  Base class for performing a log query and reporting results.
+  Validates environment existence and extracts GKE metadata.
 ---
 
 **Product**: [Cloud Composer](https://cloud.google.com/composer)\
-**Step Type**: AUTOMATED STEP
+**Step Type**: START
 
 ### Description
 
