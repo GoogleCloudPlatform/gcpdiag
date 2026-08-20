@@ -1,0 +1,10 @@
+*  dataflow/WARN/2026_001: Active Dataflow streaming jobs have Streaming Engine enabled.
+   - projects/gcpdiag-datafusion1-aaaa                                    [FAIL]
+     The following active streaming Dataflow jobs are running without Streaming Engine enabled: 2024-06-19_09_43_07-14927685200167458422
+
+   Streaming Engine offloads windowing, state management, and other resource-
+   intensive operations from the worker VMs, improving performance, stability,
+   and autoscaling.
+
+   https://gcpdiag.dev/rules/dataflow/WARN/2026_001
+

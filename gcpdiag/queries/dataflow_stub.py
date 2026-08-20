@@ -25,10 +25,12 @@ class DataflowJobsStub:
   def list_next(self, previous_request, previous_response):
     pass
 
-  def get(self, projectId, location, jobId):
+  def get(self, projectId, location, jobId, view=None):
     # BATCH JOB
     if '2026-05-18_07_03_26-5088364741087117679' in jobId:
       return apis_stub.RestCallStub(projectId, f'dataflow-jobs-{location}-batch')
+    if 'streaming-se' in jobId:
+      return apis_stub.RestCallStub(projectId, f'dataflow-jobs-{location}-streaming-se')
     return apis_stub.RestCallStub(projectId, f'dataflow-jobs-{location}-streaming')
 
   def aggregated(
