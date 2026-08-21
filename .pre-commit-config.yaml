@@ -114,3 +114,10 @@ repos:
   - id: markdownlint
     files: \.(jinja)$
     entry: mdl --rules MD034
+- repo: local
+  hooks:
+  - id: osv-scanner
+    name: OSV Scanner
+    entry: ./bin/precommit-osv-scanner
+    language: script
+    files: ^(requirements\.txt|Pipfile\.lock)$

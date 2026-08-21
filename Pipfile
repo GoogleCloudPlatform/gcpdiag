@@ -34,6 +34,5 @@ pytest-snapshot = "*"
 ruff = "*"
 # for vim:
 # pip install 'python-language-server[yapf,pyflakes,mccabe]'
-safety = "*"
 types-pyyaml = "*"
 cookiecutter = "*"

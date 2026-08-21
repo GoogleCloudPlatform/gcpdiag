@@ -18,20 +18,23 @@ setup-git:
 		done; \
 	fi
 
-
-# Comprehensive environment Check.
+# Comprehensive environment check.
 check-environment: setup-git
 	@command -v pipenv >/dev/null 2>&1 || { echo >&2 "ERROR: pipenv is not installed. Please run 'pip install pipenv' and try again."; exit 1; }
-	@if [ -z "$$(pipenv --venv)" ]; then \
+	@if [ -z "$$(pipenv --venv 2>/dev/null)" ]; then \
 		echo "Pipenv environment not created. Please run 'pipenv install --dev'."; \
 		exit 1; \
 	fi
-	# @pipenv check --ignore SFTY-20260211-60584 || { \
-	#	REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\\1/p' < Pipfile); \
-	#	echo >&2 "ERROR: Pipenv check failed. Your Python version might be incorrect."; \
-	#	echo >&2 "Please run 'pipenv --rm && pipenv --python $$REQUIRED_PYTHON_VERSION install --dev' to fix this."; \
-	#	exit 1; \
-	# }
+	@REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\1/p' < Pipfile); \
+	CURRENT_PYTHON_VERSION=$$(pipenv run python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")' 2>/dev/null); \
+	if [ "$$REQUIRED_PYTHON_VERSION" != "$$CURRENT_PYTHON_VERSION" ]; then \
+		echo >&2 "ERROR: Python version mismatch. Expected $$REQUIRED_PYTHON_VERSION but got $$CURRENT_PYTHON_VERSION."; \
+		echo >&2 "Please run 'pipenv --rm && pipenv --python $$REQUIRED_PYTHON_VERSION install --dev' to fix this."; \
+		exit 1; \
+	fi
+	@bash ./bin/precommit-osv-scanner
+
+
 
 test: check-environment
 	pipenv run pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
