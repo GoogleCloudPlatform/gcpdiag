@@ -21,10 +21,9 @@ using
 that CMEK KMS key.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Please grant Cloud KMS CryptoKey Encrypter/Decrypter role to BigQuery service account'
 

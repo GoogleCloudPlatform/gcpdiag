@@ -66,6 +66,51 @@
       "gceZone": "us-central1-a",
       "databaseInstalledVersion": "MYSQL_8_0_26",
       "createTime": "2022-05-10T08:37:30.089Z"
+    },
+    {
+      "kind": "sql#instance",
+      "state": "RUNNABLE",
+      "databaseVersion": "MYSQL_5_7",
+      "settings": {
+        "authorizedGaeApplications": [],
+        "tier": "db-n1-standard-1",
+        "kind": "sql#settings",
+        "availabilityType": "REGIONAL",
+        "pricingPlan": "PER_USE",
+        "replicationType": "SYNCHRONOUS",
+        "activationPolicy": "ALWAYS",
+        "ipConfiguration": {
+          "privateNetwork": "projects/gcpdiag-cloudsql1-aaaa/global/networks/private-network",
+          "authorizedNetworks": [],
+          "ipv4Enabled": false,
+          "requireSsl": false
+        },
+        "locationPreference": {
+          "zone": "us-central1-a",
+          "kind": "sql#locationPreference"
+        },
+        "dataDiskType": "PD_SSD",
+        "backupConfiguration": {
+          "startTime": "06:00",
+          "kind": "sql#backupConfiguration",
+          "backupRetentionSettings": {
+            "retentionUnit": "COUNT",
+            "retainedBackups": 7
+          },
+          "enabled": true,
+          "transactionLogRetentionDays": 7
+        },
+        "settingsVersion": "1",
+        "storageAutoResizeLimit": "0",
+        "storageAutoResize": true,
+        "dataDiskSizeGb": "10"
+      },
+      "instanceType": "CLOUD_SQL_INSTANCE",
+      "project": "gcpdiag-cloudsql1-aaaa",
+      "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql4",
+      "name": "sql4",
+      "region": "us-central1",
+      "gceZone": "us-central1-a"
     }
   ]
 }

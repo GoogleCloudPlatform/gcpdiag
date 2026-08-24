@@ -14,9 +14,10 @@
 """
 Places generated lint rule files under their target directories
 
-This cookiecutter hook moves the generated files to thir respective directories
+This cookiecutter hook moves the generated files to their respective directories
 and removes a temporary directory.
 """
+
 import os
 import pathlib
 import shutil
@@ -30,9 +31,9 @@ for root, dirs, files in content:
   if files:
     # move pre-populated files to their target directories
     for file in files:
-      pathlib.Path(os.path.dirname(os.path.join(target_dir, root,
-                                                file))).mkdir(parents=True,
-                                                              exist_ok=True)
+      pathlib.Path(os.path.dirname(os.path.join(target_dir, root, file))).mkdir(
+        parents=True, exist_ok=True
+      )
       os.rename(os.path.join(root, file), os.path.join(target_dir, root, file))
 
 # delete the temporary cookiecutter directory

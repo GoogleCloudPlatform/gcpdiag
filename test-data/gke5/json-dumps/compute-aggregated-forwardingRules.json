@@ -1,0 +1,5 @@
+{
+  "kind": "compute#forwardingRuleAggregatedList",
+  "id": "projects/gcpdiag-gke5-aaaa/aggregated/forwardingRules",
+  "items": {}
+}

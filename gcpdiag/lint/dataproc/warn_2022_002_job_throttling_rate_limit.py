@@ -21,10 +21,9 @@ scheduling delays can be observed.
 
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, dataproc, logs
+from gcpdiag.utils import get_path
 
 RE_PATTERN = '.*Throttling job .*: Rate limit.*'
 

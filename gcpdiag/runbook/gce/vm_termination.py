@@ -17,7 +17,6 @@ import re
 from datetime import datetime
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 from dateutil import parser
 
 from gcpdiag import runbook, utils
@@ -26,6 +25,7 @@ from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import constants, flags
 from gcpdiag.runbook.gce import util as gce_util
+from gcpdiag.utils import get_path
 
 TERMINATION_OPERATION_FILTER = """(targetId = "{INSTANCE_ID}") AND
     (operationType = "compute.instances.repair.recreateInstance") OR

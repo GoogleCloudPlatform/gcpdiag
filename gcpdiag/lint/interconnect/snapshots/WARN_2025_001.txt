@@ -5,10 +5,10 @@
    - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment4 [ OK ]
    - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5 [FAIL]  MTU mismatch: 1450 vs VPC MTU 1460
    - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
-   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
-   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
-   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
-   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment7 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment8 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment9 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment10 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
 
    Mismatched MTU may cause potential connection issues. Please check VLAN
    attachment and VPC network MTU configurations.

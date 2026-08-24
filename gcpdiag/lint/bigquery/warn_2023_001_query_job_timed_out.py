@@ -19,10 +19,9 @@ A BigQuery query or multi-statement query job can execute for up to six hours,
 after which it times out and fails.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Operation timed out after 6.0 hours'
 

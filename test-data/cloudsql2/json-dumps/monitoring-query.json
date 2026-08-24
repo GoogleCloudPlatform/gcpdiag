@@ -1,0 +1,45 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.project_id"
+      },
+      {
+        "key": "resource.database_id"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_replica_lag_mean",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "s"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-cloudsql2-aaaa"
+        },
+        {
+          "stringValue": "gcpdiag-cloudsql2-aaaa:sql6"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 800.0
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2026-05-06T22:41:12.000000Z",
+            "endTime": "2026-05-06T22:41:12.000000Z"
+          }
+        }
+      ]
+    }
+  ]
+}

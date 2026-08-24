@@ -20,13 +20,13 @@ from itertools import groupby
 from typing import List, Optional
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import config, runbook
 from gcpdiag.queries import apis, crm, gce, lb, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import generalized_steps as gce_gs
 from gcpdiag.runbook.lb import flags
+from gcpdiag.utils import get_path
 
 
 class UnhealthyBackends(runbook.DiagnosticTree):

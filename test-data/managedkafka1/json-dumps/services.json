@@ -1,0 +1,10 @@
+{
+  "services": [
+    {
+      "config": {
+        "name": "managedkafka.googleapis.com"
+      },
+      "state": "ENABLED"
+    }
+  ]
+}

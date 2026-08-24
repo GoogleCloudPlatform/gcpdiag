@@ -48,10 +48,15 @@ all:	\
 	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
 	json-dumps/services.json \
+	json-dumps/gke-recommendations-$(REGION_1).json \
 	json-dumps/compute-instances-aggregated.json \
 	json-dumps/compute-migs-aggregated.json \
 	json-dumps/org-constraints.json \
-	json-dumps/org-constraint-custom.arEnforceImmutableTags.json
+	json-dumps/org-constraint-custom.arEnforceImmutableTags.json\
+	json-dumps/compute-network-routes.json \
+	json-dumps/compute-igs-aggregated.json \
+	json-dumps/compute-aggregated-backendServices.json \
+	json-dumps/compute-aggregated-forwardingRules.json
 
 include ../Makefile.inc
 
@@ -225,6 +230,15 @@ json-dumps/services.json:
 	        'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' \
 		| $(SED_SUBST_FAKE) >$@
 
+# recommender.googleapis.com
+
+json-dumps/gke-recommendations-$(REGION_1).json:
+	$(CURL) -fsS \
+		'https://recommender.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(REGION_1)/recommenders/google.container.DiagnosisRecommender/recommendations' \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
+
+
 
 # If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
 define LOGGING_ENTRIES_BODY
@@ -247,4 +261,10 @@ json-dumps/logging-entries-1.json:
 		'https://logging.googleapis.com/v2/entries:list' \
 		--header "Content-Type:text/json" \
 		-d "$$LOGGING_ENTRIES_BODY" \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-network-routes.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/routes' \
+		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@

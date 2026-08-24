@@ -25,10 +25,9 @@ c. If the CPU utilization is high, might have to scale up the metadata database.
 
 from itertools import islice
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STRINGS = ['com.google.cloud.spanner.SpannerException: DEADLINE_EXCEEDED']
 LOG_FILTER = [

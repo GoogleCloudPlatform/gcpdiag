@@ -20,10 +20,9 @@ already exist, Check If the table you are trying to use for Bigquery
 Subscription creation  is already existed in the BigQuery or not.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Not found: Table'
 

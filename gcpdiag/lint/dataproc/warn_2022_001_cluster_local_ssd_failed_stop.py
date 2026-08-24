@@ -20,10 +20,9 @@ the VM. However, if you do shut down a VM using local SSDs, then you can't
 start the VM again later, and the data on the local SSD is lost.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, dataproc, logs
+from gcpdiag.utils import get_path
 
 METHOD_NAME = 'google.cloud.dataproc.v1.ClusterController.StopCluster'
 MATCH_STR = 'Clusters that have local SSDs cannot be stopped.'

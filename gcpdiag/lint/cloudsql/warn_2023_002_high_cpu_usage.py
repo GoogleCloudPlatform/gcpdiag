@@ -19,10 +19,9 @@ sized for your workload, and it is not covered by the SLA.
 
 from typing import Dict
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, cloudsql, monitoring
+from gcpdiag.utils import get_path
 
 CPU_USAGE_THRESHOLD = 0.98
 

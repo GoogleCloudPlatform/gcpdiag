@@ -59,6 +59,3 @@ RUN apt-get update && apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
 
 # Install kubectl
 RUN curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x ./kubectl && mv ./kubectl /usr/local/bin
-
-# Install kubectl check-gke-ingress
-RUN ln -s /opt/gcpdiag/kubectl-check_gke_ingress /usr/local/bin/kubectl-check_gke_ingress

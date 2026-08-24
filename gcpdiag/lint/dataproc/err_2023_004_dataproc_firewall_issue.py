@@ -21,10 +21,9 @@ creation. Sometimes VM to VM communications are blocked by firewall rules.
 
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, dataproc, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'This usually happens when VM to VM communications are blocked'
 

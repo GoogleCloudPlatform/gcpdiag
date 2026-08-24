@@ -1,0 +1,22 @@
+{
+  "id": "2024-06-19_09-streaming-se",
+  "projectId": "gcpdiag-dataflow1-aaaa",
+  "name": "gcs_to_pubsub_se",
+  "type": "JOB_TYPE_STREAMING",
+  "environment": {
+    "experiments": [
+      "enable_streaming_engine"
+    ],
+    "userAgent": {
+      "version": "2.56.0"
+    },
+    "version": {
+      "major": "8",
+      "job_type": "STREAMING"
+    }
+  },
+  "currentState": "JOB_STATE_RUNNING",
+  "currentStateTime": "2024-06-19T16:43:28.116816Z",
+  "createTime": "2024-06-19T16:43:08.018899Z",
+  "location": "us-central1"
+}

@@ -18,10 +18,9 @@
 Log entries with Cloud Functions having scale up issues have been found.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import gcf, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'The request was aborted because there was no available instance.'
 

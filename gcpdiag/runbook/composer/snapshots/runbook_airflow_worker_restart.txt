@@ -1,0 +1,67 @@
+end_time=2026-06-18T18:07:02.016586,name=env2,project_id=gcpdiag-
+composer1-aaaa,start_time=2026-06-18T15:07:02.016586
+
+composer/runbook-airflow-worker-restart: Runbook addresses the root causes of Airflow worker instability.
+
+  This runbook checks for the following:
+  - Verify Composer environment exists and find the associated GKE cluster
+  - Check for OOMKilled Events in Logs
+  - Check for SIGKILL / Zombie Tasks
+  - Check for Ephemeral Storage Exhaustion
+  - Check for gcs-syncd Ephemeral Storage Limit Issue
+  - Check for Worker Liveness Probe Logs.
+  - Check for Unschedulable Pods
+  
+[START]: Verify Composer environment exists and find the associated GKE cluster.
+[INFO]: Validating Composer environment: "env2" in project: "gcpdiag-composer1-aaaa"
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Found environment : env2 and cluster : us-central1-env2-941355a9-gke for project gcpdiag-composer1-aaaa
+[COMPOSITE STEP]: Checking for: - Liveness Probe failures on worker pods - Scheduling issues due to quota issues - Worker pod restarts due to GKE preemption
+[AUTOMATED STEP]: Checks for failed Liveness probes on worker pods.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No Liveness Probes issue found in airflow-worker Logs.
+
+[AUTOMATED STEP]: Check for worker pods failing to schedule due to quota issues.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No worker pods failing to schedule found in Logs.
+
+[AUTOMATED STEP]: Check if worker pods were preempted by GKE.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No GKE Preemption found in Logs.
+
+[AUTOMATED STEP]: Check for Out-of-Memory (OOM) events in worker pods.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No OOMKilled Events found in Cluster Logs.
+
+[AUTOMATED STEP]: Check for Zombie tasks or SIGKILL signals in environment logs.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No Zombie Tasks found in Logs.
+
+[AUTOMATED STEP]: Check for worker pod evictions due to ephemeral storage exhaustion.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No Ephemeral Storage Exhaustion found in Logs.
+
+[AUTOMATED STEP]: Check for gcs-syncd container hitting its ephemeral limit.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No gcs-syncd container hitting its ephemeral limit found in Logs.
+
+[END]: End step for Airflow worker restart runbook.
+[INFO]: End of the runbook
+
+

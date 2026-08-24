@@ -18,10 +18,9 @@ so we recommend disabling unused service accounts then deleting the service
 accounts when you are sure that you no longer need them
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import iam, monitoring
+from gcpdiag.utils import get_path
 
 service_accounts = {}
 query_results_per_project_id: dict[str, monitoring.TimeSeriesCollection] = {}

@@ -45,11 +45,11 @@ from typing import Any, Deque, Dict, List, Mapping, Optional, Sequence, Set, Tup
 
 import dateutil.parser
 import ratelimit
-from boltons.iterutils import get_path
 from googleapiclient import errors
 
 from gcpdiag import caching, config, executor, models, utils
 from gcpdiag.queries import apis
+from gcpdiag.utils import get_path
 
 
 @dataclasses.dataclass

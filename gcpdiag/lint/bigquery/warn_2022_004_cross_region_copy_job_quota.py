@@ -18,10 +18,9 @@ This rule verifies that there are no log entries reporting that
 the number of cross-region copy jobs running in a project exceeded the daily limit.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR1 = 'Quota exceeded: Your project exceeded quota for cross region copies per project.'
 MATCH_STR2 = 'Quota exceeded: Your table exceeded quota for cross region copies per table.'

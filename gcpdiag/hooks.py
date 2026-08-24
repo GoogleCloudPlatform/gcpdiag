@@ -96,3 +96,13 @@ def post_runbook_hook(report):
     google_internal.post_runbook_hook(report)
   except ImportError:
     pass
+
+
+def is_inspection_env() -> bool:
+  """Returns True if the environment is a Google-internal inspection environment."""
+  try:
+    from gcpdiag_google_internal import hooks as google_internal
+
+    return google_internal.is_inspection_env()
+  except ImportError:
+    return False

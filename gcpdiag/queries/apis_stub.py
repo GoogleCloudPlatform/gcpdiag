@@ -33,6 +33,7 @@ JSON_PROJECT_DIR = {
   '123456270': pathlib.Path(__file__).parents[2] / 'test-data/gce4/json-dumps',
   'gcpdiag-bigquery1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/bigquery1/json-dumps',
   'gcpdiag-gke1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
+  'gcpdiag-gke5-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gke5/json-dumps',
   '12340002': pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
   'gcpdiag-gcf1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
   '12340003': pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
@@ -45,6 +46,8 @@ JSON_PROJECT_DIR = {
   'gcpdiag-dataproc3-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/dataproc3/json-dumps',
   'gcpdiag-composer1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
   'gcpdiag-cloudsql1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/cloudsql1/json-dumps',
+  'gcpdiag-cloudsql2-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/cloudsql2/json-dumps',
+  'gcpdiag-cloudsql3-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/cloudsql3/json-dumps',
   'gcpdiag-cloudasset1-aaaa': pathlib.Path(__file__).parents[2]
   / 'test-data/cloudasset1/json-dumps',
   '12340071': pathlib.Path(__file__).parents[2] / 'test-data/cloudasset1/json-dumps',
@@ -108,6 +111,8 @@ JSON_PROJECT_DIR = {
   'gcpdiag-gce6-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/gce6/json-dumps',
   '1234560123456': pathlib.Path(__file__).parents[2] / 'test-data/gce6/json-dumps',
   'gcpdiag-vpn1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/vpn/json-dumps',
+  'gcpdiag-managedkafka1-aaaa': pathlib.Path(__file__).parents[2]
+  / 'test-data/managedkafka1/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -384,5 +389,9 @@ def get_api_stub(
     from gcpdiag.queries import looker_stub
 
     return looker_stub.LookerApiStub()
+  elif service_name == 'managedkafka':
+    from gcpdiag.queries import managedkafka_stub
+
+    return managedkafka_stub.ManagedKafkaApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

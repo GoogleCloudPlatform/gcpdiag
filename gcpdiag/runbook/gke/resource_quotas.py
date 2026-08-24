@@ -15,14 +15,12 @@
 
 from datetime import datetime
 
-from boltons.iterutils import get_path
-
 from gcpdiag import runbook
 from gcpdiag.queries import crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gcp import generalized_steps as gcp_gs
 from gcpdiag.runbook.gke import flags
-from gcpdiag.utils import GcpApiError, Version
+from gcpdiag.utils import GcpApiError, Version, get_path
 
 
 class ResourceQuotas(runbook.DiagnosticTree):

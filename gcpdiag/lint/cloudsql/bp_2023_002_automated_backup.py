@@ -42,7 +42,32 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no CloudSQL instances found')
     return
 
+  # Build a map for quick lookup
+  instance_map = {instance.name: instance for instance in instances}
+
   for instance in instances:
+    master_instance_full_name = instance.master_instance_name
+
+    if master_instance_full_name:
+      # This is a replica
+      master_name = master_instance_full_name.split(':')[-1]
+      master_instance = instance_map.get(master_name)
+
+      if master_instance:
+        # Check if master has automated backup enabled
+        if master_instance.is_automated_backup_enabled:
+          report.add_ok(instance, f'Replica of {master_name} which has automated backup enabled')
+        else:
+          report.add_failed(
+            instance, f'Replica of {master_name} which lacks automated backup enabled'
+          )
+      else:
+        report.add_skipped(
+          instance, f'Replica of {master_name} (Master instance not found in current context)'
+        )
+      continue
+
+    # This is a primary instance (or standalone)
     if not instance.is_automated_backup_enabled:
       report.add_failed(instance)
     else:

@@ -16,7 +16,6 @@
 from datetime import datetime
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import runbook
 
@@ -30,6 +29,7 @@ from gcpdiag.runbook.gce import constants, flags
 from gcpdiag.runbook.gce import generalized_steps as gce_gs
 from gcpdiag.runbook.gcp import generalized_steps as gcp_gs
 from gcpdiag.runbook.iam import generalized_steps as iam_gs
+from gcpdiag.utils import get_path
 
 GAC_SERVICE_ACCOUNT = 'gac_service_account'
 CHECK_LOGGING = 'check_logging'

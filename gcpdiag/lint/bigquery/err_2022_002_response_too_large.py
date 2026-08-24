@@ -18,10 +18,9 @@ Query results for SQL queries in BigQuery that generate excessively large result
 set a destination table fail with job error "responseTooLarge"
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Response too large to return'
 

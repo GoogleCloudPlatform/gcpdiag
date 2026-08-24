@@ -25,10 +25,9 @@ excessive memory use for buffering can lead to OOM errors.
 
 from itertools import islice
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STRINGS = ['Error message from worker: Processing stuck in step SpannerIO.Write/Write']
 LOG_FILTER = [

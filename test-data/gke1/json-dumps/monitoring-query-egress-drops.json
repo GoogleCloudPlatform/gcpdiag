@@ -1,0 +1,67 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.attachment"
+      },
+      {
+        "key": "resource.region"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_dropped_aggregate",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "dummy-attachment1"
+        },
+        {
+          "stringValue": "us-east4"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 1.5
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "dummy-attachment5"
+        },
+        {
+          "stringValue": "us-west2"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 2.5
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        }
+      ]
+    }
+  ]
+}

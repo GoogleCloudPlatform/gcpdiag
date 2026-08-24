@@ -19,10 +19,9 @@ sends this signal to avoid further memory consumption which might impact the
 execution of other Airflow tasks.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Task exited with return code Negsignal.SIGKILL'
 LOG_FILTER = ['severity=INFO', f'textPayload:"{MATCH_STR}"']

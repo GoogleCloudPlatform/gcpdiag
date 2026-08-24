@@ -19,10 +19,9 @@ This issue is caused when a job cannot be completed within a memory budget
  because of the possibility of user's schema being too large and nested.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Resources exceeded during query execution: Too many output columns'
 

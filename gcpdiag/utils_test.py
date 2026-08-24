@@ -130,3 +130,43 @@ class TestVersionComponentsParser:
     with pytest.raises(Exception):
       vcp3.extract_base_version()
     assert vcp4.extract_base_version() == '1.19.13'
+
+
+def test_get_path():
+  """get_path() should successfully retrieve nested values with different formats."""
+  data = {'a': {'b': {'c': 42}}, 'items': [{'name': 'vm1'}, {'name': 'vm2'}], 'empty': []}
+
+  # 1. Nest dict traversal via dot-separated path string
+  assert utils.get_path(data, 'a.b.c') == 42
+
+  # 2. Sequence (tuple/list) path support
+  assert utils.get_path(data, ('a', 'b', 'c')) == 42
+  assert utils.get_path(data, ['a', 'b', 'c']) == 42
+
+  # 3. List index string access
+  assert utils.get_path(data, 'items.0.name') == 'vm1'
+  assert utils.get_path(data, 'items.1.name') == 'vm2'
+
+  # 4. Default fallback returns
+  assert utils.get_path(data, 'a.b.d', default='default-val') == 'default-val'
+  assert utils.get_path(data, 'items.2.name', default='non-existent') == 'non-existent'
+  assert utils.get_path(data, 'items.name', default='invalid-list-access') == 'invalid-list-access'
+
+  # 5. Missing path yields KeyError or IndexError when default is UNSET
+  with pytest.raises(KeyError):
+    utils.get_path(data, 'a.b.d')
+  with pytest.raises(IndexError):
+    utils.get_path(data, 'items.5')
+  with pytest.raises(IndexError):
+    # Invalid accessing attribute key (string) directly on list object without numeric index
+    utils.get_path(data, 'items.name')
+
+  # 6. Duck typing / Mock attributes validation
+  class MockObj:
+    def __getitem__(self, key):
+      if key == 'subscript':
+        return 'subscript-val'
+      raise KeyError(key)
+
+  mock_obj = MockObj()
+  assert utils.get_path(mock_obj, 'subscript') == 'subscript-val'

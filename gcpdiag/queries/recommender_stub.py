@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -38,15 +38,29 @@ class RecommenderApiStub:
   def insights(self):
     return self
 
+  def recommenders(self):
+    return self
+
+  def recommendations(self):
+    return self
+
   def list(self, parent):
     parent_split = parent.split('/')
-    project, scope, insight_type = (
+    project, scope, type_or_recommender = (
       parent_split[1],
       parent_split[3],
       parent_split[-1],
     )
-    if insight_type == 'google.networkanalyzer.networkservices.loadBalancerInsight':
-      return apis_stub.RestCallStub(project, f'lb-insights-{scope}')
+    if 'insightTypes' in parent_split:
+      if type_or_recommender == 'google.networkanalyzer.networkservices.loadBalancerInsight':
+        return apis_stub.RestCallStub(project, f'lb-insights-{scope}')
+    elif 'recommenders' in parent_split:
+      if type_or_recommender == 'google.container.DiagnosisRecommender':
+        return apis_stub.RestCallStub(
+          project,
+          f'gke-recommendations-{scope}',
+          default_json_basename='gke-recommendations-europe-west4',
+        )
 
   def list_next(self, previous_request, previous_response):
     return None

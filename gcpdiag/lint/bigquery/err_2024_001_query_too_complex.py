@@ -22,10 +22,9 @@ substitution for temp tables. It is not a good practice and they could use
 scripts and temp tables instead.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Not enough resources for query planning - too many subqueries or query is too complex'
 

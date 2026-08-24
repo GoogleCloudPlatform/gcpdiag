@@ -25,11 +25,10 @@ are set appropriately or consider manually scaling node pools as needed.
 
 from typing import Optional, Tuple
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.lint.gke import util
 from gcpdiag.queries import apis, gke, logs
+from gcpdiag.utils import get_path
 
 _LOG_RESOURCE_TYPE = 'k8s_cluster'
 _LOG_NAME = 'log_id("container.googleapis.com%2Fcluster-autoscaler-visibility")'

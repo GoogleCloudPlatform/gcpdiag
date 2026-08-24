@@ -21,6 +21,17 @@ DATAFLOW_WORKER_ROLE = 'roles/dataflow.worker'
 DATAFLOW_DEVELOPER_ROLE = 'roles/dataflow.developer'
 DATAFLOW_IAM_SERVICE_ACCOUNT_USER = 'roles/iam.serviceAccountUser'
 
+# Heuristic mapping for runbook error catalog. Simple substring matching might
+# produce false positives (e.g. interacting with Spanner instead of BigQuery).
+ERROR_CATALOG = {
+  'Permission denied': 'troubleshoot-permissions',
+  '403': 'troubleshoot-permissions',
+  'BigQuery': 'bigquery_errors',
+  'table not found': 'bigquery_errors',
+  'Pub/Sub': 'pubsub_errors',
+  'subscription': 'pubsub_errors',
+}
+
 # product errors
 GENERIC_ERR = 'Error logs found in job logs for the project'
 BATCH_JOB_FAILED_ERR = 'The job failed because a work item has failed 4 times.'

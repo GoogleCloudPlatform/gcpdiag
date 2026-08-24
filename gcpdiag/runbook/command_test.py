@@ -324,3 +324,8 @@ class Test(unittest.TestCase):
     self.assertTrue(mock_hook.called)
     mock_output_obj.display_footer.assert_called_once()
     mock_kube.assert_called_once()
+
+  def test_tag_in_runbook_args_parser(self):
+    parser = command._init_runbook_args_parser()
+    args = parser.parse_args(['--tag', 'slow,boot'])
+    self.assertEqual(args.tag, ['slow,boot'])

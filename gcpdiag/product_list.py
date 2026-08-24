@@ -28,6 +28,7 @@ def get_product_list() -> Dict:
     'interconnect': '[Interconnect](https://cloud.google.com/network-connectivity/docs/interconnect)',
     'lb': '[Load balancing](https://cloud.google.com/load-balancing)',
     'logs': '[Cloud Logging](https://cloud.google.com/logging)',
+    'managedkafka': '[Managed Service for Apache Kafka](https://cloud.google.com/managed-service-for-apache-kafka/docs)',
     'monitoring': 'https://cloud.google.com/monitoring',
     'notebooks': '[Vertex AI Workbench](https://cloud.google.com/vertex-ai-workbench)',
     'nat': '[Cloud NAT](https://cloud.google.com/nat)',

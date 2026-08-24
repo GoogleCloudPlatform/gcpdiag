@@ -21,10 +21,9 @@ unhealthy due to events like scheduled maintenance. However, overall it should
 be healthy.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, monitoring
+from gcpdiag.utils import get_path
 
 _query_results_per_project_id: dict[str, monitoring.TimeSeriesCollection] = {}
 envs_by_project = {}

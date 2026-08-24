@@ -1,0 +1,5 @@
+{
+  "kind": "compute#backendServiceAggregatedList",
+  "id": "projects/gcpdiag-gke5-aaaa/aggregated/backendServices",
+  "items": {}
+}

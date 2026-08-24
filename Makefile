@@ -2,21 +2,39 @@ VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
 DIST_NAME=gcpdiag-$(VERSION)
 SHELL=/bin/bash
 
-.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code
+.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code setup-git
+
+setup-git:
+	@if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then \
+		git config submodule.recurse true; \
+		HOOKS_DIR=$$(git rev-parse --git-path hooks); \
+		for hook in post-rewrite post-merge post-checkout; do \
+			if [ ! -f $$HOOKS_DIR/$$hook ]; then \
+				echo '#!/bin/bash' > $$HOOKS_DIR/$$hook; \
+				echo 'git submodule update --init --recursive' >> $$HOOKS_DIR/$$hook; \
+				chmod +x $$HOOKS_DIR/$$hook; \
+				echo "Installed $$hook hook."; \
+			fi; \
+		done; \
+	fi
 
 # Comprehensive environment check.
-check-environment:
+check-environment: setup-git
 	@command -v pipenv >/dev/null 2>&1 || { echo >&2 "ERROR: pipenv is not installed. Please run 'pip install pipenv' and try again."; exit 1; }
-	@if [ -z "$$(pipenv --venv)" ]; then \
+	@if [ -z "$$(pipenv --venv 2>/dev/null)" ]; then \
 		echo "Pipenv environment not created. Please run 'pipenv install --dev'."; \
 		exit 1; \
 	fi
-	@pipenv check || { \
-		REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\\1/p' < Pipfile); \
-		echo >&2 "ERROR: Pipenv check failed. Your Python version might be incorrect."; \
+	@REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\1/p' < Pipfile); \
+	CURRENT_PYTHON_VERSION=$$(pipenv run python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")' 2>/dev/null); \
+	if [ "$$REQUIRED_PYTHON_VERSION" != "$$CURRENT_PYTHON_VERSION" ]; then \
+		echo >&2 "ERROR: Python version mismatch. Expected $$REQUIRED_PYTHON_VERSION but got $$CURRENT_PYTHON_VERSION."; \
 		echo >&2 "Please run 'pipenv --rm && pipenv --python $$REQUIRED_PYTHON_VERSION install --dev' to fix this."; \
 		exit 1; \
-	}
+	fi
+	@bash ./bin/precommit-osv-scanner
+
+
 
 test: check-environment
 	pipenv run pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked

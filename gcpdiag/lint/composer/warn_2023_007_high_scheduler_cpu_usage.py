@@ -17,10 +17,9 @@ Airflow scheduler's CPU and memory metrics help you check whether the
 scheduler's performance is a bottleneck in the overall Airflow performance.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, monitoring
+from gcpdiag.utils import get_path
 
 CPU_USAGE_THRESHOLD = 1
 

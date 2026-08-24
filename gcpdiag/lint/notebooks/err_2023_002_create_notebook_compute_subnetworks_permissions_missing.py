@@ -18,10 +18,9 @@ Creating notebook inside VPC requires user and service-*@gcp-sa-notebooks.iam.gs
 to have compute.subnetworks.use and compute.subnetworks.useExternalIp permissions in VPC project
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 # used by check for relevant logs
 MATCH_STRING = "Required 'compute.subnetworks"

@@ -38,5 +38,6 @@ def get(url, params=None, timeout=None, *, data=None, headers=None):
       response.headers['Content-Type'] = 'text/html'
       return response
   except FileNotFoundError:
+    response = requests.Response()
     response.status_code = 404
     return response

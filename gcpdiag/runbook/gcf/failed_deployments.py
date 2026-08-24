@@ -16,7 +16,6 @@
 from datetime import datetime
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import config, runbook
 from gcpdiag.queries import crm, iam, logs
@@ -24,6 +23,7 @@ from gcpdiag.runbook import op
 from gcpdiag.runbook.gcf import constants as gcf_const
 from gcpdiag.runbook.gcf import flags
 from gcpdiag.runbook.iam import generalized_steps as iam_gs
+from gcpdiag.utils import get_path
 
 
 class FailedDeployments(runbook.DiagnosticTree):

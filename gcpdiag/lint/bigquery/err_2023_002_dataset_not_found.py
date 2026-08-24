@@ -19,10 +19,9 @@ While trying to copy a table, the dataset was not found
 
 import itertools
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 # String the is unique to this error
 MATCH_STR = 'Not found: Dataset'

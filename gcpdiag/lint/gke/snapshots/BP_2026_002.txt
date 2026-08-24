@@ -1,0 +1,21 @@
+*  gke/BP/2026_002: GKE control plane logging and monitoring enabled.
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [FAIL]
+     control plane logging and control plane monitoring are disabled
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [FAIL]
+     control plane logging and control plane monitoring are disabled
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
+     control plane logging and control plane monitoring are disabled
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
+     control plane logging and control plane monitoring are disabled
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [FAIL]
+     control plane logging and control plane monitoring are disabled
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [FAIL]
+     control plane logging and control plane monitoring are disabled
+
+   Control plane logging and monitoring (API_SERVER, SCHEDULER, and
+   CONTROLLER_MANAGER) are essential for troubleshooting cluster-level issues
+   and monitoring the health of the GKE control plane.
+
+   https://gcpdiag.dev/rules/gke/BP/2026_002
+

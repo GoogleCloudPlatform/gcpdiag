@@ -15,12 +15,11 @@
 
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import runbook
 from gcpdiag.queries import crm, iam, monitoring, pubsub, quotas
 from gcpdiag.runbook import op
 from gcpdiag.runbook.pubsub import flags
+from gcpdiag.utils import get_path
 
 
 class PubsubQuotas(runbook.Step):

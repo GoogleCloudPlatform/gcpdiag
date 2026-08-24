@@ -18,10 +18,9 @@ number of schedulers and Reduce the CPU of schedulers for Optimize environment
 performance and costs
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, monitoring
+from gcpdiag.utils import get_path
 
 CPU_USAGE_THRESHOLD = 0.35
 

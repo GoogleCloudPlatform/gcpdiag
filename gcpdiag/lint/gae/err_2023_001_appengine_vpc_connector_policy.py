@@ -18,10 +18,9 @@
 Organizational policy is preventing the creation of a Serverless VPC Access Connector.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 SEVERITY = 'ERROR'
 METHOD_NAME = 'google.cloud.vpcaccess.v1.VpcAccessService.CreateConnector'

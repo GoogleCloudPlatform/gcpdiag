@@ -20,10 +20,9 @@ HDFS had issues writing file(s) to DataNode(s).
 
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, dataproc, logs
+from gcpdiag.utils import get_path
 
 RE_PATTERN = (
   '(.*could only be written to .*are excluded in this operation.*)|'

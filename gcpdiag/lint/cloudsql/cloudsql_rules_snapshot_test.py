@@ -13,9 +13,62 @@
 # limitations under the License.
 """Generalize rule snapshot testing"""
 
+import datetime
+from unittest import mock
+
 from gcpdiag.lint import cloudsql, snapshot_test_base
 
 
-class Test(snapshot_test_base.RulesSnapshotTestBase):
+class MockDate(datetime.date):
+  @classmethod
+  def today(cls):
+    return cls(2026, 1, 1)
+
+
+@mock.patch('gcpdiag.lint.cloudsql.warn_2026_002_eol_version.date', MockDate)
+class TestCloudSql1(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = cloudsql
   project_id = 'gcpdiag-cloudsql1-aaaa'
+
+  def _list_rules(self):
+    rules = super()._list_rules()
+    return [
+      r
+      for r in rules
+      if f'{r.rule_class}_{r.rule_id}'
+      not in (
+        'BP_2023_002',
+        'BP_2026_003',
+        'BP_2026_001',
+        'WARN_2026_003',
+        'BP_2026_002',
+      )
+    ]
+
+
+class TestCloudsql2(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = cloudsql
+  project_id = 'gcpdiag-cloudsql2-aaaa'
+
+  def _list_rules(self):
+    rules = super()._list_rules()
+    return [
+      r
+      for r in rules
+      if f'{r.rule_class}_{r.rule_id}'
+      in (
+        'BP_2023_002',
+        'BP_2026_003',
+        'WARN_2026_003',
+        'BP_2026_002',
+      )
+    ]
+
+
+class TestCloudSql3(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = cloudsql
+  project_id = 'gcpdiag-cloudsql3-aaaa'
+
+  def _list_rules(self):
+    rules = super()._list_rules()
+    return [r for r in rules if f'{r.rule_class}_{r.rule_id}' in ('BP_2026_001',)]

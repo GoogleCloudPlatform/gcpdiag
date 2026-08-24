@@ -1,0 +1,17 @@
+*  gke/BP/2026_004: GKE node pools do not use Preemptible or Spot VMs.
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [SKIP]
+     no node pools found
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
+     no node pools found
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
+     The following GKE nodepool(s) use either preemptible or spot VMs: low-pod-per-node-pool
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
+
+   GKE node pools should not use Preemptible or Spot VMs for production
+   workloads as they can be terminated at any time with a short grace period.
+
+   https://gcpdiag.dev/rules/gke/BP/2026_004
+

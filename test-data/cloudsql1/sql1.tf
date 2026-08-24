@@ -44,6 +44,28 @@ resource "google_sql_database_instance" "sql1" {
     }
   }
 }
+resource "google_sql_database_instance" "sql4" {
+  project          = google_project.project.project_id
+  name             = "sql4"
+  region           = "us-central1"
+  database_version = "MYSQL_5_7"
+
+  depends_on = [google_project_service.sqladmin,
+  google_service_networking_connection.private_vpc_connection]
+
+  settings {
+    tier              = "db-n1-standard-1"
+    availability_type = "REGIONAL"
+    backup_configuration {
+      enabled            = true
+      binary_log_enabled = true
+    }
+    ip_configuration {
+      ipv4_enabled    = false
+      private_network = google_compute_network.private_network.id
+    }
+  }
+}
 
 provider "google-beta" {
   region = "us-central1"

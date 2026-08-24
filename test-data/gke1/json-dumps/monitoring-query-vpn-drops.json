@@ -1,0 +1,44 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.gateway_id"
+      },
+      {
+        "key": "resource.region"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_dropped_aggregate",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "dummy-vpn-gateway"
+        },
+        {
+          "stringValue": "us-central1"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 3.0
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        }
+      ]
+    }
+  ]
+}

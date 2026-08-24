@@ -24,10 +24,9 @@ https://cloud.google.com/dataproc/docs/support/spark-job-tuning#yarn_nodes_are_u
 
 import re
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, dataproc, logs
+from gcpdiag.utils import get_path
 
 RE_PATTERN = (
   '(.*dirs usable space is below configured utilization percentage.*)|'

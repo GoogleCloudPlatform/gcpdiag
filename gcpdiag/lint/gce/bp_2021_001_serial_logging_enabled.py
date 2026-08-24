@@ -26,6 +26,8 @@ import operator as op
 from gcpdiag import lint, models
 from gcpdiag.queries import gce
 
+tags = ['gce', 'serial-port', 'test-tag']
+
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context)

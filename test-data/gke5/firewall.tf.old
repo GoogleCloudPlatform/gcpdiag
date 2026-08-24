@@ -1,0 +1,56 @@
+resource "google_compute_firewall" "fw-test-800" {
+  project  = google_project.project.project_id
+  name     = "fw-test-800"
+  network  = "default"
+  priority = 800
+
+  source_ranges = ["10.100.0.0/24"]
+
+  deny {
+    protocol = "tcp"
+    ports    = ["1001-1002"]
+  }
+}
+
+resource "google_compute_firewall" "fw-test-900" {
+  project  = google_project.project.project_id
+  name     = "fw-test-900"
+  network  = "default"
+  priority = 900
+
+  source_ranges = ["10.100.0.0/24"]
+  source_tags   = ["foobar", "foo", "bar"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["1234", "1000-2000", "2033"]
+  }
+}
+
+resource "google_compute_firewall" "fw-test-901" {
+  project  = google_project.project.project_id
+  name     = "fw-test-901"
+  network  = "default"
+  priority = 901
+
+  source_service_accounts = ["service-12340002@compute-system.iam.gserviceaccount.com"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["1234", "1000-2000", "2033"]
+  }
+}
+
+resource "google_compute_firewall" "fw-test-950" {
+  project  = google_project.project.project_id
+  name     = "fw-test-950"
+  network  = "default"
+  priority = 950
+
+  source_ranges = ["0.0.0.0/0"]
+
+  deny {
+    protocol = "tcp"
+    ports    = ["1006"]
+  }
+}

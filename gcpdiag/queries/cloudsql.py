@@ -13,13 +13,15 @@
 # limitations under the License.
 """Queries related to CloudSQL."""
 
+import datetime
 import ipaddress
-from typing import Iterable, List
-
-from boltons.iterutils import get_path
+import logging
+import re
+from typing import Iterable, List, Optional
 
 from gcpdiag import caching, config, models
-from gcpdiag.queries import apis, network
+from gcpdiag.queries import apis, network, web
+from gcpdiag.utils import get_path
 
 
 class Instance(models.Resource):
@@ -36,6 +38,12 @@ class Instance(models.Resource):
     return self._resource_data['name']
 
   @property
+  def master_instance_name(self) -> str:
+    """The name of the master instance, if this is a replica."""
+    # API returns 'masterInstanceName' for replicas.
+    return self._resource_data.get('masterInstanceName', '')
+
+  @property
   def state(self) -> str:
     return self._resource_data['state']
 
@@ -46,7 +54,12 @@ class Instance(models.Resource):
   @property
   def is_regional(self) -> bool:
     return (
-      get_path(self._resource_data, ('settings', 'availabilityType'), default='ZONAL') == 'REGIONAL'
+      get_path(
+        self._resource_data,
+        ('settings', 'availabilityType'),
+        default='ZONAL',
+      )
+      == 'REGIONAL'
     )
 
   @property
@@ -77,7 +90,9 @@ class Instance(models.Resource):
   @property
   def authorizednetworks(self) -> List[str]:
     authorizednetworks = get_path(
-      self._resource_data, ('settings', 'ipConfiguration', 'authorizedNetworks'), []
+      self._resource_data,
+      ('settings', 'ipConfiguration', 'authorizedNetworks'),
+      [],
     )
     return [authorizednetwork['value'] for authorizednetwork in authorizednetworks]
 
@@ -90,13 +105,33 @@ class Instance(models.Resource):
     return get_path(self._resource_data, ('settings', 'backupConfiguration', 'enabled'))
 
   @property
+  def is_pitr_enabled(self) -> bool:
+    return get_path(
+      self._resource_data, ('settings', 'backupConfiguration', 'pointInTimeRecoveryEnabled'), False
+    )
+
+  @property
+  def is_binary_log_enabled(self) -> bool:
+    return get_path(
+      self._resource_data, ('settings', 'backupConfiguration', 'binaryLogEnabled'), False
+    )
+
+  @property
   def is_suspended_state(self) -> bool:
     return self.state == 'SUSPENDED'
 
   @property
   def is_shared_core(self) -> bool:
     shared_core_tiers = ['db-g1-small', 'db-f1-micro']
-    return get_path(self._resource_data, ('settings', 'tier')) in shared_core_tiers
+    return self.tier in shared_core_tiers
+
+  @property
+  def tier(self) -> str:
+    return get_path(self._resource_data, ('settings', 'tier'), default='')
+
+  @property
+  def edition(self) -> str:
+    return get_path(self._resource_data, ('settings', 'edition'), default='N/A')
 
   @property
   def is_high_available(self) -> bool:
@@ -141,3 +176,62 @@ def get_instances(context: models.Context) -> Iterable[Instance]:
 
     databases.append(Instance(context.project_id, d))
   return databases
+
+
+@caching.cached_api_call
+def get_release_schedule() -> dict:
+  """Extract the release schedule for Cloud SQL instances.
+
+  Returns:
+    A dictionary of release schedule.
+  """
+  page_url = 'https://cloud.google.com/sql/docs/db-versions'
+  release_data = {}
+  try:
+    tables = web.fetch_and_parse_all_tables(page_url)
+
+    def parse_date(date_str) -> Optional[datetime.date]:
+      date_str = date_str.strip().replace('*', '')
+      if not date_str or date_str in ['—', '-', 'N/A']:
+        return None
+      try:
+        return datetime.datetime.strptime(date_str, '%B %d, %Y').date()
+      except ValueError:
+        return None
+
+    for table in tables:
+      for row in table:
+        if len(row) < 5:
+          continue
+        version_str = row[0]
+
+        # Identify DB type and version
+        version_key = None
+        if 'MySQL' in version_str:
+          v = re.search(r'MySQL (\d+\.\d+)', version_str)
+          if v:
+            version_key = f'MYSQL_{v.group(1).replace(".", "_")}'
+        elif 'PostgreSQL' in version_str:
+          v = re.search(r'PostgreSQL (\d+)', version_str)
+          if not v:
+            v = re.search(r'PostgreSQL (\d+\.\d+)', version_str)
+          if v:
+            version_key = f'POSTGRES_{v.group(1).replace(".", "_")}'
+        elif 'SQL Server' in version_str:
+          v = re.search(r'SQL Server (\d+)', version_str)
+          if v:
+            version_key = f'SQLSERVER_{v.group(1)}'
+
+        if not version_key:
+          continue
+
+        regular_support_end = parse_date(row[3])
+        extended_support_end = parse_date(row[4])
+
+        release_data[version_key] = {
+          'regular_support_end': regular_support_end,
+          'extended_support_end': extended_support_end,
+        }
+  except Exception as e:
+    logging.error('Error extracting Cloud SQL release schedule: %s', e)
+  return release_data

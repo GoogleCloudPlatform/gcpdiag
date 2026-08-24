@@ -100,6 +100,23 @@ class Test(TestCase):
     args = parser.parse_args(['--project', 'myproject', '--config', '/path/to/file'])
     assert args.config == '/path/to/file'
 
+  def test_output_casing_and_validation(self):
+    parser = command.init_args_parser()
+    # Test valid outputs in different casing
+    args = parser.parse_args(['--project', 'myproject', '--output', 'JSON'])
+    assert args.output == 'json'
+    args = parser.parse_args(['--project', 'myproject', '--output', 'json'])
+    assert args.output == 'json'
+    args = parser.parse_args(['--project', 'myproject', '--output', 'CSV'])
+    assert args.output == 'csv'
+    args = parser.parse_args(['--project', 'myproject', '--output', 'terminal'])
+    assert args.output == 'terminal'
+
+    # Test invalid output causes argparse to exit with error
+    with self.assertRaises(SystemExit) as cm:
+      parser.parse_args(['--project', 'myproject', '--output', 'invalid'])
+    assert cm.exception.code == 2
+
   def test_load_repository_rules(self):
     repo = lint.LintRuleRepository()
     command._load_repository_rules(repo)
@@ -146,3 +163,53 @@ class Test(TestCase):
       args = parser.parse_args(['--project', 'x', '--label', 'invalid'])
     except SystemExit as e:
       assert e.code == 2
+
+  def test_lint_rules_filtered_by_tags(self):
+    repo = lint.LintRuleRepository(
+      include_tags=['TEst_Tag_1'],
+      exclude_tags=['tEst_tAg_2'],
+    )
+    rule1 = lint.LintRule(
+      product='gke',
+      rule_class=lint.LintRuleClass.WARN,
+      rule_id='2021_001',
+      short_desc='desc',
+      long_desc='desc',
+      keywords=[],
+      tags=['tesT_taG_1'],
+      run_rule_f=lambda x: None,
+    )
+    rule2 = lint.LintRule(
+      product='gke',
+      rule_class=lint.LintRuleClass.WARN,
+      rule_id='2021_002',
+      short_desc='desc',
+      long_desc='desc',
+      keywords=[],
+      tags=['test_tag_1', 'tEst_Tag_2'],
+      run_rule_f=lambda x: None,
+    )
+    rule3 = lint.LintRule(
+      product='gke',
+      rule_class=lint.LintRuleClass.WARN,
+      rule_id='2021_003',
+      short_desc='desc',
+      long_desc='desc',
+      keywords=[],
+      tags=['test_tag_3'],
+      run_rule_f=lambda x: None,
+    )
+    repo._register_rule(rule1)
+    repo._register_rule(rule2)
+    repo._register_rule(rule3)
+    rules = list(repo.rules_to_run)
+    self.assertIn(rule1, rules)
+    self.assertNotIn(rule2, rules)
+    self.assertNotIn(rule3, rules)
+
+  def test_tag_args_parser(self):
+    parser = command.init_args_parser()
+    args = parser.parse_args(['--project', 'myproject', '--tag', 'slOw,PerFormance'])
+    self.assertEqual(args.tag, ['slOw,PerFormance'])
+    parsed_tags = command._parse_tag_pattern(args.tag)
+    self.assertEqual(parsed_tags, ['slow', 'performance'])

@@ -9,9 +9,7 @@ python_version = "3.12"
 [packages]
 aiohttp = "*"
 platformdirs = "*"
-boltons = "*"
 rich = "*"
-diskcache = "*"
 dnspython = "*"
 google-api-python-client = "*"
 jinja2 = ">=3.0.0"
@@ -36,6 +34,5 @@ pytest-snapshot = "*"
 ruff = "*"
 # for vim:
 # pip install 'python-language-server[yapf,pyflakes,mccabe]'
-safety = "*"
 types-pyyaml = "*"
 cookiecutter = "*"

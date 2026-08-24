@@ -1,0 +1,19 @@
+{
+  "topics": [
+    {
+      "name": "projects/gcpdiag-managedkafka1-aaaa/locations/us-central1/clusters/gcpdiag-my-kafka-cluster/topics/gcpdiag-my-topic",
+      "partitionCount": 30,
+      "replicationFactor": 3,
+      "configs": {
+        "cleanup.policy": "delete",
+        "min.insync.replicas": "2"
+      }
+    },
+    {
+      "name": "projects/gcpdiag-managedkafka1-aaaa/locations/us-central1/clusters/gcpdiag-my-kafka-cluster/topics/__internal_google_managed_kafka_topic_10",
+      "partitionCount": 1,
+      "replicationFactor": 1,
+      "configs": {}
+    }
+  ]
+}

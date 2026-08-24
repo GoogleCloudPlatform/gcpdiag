@@ -20,10 +20,10 @@ import re
 from typing import Dict, Mapping, Union
 
 import googleapiclient.errors
-from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, iam
+from gcpdiag.utils import get_path
 
 
 class Topic(models.Resource):

@@ -15,12 +15,18 @@
 # Lint as: python3
 """Test code in gke.py."""
 
+import base64
+import datetime
 import ipaddress
 import re
 import unittest
 from unittest import mock
 
 import pytest
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.x509.oid import NameOID
 
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, gce, gke
@@ -38,6 +44,9 @@ DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clust
 DUMMY_CLUSTER6_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke6'
 DUMMY_AUTOPILOT_CLUSTER1_NAME = (
   f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/autopilot-gke1'
+)
+DUMMY_AUTOPILOT_CLUSTER2_NAME = (
+  f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/autopilot-gke2'
 )
 DUMMY_DEFAULT_NAME = 'default'
 
@@ -57,6 +66,13 @@ class TestCluster(unittest.TestCase):
     context = models.Context(project_id=DUMMY_PROJECT_NAME, locations=['europe-west4'])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 7
+
+  def test_get_clusters_by_region_gke5(self):
+    """get_clusters returns the right cluster matched by region for gke5."""
+    context = models.Context(project_id='gcpdiag-gke5-aaaa', locations=['europe-west4'])
+    clusters = gke.get_clusters(context)
+    expected_cluster_name = 'projects/gcpdiag-gke5-aaaa/zones/europe-west4-a/clusters/gke1'
+    assert expected_cluster_name in clusters and len(clusters) == 9
 
   def test_cluster_properties(self):
     """verify cluster property methods."""
@@ -114,7 +130,9 @@ class TestCluster(unittest.TestCase):
 
   def test_has_authenticator_group_enabled(self):
     """ ""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
-    enabled."""
+
+    enabled.
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER3_NAME in clusters.keys()
@@ -126,7 +144,9 @@ class TestCluster(unittest.TestCase):
 
   def test_cluster_has_workload_identity_enabled(self):
     """has_workload_identity_enabled should return true for GKE cluster with
-    workload identity enabled."""
+
+    workload identity enabled.
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -136,7 +156,9 @@ class TestCluster(unittest.TestCase):
 
   def test_has_http_load_balancing_enabled(self):
     """has_http_load_balancing_enabled should return true if the GKE cluster has
-    http load balancing enabled"""
+
+    http load balancing enabled
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -146,7 +168,9 @@ class TestCluster(unittest.TestCase):
 
   def test_has_default_service_account(self):
     """has_default_service_account should return true for GKE node-pools with
-    the default GCE SA."""
+
+    the default GCE SA.
+    """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # 'default-pool' has the default SA
@@ -398,6 +422,20 @@ class TestCluster(unittest.TestCase):
     c_autopilot = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
     assert c_autopilot.is_nodelocal_dnscache_enabled
 
+  def test_dns_provider(self):
+    """Test the dns_provider property."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+
+    c1 = clusters[DUMMY_CLUSTER1_NAME]
+    assert c1.dns_provider == 'KUBE_DNS'
+
+    c_autopilot = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
+    assert c_autopilot.dns_provider == 'CLOUD_DNS'
+
+    c_autopilot2 = clusters[DUMMY_AUTOPILOT_CLUSTER2_NAME]
+    assert c_autopilot2.dns_provider == 'KUBE_DNS'
+
 
 class TestVersion:
   """Test GKE Version class"""
@@ -450,3 +488,108 @@ class TestVersion:
   def raises(self, v):
     with pytest.raises(Exception):
       Version(v)
+
+
+def _generate_mock_cert(valid_days, expired=False):
+  private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+  subject = issuer = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, 'Mock CA')])
+  now = datetime.datetime.now(datetime.timezone.utc)
+  if expired:
+    not_before = now - datetime.timedelta(days=valid_days + 10)
+    not_after = now - datetime.timedelta(days=10)
+  else:
+    not_before = now - datetime.timedelta(days=10)
+    not_after = now + datetime.timedelta(days=valid_days)
+
+  cert = (
+    x509.CertificateBuilder()
+    .subject_name(subject)
+    .issuer_name(issuer)
+    .public_key(private_key.public_key())
+    .serial_number(x509.random_serial_number())
+    .not_valid_before(not_before)
+    .not_valid_after(not_after)
+    .sign(private_key, hashes.SHA256())
+  )
+
+  return cert.public_bytes(serialization.Encoding.PEM).decode('utf-8')
+
+
+class TestClusterCaCertificateInfo:
+  """Test parsing helper function under various certificate payload formats."""
+
+  def test_parse_single_healthy_cert(self):
+    pem = _generate_mock_cert(valid_days=300)
+    b64_pem = base64.b64encode(pem.encode('utf-8')).decode('utf-8')
+    context = models.Context(project_id='project-id')
+    c = gke.Cluster(
+      'project-id',
+      {
+        'currentMasterVersion': '1.20.0',
+        'location': 'us-central1-a',
+        'name': 'dummy-cluster',
+        'masterAuth': {'clusterCaCertificate': b64_pem},
+      },
+      context,
+    )
+    cert_info = c.cluster_ca_certificate_info
+    assert cert_info is not None
+    assert len(cert_info['certificates']) == 1
+    expiry = datetime.datetime.fromisoformat(cert_info['certificates'][0]['notAfter'])
+    assert expiry > datetime.datetime.now(datetime.timezone.utc)
+
+  def test_parse_multiple_certs_bundle(self):
+    pem1 = _generate_mock_cert(valid_days=15)
+    pem2 = _generate_mock_cert(valid_days=300)
+    bundle = pem1 + pem2
+    b64_bundle = base64.b64encode(bundle.encode('utf-8')).decode('utf-8')
+    context = models.Context(project_id='project-id')
+    c = gke.Cluster(
+      'project-id',
+      {
+        'currentMasterVersion': '1.20.0',
+        'location': 'us-central1-a',
+        'name': 'dummy-cluster',
+        'masterAuth': {'clusterCaCertificate': b64_bundle},
+      },
+      context,
+    )
+    cert_info = c.cluster_ca_certificate_info
+    assert cert_info is not None
+    assert len(cert_info['certificates']) == 2
+    expiries = sorted(
+      datetime.datetime.fromisoformat(c['notAfter']) for c in cert_info['certificates']
+    )
+    assert (expiries[0] - datetime.datetime.now(datetime.timezone.utc)).days < 20
+    assert (expiries[1] - datetime.datetime.now(datetime.timezone.utc)).days > 290
+
+  def test_parse_invalid_cert_fails(self):
+    context = models.Context(project_id='project-id')
+    c = gke.Cluster(
+      'project-id',
+      {
+        'currentMasterVersion': '1.20.0',
+        'location': 'us-central1-a',
+        'name': 'dummy-cluster',
+        'masterAuth': {'clusterCaCertificate': 'NOT_A_VALID_CERTIFICATE_PAYLOAD'},
+      },
+      context,
+    )
+    assert c.cluster_ca_certificate_info is None
+
+  def test_parse_raw_pem_unencoded(self):
+    pem = _generate_mock_cert(valid_days=300)
+    context = models.Context(project_id='project-id')
+    c = gke.Cluster(
+      'project-id',
+      {
+        'currentMasterVersion': '1.20.0',
+        'location': 'us-central1-a',
+        'name': 'dummy-cluster',
+        'masterAuth': {'clusterCaCertificate': pem},
+      },
+      context,
+    )
+    cert_info = c.cluster_ca_certificate_info
+    assert cert_info is not None
+    assert len(cert_info['certificates']) == 1

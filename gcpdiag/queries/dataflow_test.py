@@ -35,3 +35,20 @@ class TestDataFlow(unittest.TestCase):
     jobs = dataflow.get_all_dataflow_jobs_for_project(DUMMY_PROJECT_NAME)
     assert {j.state for j in jobs} != {'JOB_STATE_FAILED'}
     assert None not in [j.minutes_in_current_state for j in jobs]
+
+  def test_streaming_engine_detection(self):
+    # Test job without streaming engine
+    job_no_se = dataflow.get_job(
+      project_id=DUMMY_PROJECT_NAME,
+      job='2024-06-19_09_43_07-14927685200167458422',
+      region='us-central1',
+    )
+    assert job_no_se is not None
+    assert not job_no_se.is_streaming_engine_enabled
+
+    # Test job with streaming engine
+    job_se = dataflow.get_job(
+      project_id=DUMMY_PROJECT_NAME, job='streaming-se', region='us-central1'
+    )
+    assert job_se is not None
+    assert job_se.is_streaming_engine_enabled

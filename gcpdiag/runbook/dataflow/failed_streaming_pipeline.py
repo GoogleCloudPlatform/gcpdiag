@@ -16,6 +16,7 @@
 from gcpdiag import runbook
 from gcpdiag.queries import apis, crm, dataflow, logs
 from gcpdiag.runbook import op
+from gcpdiag.runbook.dataflow import constants as dataflow_constants
 from gcpdiag.runbook.dataflow import flags
 from gcpdiag.runbook.dataflow import generalized_steps as dataflow_gs
 
@@ -74,8 +75,11 @@ class FailedStreamingPipeline(runbook.DiagnosticTree):
     supported_sdk = dataflow_gs.ValidSdk()
     self.add_step(parent=streaming, child=supported_sdk)
 
+    job_state = JobState()
+    self.add_step(parent=supported_sdk, child=job_state)
+
     job_graph = dataflow_gs.JobGraphIsConstructed()
-    self.add_step(parent=supported_sdk, child=job_graph)
+    self.add_step(parent=job_state, child=job_graph)
 
     self.add_step(parent=job_graph, child=dataflow_gs.JobLogsVisible())
 
@@ -153,7 +157,7 @@ class JobState(runbook.Step):
   template = 'generics::failed_streaming_pipeline_check_common_errors'
 
   def execute(self):
-    """Checks that the Dataflow job's state."""
+    """Checks the Dataflow job's state."""
     job = dataflow.get_job(
       op.get(flags.PROJECT_ID),
       op.get(flags.DATAFLOW_JOB_ID),
@@ -161,24 +165,42 @@ class JobState(runbook.Step):
     )
 
     if job.state == 'JOB_STATE_FAILED':
-      log_filter = ['severity>=WARNING']
       project_id = op.get(flags.PROJECT_ID)
-      log_name = 'log_id("dataflow.googleapis.com/worker")'
+      filter_str = (
+        'resource.type="dataflow_step"\nlog_id("dataflow.googleapis.com/worker")\nseverity>=ERROR'
+      )
       project_logs = {}
 
-      project_logs[project_id] = logs.query(
+      project_logs[project_id] = logs.realtime_query(
         project_id=project_id,
-        resource_type='dataflow_step',
-        log_name=log_name,
-        filter_str=' AND '.join(log_filter),
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME),
+        filter_str=filter_str,
       )
 
-      for log_entry in project_logs[project_id].entries:
-        if log_entry['severity'] >= 'ERROR':
-          op.info(message=(f'Error logs found in job logs for the project {job.full_path}'))
+      anchor = None
+      error_logs_found = False
+      for log_entry in project_logs[project_id]:
+        error_logs_found = True
+        msg = log_entry.get('message') or log_entry.get('textPayload')
+        if not msg and isinstance(log_entry.get('jsonPayload'), dict):
+          msg = log_entry['jsonPayload'].get('message') or log_entry['jsonPayload'].get('MESSAGE')
+        msg_str = str(msg or '')
+        for err_substr, doc_anchor in dataflow_constants.ERROR_CATALOG.items():
+          if err_substr.lower() in msg_str.lower():
+            anchor = doc_anchor
+            break
+        if anchor:
+          break
+
+      if error_logs_found:
+        op.info(message=(f'Error logs found in job logs for the project {job.full_path}'))
 
       failure_reason = op.prep_msg(op.FAILURE_REASON, job_id=op.get(flags.DATAFLOW_JOB_ID))
-      failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION)
+      if anchor:
+        failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION, anchor=anchor)
+      else:
+        failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION)
 
       op.add_failed(
         resource=job,

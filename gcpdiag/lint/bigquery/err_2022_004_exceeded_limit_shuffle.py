@@ -18,10 +18,9 @@ The query job failed because the maximum disk and memory limit available for
 shuffle operations was exceeded for the project or organization.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = (
   'Your project or organization exceeded the maximum disk and mem'

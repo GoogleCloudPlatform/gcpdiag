@@ -1,0 +1,4 @@
+[[PackageOverrides]]
+name = "stdlib"
+vulnerability.ignore = true
+reason = "Website documentation module uses stdlib version 1.24.5."

@@ -13,13 +13,12 @@
 # limitations under the License.
 """Runbook for troubleshooting Pub/Sub Cloud Storage subscriptions"""
 
-from boltons.iterutils import get_path
-
 from gcpdiag import models, runbook, utils
 from gcpdiag.queries import apis, crm, gcs, monitoring, pubsub
 from gcpdiag.runbook import op
 from gcpdiag.runbook.pubsub import flags
 from gcpdiag.runbook.pubsub import generalized_steps as pubsub_gs
+from gcpdiag.utils import get_path
 
 # Query to fetch push request counts grouped by response_class
 RESPONSE_CODES = (

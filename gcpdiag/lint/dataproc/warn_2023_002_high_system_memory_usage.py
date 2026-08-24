@@ -20,10 +20,9 @@ memory use reaches 90% (0.9). When this limit is reached, new jobs cannot be sch
 The amount of free memory needed to schedule another job on the cluster is not sufficient.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, dataproc, logs
+from gcpdiag.utils import get_path
 
 CLASS_NAME = 'com.google.cloud.hadoop.services.agent.JobSubmissionLimiterImpl'
 MATCH_STR = 'High system memory usage'

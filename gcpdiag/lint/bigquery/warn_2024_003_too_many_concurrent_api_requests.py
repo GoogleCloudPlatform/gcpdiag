@@ -19,10 +19,9 @@ BigQuery returns Quota exceeded or Exceeded rate limits error when you hit the
 rate limit for the number of API requests to a BigQuery API per user per method.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'too many API requests per user per method for this user_method'
 

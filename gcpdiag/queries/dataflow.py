@@ -91,6 +91,28 @@ class Job(models.Resource):
     delta = datetime.now() - timestamp
     return int(delta.total_seconds() // 60)
 
+  @property
+  def experiments(self) -> List[str]:
+    env = self._resource_data.get('environment') or {}
+    return env.get('experiments', [])
+
+  @property
+  def is_streaming_engine_enabled(self) -> bool:
+    experiments = self.experiments
+    if (
+      'enable_streaming_engine' in experiments
+      or 'enable_windmill_service' in experiments
+      or 'use_runner_v2' in experiments
+    ):
+      return True
+    env = self._resource_data.get('environment') or {}
+    streaming_mode = env.get('streamingMode')
+    if streaming_mode == 'STREAMING_MODE_AT_LEAST_ONCE':
+      return True
+    if env.get('useStreamingEngineResourceBasedBilling'):
+      return True
+    return False
+
 
 def get_region_dataflow_jobs(api, context: models.Context, region: str) -> List[Job]:
   response = apis_utils.list_all(
@@ -145,7 +167,12 @@ def get_job(project_id: str, job: str, region: str) -> Union[Job, None]:
   if not apis.is_enabled(project_id, 'dataflow'):
     return None
 
-  query = api.projects().locations().jobs().get(projectId=project_id, location=region, jobId=job)
+  query = (
+    api.projects()
+    .locations()
+    .jobs()
+    .get(projectId=project_id, location=region, jobId=job, view='JOB_VIEW_DESCRIPTION')
+  )
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     return Job(project_id, resp)

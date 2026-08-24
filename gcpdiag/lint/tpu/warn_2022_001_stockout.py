@@ -20,10 +20,9 @@ cannot accommodate your request due to the current unavailability of a Cloud
 TPU resource.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'There is no more capacity in the zone'
 MATCH_STR2 = 'you can try in another zone where Cloud TPU Nodes'

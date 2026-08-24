@@ -19,10 +19,9 @@ Unable to create snapshot if the subscription backlog is too old and message of
 'subscription's backlog is too old' is displayed on the cloud console.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = (
   'The operation could not be completed because the requested '

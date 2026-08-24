@@ -1,0 +1,40 @@
+#!/bin/bash
+set -euo pipefail
+
+# Check if osv-scanner exists in PATH or ~/.local/bin
+OSV_SCANNER_BIN=""
+if command -v osv-scanner >/dev/null 2>&1; then
+  OSV_SCANNER_BIN="osv-scanner"
+elif [ -x "$HOME/.local/bin/osv-scanner" ]; then
+  OSV_SCANNER_BIN="$HOME/.local/bin/osv-scanner"
+fi
+
+# If missing, detect OS/Arch and download automatically
+if [ -z "$OSV_SCANNER_BIN" ]; then
+  OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+  ARCH=$(uname -m)
+  case "$ARCH" in
+    x86_64) OSV_ARCH="amd64" ;;
+    aarch64|arm64) OSV_ARCH="arm64" ;;
+    *) OSV_ARCH="amd64" ;;
+  esac
+
+  OSV_URL="https://github.com/google/osv-scanner/releases/download/v1.9.2/osv-scanner_${OS}_${OSV_ARCH}"
+
+  mkdir -p "$HOME/.local/bin"
+  echo "osv-scanner not found. Auto-downloading..."
+  if curl -fsSL --connect-timeout 5 "$OSV_URL" -o "$HOME/.local/bin/osv-scanner" 2>/dev/null; then
+    chmod +x "$HOME/.local/bin/osv-scanner"
+    OSV_SCANNER_BIN="$HOME/.local/bin/osv-scanner"
+  else
+    rm -f "$HOME/.local/bin/osv-scanner"
+  fi
+fi
+
+# Run scanner if available, or skip gracefully if offline
+if [ -n "$OSV_SCANNER_BIN" ]; then
+  exec "$OSV_SCANNER_BIN" --config=osv-scanner.toml --lockfile=requirements.txt --lockfile=Pipfile.lock "$@"
+else
+  echo "WARNING: osv-scanner not installed and no internet connection to download it. Skipping."
+  exit 0
+fi

@@ -23,10 +23,9 @@ then the status is healthy as long as at least one of schedulers is responding.
 
 from typing import Dict
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, monitoring
+from gcpdiag.utils import get_path
 
 _query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 envs_by_project = {}

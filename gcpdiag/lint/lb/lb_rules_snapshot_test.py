@@ -19,3 +19,16 @@ from gcpdiag.lint import lb, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = lb
   project_id = 'gcpdiag-lb1-aaaa'
+
+  def _list_rules(self):
+    rules = super()._list_rules()
+    return [r for r in rules if not (r.rule_class.value == 'BP' and r.rule_id == '2026_001')]
+
+
+class TestLb2(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = lb
+  project_id = 'gcpdiag-lb2-aaaa'
+
+  def _list_rules(self):
+    rules = super()._list_rules()
+    return [r for r in rules if r.rule_class.value == 'BP' and r.rule_id == '2026_001']

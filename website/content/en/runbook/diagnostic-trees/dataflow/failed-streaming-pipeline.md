@@ -52,6 +52,8 @@ gcpdiag runbook --help
 
   - [Valid Sdk](/runbook/steps/dataflow/valid-sdk)
 
+  - [Job State](/runbook/steps/dataflow/job-state)
+
   - [Job Graph Is Constructed](/runbook/steps/dataflow/job-graph-is-constructed)
 
   - [Job Logs Visible](/runbook/steps/dataflow/job-logs-visible)

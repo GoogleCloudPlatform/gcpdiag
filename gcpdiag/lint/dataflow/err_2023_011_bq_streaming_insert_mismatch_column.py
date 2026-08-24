@@ -18,10 +18,9 @@ The Dataflow job writing to bigquery using streaming inserts can fail due to mis
 
 from itertools import islice
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STRINGS = [
   ' java.io.IOException: Insert failed:',

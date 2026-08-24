@@ -104,6 +104,7 @@ json-dumps/compute-forwardingRules-%.json:
 json-dumps/compute-aggregated-forwardingRules.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/forwardingRules/' \
+		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-backendServices.json:
@@ -119,6 +120,7 @@ json-dumps/compute-backendServices-%.json:
 json-dumps/compute-aggregated-backendServices.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/backendServices/' \
+		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-aggregated-targetHttpsProxies.json:
@@ -172,6 +174,7 @@ json-dumps/compute-instances-aggregated.json:
 json-dumps/compute-igs-aggregated.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/instanceGroups' \
+		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-migs-aggregated.json:

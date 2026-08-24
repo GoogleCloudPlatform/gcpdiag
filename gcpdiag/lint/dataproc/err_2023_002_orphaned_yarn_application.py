@@ -19,10 +19,9 @@ This rule will look if any Orphaned YARN application are killed by dataproc
 agent in the cluster.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, dataproc, logs
+from gcpdiag.utils import get_path
 
 CLASS_NAME = 'com.google.cloud.hadoop.services.agent.job.YarnJobUpdater'
 MATCH_STR = 'Killing orphaned yarn application'

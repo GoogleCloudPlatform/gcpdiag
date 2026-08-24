@@ -1,0 +1,6 @@
+{
+  "booleanPolicy": {
+    "enforced": true
+  },
+  "constraint": "constraints/compute.disableSerialPortAccess"
+}

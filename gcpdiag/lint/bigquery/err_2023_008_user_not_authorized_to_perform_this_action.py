@@ -19,10 +19,9 @@ also have permission pubsub.topics.getIamPolicy which is part of the role
 roles/pubsub.admin.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'User not authorized to perform this action'
 

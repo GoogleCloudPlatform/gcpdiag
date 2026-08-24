@@ -1,0 +1,108 @@
+{
+  "recommendations": [
+    {
+      "name": "projects/gcpdiag-gke1-aaaa/locations/europe-west4/recommenders/google.container.DiagnosisRecommender/recommendations/rec-pdb-1",
+      "description": "Workload missing Pod Disruption Budget: deployment/nginx in namespace default is missing a Pod Disruption Budget",
+      "recommenderSubtype": "GKE_WORKLOAD_PDB_MISSING",
+      "stateInfo": {
+        "state": "ACTIVE"
+      },
+      "targetResources": [
+        "//container.googleapis.com/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2"
+      ],
+      "content": {
+        "overview": {
+          "podDisruptionRecommendation": [
+            {
+              "deploymentInfo": {
+                "deploymentName": "nginx",
+                "deploymentNamespace": "default"
+              }
+            }
+          ]
+        }
+      },
+      "primaryImpact": {
+        "category": "RELIABILITY"
+      }
+    },
+    {
+      "name": "projects/gcpdiag-gke1-aaaa/locations/europe-west4/recommenders/google.container.DiagnosisRecommender/recommendations/rec-pdb-2",
+      "description": "StatefulSet mysql in namespace default has no matching Pod Disruption Budget",
+      "recommenderSubtype": "PDB_UNPROTECTED_STATEFULSET",
+      "stateInfo": {
+        "state": "ACTIVE"
+      },
+      "targetResources": [
+        "//container.googleapis.com/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2"
+      ],
+      "content": {
+        "overview": {
+          "podDisruptionRecommendation": [
+            {
+              "statefulSetInfo": {
+                "statefulSetName": "mysql",
+                "statefulSetNamespace": "default"
+              }
+            }
+          ]
+        }
+      },
+      "primaryImpact": {
+        "category": "RELIABILITY"
+      }
+    },
+    {
+      "name": "projects/gcpdiag-gke1-aaaa/locations/europe-west4/recommenders/google.container.DiagnosisRecommender/recommendations/rec-pdb-3",
+      "description": "Pod Disruption Budget nginx-pdb in namespace default does not allow any voluntary disruptions",
+      "recommenderSubtype": "PDB_UNPERMISSIVE",
+      "stateInfo": {
+        "state": "ACTIVE"
+      },
+      "targetResources": [
+        "//container.googleapis.com/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2"
+      ],
+      "content": {
+        "overview": {
+          "podDisruptionRecommendation": [
+            {
+              "pdbInfo": {
+                "pdbName": "nginx-pdb",
+                "pdbNamespace": "default"
+              }
+            }
+          ]
+        }
+      },
+      "primaryImpact": {
+        "category": "RELIABILITY"
+      }
+    },
+    {
+      "name": "projects/gcpdiag-gke1-aaaa/locations/europe-west4/recommenders/google.container.DiagnosisRecommender/recommendations/rec-pdb-4",
+      "description": "StatefulSet redis in namespace default is covered by PDB but missing readiness probes",
+      "recommenderSubtype": "PDB_STATEFULSET_WITHOUT_PROBES",
+      "stateInfo": {
+        "state": "ACTIVE"
+      },
+      "targetResources": [
+        "//container.googleapis.com/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2"
+      ],
+      "content": {
+        "overview": {
+          "podDisruptionRecommendation": [
+            {
+              "statefulSetInfo": {
+                "statefulSetName": "redis",
+                "statefulSetNamespace": "default"
+              }
+            }
+          ]
+        }
+      },
+      "primaryImpact": {
+        "category": "RELIABILITY"
+      }
+    }
+  ]
+}

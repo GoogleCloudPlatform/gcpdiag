@@ -18,10 +18,9 @@
 Log entries indicating Cloud Functions exceeding memory limits have been found.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import gcf, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'Error: memory limit exceeded.'
 

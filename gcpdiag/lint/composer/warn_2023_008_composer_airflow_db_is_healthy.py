@@ -17,10 +17,9 @@ The Airflow monitoring pod pings the database every minute and reports health
 status as True if a SQL connection can be established or False if not.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, monitoring
+from gcpdiag.utils import get_path
 
 envs_by_project = {}
 _query_results_per_project_id: dict[str, monitoring.TimeSeriesCollection] = {}

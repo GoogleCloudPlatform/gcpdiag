@@ -1,0 +1,21 @@
+{
+  "policies": [
+    {
+      "version": 2,
+      "constraint": "constraints/cloudbuild.allowedWorkerPools",
+      "etag": "CNmNp74GEPCmnzw=",
+      "updateTime": "2025-03-06T16:01:29.126342Z",
+      "listPolicy": {
+        "allowedValues": [
+          "projects/12340004/locations/us-central1/workerPools/test-pool"
+        ]
+      }
+    },
+    {
+      "constraint": "constraints/compute.skipDefaultNetworkCreation",
+      "etag": "CL2Kp74GENDg7McD",
+      "updateTime": "2025-03-06T15:54:37.955986Z",
+      "booleanPolicy": {}
+    }
+  ]
+}

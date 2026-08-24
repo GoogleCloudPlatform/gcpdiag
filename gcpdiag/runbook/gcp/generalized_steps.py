@@ -16,13 +16,13 @@
 import typing
 
 import googleapiclient.http
-from boltons.iterutils import get_path
 
 from gcpdiag import config, models, runbook
 from gcpdiag.models import Resource
 from gcpdiag.queries import apis, crm
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gcp import constants, flags
+from gcpdiag.utils import get_path
 
 
 class HumanTask(runbook.Step):
@@ -79,7 +79,7 @@ class ResourceAttributeCheck(runbook.Step):
     query_kwargs (dict): Keyword arguments to pass to `resource_query`.
     resource (Resource): The GCP resource fetched by `resource_query`.
     attribute (Optional[tuple]): Path to the nested attribute within the resource to be
-        verified, represented as a tuple of strings. Utilizes `boltons.iterutils.get_path`
+        verified, represented as a tuple of strings. Utilizes `gcpdiag.utils.get_path`
         for navigation.
     evaluator (Optional[Callable]): A custom function for performing complex evaluations
         on a resource attribute.
@@ -112,7 +112,7 @@ class ResourceAttributeCheck(runbook.Step):
     }
     ```
 
-  `get_path`: https://boltons.readthedocs.io/en/latest/_modules/boltons/iterutils.html#get_path
+  `get_path`: gcpdiag.utils.get_path
   """
 
   resource_query: typing.Callable

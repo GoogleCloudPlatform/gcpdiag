@@ -21,10 +21,9 @@ dataflow workers over port 12345 are missing.
 
 import itertools
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STR = 'failed to connect to all addresses'
 

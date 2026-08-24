@@ -1,0 +1,25 @@
+{
+  "clusters": [
+    {
+      "name": "projects/gcpdiag-managedkafka1-aaaa/locations/us-central1/clusters/gcpdiag-my-kafka-cluster",
+      "state": "ACTIVE",
+      "brokerDetails": [
+        {
+          "brokerIndex": 0,
+          "nodeId": 1001,
+          "rack": "us-central1-a"
+        },
+        {
+          "brokerIndex": 1,
+          "nodeId": 1002,
+          "rack": "us-central1-b"
+        },
+        {
+          "brokerIndex": 2,
+          "nodeId": 1003,
+          "rack": "us-central1-f"
+        }
+      ]
+    }
+  ]
+}

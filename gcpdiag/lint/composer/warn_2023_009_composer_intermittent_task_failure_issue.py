@@ -23,10 +23,9 @@ To minimize the impact of such errors, it is recommended to check the
 common issues from our public documentation and follow the best practices.
 """
 
-from boltons.iterutils import get_path
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, crm, logs
+from gcpdiag.utils import get_path
 
 MATCH_STRING = (
   '[queued]> finished (failed) although the task says its queued. '

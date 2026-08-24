@@ -1,0 +1,16 @@
+{
+  "acls": [
+    {
+      "name": "projects/gcpdiag-managedkafka1-aaaa/locations/us-central1/clusters/gcpdiag-my-kafka-cluster/acls/gcpdiag-my-acl",
+      "aclEntries": [
+        {
+          "principal": "User:alice@example.com",
+          "permissionType": "ALLOW",
+          "operation": "READ",
+          "resourceType": "TOPIC",
+          "resourceName": "gcpdiag-my-topic"
+        }
+      ]
+    }
+  ]
+}
