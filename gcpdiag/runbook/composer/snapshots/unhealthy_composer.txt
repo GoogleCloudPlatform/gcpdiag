@@ -1,0 +1,71 @@
+end_time=2026-06-18T18:07:02.016586,name=env2,project_id=gcpdiag-
+composer1-aaaa,start_time=2026-06-18T15:07:02.016586
+
+composer/unhealthy-composer: Diagnose and troubleshoot unhealthy Composer environments.
+
+  This runbook investigates common causes for an unhealthy status in a Cloud
+  Composer environment by analyzing GKE health, resource utilization, and
+  component logs.
+
+  step 1 - Check environment health status
+  step 2 - Check for GKE IP exhaustion
+  step 3 - Validate environment service account status
+  step 4 - Check plugins directory existence
+  step 5 - Check web server CPU utilization
+  step 6 - Check for monitoring pod restarts
+  step 7 - Check for snapshot load pod restarts
+  
+[START]: Find the Composer environment and check if it exists in the project.
+[INFO]: Locating Composer environment "env2" in project "gcpdiag-composer1-aaaa"...
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Environment "env2" found in project "gcpdiag-composer1-aaaa".
+[AUTOMATED STEP]: Check environment health (Cloud Monitoring).
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [FAIL]
+     [REASON]
+     Environment is reporting as unhealthy in Cloud Monitoring.
+
+     [REMEDIATION]
+     Investigate the environment health.
+
+[AUTOMATED STEP]: Check if the GKE cluster has IP exhaustion issues.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Underlying GKE cluster is not experiencing IP exhaustion issues.
+
+[AUTOMATED STEP]: Validate environment service account.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Service account is active.
+
+[AUTOMATED STEP]: Verify plugins directory.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No issues with Plugins directory.
+
+[AUTOMATED STEP]: Analyze web server CPU usage.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [SKIP]
+     [REASON]
+     Web server CPU limit not found in environment config.
+[AUTOMATED STEP]: Check if the environment's monitoring pod is running and checking for OOM events.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     Monitoring Pod is running in cluster.
+
+[AUTOMATED STEP]: Check if the Composer environment's snapshot load had any issues.
+
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [OK]
+     [REASON]
+     No issues with snapshot load.
+
+[END]: End step.
+[INFO]: End of the runbook.
+
+

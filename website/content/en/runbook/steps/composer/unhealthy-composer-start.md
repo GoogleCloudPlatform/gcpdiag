@@ -1,18 +1,18 @@
 ---
-title: "composer/Log Check Step"
-linkTitle: "Log Check Step"
+title: "composer/Unhealthy Composer Start"
+linkTitle: "Unhealthy Composer Start"
 weight: 3
 type: docs
 description: >
-  Base class for performing a log query and reporting results for a given step.
+  Start step for the unhealthy Composer environment diagnostic tree.
 ---
 
 **Product**: [Cloud Composer](https://cloud.google.com/composer)\
-**Step Type**: AUTOMATED STEP
+**Step Type**: START
 
 ### Description
 
-None
+This step is used to find the Composer environment and check if it exists.
 
 
 

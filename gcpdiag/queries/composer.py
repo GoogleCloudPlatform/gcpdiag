@@ -15,7 +15,7 @@
 
 import logging
 import re
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 from packaging import version
 
@@ -35,6 +35,22 @@ class Environment(models.Resource):
     self._resource_data = resource_data
     self.region, self.name = self.parse_full_path()
     self.version_pattern = re.compile(r'composer-(.*)-airflow-(.*)')
+
+  @property
+  def webserver_cpu(self) -> Optional[float]:
+    return get_path(
+      self._resource_data,
+      ('config', 'workloadsConfig', 'webServer', 'cpu'),
+      default=None,
+    )
+
+  @property
+  def webserver_memory_gb(self) -> Optional[float]:
+    return get_path(
+      self._resource_data,
+      ('config', 'workloadsConfig', 'webServer', 'memoryGb'),
+      default=None,
+    )
 
   @property
   def worker_cpu(self) -> float:

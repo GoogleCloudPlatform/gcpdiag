@@ -1,0 +1,125 @@
+{% block health_metric_failure_reason %}
+Environment is reporting as unhealthy in Cloud Monitoring.
+{% endblock %}
+
+{% block health_metric_failure_remediation %}
+Investigate the environment health.
+{% endblock %}
+
+{% block health_metric_success_reason %}
+Composer Environment is healthy according to Cloud Monitoring.
+{% endblock %}
+
+{% block gke_existence_success_reason %}
+Underlying GKE cluster for environment exists.
+{% endblock %}
+
+{% block gke_existence_failure_reason %}
+Underlying GKE cluster appears deleted.
+{% endblock %}
+
+{% block gke_existence_failure_remediation %}
+Verify the underlying GKE cluster exists. If deleted, create a new Cloud Composer environment.
+{% endblock %}
+
+{% block gke_ip_exhaustion_success_reason %}
+Underlying GKE cluster is not experiencing IP exhaustion issues.
+{% endblock %}
+
+{% block gke_ip_exhaustion_failure_reason %}
+Underlying GKE cluster is experiencing IP exhaustion issues.
+{% endblock %}
+
+{% block gke_ip_exhaustion_failure_remediation %}
+Consider resizing the cluster IP ranges.
+See [documentation](https://docs.cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr) for details.
+{% endblock %}
+
+{% block service_account_status_success_reason %}
+Service account is active.
+{% endblock %}
+
+{% block service_account_status_failure_reason %}
+Service account is missing or disabled.
+{% endblock %}
+
+{% block service_account_status_failure_remediation %}
+Verify the service account status in the IAM page. Follow the [documentation](https://docs.cloud.google.com/iam/docs/service-accounts-delete-undelete) for details.
+{% endblock %}
+
+
+{% block plugins_directory_check_success_reason %}
+No issues with Plugins directory.
+{% endblock %}
+
+{% block plugins_directory_check_failure_reason %}
+Plugins directory is missing in the bucket.
+{% endblock %}
+
+{% block plugins_directory_check_failure_remediation %}
+Empty the directory instead of deleting it to remove plugins. Recreate the plugins directory if it is missing.
+{% endblock %}
+
+{% block webserver_cpu_utilization_success_reason %}
+Web server CPU utilization is normal.
+{% endblock %}
+
+{% block webserver_cpu_utilization_failure_reason_alt1 %}
+No metrics found for the Airflow web server CPU utilization for cluster.
+{% endblock %}
+
+{% block webserver_cpu_utilization_failure_remediation_alt1 %}
+Verify that the Composer environment is running and that Cloud Monitoring is enabled for the underlying GKE cluster.
+{% endblock %}
+
+{% block webserver_cpu_utilization_failure_reason %}
+Web Server CPU utilization is at or near its limit.
+{% endblock %}
+
+{% block webserver_cpu_utilization_failure_remediation %}
+Consider increasing the CPU limit for the web server.
+{% endblock %}
+
+{% block snapshot_load_stability_success_reason %}
+No issues with snapshot load.
+{% endblock %}
+
+{% block snapshot_load_stability_failure_reason %}
+Snapshot load has failed.
+{% endblock %}
+
+{% block snapshot_load_stability_failure_remediation %}
+To mitigate the issue, remove unnecessary connections or variables and load the snapshot again. If the issue persists, contact Google Cloud Support for assistance.
+{% endblock %}
+
+{% block snapshot_load_stability_failure_reason_alt1 %}
+OOM events found in cluster logs.
+{% endblock %}
+
+{% block snapshot_load_stability_failure_remediation_alt1 %}
+Contact Google Cloud Support for assistance.
+{% endblock %}
+
+{% block oom_success_reason %}
+No OOM found in cluster logs.
+{% endblock %}
+
+{% block monitoring_stability_failure_reason %}
+Monitoring Pod has restarted due to OOM.
+{% endblock %}
+
+{% block monitoring_stability_failure_remediation %}
+Upgrade to the latest composer version. For more details, refer to [documentation](https://docs.cloud.google.com/composer/docs/release-notes#February_05_2024).
+{% endblock %}
+
+{% block monitoring_stability_success_reason %}
+Monitoring Pod is running in cluster.
+{% endblock %}
+
+{% block monitoring_stability_failure_reason_alt1 %}
+Monitoring Pod is not running in the cluster, but no OOM events were found in the logs.
+{% endblock %}
+
+{% block monitoring_stability_failure_remediation_alt1 %}
+Check if the GKE cluster exists or contact Google Cloud Support for assistance.
+{% endblock %}

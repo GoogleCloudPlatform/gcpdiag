@@ -1,14 +1,14 @@
 ---
-title: "composer/Log Check Step"
-linkTitle: "Log Check Step"
+title: "composer/Runbook Airflow Worker Restart End"
+linkTitle: "Runbook Airflow Worker Restart End"
 weight: 3
 type: docs
 description: >
-  Base class for performing a log query and reporting results for a given step.
+  End step for Airflow worker restart runbook.
 ---
 
 **Product**: [Cloud Composer](https://cloud.google.com/composer)\
-**Step Type**: AUTOMATED STEP
+**Step Type**: END
 
 ### Description
 
