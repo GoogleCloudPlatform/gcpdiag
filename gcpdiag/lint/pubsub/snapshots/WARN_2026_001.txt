@@ -1,0 +1,10 @@
+*  pubsub/WARN/2026_001: Active Pub/Sub subscriptions have a Dead-Letter Queue configured.
+   - projects/gcpdiag-pubsub1-aaaa                                        [FAIL]
+     3 subscriptions do not have a Dead-Letter Queue (DLQ) configured: gcpdiag-bqdlqsubscription-9pm6hng1, gcpdiag-gcsdlqsubscription-9pm6hng1, gcpdiag-pubsub1subscription-9pm6hng1
+
+   Active Pub/Sub subscriptions should have a Dead-Letter Queue (DLQ) configured
+   to prevent head-of-line delivery delays and runaway storage billing costs
+   caused by un-acknowledged poison messages.
+
+   https://gcpdiag.dev/rules/pubsub/WARN/2026_001
+
