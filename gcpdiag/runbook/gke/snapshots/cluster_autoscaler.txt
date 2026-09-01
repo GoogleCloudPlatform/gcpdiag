@@ -28,6 +28,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
 
   
 [START]: Check the provided parameters.
+[AUTOMATED STEP]: Active configuration check for GKE Cluster Autoscaler
 [AUTOMATED STEP]: Check for "scale.up.error.out.of.resources" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
@@ -824,6 +825,33 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
 
      [REMEDIATION]
      The root cause of this error is unknown. Contact Cloud Customer Care for further investigation.
+
+[AUTOMATED STEP]: Check for "no.scale.up.mig.failing.predicate" log entries
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleUp event failed because pending pods could not be scheduled on any potential node pools due to scheduling constraints (predicate failures).
+     Details of blocking workloads:
+     Predicate details could not be parsed.
+
+     [REMEDIATION]
+     Examine the predicate failures listed above.
+     - If pods have 'untolerated taints', make sure your pods tolerate those taints or route them to a pool without those taints.
+     - If 'Insufficient memory/cpu' is shown, verify if the pod requests exceed the capacity of the node pool's machine type, or if other limits prevent scheduling.
+     For more information, see: <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up#pod-configurations>
+
+[AUTOMATED STEP]: Check for "no.scale.up.in.backoff" logs representing MIGs in backoff
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleUp event was skipped because one or more node pools (MIGs) are in backoff state due to previous node bootstrapping or provisioning failures.
+     List of node groups in backoff:
+     Backoff details could not be parsed.
+
+     [REMEDIATION]
+     When a node pool fails to bootstrap (e.g. because of networking, service account, or image issues), the Cluster Autoscaler enters a backoff period before trying to scale it up again.
+     Check the GKE system events or GCE compute engine operation logs for the instance creation failures to resolve the root bootstrapping issue.
+     For details, see: <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up>
 
 [END]: Finalize `Cluster Autoscaler` diagnostics.
 

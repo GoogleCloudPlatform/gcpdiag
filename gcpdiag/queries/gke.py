@@ -123,6 +123,34 @@ class NodePool(models.Resource):
     return self._resource_data['name']
 
   @property
+  def autoscaling(self) -> dict:
+    return self._resource_data.get('autoscaling', {})
+
+  @property
+  def autoscaling_enabled(self) -> bool:
+    return self.autoscaling.get('enabled', False)
+
+  @property
+  def min_node_count(self) -> int:
+    return self.autoscaling.get('minNodeCount', 0)
+
+  @property
+  def max_node_count(self) -> int:
+    return self.autoscaling.get('maxNodeCount', 0)
+
+  @property
+  def total_min_node_count(self) -> int:
+    return self.autoscaling.get('totalMinNodeCount', 0)
+
+  @property
+  def total_max_node_count(self) -> int:
+    return self.autoscaling.get('totalMaxNodeCount', 0)
+
+  @property
+  def current_node_count(self) -> int:
+    return self._resource_data.get('currentNodeCount', 0)
+
+  @property
   def config(self) -> NodeConfig:
     return NodeConfig(self._resource_data['config'])
 
@@ -315,7 +343,7 @@ class Cluster(models.Resource):
 
   @property
   def status_message(self) -> str:
-    return self._resource_data.get('statusMessage', None)
+    return self._resource_data['statusMessage']
 
   def has_app_layer_enc_enabled(self) -> bool:
     # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'

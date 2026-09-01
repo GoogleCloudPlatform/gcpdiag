@@ -342,9 +342,12 @@ class TestClusterAutoscaler(unittest.TestCase):
 
     start_steps = self.runbook.start.steps
     self.assertGreater(len(start_steps), 0)
-    self.assertIsInstance(start_steps[0], cluster_autoscaler.CaOutOfResources)
+    self.assertIsInstance(start_steps[0], cluster_autoscaler.CaAutoscalingCheck)
 
-    out_of_resources_steps = start_steps[0].steps
+    autoscaling_check_steps = start_steps[0].steps
+    self.assertIsInstance(autoscaling_check_steps[0], cluster_autoscaler.CaOutOfResources)
+
+    out_of_resources_steps = autoscaling_check_steps[0].steps
     self.assertIsInstance(out_of_resources_steps[0], cluster_autoscaler.CaQuotaExceeded)
 
     self.assertIsInstance(self.runbook.start.steps[-1], cluster_autoscaler.ClusterAutoscalerEnd)
@@ -384,4 +387,183 @@ class TestClusterAutoscaler(unittest.TestCase):
     step = cluster_autoscaler.CaOutOfResources()
     step.execute()
 
+    mock_add_failed.assert_called_once()
+
+  @mock.patch('gcpdiag.runbook.op.prep_msg')
+  @mock.patch('gcpdiag.queries.gke.get_cluster')
+  @mock.patch('gcpdiag.runbook.op.add_ok')
+  @mock.patch('gcpdiag.runbook.op.get')
+  @mock.patch('gcpdiag.queries.crm.get_project')
+  def test_autoscaling_check_autopilot(
+    self, mock_crm, mock_get, mock_add_ok, mock_gke, mock_prep_msg
+  ):
+    """CaAutoscalingCheck with Autopilot cluster."""
+    del mock_crm
+    mock_get.side_effect = lambda k, v=None: RUNBOOK_PARAMS.get(k, v)
+    mock_cluster = mock.MagicMock()
+    mock_cluster.is_autopilot = True
+    mock_gke.return_value = mock_cluster
+
+    step = cluster_autoscaler.CaAutoscalingCheck()
+    step.execute()
+    mock_add_ok.assert_called_once()
+
+  @mock.patch('gcpdiag.runbook.op.prep_msg')
+  @mock.patch('gcpdiag.queries.gke.get_cluster')
+  @mock.patch('gcpdiag.runbook.op.add_failed')
+  @mock.patch('gcpdiag.runbook.op.get')
+  @mock.patch('gcpdiag.queries.crm.get_project')
+  def test_autoscaling_check_disabled(
+    self, mock_crm, mock_get, mock_add_failed, mock_gke, mock_prep_msg
+  ):
+    """CaAutoscalingCheck when autoscaling is disabled on all pools."""
+    del mock_crm
+    mock_get.side_effect = lambda k, v=None: RUNBOOK_PARAMS.get(k, v)
+    mock_prep_msg.side_effect = lambda x, **y: x
+
+    mock_nodepool = mock.MagicMock()
+    mock_nodepool.autoscaling_enabled = False
+
+    mock_cluster = mock.MagicMock()
+    mock_cluster.is_autopilot = False
+    mock_cluster.nodepools = [mock_nodepool]
+    mock_gke.return_value = mock_cluster
+
+    step = cluster_autoscaler.CaAutoscalingCheck()
+    step.execute()
+    mock_add_failed.assert_called_once()
+
+  @mock.patch('gcpdiag.runbook.op.prep_msg')
+  @mock.patch('gcpdiag.queries.gke.get_cluster')
+  @mock.patch('gcpdiag.runbook.op.add_failed')
+  @mock.patch('gcpdiag.runbook.op.get')
+  @mock.patch('gcpdiag.queries.crm.get_project')
+  def test_autoscaling_check_limits_reached(
+    self, mock_crm, mock_get, mock_add_failed, mock_gke, mock_prep_msg
+  ):
+    """CaAutoscalingCheck when autoscaling limits are reached (max_node_count)."""
+    del mock_crm
+    mock_get.side_effect = lambda k, v=None: RUNBOOK_PARAMS.get(k, v)
+    mock_prep_msg.side_effect = lambda x, **y: x
+
+    mock_nodepool = mock.MagicMock()
+    mock_nodepool.name = 'pool-1'
+    mock_nodepool.autoscaling_enabled = True
+    mock_nodepool.current_node_count = 10
+    mock_nodepool.max_node_count = 10
+    mock_nodepool.min_node_count = 1
+
+    mock_cluster = mock.MagicMock()
+    mock_cluster.is_autopilot = False
+    mock_cluster.nodepools = [mock_nodepool]
+    mock_gke.return_value = mock_cluster
+
+    step = cluster_autoscaler.CaAutoscalingCheck()
+    step.execute()
+    mock_add_failed.assert_called_once()
+
+  @mock.patch('gcpdiag.runbook.op.prep_msg')
+  @mock.patch('gcpdiag.queries.gke.get_cluster')
+  @mock.patch('gcpdiag.runbook.op.add_ok')
+  @mock.patch('gcpdiag.runbook.op.get')
+  @mock.patch('gcpdiag.queries.crm.get_project')
+  def test_autoscaling_check_zero_nodes_min_zero(
+    self, mock_crm, mock_get, mock_add_ok, mock_gke, mock_prep_msg
+  ):
+    """CaAutoscalingCheck when current=0 and min=0 (should be OK, not limit reached)."""
+    del mock_crm
+    mock_get.side_effect = lambda k, v=None: RUNBOOK_PARAMS.get(k, v)
+    mock_prep_msg.side_effect = lambda x, **y: x
+
+    mock_nodepool = mock.MagicMock()
+    mock_nodepool.name = 'pool-1'
+    mock_nodepool.autoscaling_enabled = True
+    mock_nodepool.current_node_count = 0
+    mock_nodepool.max_node_count = 10
+    mock_nodepool.min_node_count = 0
+
+    mock_cluster = mock.MagicMock()
+    mock_cluster.is_autopilot = False
+    mock_cluster.nodepools = [mock_nodepool]
+    mock_gke.return_value = mock_cluster
+
+    step = cluster_autoscaler.CaAutoscalingCheck()
+    step.execute()
+    mock_add_ok.assert_called_once()
+
+  @mock.patch('gcpdiag.runbook.op.prep_msg')
+  @mock.patch('gcpdiag.runbook.gke.cluster_autoscaler.local_log_search')
+  @mock.patch('gcpdiag.runbook.op.add_failed')
+  @mock.patch('gcpdiag.runbook.op.get')
+  @mock.patch('gcpdiag.queries.crm.get_project')
+  def test_no_scale_up_mig_failing_predicate_logs(
+    self, mock_crm, mock_get, mock_add_failed, mock_log_search, mock_prep_msg
+  ):
+    """CaNoScaleUpMigFailingPredicate parses visibility logs with failing predicate."""
+    del mock_crm
+    mock_prep_msg.side_effect = lambda x, **y: x
+    mock_get.side_effect = lambda k, v=None: RUNBOOK_PARAMS.get(k, v)
+    mock_log_search.return_value = [
+      {
+        'jsonPayload': {
+          'noDecisionStatus': {
+            'noScaleUp': {
+              'unhandledPodGroups': [
+                {
+                  'podGroup': {'samplePod': {'name': 'web-pod', 'namespace': 'default'}},
+                  'rejectedMigs': [
+                    {
+                      'mig': {'name': 'gke-cluster-pool-1-mig', 'nodepool': 'pool-1'},
+                      'reason': {
+                        'messageId': 'no.scale.up.mig.failing.predicate',
+                        'parameters': ['NodeResourcesFit', 'Taint'],
+                      },
+                    }
+                  ],
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+
+    step = cluster_autoscaler.CaNoScaleUpMigFailingPredicate()
+    step.execute()
+    mock_add_failed.assert_called_once()
+
+  @mock.patch('gcpdiag.runbook.op.prep_msg')
+  @mock.patch('gcpdiag.runbook.gke.cluster_autoscaler.local_log_search')
+  @mock.patch('gcpdiag.runbook.op.add_failed')
+  @mock.patch('gcpdiag.runbook.op.get')
+  @mock.patch('gcpdiag.queries.crm.get_project')
+  def test_no_scale_up_in_backoff_logs(
+    self, mock_crm, mock_get, mock_add_failed, mock_log_search, mock_prep_msg
+  ):
+    """CaNoScaleUpInBackoff detects MIGs in backoff state."""
+    del mock_crm
+    mock_prep_msg.side_effect = lambda x, **y: x
+    mock_get.side_effect = lambda k, v=None: RUNBOOK_PARAMS.get(k, v)
+    mock_log_search.return_value = [
+      {
+        'jsonPayload': {
+          'noDecisionStatus': {
+            'noScaleUp': {
+              'skippedMigs': [
+                {
+                  'mig': {'name': 'gke-cluster-pool-1-mig', 'nodepool': 'pool-1'},
+                  'reason': {
+                    'messageId': 'no.scale.up.in.backoff',
+                    'parameters': ['in backoff after failed scale-up'],
+                  },
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+
+    step = cluster_autoscaler.CaNoScaleUpInBackoff()
+    step.execute()
     mock_add_failed.assert_called_once()

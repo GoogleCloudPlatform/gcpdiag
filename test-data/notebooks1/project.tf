@@ -22,14 +22,14 @@ terraform {
     }
     google-beta = {
       source  = "hashicorp/google-beta"
-      version = ">= 3.46.0"
+      version = ">= 3.46.0, < 6.0.0"
     }
   }
 }
 
 resource "random_string" "project_id_suffix" {
   length  = 8
-  number  = true
+  numeric = true
   lower   = true
   upper   = false
   special = false

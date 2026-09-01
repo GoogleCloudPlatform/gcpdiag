@@ -113,6 +113,7 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
 
   def build_tree(self):
     start = ClusterAutoscalerStart()
+    autoscaling_check = CaAutoscalingCheck()
     out_of_resources = CaOutOfResources()
     quota_exceeded = CaQuotaExceeded()
     instance_timeout = CaInstanceTimeout()
@@ -129,10 +130,13 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
     pod_not_enough_pdb = CaPodNotEnoughPdb()
     pod_controller_not_found = CaPodControllerNotFound()
     pod_unexpected_error = CaPodUnexpectedError()
+    no_scale_up_predicate = CaNoScaleUpMigFailingPredicate()
+    no_scale_up_backoff = CaNoScaleUpInBackoff()
     end = ClusterAutoscalerEnd()
 
     self.add_start(step=start)
-    self.add_step(parent=start, child=out_of_resources)
+    self.add_step(parent=start, child=autoscaling_check)
+    self.add_step(parent=autoscaling_check, child=out_of_resources)
     self.add_step(parent=out_of_resources, child=quota_exceeded)
     self.add_step(parent=quota_exceeded, child=instance_timeout)
     self.add_step(parent=instance_timeout, child=ip_space_exhausted)
@@ -148,6 +152,8 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
     self.add_step(parent=pod_kube_system_unmovable, child=pod_not_enough_pdb)
     self.add_step(parent=pod_not_enough_pdb, child=pod_controller_not_found)
     self.add_step(parent=pod_controller_not_found, child=pod_unexpected_error)
+    self.add_step(parent=pod_unexpected_error, child=no_scale_up_predicate)
+    self.add_step(parent=no_scale_up_predicate, child=no_scale_up_backoff)
     self.add_end(step=end)
 
 
@@ -192,6 +198,64 @@ class ClusterAutoscalerStart(runbook.StartStep):
           cluster.name, op.get(flags.LOCATION), op.get(flags.PROJECT_ID)
         ),
       )
+
+
+class CaAutoscalingCheck(runbook.Step):
+  """Active configuration check for GKE Cluster Autoscaler"""
+
+  template = 'clusterautoscaler::autoscaling_check'
+
+  def execute(self):
+    """Active configuration check for GKE Cluster Autoscaler"""
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    location = op.get(flags.LOCATION)
+
+    cluster = gke.get_cluster(project, cluster_name, location)
+    if not cluster:
+      return
+
+    if cluster.is_autopilot:
+      op.add_ok(project_path, reason='Autopilot cluster has autoscaling enabled by default.')
+      return
+
+    # Check if autoscaling is enabled on any node pool
+    autoscaling_enabled = False
+    max_reached_pools = []
+    min_reached_pools = []
+
+    for np in cluster.nodepools:
+      if np.autoscaling_enabled:
+        autoscaling_enabled = True
+        # Check if max is reached
+        if np.current_node_count >= np.max_node_count:
+          max_reached_pools.append(f'{np.name} (max: {np.max_node_count})')
+        # Check if min is reached (only flag if min_node_count > 0)
+        if np.current_node_count <= np.min_node_count and np.min_node_count > 0:
+          min_reached_pools.append(f'{np.name} (min: {np.min_node_count})')
+
+    if not autoscaling_enabled:
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, reason='autoscaling_disabled'),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, reason='autoscaling_disabled'),
+      )
+      return
+
+    if max_reached_pools or min_reached_pools:
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(
+          op.FAILURE_REASON,
+          reason='limits_reached',
+          max_pools=', '.join(max_reached_pools) if max_reached_pools else 'None',
+          min_pools=', '.join(min_reached_pools) if min_reached_pools else 'None',
+        ),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION, reason='limits_reached'),
+      )
+    else:
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON))
 
 
 class CaOutOfResources(runbook.Step):
@@ -785,6 +849,125 @@ class CaPodUnexpectedError(runbook.Step):
       op.add_failed(
         project_path,
         reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
+    else:
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
+
+
+class CaNoScaleUpMigFailingPredicate(runbook.Step):
+  """Check for "no.scale.up.mig.failing.predicate" log entries"""
+
+  template = 'clusterautoscaler::no_scale_up_mig_failing_predicate'
+
+  def execute(self):
+    """Check for "no.scale.up.mig.failing.predicate" log entries"""
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    error_message = (
+      'jsonPayload.noDecisionStatus.noScaleUp.unhandledPodGroups.rejectedMigs.reason.messageId='
+      '"no.scale.up.mig.failing.predicate"'
+    )
+
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
+
+    if log_entries:
+      blocking_details_set = set()
+      # Parse log entries to extract specific predicate failures
+      for log_entry in log_entries:
+        no_scale_up = (
+          log_entry.get('jsonPayload', {}).get('noDecisionStatus', {}).get('noScaleUp', {})
+        )
+        for pod_group_info in no_scale_up.get('unhandledPodGroups', []):
+          sample_pod = pod_group_info.get('podGroup', {}).get('samplePod', {})
+          pod_name = sample_pod.get('name', 'unknown-pod')
+          pod_namespace = sample_pod.get('namespace', 'unknown-namespace')
+
+          for rejected_mig in pod_group_info.get('rejectedMigs', []):
+            reason_info = rejected_mig.get('reason', {})
+            if reason_info.get('messageId') == 'no.scale.up.mig.failing.predicate':
+              predicates = ', '.join(reason_info.get('parameters', []))
+              mig_name = rejected_mig.get('mig', {}).get('name', 'unknown-mig')
+              nodepool_name = rejected_mig.get('mig', {}).get('nodepool', 'unknown-nodepool')
+              blocking_details_set.add(
+                f'- Pod: {pod_namespace}/{pod_name} -> Node Pool: {nodepool_name} (MIG: {mig_name}) failed due to: {predicates}'
+              )
+
+      blocking_details = (
+        '\n'.join(sorted(blocking_details_set))
+        if blocking_details_set
+        else 'Predicate details could not be parsed.'
+      )
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, blocking_details=blocking_details),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
+    else:
+      op.add_ok(
+        project_path,
+        reason=op.prep_msg(
+          op.SUCCESS_REASON, start_time=op.get(flags.START_TIME), end_time=op.get(flags.END_TIME)
+        ),
+      )
+
+
+class CaNoScaleUpInBackoff(runbook.Step):
+  """Check for "no.scale.up.in.backoff" logs representing MIGs in backoff"""
+
+  template = 'clusterautoscaler::no_scale_up_in_backoff'
+
+  def execute(self):
+    """Check for "no.scale.up.in.backoff" logs representing MIGs in backoff"""
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    error_message = (
+      '(jsonPayload.noDecisionStatus.noScaleUp.skippedMigs.reason.messageId='
+      '"no.scale.up.in.backoff" OR '
+      'jsonPayload.noDecisionStatus.noScaleUp.unhandledPodGroups.skippedMigs.reason.messageId='
+      '"no.scale.up.in.backoff")'
+    )
+
+    log_entries = local_log_search(cluster_name, cluster_location, error_message)
+
+    if log_entries:
+      backoff_details_set = set()
+
+      def _extract_skipped_migs(skipped_migs_list):
+        for skipped_mig in skipped_migs_list:
+          reason_info = skipped_mig.get('reason', {})
+          mig_name = skipped_mig.get('mig', {}).get('name', 'unknown-mig')
+          nodepool_name = skipped_mig.get('mig', {}).get('nodepool', 'unknown-nodepool')
+          reasons = ', '.join(reason_info.get('parameters', []))
+          backoff_details_set.add(f'- Node Pool: {nodepool_name} (MIG: {mig_name}) -> {reasons}')
+
+      for log_entry in log_entries:
+        no_scale_up = (
+          log_entry.get('jsonPayload', {}).get('noDecisionStatus', {}).get('noScaleUp', {})
+        )
+        # Check global skipped MIGs
+        _extract_skipped_migs(no_scale_up.get('skippedMigs', []))
+        # Check per pod-group skipped MIGs
+        for pod_group_info in no_scale_up.get('unhandledPodGroups', []):
+          _extract_skipped_migs(pod_group_info.get('skippedMigs', []))
+
+      backoff_details = (
+        '\n'.join(sorted(backoff_details_set))
+        if backoff_details_set
+        else 'Backoff details could not be parsed.'
+      )
+      op.add_failed(
+        project_path,
+        reason=op.prep_msg(op.FAILURE_REASON, backoff_details=backoff_details),
         remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
     else:

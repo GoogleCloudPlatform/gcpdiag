@@ -266,3 +266,61 @@ The root cause of this error is unknown. Contact Cloud Customer Care for further
 {% block pod_unexpected_error_success_reason %}
 No "no.scale.down.node.pod.unexpected.error" errors found between {start_time} and {end_time}
 {% endblock pod_unexpected_error_success_reason %}
+
+{% block autoscaling_check_failure_reason %}
+{% if reason == "autoscaling_disabled" %}
+Cluster autoscaling is not enabled on any node pool of the cluster.
+{% elif reason == "limits_reached" %}
+Some node pools have reached their autoscaling size limits:
+- Max-reached pools (block scale-up): {max_pools}
+- Min-reached pools (block scale-down): {min_pools}
+{% endif %}
+{% endblock autoscaling_check_failure_reason %}
+
+{% block autoscaling_check_failure_remediation %}
+{% if reason == "autoscaling_disabled" %}
+Enable autoscaling on at least one node pool to allow the cluster to scale automatically.
+For more information, see: <https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#enable>
+{% elif reason == "limits_reached" %}
+If you need more capacity, increase the maxNodeCount of the affected node pools.
+If you want to allow further scale-down, decrease the minNodeCount.
+For details, see: <https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool>
+{% endif %}
+{% endblock autoscaling_check_failure_remediation %}
+
+{% block autoscaling_check_success_reason %}
+Cluster autoscaling is enabled on at least one node pool, and no node pools are currently stuck at their size limits.
+{% endblock autoscaling_check_success_reason %}
+
+{% block no_scale_up_mig_failing_predicate_failure_reason %}
+The scaleUp event failed because pending pods could not be scheduled on any potential node pools due to scheduling constraints (predicate failures).
+Details of blocking workloads:
+{blocking_details}
+{% endblock no_scale_up_mig_failing_predicate_failure_reason %}
+
+{% block no_scale_up_mig_failing_predicate_failure_remediation %}
+Examine the predicate failures listed above.
+- If pods have 'untolerated taints', make sure your pods tolerate those taints or route them to a pool without those taints.
+- If 'Insufficient memory/cpu' is shown, verify if the pod requests exceed the capacity of the node pool's machine type, or if other limits prevent scheduling.
+For more information, see: <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up#pod-configurations>
+{% endblock no_scale_up_mig_failing_predicate_failure_remediation %}
+
+{% block no_scale_up_mig_failing_predicate_success_reason %}
+No "no.scale.up.mig.failing.predicate" errors found between {start_time} and {end_time}
+{% endblock no_scale_up_mig_failing_predicate_success_reason %}
+
+{% block no_scale_up_in_backoff_failure_reason %}
+The scaleUp event was skipped because one or more node pools (MIGs) are in backoff state due to previous node bootstrapping or provisioning failures.
+List of node groups in backoff:
+{backoff_details}
+{% endblock no_scale_up_in_backoff_failure_reason %}
+
+{% block no_scale_up_in_backoff_failure_remediation %}
+When a node pool fails to bootstrap (e.g. because of networking, service account, or image issues), the Cluster Autoscaler enters a backoff period before trying to scale it up again.
+Check the GKE system events or GCE compute engine operation logs for the instance creation failures to resolve the root bootstrapping issue.
+For details, see: <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up>
+{% endblock no_scale_up_in_backoff_failure_remediation %}
+
+{% block no_scale_up_in_backoff_success_reason %}
+No "no.scale.up.in.backoff" logs found between {start_time} and {end_time}
+{% endblock no_scale_up_in_backoff_success_reason %}

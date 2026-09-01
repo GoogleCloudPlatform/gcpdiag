@@ -65,6 +65,8 @@ gcpdiag runbook --help
 
   - [Cluster Autoscaler Start](/runbook/steps/gke/cluster-autoscaler-start)
 
+  - [Ca Autoscaling Check](/runbook/steps/gke/ca-autoscaling-check)
+
   - [Ca Out Of Resources](/runbook/steps/gke/ca-out-of-resources)
 
   - [Ca Quota Exceeded](/runbook/steps/gke/ca-quota-exceeded)
@@ -96,6 +98,10 @@ gcpdiag runbook --help
   - [Ca Pod Controller Not Found](/runbook/steps/gke/ca-pod-controller-not-found)
 
   - [Ca Pod Unexpected Error](/runbook/steps/gke/ca-pod-unexpected-error)
+
+  - [Ca No Scale Up Mig Failing Predicate](/runbook/steps/gke/ca-no-scale-up-mig-failing-predicate)
+
+  - [Ca No Scale Up In Backoff](/runbook/steps/gke/ca-no-scale-up-in-backoff)
 
   - [Cluster Autoscaler End](/runbook/steps/gke/cluster-autoscaler-end)
 
