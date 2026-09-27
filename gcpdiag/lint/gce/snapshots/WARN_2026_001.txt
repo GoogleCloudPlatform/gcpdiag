@@ -1,0 +1,9 @@
+*  gce/WARN/2026_001: GCE boot disk auto-delete is enabled.
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-35923fbc-2xxp [SKIP]
+     GKE node - managed by GKE
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [ OK ]
+
