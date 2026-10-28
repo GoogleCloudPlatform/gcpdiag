@@ -34,7 +34,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 	# dependency for pydot
 	graphviz \
 	# dependency for markdownlint
-	ruby
+	ruby \
+	ruby-dev
 
 
 # terraform

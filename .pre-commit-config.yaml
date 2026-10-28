@@ -108,12 +108,14 @@ repos:
     name: Check presence of "TODO:" comments
     entry: ./bin/precommit-todo-annotations
     language: script
-- repo: https://github.com/markdownlint/markdownlint
-  rev: v0.13.0
+- repo: local
   hooks:
   - id: markdownlint
+    name: Markdownlint
+    entry: ./bin/precommit-markdownlint
+    language: script
     files: \.(jinja)$
-    entry: mdl --rules MD034
+    require_serial: true
 - repo: local
   hooks:
   - id: osv-scanner

@@ -1,0 +1,39 @@
+#!/bin/bash
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+set -euo pipefail
+
+if command -v mdl >/dev/null 2>&1; then
+  exec mdl --rules MD034 "$@"
+fi
+
+MDL_DIR="${HOME}/.cache/gcpdiag-mdl"
+if [ ! -x "${MDL_DIR}/bin/mdl" ]; then
+  mkdir -p "${MDL_DIR}"
+  cat << 'EOF' > "${MDL_DIR}/Gemfile"
+source "https://rubygems.org"
+gem "tomlrb", "2.0.4"
+gem "mdl", "0.13.0"
+EOF
+  GEM_HOME="${MDL_DIR}" GEM_PATH="${MDL_DIR}" gem install \
+    --no-document \
+    --no-user-install \
+    --no-lock \
+    --install-dir "${MDL_DIR}" \
+    --bindir "${MDL_DIR}/bin" \
+    -g "${MDL_DIR}/Gemfile"
+fi
+
+exec env GEM_HOME="${MDL_DIR}" GEM_PATH="${MDL_DIR}" "${MDL_DIR}/bin/mdl" --rules MD034 "$@"
